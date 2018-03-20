@@ -3,11 +3,12 @@
 
 import sys, os
 from os import system, environ
-sys.path = [environ["CMSSW_BASE"] + "/src/Exploration/condor/",] + sys.path
-
 from samples import SampleCollection
 import optparse 
 import subprocess
+
+repo = "Analyzer/Analyzer"
+sys.path = [environ["CMSSW_BASE"] + "/src/%s/test/condor/" % repo,] + sys.path
 
 # Parse command line arguments
 parser = optparse.OptionParser("usage: %prog [options]\n")
@@ -23,15 +24,15 @@ options, args = parser.parse_args()
 
 # Prepare the list of files to transfer
 mvaFileName = ""
-with file(environ["CMSSW_BASE"] + "/src/Exploration/TopTagger.cfg") as meowttcfgFile:
+with file(environ["CMSSW_BASE"] + "/src/%s/test/TopTagger.cfg" % repo) as meowttcfgFile:
     for line in meowttcfgFile:
         if "modelFile" in line:
             mvaFileName = line.split("=")[1].strip().strip("\"")
             break
 
-filestoTransfer = [environ["CMSSW_BASE"] + "/src/Exploration/MyAnalysis", 
-                   environ["CMSSW_BASE"] + "/src/Exploration/%s" % mvaFileName,
-                   environ["CMSSW_BASE"] + "/src/Exploration/TopTagger.cfg",
+filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MyAnalysis" % repo, 
+                   environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,mvaFileName),
+                   environ["CMSSW_BASE"] + "/src/%s/test/TopTagger.cfg" % repo,
                    environ["CMSSW_BASE"] + "/src/TopTagger/TopTagger/test/libTopTagger.so"
                    ]
 
