@@ -1,10 +1,10 @@
-WDIR = .
-ODIR = obj
+WDIR   = .
+ODIR   = obj
 IFWDIR = $(CMSSW_BASE)/src/Framework/Framework/include
 SFWDIR = $(CMSSW_BASE)/src/Framework/Framework/src
-IADIR = $(CMSSW_BASE)/src/Analyzer/Analyzer/include
-SADIR = $(CMSSW_BASE)/src/Analyzer/Analyzer/src
-TDIR = $(CMSSW_BASE)/src
+IADIR  = $(CMSSW_BASE)/src/Analyzer/Analyzer/include
+SADIR  = $(CMSSW_BASE)/src/Analyzer/Analyzer/src
+TDIR   = $(CMSSW_BASE)/src
 
 OPENCV_DIRECTORY = /uscms_data/d3/nstrobbe/SOFTWARE/opencv
 TTDIR            = $(CMSSW_BASE)/src/TopTagger/
@@ -68,6 +68,18 @@ $(ODIR)/%.o : $(SFWDIR)/%.cc
 	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -o $@ -c $<
 
 $(ODIR)/%.o : $(SFWDIR)/%.cpp
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -o $@ -c $<
+
+$(ODIR)/%.o : $(SADIR)/%.C
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -o $@ -c $<
+
+$(ODIR)/%.o : $(SADIR)/%.c
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -o $@ -c $<
+
+$(ODIR)/%.o : $(SADIR)/%.cc
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -o $@ -c $<
+
+$(ODIR)/%.o : $(SADIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -o $@ -c $<
 
 $(ODIR)/%.o : $(WDIR)/%.C
