@@ -33,102 +33,54 @@ void ExploreEventSelection::InitHistos()
     my_histos.emplace("h_ntops", new TH1D("h_ntops","h_ntops", 5, 0, 5));
     my_histos.emplace("h_mbl_2l_test", new TH1D("h_mbl_2l_test","h_mbl_2l_test", 50, 0, 200));
     
-    // 0 lepton plots
-    // "6j" is the control region only. Only look at data for that region
-    // Add cuts on Owen's BDT 
-    std::vector<std::string> mycuts_0l {"g6j_HT500_g1b", "g6j_HT500_g1b_0t", "g6j_HT500_g1b_1t", "g6j_HT500_g1b_2t",
-            "6j_HT500_g1b_0t", "6j_HT500_g1b_1t1", "6j_HT500_g1b_1t2","6j_HT500_g1b_1t3","6j_HT500_g1b_2t", 
-            "g7j_HT500_g1b_0t", "g7j_HT500_g1b_1t1", "g7j_HT500_g1b_1t2", "g7j_HT500_g1b_1t3", "g7j_HT500_g1b_2t"};
-    for(std::string mycut : mycuts_0l)
-    {
-        my_histos.emplace("h_njets_0l_"+mycut, new TH1D(("h_njets_0l_"+mycut).c_str(),("h_njets_0l_"+mycut).c_str(), 19, 0, 19));
-        my_histos.emplace("h_ntops_0l_"+mycut, new TH1D(("h_ntops_0l_"+mycut).c_str(),("h_ntops_0l_"+mycut).c_str(), 5, 0, 5));
-        my_histos.emplace("h_nb_0l_"+mycut, new TH1D(("h_nb_0l_"+mycut).c_str(),("h_nb_0l_"+mycut).c_str(), 10, 0, 10));
-        my_histos.emplace("h_HT_0l_"+mycut, new TH1D(("h_HT_0l_"+mycut).c_str(),("h_HT_0l_"+mycut).c_str(), 60, 0, 3000));
-        my_histos.emplace("h_bdt_0l_"+mycut, new TH1D(("h_bdt_0l_"+mycut).c_str(),("h_bdt_0l_"+mycut).c_str(), 40, -0.5, 0.5));
+    //Kelvin added btag type histograms
+    std::vector<std::string> btag_types_tags        { "medium" , "tight" };
+    std::vector<std::string> pt_threshold_tags      { "pt30" , "pt40" , "pt45" };
+    std::vector<std::string> nleptons_tags          { "0l" , "1l" , "2l" };
+    std::vector<std::string> n_med_btags            { "0", "1", "2", "3", "4", "5", "6" };
+    std::vector<std::string> n_tight_btags          { "0", "1", "2", "3", "4", "5", "6" };
+    std::vector<std::string> n_subjets_top_tags     { "1", "2", "3" };
 
-        my_2d_histos.emplace("h_njets_bdt_0l_"+mycut, new TH2D(("h_njets_bdt_0l_"+mycut).c_str(),("h_njets_bdt_0l_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
-    }
+    for( std::string btagTag : btag_types_tags ) {
+        for( std::string ptTag : pt_threshold_tags ) {
+            for( std::string nLepTag : nleptons_tags ) {
+                my_histos.emplace( "h_nbtags_"+btagTag+"_"+ptTag+"_"+nLepTag, new TH1D( ( "h_nbtags_"+btagTag+"_"+ptTag+"_"+nLepTag ).c_str(), ( "h_nbtags_"+btagTag+"_"+ptTag+"_"+nLepTag ).c_str(), 8, 0, 8 ) );
+            }//END of nleptons_tags
+        }//END of ptTag
+    }//END of btagTag
 
-    // 1 lepton plots
-    // attempt to have "6j" be the control region, also include 6j in case that works better
-    // TODO: add BDT cuts
-    std::vector<std::string> mycuts_1l {"g6j","g6j_g1b", "g6j_g1b_mbl", "g6j_g1b_mbl_0t", "g6j_g1b_mbl_1t1", "g6j_g1b_mbl_1t2", "g6j_g1b_mbl_1t3",
-            "6j","6j_g1b", "6j_g1b_mbl", "6j_g1b_mbl_0t", "6j_g1b_mbl_1t1", "6j_g1b_mbl_1t2", "6j_g1b_mbl_1t3",
-            "g7j","g7j_g1b", "g7j_g1b_mbl", "g7j_g1b_mbl_0t", "g7j_g1b_mbl_1t1", "g7j_g1b_mbl_1t2", "g7j_g1b_mbl_1t3",
-            };
-    std::vector<std::string> mycuts_1mu {
-            "6j","6j_g1b", "6j_g1b_mbl", "6j_g1b_mbl_0t", "6j_g1b_mbl_1t1", "6j_g1b_mbl_1t2", "6j_g1b_mbl_1t3",
-            };
-    std::vector<std::string> mycuts_1el {
-            "6j","6j_g1b", "6j_g1b_mbl", "6j_g1b_mbl_0t", "6j_g1b_mbl_1t1", "6j_g1b_mbl_1t2", "6j_g1b_mbl_1t3",
-            };
-    for(std::string mycut : mycuts_1l)
-    {
-        my_histos.emplace("h_njets_1l_"+mycut, new TH1D(("h_njets_1l_"+mycut).c_str(),("h_njets_1l_"+mycut).c_str(), 15, 0, 15));
-        my_histos.emplace("h_ntops_1l_"+mycut, new TH1D(("h_ntops_1l_"+mycut).c_str(),("h_ntops_1l_"+mycut).c_str(), 5, 0, 5));
-        my_histos.emplace("h_nb_1l_"+mycut, new TH1D(("h_nb_1l_"+mycut).c_str(),("h_nb_1l_"+mycut).c_str(), 10, 0, 10));
-        my_histos.emplace("h_HT_1l_"+mycut, new TH1D(("h_HT_1l_"+mycut).c_str(),("h_HT_1l_"+mycut).c_str(), 60, 0, 3000));
-        my_histos.emplace("h_mbl_1l_"+mycut, new TH1D(("h_mbl_1l_"+mycut).c_str(),("h_mbl_1l_"+mycut).c_str(), 30, 0, 300));
-        my_histos.emplace("h_bdt_1l_"+mycut, new TH1D(("h_bdt_1l_"+mycut).c_str(),("h_bdt_1l_"+mycut).c_str(), 40, -0.5, 0.5));
+    for( std::string nMedTag : n_med_btags ) {
+        for( std::string nTightTag: n_tight_btags ) {
 
-        my_2d_histos.emplace("h_njets_bdt_1l_"+mycut, new TH2D(("h_njets_bdt_1l_"+mycut).c_str(),("h_njets_bdt_1l_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
-    }
-    for(std::string mycut : mycuts_1mu)
-    {
-        my_histos.emplace("h_mupt_1mu_"+mycut, new TH1D(("h_mupt_1mu_"+mycut).c_str(),("h_mupt_1mu_"+mycut).c_str(), 50, 0, 500));
-        my_histos.emplace("h_njets_1mu_"+mycut, new TH1D(("h_njets_1mu_"+mycut).c_str(),("h_njets_1mu_"+mycut).c_str(), 15, 0, 15));
-        my_histos.emplace("h_ntops_1mu_"+mycut, new TH1D(("h_ntops_1mu_"+mycut).c_str(),("h_ntops_1mu_"+mycut).c_str(), 5, 0, 5));
-        my_histos.emplace("h_nb_1mu_"+mycut, new TH1D(("h_nb_1mu_"+mycut).c_str(),("h_nb_1mu_"+mycut).c_str(), 10, 0, 10));
-        my_histos.emplace("h_HT_1mu_"+mycut, new TH1D(("h_HT_1mu_"+mycut).c_str(),("h_HT_1mu_"+mycut).c_str(), 60, 0, 3000));
-        my_histos.emplace("h_mbl_1mu_"+mycut, new TH1D(("h_mbl_1mu_"+mycut).c_str(),("h_mbl_1mu_"+mycut).c_str(), 30, 0, 300));
-        my_histos.emplace("h_bdt_1mu_"+mycut, new TH1D(("h_bdt_1mu_"+mycut).c_str(),("h_bdt_1mu_"+mycut).c_str(), 40, -0.5, 0.5));
+            if( nTightTag == nMedTag ) break; //Does not make sense to require more tight tags than medium tags
 
-        my_2d_histos.emplace("h_njets_bdt_1mu_"+mycut, new TH2D(("h_njets_bdt_1mu_"+mycut).c_str(),("h_njets_bdt_1mu_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
-    }
-    for(std::string mycut : mycuts_1el)
-    {
-        my_histos.emplace("h_elpt_1el_"+mycut, new TH1D(("h_elpt_1el_"+mycut).c_str(),("h_elpt_1el_"+mycut).c_str(), 50, 0, 500));
-        my_histos.emplace("h_njets_1el_"+mycut, new TH1D(("h_njets_1el_"+mycut).c_str(),("h_njets_1el_"+mycut).c_str(), 15, 0, 15));
-        my_histos.emplace("h_ntops_1el_"+mycut, new TH1D(("h_ntops_1el_"+mycut).c_str(),("h_ntops_1el_"+mycut).c_str(), 5, 0, 5));
-        my_histos.emplace("h_nb_1el_"+mycut, new TH1D(("h_nb_1el_"+mycut).c_str(),("h_nb_1el_"+mycut).c_str(), 10, 0, 10));
-        my_histos.emplace("h_HT_1el_"+mycut, new TH1D(("h_HT_1el_"+mycut).c_str(),("h_HT_1el_"+mycut).c_str(), 60, 0, 3000));
-        my_histos.emplace("h_mbl_1el_"+mycut, new TH1D(("h_mbl_1el_"+mycut).c_str(),("h_mbl_1el_"+mycut).c_str(), 30, 0, 300));
-        my_histos.emplace("h_bdt_1el_"+mycut, new TH1D(("h_bdt_1el_"+mycut).c_str(),("h_bdt_1el_"+mycut).c_str(), 40, -0.5, 0.5));
+            for( std::string ptTag : pt_threshold_tags ) {
+                for( std::string nLepTag : nleptons_tags ) {
+                    my_histos.emplace( "h_ntops_"+ptTag+"_"+nLepTag+"_"+nMedTag+"mTag_"+nTightTag+"tTag", new TH1D( ("h_ntops_"+ptTag+"_"+nLepTag+"_"+nMedTag+"mTag_"+nTightTag+"tTag").c_str(), ("h_ntops_"+ptTag+"_"+nLepTag+"_"+nMedTag+"mTag_"+nTightTag+"tTag").c_str(), 5, 0, 5 ) );
+                    my_histos.emplace( "h_njets_"+ptTag+"_"+nLepTag+"_"+nMedTag+"mTag_"+nTightTag+"tTag", new TH1D( ("h_njets_"+ptTag+"_"+nLepTag+"_"+nMedTag+"mTag_"+nTightTag+"tTag").c_str(), ("h_njets_"+ptTag+"_"+nLepTag+"_"+nMedTag+"mTag_"+nTightTag+"tTag").c_str(), 15, 0, 15 ) );
+                    for( std::string nSubJetsTag : n_subjets_top_tags ) {
+                        my_histos.emplace( "h_ntops_"+nSubJetsTag+"j_"+ptTag+"_"+nLepTag+"_"+nMedTag+"mTag_"+nTightTag+"tTag", new TH1D( ( "h_ntops_"+nSubJetsTag+"j_"+ptTag+"_"+nLepTag+"_"+nMedTag+"mTag_"+nTightTag+"tTag" ).c_str(), ("h_ntops_"+nSubJetsTag+"j_"+ptTag+"_"+nLepTag+"_"+nMedTag+"mTag_"+nTightTag+"tTag" ).c_str(), 5, 0, 5 ) );
+                    }//END of n_subjets_top_tags
+                }//END of nleptons_tags
+            }//END of pt_threshold_tags
 
-        my_2d_histos.emplace("h_njets_bdt_1el_"+mycut, new TH2D(("h_njets_bdt_1el_"+mycut).c_str(),("h_njets_bdt_1el_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
-    }
+        }//END of n_tight_btags
+    }//END of n_med_btags
 
-    
-    // 2 lepton plots
-    // onZ control region only for now, also check for 1top to see if a fake top changes any behavior
-    std::vector<std::string> mycuts_2l {"onZ", "onZ_g1b", "onZ_g1b_nombl", "onZ_g1b_g1t", "onZ_g1b_nombl_g1t", "2b",
-            "onZ_g1b_nombl_bdt1","onZ_g1b_nombl_bdt2","onZ_g1b_nombl_bdt3","onZ_g1b_nombl_bdt4"};
-    for(std::string mycut : mycuts_2l)
-    {
-        my_histos.emplace("h_njets_2l_"+mycut, new TH1D(("h_njets_2l_"+mycut).c_str(),("h_njets_2l_"+mycut).c_str(), 15, 0, 15));
-        my_histos.emplace("h_ntops_2l_"+mycut, new TH1D(("h_ntops_2l_"+mycut).c_str(),("h_ntops_2l_"+mycut).c_str(), 5, 0, 5));
-        my_histos.emplace("h_nb_2l_"+mycut, new TH1D(("h_nb_2l_"+mycut).c_str(),("h_nb_2l_"+mycut).c_str(), 10, 0, 10));
-        my_histos.emplace("h_HT_2l_"+mycut, new TH1D(("h_HT_2l_"+mycut).c_str(),("h_HT_2l_"+mycut).c_str(), 60, 0, 3000));
-        my_histos.emplace("h_bdt_2l_"+mycut, new TH1D(("h_bdt_2l_"+mycut).c_str(),("h_bdt_2l_"+mycut).c_str(), 40, -0.5, 0.5));
+    //Histograms for scanning the number of tight tags given a set number of medium tags
+    for( std::string nMedTag : n_med_btags ) {
+        for( std::string ptTag : pt_threshold_tags ) {
+            for( std::string nLepTag : nleptons_tags ) {
+                my_efficiencies.emplace( "event_sel_"+ptTag+"_"+nLepTag+"_"+nMedTag+"mTag", new TEfficiency( ( "event_sel_"+ptTag+"_"+nLepTag+"_"+nMedTag+"mTag" ).c_str(), "Efficiency wrt previous cut;Tight btag cut;#epsilon", 9, 0, 9 ) );
+            }//END of nleptons_tags
+        }//END of pt_threshold_tags
+    }//END of n_med_btags   
 
-        my_2d_histos.emplace("h_njets_bdt_2l_"+mycut, new TH2D(("h_njets_bdt_2l_"+mycut).c_str(),("h_njets_bdt_2l_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
-
-    }
-
-    // Cut flows
-    my_efficiencies.emplace("event_sel", new TEfficiency("event_sel","Event selection efficiency wrt previous cut;Cut;#epsilon",8,0,8));
-    my_efficiencies.emplace("event_sel_total", new TEfficiency("event_sel_total","Total event selection efficiency;Cut;#epsilon",8,0,8));
-
-    my_efficiencies.emplace("event_sel_0l", new TEfficiency("event_sel_0l","0 lepton event selection efficiency wrt previous cut;Cut;#epsilon",8,0,8));
-    my_efficiencies.emplace("event_sel_total_0l", new TEfficiency("event_sel_total_0l","Total 0 lepton event selection efficiency;Cut;#epsilon",8,0,8));
-
-    my_efficiencies.emplace("event_sel_1l", new TEfficiency("event_sel_1l","1 lepton event selection efficiency wrt previous cut;Cut;#epsilon",8,0,8));
-    my_efficiencies.emplace("event_sel_total_1l", new TEfficiency("event_sel_total_1l","Total 1 lepton event selection efficiency;Cut;#epsilon",8,0,8));
-
-    my_efficiencies.emplace("event_sel_2l", new TEfficiency("event_sel_2l","2 lepton event selection efficiency wrt previous cut;Cut;#epsilon",8,0,8));
-    my_efficiencies.emplace("event_sel_total_2l", new TEfficiency("event_sel_total_2l","Total 2 lepton event selection efficiency;Cut;#epsilon",8,0,8));
-
+    for( std::string ptTag : pt_threshold_tags ) {
+        for( std::string nLepTag : nleptons_tags ) {
+            my_2d_histos.emplace( "h_nbtags_"+ptTag+"_"+nLepTag, new TH2D( ( "h_nbtags_"+ptTag+"_"+nLepTag ).c_str(), ( "h_nbtags_"+ptTag+"_"+nLepTag ).c_str(), 8, 0, 8, 8, 0, 8 ) );
+        }
+    }//END of pt_threshold_tags
 }
 
 void ExploreEventSelection::Loop(double weight, int maxevents, std::string type, std::string filetag, bool isQuiet)
@@ -558,190 +510,356 @@ void ExploreEventSelection::Loop(double weight, int maxevents, std::string type,
           //std::cout << "New top counting: " << pass_0t << " " << pass_1t << " " << pass_2t << " " << pass_1t1 << " " << pass_1t2 << " " << pass_1t3 << std::endl;
       }
 
-      bool bdt_bin1 = eventshape_bdt_val > -1.   && eventshape_bdt_val <= -0.04;
-      bool bdt_bin2 = eventshape_bdt_val > -0.04 && eventshape_bdt_val <= 0;
-      bool bdt_bin3 = eventshape_bdt_val > 0     && eventshape_bdt_val <= 0.04;
-      bool bdt_bin4 = eventshape_bdt_val > 0.04  && eventshape_bdt_val <= 1;
-
+      // Basic event selection stuff
+      //
+      //   Impose a pT / eta cut ( pT > 20, 30, 40 ) / ( eta < 2.4 )
+      //   Apply preselection of njets >= 6 and HT > 500 GeV
+      //   Three different CSV btag requirements:
+      //       Loose    - 0.5438 ( 10% )
+      //       Medium   - 0.8484 (  1% )
+      //       Tight    - 0.9535 ( .1% )
       
-      const std::map<std::string, bool> cut_map_0l {
-          {"g6j_HT500_g1b", passBaseline0l},
-          {"g6j_HT500_g1b_0t", passBaseline0l && pass_0t},
-          {"g6j_HT500_g1b_1t", passBaseline0l && pass_1t},
-          {"g6j_HT500_g1b_2t", passBaseline0l && pass_2t},
-          {"6j_HT500_g1b_0t",  passBaseline0l && rec_njet_pt30==6 && pass_0t},
-          {"6j_HT500_g1b_1t1", passBaseline0l && rec_njet_pt30==6 && pass_1t1},
-          {"6j_HT500_g1b_1t2", passBaseline0l && rec_njet_pt30==6 && pass_1t2},
-          {"6j_HT500_g1b_1t3", passBaseline0l && rec_njet_pt30==6 && pass_1t3},
-          {"6j_HT500_g1b_2t",  passBaseline0l && rec_njet_pt30==6 && pass_2t},
-          {"g7j_HT500_g1b_0t",  passBaseline0l && rec_njet_pt30>=7 && pass_0t},
-          {"g7j_HT500_g1b_1t1", passBaseline0l && rec_njet_pt30>=7 && pass_1t1},
-          {"g7j_HT500_g1b_1t2", passBaseline0l && rec_njet_pt30>=7 && pass_1t2},
-          {"g7j_HT500_g1b_1t3", passBaseline0l && rec_njet_pt30>=7 && pass_1t3},
-          {"g7j_HT500_g1b_2t",  passBaseline0l && rec_njet_pt30>=7 && pass_2t}
-      };
+      int rec_njet_KM_pt45(0);
+      int rec_njet_KM_pt40(0);
+      int rec_njet_KM_pt30(0);
 
-      for(auto& kv : cut_map_0l)
-      {
-          if(kv.second)
-          {
-              my_histos["h_njets_0l_"+kv.first]->Fill(rec_njet_pt30, eventweight);
-              my_histos["h_ntops_0l_"+kv.first]->Fill(tops.size(), eventweight);
-              my_histos["h_nb_0l_"+kv.first]->Fill(rec_njet_pt30_btag, eventweight);
-              my_histos["h_HT_0l_"+kv.first]->Fill(HT_trigger, eventweight);
-              my_histos["h_bdt_0l_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
-              my_2d_histos["h_njets_bdt_0l_"+kv.first]->Fill(rec_njet_pt30, eventshape_bdt_val, eventweight);
-          }
-      }
-
-      const std::map<std::string, bool> cut_map_1l {
-          {"g6j", passBaseline1l},
-          {"g6j_g1b", passBaseline1l && pass_g1b},
-          {"g6j_g1b_mbl", passBaseline1l && pass_g1b && pass_mbl},
-          {"g6j_g1b_mbl_0t",  passBaseline1l && pass_g1b && pass_mbl && pass_0t},
-          {"g6j_g1b_mbl_1t1", passBaseline1l && pass_g1b && pass_mbl && pass_1t1},
-          {"g6j_g1b_mbl_1t2", passBaseline1l && pass_g1b && pass_mbl && pass_1t2},
-          {"g6j_g1b_mbl_1t3", passBaseline1l && pass_g1b && pass_mbl && pass_1t3},
-          {"6j", passBaseline1l && rec_njet_pt30==6},
-          {"6j_g1b", passBaseline1l && rec_njet_pt30==6 && pass_g1b},
-          {"6j_g1b_mbl", passBaseline1l && rec_njet_pt30==6 && pass_g1b && pass_mbl},
-          {"6j_g1b_mbl_0t",  passBaseline1l && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_0t},
-          {"6j_g1b_mbl_1t1", passBaseline1l && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t1},
-          {"6j_g1b_mbl_1t2", passBaseline1l && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t2},
-          {"6j_g1b_mbl_1t3", passBaseline1l && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t3},
-          {"g7j", passBaseline1l && rec_njet_pt30>=7},
-          {"g7j_g1b", passBaseline1l && rec_njet_pt30>=7 && pass_g1b},
-          {"g7j_g1b_mbl", passBaseline1l && rec_njet_pt30>=7 && pass_g1b && pass_mbl},
-          {"g7j_g1b_mbl_0t",  passBaseline1l && rec_njet_pt30>=7 && pass_g1b && pass_mbl && pass_0t},
-          {"g7j_g1b_mbl_1t1", passBaseline1l && rec_njet_pt30>=7 && pass_g1b && pass_mbl && pass_1t1},
-          {"g7j_g1b_mbl_1t2", passBaseline1l && rec_njet_pt30>=7 && pass_g1b && pass_mbl && pass_1t2},
-          {"g7j_g1b_mbl_1t3", passBaseline1l && rec_njet_pt30>=7 && pass_g1b && pass_mbl && pass_1t3},
-      };
-      const std::map<std::string, bool> cut_map_1mu {
-          {"6j", passBaseline1mu && rec_njet_pt30==6},
-          {"6j_g1b", passBaseline1mu && rec_njet_pt30==6 && pass_g1b},
-          {"6j_g1b_mbl", passBaseline1mu && rec_njet_pt30==6 && pass_g1b && pass_mbl},
-          {"6j_g1b_mbl_0t",  passBaseline1mu && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_0t},
-          {"6j_g1b_mbl_1t1", passBaseline1mu && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t1},
-          {"6j_g1b_mbl_1t2", passBaseline1mu && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t2},
-          {"6j_g1b_mbl_1t3", passBaseline1mu && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t3},
-      };
-      const std::map<std::string, bool> cut_map_1el {
-          {"6j", passBaseline1el && rec_njet_pt30==6},
-          {"6j_g1b", passBaseline1el && rec_njet_pt30==6 && pass_g1b},
-          {"6j_g1b_mbl", passBaseline1el && rec_njet_pt30==6 && pass_g1b && pass_mbl},
-          {"6j_g1b_mbl_0t",  passBaseline1el && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_0t},
-          {"6j_g1b_mbl_1t1", passBaseline1el && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t1},
-          {"6j_g1b_mbl_1t2", passBaseline1el && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t2},
-          {"6j_g1b_mbl_1t3", passBaseline1el && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t3},
-      };
-
-
-      for(auto& kv : cut_map_1l)
-      {
-          if(kv.second)
-          {
-              my_histos["h_njets_1l_"+kv.first]->Fill(rec_njet_pt30, eventweight);
-              my_histos["h_ntops_1l_"+kv.first]->Fill(tops.size(), eventweight);
-              my_histos["h_nb_1l_"+kv.first]->Fill(rec_njet_pt30_btag, eventweight);
-              my_histos["h_HT_1l_"+kv.first]->Fill(HT_trigger, eventweight);
-              my_histos["h_bdt_1l_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
-              my_histos["h_mbl_1l_"+kv.first]->Fill(mbl, eventweight);
-              my_2d_histos["h_njets_bdt_1l_"+kv.first]->Fill(rec_njet_pt30, eventshape_bdt_val, eventweight);
-          }
-      }
-      for(auto& kv : cut_map_1mu)
-      {
-          if(kv.second)
-          {
-              my_histos["h_mupt_1mu_"+kv.first]->Fill(rec_muon_pt30[0].Pt(), eventweight);
-              my_histos["h_njets_1mu_"+kv.first]->Fill(rec_njet_pt30, eventweight);
-              my_histos["h_ntops_1mu_"+kv.first]->Fill(tops.size(), eventweight);
-              my_histos["h_nb_1mu_"+kv.first]->Fill(rec_njet_pt30_btag, eventweight);
-              my_histos["h_HT_1mu_"+kv.first]->Fill(HT_trigger, eventweight);
-              my_histos["h_bdt_1mu_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
-              my_histos["h_mbl_1mu_"+kv.first]->Fill(mbl, eventweight);
-              my_2d_histos["h_njets_bdt_1mu_"+kv.first]->Fill(rec_njet_pt30, eventshape_bdt_val, eventweight);
-          }
-      }
-      for(auto& kv : cut_map_1el)
-      {
-          if(kv.second)
-          {
-              my_histos["h_elpt_1el_"+kv.first]->Fill(rec_electron_pt30[0].Pt(), eventweight);
-              my_histos["h_njets_1el_"+kv.first]->Fill(rec_njet_pt30, eventweight);
-              my_histos["h_ntops_1el_"+kv.first]->Fill(tops.size(), eventweight);
-              my_histos["h_nb_1el_"+kv.first]->Fill(rec_njet_pt30_btag, eventweight);
-              my_histos["h_HT_1el_"+kv.first]->Fill(HT_trigger, eventweight);
-              my_histos["h_bdt_1el_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
-              my_histos["h_mbl_1el_"+kv.first]->Fill(mbl, eventweight);
-              my_2d_histos["h_njets_bdt_1el_"+kv.first]->Fill(rec_njet_pt30, eventshape_bdt_val, eventweight);
-          }
-      }
-
-      const std::map<std::string, bool> cut_map_2l {
-          {"onZ", passBaseline2l && onZ},
-          {"onZ_g1b", passBaseline2l && onZ && pass_g1b},
-          {"onZ_g1b_nombl", passBaseline2l && onZ && pass_g1b && !passMbl_2l},
-          {"onZ_g1b_nombl_bdt1", passBaseline2l && onZ && pass_g1b && !passMbl_2l && bdt_bin1},
-          {"onZ_g1b_nombl_bdt2", passBaseline2l && onZ && pass_g1b && !passMbl_2l && bdt_bin2},
-          {"onZ_g1b_nombl_bdt3", passBaseline2l && onZ && pass_g1b && !passMbl_2l && bdt_bin3},
-          {"onZ_g1b_nombl_bdt4", passBaseline2l && onZ && pass_g1b && !passMbl_2l && bdt_bin4},
-          {"onZ_g1b_g1t", passBaseline2l && onZ && pass_g1b && pass_1t}, 
-          {"onZ_g1b_nombl_g1t", passBaseline2l && onZ && pass_g1b && !passMbl_2l && pass_1t}, 
-          {"2b", passBaseline2l && rec_njet_pt30_btag == 2} 
-      };
-
-      for(auto& kv : cut_map_2l)
-      {
-          if(kv.second)
-          {
-              my_histos["h_njets_2l_"+kv.first]->Fill(rec_njet_pt30, eventweight);
-              my_histos["h_ntops_2l_"+kv.first]->Fill(tops.size(), eventweight);
-              my_histos["h_nb_2l_"+kv.first]->Fill(rec_njet_pt30_btag, eventweight);
-              my_histos["h_HT_2l_"+kv.first]->Fill(HT_trigger, eventweight);
-              my_histos["h_bdt_2l_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
-              my_2d_histos["h_njets_bdt_2l_"+kv.first]->Fill(rec_njet_pt30, eventshape_bdt_val, eventweight);
-          }
-      }
-
-      // Fill event selection efficiencies
-      my_efficiencies["event_sel_total"]->Fill(true,0);
-      my_efficiencies["event_sel_total"]->Fill(HT_trigger>500,1);
-      my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 ,2);
-      my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 ,3);
-      my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && tops.size()>0 ,4);
-      my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && tops.size()>0 && rec_njet_pt45_btag>1 ,5);
-      my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && tops.size()>0 && rec_njet_pt45_btag>1 && tops.size()>1 ,6);
-      my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && tops.size()>0 && rec_njet_pt45_btag>1 && tops.size()>1 && rec_njet_pt30>=8 ,7);
+      int rec_njet_passMediumBtag_pt30(0);
+      int rec_njet_passTightBtag_pt30(0);
       
-      my_efficiencies["event_sel"]->Fill(true,0);
-      my_efficiencies["event_sel"]->Fill(HT_trigger>500,1);
-      if(HT_trigger>500)
-      {
-          my_efficiencies["event_sel"]->Fill(rec_njet_pt45>=6,2);
-          if (rec_njet_pt45>=6)
-          {
-              my_efficiencies["event_sel"]->Fill(rec_njet_pt45_btag>0,3);
-              if (rec_njet_pt45_btag>0)
-              {
-                  my_efficiencies["event_sel"]->Fill(tops.size()>0,4);
-                  if (tops.size()>0)
-                  {
-                      my_efficiencies["event_sel"]->Fill(rec_njet_pt45_btag>1,5);
-                      if (rec_njet_pt45_btag>1)
-                      {
-                          my_efficiencies["event_sel"]->Fill(tops.size()>1,6);
-                          if (tops.size()>1)
-                          {
-                              my_efficiencies["event_sel"]->Fill(rec_njet_pt30>=8,7);
-                          }
-                      }
-                  }
-              }
+      int rec_njet_passMediumBtag_pt40(0);
+      int rec_njet_passTightBtag_pt40(0);
+
+      int rec_njet_passMediumBtag_pt45(0);
+      int rec_njet_passTightBtag_pt45(0);
+
+      double HT_pt40(0.0);
+      bool pass0lPreselection(true);
+      bool pass1lPreselection(true);
+      bool pass2lPreselection(true);
+
+      for( unsigned int itJet = 0; itJet < Jets->size(); itJet++ ) {
+
+          TLorentzVector jlv ( Jets->at(itJet) );
+
+          if( std::fabs( jlv.Eta() ) > 2.4 ) continue;
+
+          bool passMediumBtag   = ( Jets_bDiscriminatorCSV->at(itJet) > 0.8484 );
+          bool passTightBtag    = ( Jets_bDiscriminatorCSV->at(itJet) > 0.9535 );
+
+          bool passPt30         = ( jlv.Pt() > 30.0 );
+          bool passPt40         = ( jlv.Pt() > 40.0 );
+          bool passPt45         = ( jlv.Pt() > 35.0 );
+
+          if( passPt30 ) {
+            
+            rec_njet_KM_pt30++;
+
+            if( passTightBtag ) {
+                rec_njet_passTightBtag_pt30++;
+                rec_njet_passMediumBtag_pt30++;
+            }
+
+            else if( passMediumBtag ) {
+                rec_njet_passMediumBtag_pt30++;
+            }
+
+          }//END of passPt30
+          
+          if( passPt40 ) {
+            
+            HT_pt40 += jlv.Pt();
+            rec_njet_KM_pt40++;
+
+            if( passTightBtag ) {
+                rec_njet_passTightBtag_pt40++;
+                rec_njet_passMediumBtag_pt40++;
+            }
+
+            else if( passMediumBtag ) {
+                rec_njet_passMediumBtag_pt40++;
+            }
+
+          }//END of passPt30
+          
+          if( passPt45 ) {
+            
+            rec_njet_KM_pt45++;
+
+            if( passTightBtag ) {
+                rec_njet_passTightBtag_pt45++;
+                rec_njet_passMediumBtag_pt45++;
+            }
+
+            else if( passMediumBtag ) {
+                rec_njet_passMediumBtag_pt45++;
+            }
+
+          }//END of passPt45
+
+      }//END of jet loop
+      //Now filling the histograms
+      
+      std::vector<std::string> n_medium_btags   { "0", "1", "2", "3", "4", "5", "6" };
+      std::vector<std::string> n_tight_btags    { "0", "1", "2", "3", "4", "5", "6" };
+
+      if( passBaseline0l ) {
+          
+          my_histos["h_nbtags_medium_pt30_0l"]->Fill(rec_njet_passMediumBtag_pt30, eventweight);
+          my_histos["h_nbtags_tight_pt30_0l"]->Fill(rec_njet_passTightBtag_pt30, eventweight);
+          my_histos["h_nbtags_medium_pt40_0l"]->Fill(rec_njet_passMediumBtag_pt40, eventweight);
+          my_histos["h_nbtags_tight_pt40_0l"]->Fill(rec_njet_passTightBtag_pt40, eventweight);
+          my_histos["h_nbtags_medium_pt45_0l"]->Fill(rec_njet_passMediumBtag_pt45, eventweight);
+          my_histos["h_nbtags_tight_pt45_0l"]->Fill(rec_njet_passTightBtag_pt45, eventweight);
+
+          my_2d_histos["h_nbtags_pt30_0l"]->Fill(rec_njet_passMediumBtag_pt30, rec_njet_passTightBtag_pt30, eventweight);
+          my_2d_histos["h_nbtags_pt40_0l"]->Fill(rec_njet_passMediumBtag_pt40, rec_njet_passTightBtag_pt40, eventweight);
+          my_2d_histos["h_nbtags_pt45_0l"]->Fill(rec_njet_passMediumBtag_pt45, rec_njet_passTightBtag_pt45, eventweight);
+          
+          for( int i = 0; i < 6; i++ ) {
+            
+            //Event Efficiency Plots
+            
+            if( rec_njet_passMediumBtag_pt30 > i) {
+                my_efficiencies["event_sel_pt30_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > -1, 0);
+                my_efficiencies["event_sel_pt30_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 0, 1);
+                my_efficiencies["event_sel_pt30_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 1, 2);
+                my_efficiencies["event_sel_pt30_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 2, 3);
+                my_efficiencies["event_sel_pt30_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 3, 4);
+                my_efficiencies["event_sel_pt30_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 4, 5);
+                my_efficiencies["event_sel_pt30_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 5, 6);
+                my_efficiencies["event_sel_pt30_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 6, 7);
+                my_efficiencies["event_sel_pt30_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 7, 8);
+
+               for( int j = 0; j < i; ++j ) {
+                    
+                    if( rec_njet_passTightBtag_pt30 > j ) {
+
+                       int totalTops = ntops_1jet + ntops_2jet +ntops_3jet;
+                       my_histos["h_ntops_pt30_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill( totalTops, eventweight);
+                       my_histos["h_ntops_1j_pt30_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
+                       my_histos["h_ntops_2j_pt30_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
+                       my_histos["h_ntops_3j_pt30_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
+                       my_histos["h_njets_pt30_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt30, eventweight);
+                    }
+                }
+            }
+        
+            if( rec_njet_passMediumBtag_pt40 > i) {
+                my_efficiencies["event_sel_pt40_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > -1, 0);
+                my_efficiencies["event_sel_pt40_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 0, 1);
+                my_efficiencies["event_sel_pt40_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 1, 2);
+                my_efficiencies["event_sel_pt40_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 2, 3);
+                my_efficiencies["event_sel_pt40_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 3, 4);
+                my_efficiencies["event_sel_pt40_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 4, 5);
+                my_efficiencies["event_sel_pt40_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 5, 6);
+                my_efficiencies["event_sel_pt40_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 7, 8);
+                for( int j = 0; j < i; ++j ) {
+                    if( rec_njet_passTightBtag_pt40 > j ) {
+                       int totalTops = ntops_1jet + ntops_2jet +ntops_3jet;
+                       my_histos["h_ntops_pt40_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill( totalTops, eventweight);
+                       my_histos["h_ntops_1j_pt40_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
+                       my_histos["h_ntops_2j_pt40_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
+                       my_histos["h_ntops_3j_pt40_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
+                       my_histos["h_njets_pt40_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt40, eventweight);
+                    }
+                }
+            }
+            if( rec_njet_passMediumBtag_pt45 > i) {
+                my_efficiencies["event_sel_pt45_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > -1, 0);
+                my_efficiencies["event_sel_pt45_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 0, 1);
+                my_efficiencies["event_sel_pt45_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 1, 2);
+                my_efficiencies["event_sel_pt45_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 2, 3);
+                my_efficiencies["event_sel_pt45_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 3, 4);
+                my_efficiencies["event_sel_pt45_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 4, 5);
+                my_efficiencies["event_sel_pt45_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 5, 6);
+                my_efficiencies["event_sel_pt45_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 6, 7);
+                my_efficiencies["event_sel_pt45_0l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 7, 8);
+              for( int j = 0; j < i; ++j ) {
+                    if( rec_njet_passTightBtag_pt45 > j ) {
+                       int totalTops = ntops_1jet + ntops_2jet +ntops_3jet;
+                       my_histos["h_ntops_pt45_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill( totalTops, eventweight);
+                       my_histos["h_ntops_1j_pt45_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
+                       my_histos["h_ntops_2j_pt45_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
+                       my_histos["h_ntops_3j_pt45_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
+                       my_histos["h_njets_pt45_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt45, eventweight);                       
+                    }
+                }
+            }
           }
       }
- 
+
+      if( passBaseline1l ) {
+          
+          my_histos["h_nbtags_medium_pt30_1l"]->Fill(rec_njet_passMediumBtag_pt30, eventweight);
+          my_histos["h_nbtags_tight_pt30_1l"]->Fill(rec_njet_passTightBtag_pt30, eventweight);
+          my_histos["h_nbtags_medium_pt40_1l"]->Fill(rec_njet_passMediumBtag_pt40, eventweight);
+          my_histos["h_nbtags_tight_pt40_1l"]->Fill(rec_njet_passTightBtag_pt40, eventweight);
+          my_histos["h_nbtags_medium_pt45_1l"]->Fill(rec_njet_passMediumBtag_pt45, eventweight);
+          my_histos["h_nbtags_tight_pt45_1l"]->Fill(rec_njet_passTightBtag_pt45, eventweight);
+
+          my_2d_histos["h_nbtags_pt30_1l"]->Fill(rec_njet_passMediumBtag_pt30, rec_njet_passTightBtag_pt30, eventweight);
+          my_2d_histos["h_nbtags_pt40_1l"]->Fill(rec_njet_passMediumBtag_pt40, rec_njet_passTightBtag_pt40, eventweight);
+          my_2d_histos["h_nbtags_pt45_1l"]->Fill(rec_njet_passMediumBtag_pt45, rec_njet_passTightBtag_pt45, eventweight);
+          
+          for( int i = 0; i < 6; i++ ) {
+            
+            //Event Efficiency Plots
+            
+            if( rec_njet_passMediumBtag_pt30 > i) {
+                my_efficiencies["event_sel_pt30_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > -1, 0);
+                my_efficiencies["event_sel_pt30_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 0, 1);
+                my_efficiencies["event_sel_pt30_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 1, 2);
+                my_efficiencies["event_sel_pt30_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 2, 3);
+                my_efficiencies["event_sel_pt30_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 3, 4);
+                my_efficiencies["event_sel_pt30_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 4, 5);
+                my_efficiencies["event_sel_pt30_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 5, 6);
+                my_efficiencies["event_sel_pt30_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 6, 7);
+                my_efficiencies["event_sel_pt30_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 7, 8);
+
+               for( int j = 0; j < i; ++j ) {
+                    
+                    if( rec_njet_passTightBtag_pt30 > j ) {
+
+                       int totalTops = ntops_1jet + ntops_2jet +ntops_3jet;
+                       my_histos["h_ntops_pt30_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill( totalTops, eventweight);
+                       my_histos["h_ntops_1j_pt30_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
+                       my_histos["h_ntops_2j_pt30_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
+                       my_histos["h_ntops_3j_pt30_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
+                       my_histos["h_njets_pt30_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt30, eventweight);
+                    }
+                }
+            }
+        
+            if( rec_njet_passMediumBtag_pt40 > i) {
+                my_efficiencies["event_sel_pt40_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > -1, 0);
+                my_efficiencies["event_sel_pt40_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 0, 1);
+                my_efficiencies["event_sel_pt40_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 1, 2);
+                my_efficiencies["event_sel_pt40_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 2, 3);
+                my_efficiencies["event_sel_pt40_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 3, 4);
+                my_efficiencies["event_sel_pt40_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 4, 5);
+                my_efficiencies["event_sel_pt40_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 5, 6);
+                my_efficiencies["event_sel_pt40_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 7, 8);
+                for( int j = 0; j < i; ++j ) {
+                    if( rec_njet_passTightBtag_pt40 > j ) {
+                       int totalTops = ntops_1jet + ntops_2jet +ntops_3jet;
+                       my_histos["h_ntops_pt40_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill( totalTops, eventweight);
+                       my_histos["h_ntops_1j_pt40_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
+                       my_histos["h_ntops_2j_pt40_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
+                       my_histos["h_ntops_3j_pt40_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
+                       my_histos["h_njets_pt40_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt40, eventweight);
+                    }
+                }
+            }
+            if( rec_njet_passMediumBtag_pt45 > i) {
+                my_efficiencies["event_sel_pt45_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > -1, 0);
+                my_efficiencies["event_sel_pt45_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 0, 1);
+                my_efficiencies["event_sel_pt45_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 1, 2);
+                my_efficiencies["event_sel_pt45_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 2, 3);
+                my_efficiencies["event_sel_pt45_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 3, 4);
+                my_efficiencies["event_sel_pt45_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 4, 5);
+                my_efficiencies["event_sel_pt45_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 5, 6);
+                my_efficiencies["event_sel_pt45_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 6, 7);
+                my_efficiencies["event_sel_pt45_1l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 7, 8);
+              for( int j = 0; j < i; ++j ) {
+                    if( rec_njet_passTightBtag_pt45 > j ) {
+                       int totalTops = ntops_1jet + ntops_2jet +ntops_3jet;
+                       my_histos["h_ntops_pt45_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill( totalTops, eventweight);
+                       my_histos["h_ntops_1j_pt45_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
+                       my_histos["h_ntops_2j_pt45_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
+                       my_histos["h_ntops_3j_pt45_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
+                       my_histos["h_njets_pt45_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt45, eventweight);                       
+                    }
+                }
+            }
+          }
+      }
+
+      if( passBaseline2l ) {
+          
+          my_histos["h_nbtags_medium_pt30_2l"]->Fill(rec_njet_passMediumBtag_pt30, eventweight);
+          my_histos["h_nbtags_tight_pt30_2l"]->Fill(rec_njet_passTightBtag_pt30, eventweight);
+          my_histos["h_nbtags_medium_pt40_2l"]->Fill(rec_njet_passMediumBtag_pt40, eventweight);
+          my_histos["h_nbtags_tight_pt40_2l"]->Fill(rec_njet_passTightBtag_pt40, eventweight);
+          my_histos["h_nbtags_medium_pt45_2l"]->Fill(rec_njet_passMediumBtag_pt45, eventweight);
+          my_histos["h_nbtags_tight_pt45_2l"]->Fill(rec_njet_passTightBtag_pt45, eventweight);
+
+          my_2d_histos["h_nbtags_pt30_2l"]->Fill(rec_njet_passMediumBtag_pt30, rec_njet_passTightBtag_pt30, eventweight);
+          my_2d_histos["h_nbtags_pt40_2l"]->Fill(rec_njet_passMediumBtag_pt40, rec_njet_passTightBtag_pt40, eventweight);
+          my_2d_histos["h_nbtags_pt45_2l"]->Fill(rec_njet_passMediumBtag_pt45, rec_njet_passTightBtag_pt45, eventweight);
+          
+          for( int i = 0; i < 6; i++ ) {
+            
+            //Event Efficiency Plots
+            
+            if( rec_njet_passMediumBtag_pt30 > i) {
+                my_efficiencies["event_sel_pt30_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > -1, 0);
+                my_efficiencies["event_sel_pt30_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 0, 1);
+                my_efficiencies["event_sel_pt30_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 1, 2);
+                my_efficiencies["event_sel_pt30_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 2, 3);
+                my_efficiencies["event_sel_pt30_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 3, 4);
+                my_efficiencies["event_sel_pt30_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 4, 5);
+                my_efficiencies["event_sel_pt30_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 5, 6);
+                my_efficiencies["event_sel_pt30_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 6, 7);
+                my_efficiencies["event_sel_pt30_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt30 > 7, 8);
+
+               for( int j = 0; j < i; ++j ) {
+                    
+                    if( rec_njet_passTightBtag_pt30 > j ) {
+
+                       int totalTops = ntops_1jet + ntops_2jet +ntops_3jet;
+                       my_histos["h_ntops_pt30_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill( totalTops, eventweight);
+                       my_histos["h_ntops_1j_pt30_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
+                       my_histos["h_ntops_2j_pt30_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
+                       my_histos["h_ntops_3j_pt30_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
+                       my_histos["h_njets_pt30_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt30, eventweight);
+                    }
+                }
+            }
+        
+            if( rec_njet_passMediumBtag_pt40 > i) {
+                my_efficiencies["event_sel_pt40_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > -1, 0);
+                my_efficiencies["event_sel_pt40_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 0, 1);
+                my_efficiencies["event_sel_pt40_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 1, 2);
+                my_efficiencies["event_sel_pt40_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 2, 3);
+                my_efficiencies["event_sel_pt40_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 3, 4);
+                my_efficiencies["event_sel_pt40_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 4, 5);
+                my_efficiencies["event_sel_pt40_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 5, 6);
+                my_efficiencies["event_sel_pt40_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt40 > 7, 8);
+                for( int j = 0; j < i; ++j ) {
+                    if( rec_njet_passTightBtag_pt40 > j ) {
+                       int totalTops = ntops_1jet + ntops_2jet +ntops_3jet;
+                       my_histos["h_ntops_pt40_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill( totalTops, eventweight);
+                       my_histos["h_ntops_1j_pt40_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
+                       my_histos["h_ntops_2j_pt40_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
+                       my_histos["h_ntops_3j_pt40_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
+                       my_histos["h_njets_pt40_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt40, eventweight);
+                    }
+                }
+            }
+            if( rec_njet_passMediumBtag_pt45 > i) {
+                my_efficiencies["event_sel_pt45_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > -1, 0);
+                my_efficiencies["event_sel_pt45_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 0, 1);
+                my_efficiencies["event_sel_pt45_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 1, 2);
+                my_efficiencies["event_sel_pt45_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 2, 3);
+                my_efficiencies["event_sel_pt45_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 3, 4);
+                my_efficiencies["event_sel_pt45_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 4, 5);
+                my_efficiencies["event_sel_pt45_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 5, 6);
+                my_efficiencies["event_sel_pt45_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 6, 7);
+                my_efficiencies["event_sel_pt45_2l_"+n_medium_btags[i]+"mTag"]->Fill(rec_njet_passTightBtag_pt45 > 7, 8);
+              for( int j = 0; j < i; ++j ) {
+                    if( rec_njet_passTightBtag_pt45 > j ) {
+                       int totalTops = ntops_1jet + ntops_2jet +ntops_3jet;
+                       my_histos["h_ntops_pt45_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill( totalTops, eventweight);
+                       my_histos["h_ntops_1j_pt45_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
+                       my_histos["h_ntops_2j_pt45_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
+                       my_histos["h_ntops_3j_pt45_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
+                       my_histos["h_njets_pt45_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt45, eventweight);                       
+                    }
+                }
+            }
+          }
+      }
+
       my_histos["h_met"]->Fill(MET, eventweight);
       my_histos["h_ht"]->Fill(HT, eventweight);
 
