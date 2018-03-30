@@ -61,7 +61,9 @@ do
         # Check if everything is peachy keen
         if [ $mod -eq 0 ]
         then
+            echo -en "\033[0;31m"
             echo "Nothing to commit"
+            echo -en "\033[0m"
         fi
 
         cd ../
