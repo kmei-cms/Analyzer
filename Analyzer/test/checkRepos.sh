@@ -38,6 +38,7 @@ do
             echo "               https://github.com/StealthStop/Analyzer.git"
             echo "               https://github.com/susy2015/TopTagger.git"
             echo "               https://github.com/susy2015/TopTaggerTools.git"
+            echo "               https://github.com/susy2015/SusyAnaTools.git"
         fi
 
         # Check for modified files
