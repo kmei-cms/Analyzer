@@ -1,7 +1,8 @@
-#include "../include/ExploreBackground.h"
-#include "../include/ExploreTopTagger.h"
-#include "../include/ExploreEventSelection.h"
-#include "../include/samples.h"
+#include "Analyzer/Analyzer/include/ExploreBackground.h"
+#include "Analyzer/Analyzer/include/ExploreTopTagger.h"
+#include "Analyzer/Analyzer/include/ExploreEventSelection.h"
+#include "Framework/Framework/include/samples.h"
+#include "TopTaggerTools/Tools/include/HistoContainer.h"
 
 #include "TH1D.h"
 #include "TFile.h"
