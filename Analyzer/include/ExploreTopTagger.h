@@ -20,7 +20,7 @@ public :
    ExploreTopTagger(TTree* tree) : NtupleClass(tree) {}
 
    //virtual void Loop(std::string runtype);
-   void     Loop(std::string runtype, double weight, int maxevents = -1, bool isQuiet = false);
+   void     Loop(double weight, int maxevents = -1, std::string runtype="", std::string filetag= "", bool isQuiet = false);
    virtual void     InitHistos();
    virtual void     WriteHistos();
 

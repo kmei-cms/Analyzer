@@ -8,8 +8,32 @@
 #include "TFile.h"
 #include "TChain.h"
 
-#include<iostream>
+#include <iostream>
 #include <getopt.h>
+
+template<typename Explore> void run(TChain* ch, std::set<AnaSamples::FileSummary> vvf, 
+                                    std::string runType, int startFile, int nFiles, int maxEvts)
+{
+    Explore t = Explore(ch);
+    std::cout << "Initializing..." << std::endl;
+    t.InitHistos();
+    for(const AnaSamples::FileSummary& file : vvf)
+    {
+        std::cout << "Running over sample " << file.tag << std::endl;
+        TChain* new_ch = new TChain( (AnaSamples::treeName).c_str());
+        t.Init(new_ch);
+        file.addFilesToChain(new_ch, startFile, nFiles);
+        double weight = file.getWeight();
+        std::string runtype = "";
+        if(file.tag.find(runType) != std::string::npos)
+            runtype = runType;
+        std::cout << "Starting loop" << std::endl;
+        printf( "weight: %f nFiles: %i startFile: %i maxEvts: %i \n",weight,nFiles,startFile,maxEvts );
+        t.Loop(weight, maxEvts, runtype, file.tag);
+    }
+    std::cout << "Writing histograms..." << std::endl;
+    t.WriteHistos();
+}
 
 int main(int argc, char *argv[])
 {
@@ -20,12 +44,12 @@ int main(int argc, char *argv[])
         {"doBackground",       no_argument, 0, 'b'},
         {"doTopTagger",        no_argument, 0, 't'},
         {"doEventSelection",   no_argument, 0, 's'},
-        {"condor",           no_argument, 0, 'c'},
-        {"histFile",   required_argument, 0, 'H'},
-        {"dataSets",   required_argument, 0, 'D'},
-        {"numFiles",   required_argument, 0, 'N'},
-        {"startFile",  required_argument, 0, 'M'},
-        {"numEvts",    required_argument, 0, 'E'},
+        {"condor",             no_argument, 0, 'c'},
+        {"histFile",     required_argument, 0, 'H'},
+        {"dataSets",     required_argument, 0, 'D'},
+        {"numFiles",     required_argument, 0, 'N'},
+        {"startFile",    required_argument, 0, 'M'},
+        {"numEvts",      required_argument, 0, 'E'},
     };
 
     bool doBackground = false, doTopTagger = false, doEventSelection = false;
@@ -72,10 +96,8 @@ int main(int argc, char *argv[])
         case 'E':
             maxEvts = int(atoi(optarg));
             break;
-
         }
     }
-
 
     if(runOnCondor)
     {
@@ -110,73 +132,19 @@ int main(int argc, char *argv[])
     for(auto& fsVec : fileMap) for(auto& fs : fsVec.second) vvf.insert(fs);
 
     TFile* myfile = TFile::Open(histFile.c_str(), "RECREATE");
-
     TChain* ch = new TChain( (AnaSamples::treeName).c_str() ) ;
 
     if(doBackground)
     {
-        ExploreBackground t = ExploreBackground(ch);
-        std::cout << "Initializing..." << std::endl;
-        t.InitHistos();
-        for(const AnaSamples::FileSummary& file : vvf)
-        {
-            std::cout << "Running over sample " << file.tag << std::endl;
-            TChain* new_ch = new TChain( (AnaSamples::treeName).c_str());
-            t.Init(new_ch);
-            file.addFilesToChain(new_ch, startFile, nFiles);
-            double weight = file.getWeight();
-            std::cout << "starting loop" << std::endl;
-            std::string runtype = "";
-            if(file.tag.find("Data") != std::string::npos)
-                runtype = "Data";
-            t.Loop(weight, maxEvts, runtype, file.tag);            
-        }
-        std::cout << "Writing histograms..." << std::endl;
-        t.WriteHistos();
+        run<ExploreBackground>(ch,vvf,"Data",startFile,nFiles,maxEvts);
     }
-
-    if(doTopTagger)
+    else if(doTopTagger)
     {
-        ExploreTopTagger t = ExploreTopTagger(ch);
-        std::cout << "Initializing..." << std::endl;
-        t.InitHistos();
-        for(const AnaSamples::FileSummary& file : vvf)
-        {
-            std::cout << "Running over sample " << file.tag << std::endl;
-            TChain* new_ch = new TChain( (AnaSamples::treeName).c_str());
-            t.Init(new_ch);
-            file.addFilesToChain(new_ch, startFile, nFiles);
-            double weight = file.getWeight();
-            std::string type = "";
-            if(file.tag.find("qcd") != std::string::npos)
-                type = "qcd";
-            std::cout << "starting loop" << std::endl;
-            t.Loop(type, weight, maxEvts);            
-        }
-        std::cout << "Writing histograms..." << std::endl;
-        t.WriteHistos();
+        run<ExploreTopTagger>(ch,vvf,"qcd",startFile,nFiles,maxEvts);
     }
-
-    if(doEventSelection)
+    else if(doEventSelection)
     {
-        ExploreEventSelection t = ExploreEventSelection(ch);
-        std::cout << "Initializing..." << std::endl;
-        t.InitHistos();
-        for(const AnaSamples::FileSummary& file : vvf)
-        {
-            std::cout << "Running over sample " << file.tag << std::endl;
-            TChain* new_ch = new TChain( (AnaSamples::treeName).c_str());
-            t.Init(new_ch);
-            file.addFilesToChain(new_ch, startFile, nFiles);
-            double weight = file.getWeight();
-            std::cout << "starting loop" << std::endl;
-            std::string runtype = "";
-            if(file.tag.find("Data") != std::string::npos)
-                runtype = "Data";
-            t.Loop(weight, maxEvts, runtype, file.tag);
-        }
-        std::cout << "Writing histograms..." << std::endl;
-        t.WriteHistos();
+        run<ExploreEventSelection>(ch,vvf,"Data",startFile,nFiles,maxEvts);
     }
 
     myfile->Close();
