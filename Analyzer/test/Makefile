@@ -1,11 +1,13 @@
-WDIR   = .
-ODIR   = obj
-IFWDIR = $(CMSSW_BASE)/src/Framework/Framework/include
-SFWDIR = $(CMSSW_BASE)/src/Framework/Framework/src
-IADIR  = $(CMSSW_BASE)/src/Analyzer/Analyzer/include
-SADIR  = $(CMSSW_BASE)/src/Analyzer/Analyzer/src
-SSDIR  = $(CMSSW_BASE)/src/SusyAnaTools/Tools
-TDIR   = $(CMSSW_BASE)/src
+WDIR    = .
+ODIR    = obj
+IFWDIR  = $(CMSSW_BASE)/src/Framework/Framework/include
+SFWDIR  = $(CMSSW_BASE)/src/Framework/Framework/src
+IADIR   = $(CMSSW_BASE)/src/Analyzer/Analyzer/include
+SADIR   = $(CMSSW_BASE)/src/Analyzer/Analyzer/src
+SSDIR   = $(CMSSW_BASE)/src/SusyAnaTools/Tools
+ITTDir  = $(CMSSW_BASE)/CfgParser/include
+STTDir  = $(CMSSW_BASE)/CfgParser/src
+TDIR    = $(CMSSW_BASE)/src
 
 OPENCV_DIRECTORY = /uscms_data/d3/nstrobbe/SOFTWARE/opencv
 TTDIR            = $(CMSSW_BASE)/src/TopTagger/
@@ -39,7 +41,7 @@ LIBSTOPTAGGER += -L$(TTTDIR) -lTopTagger
 #OBJS       = $(patsubst %, $(ODIR)/%, $(OBJ))
 
 
-PROGRAMS = MyAnalysis 
+PROGRAMS = MyAnalysis simpleAnalyzer
 
 
 all: mkobj sampPyWrap $(PROGRAMS)
@@ -61,59 +63,74 @@ $(ODIR)/samplesModulePyWrap.o: $(SFWDIR)/samplesModule.cc
 
 #Framework Repo
 $(ODIR)/%.o : $(SFWDIR)/%.C
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
 $(ODIR)/%.o : $(SFWDIR)/%.c
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
 $(ODIR)/%.o : $(SFWDIR)/%.cc
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
 $(ODIR)/%.o : $(SFWDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
 #Analyzer Repo
 $(ODIR)/%.o : $(SADIR)/%.C
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
 $(ODIR)/%.o : $(SADIR)/%.c
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
 $(ODIR)/%.o : $(SADIR)/%.cc
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
 $(ODIR)/%.o : $(SADIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
 #SusyAnaTools Repo
 $(ODIR)/%.o : $(SSDIR)/%.C
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
 $(ODIR)/%.o : $(SSDIR)/%.c
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
 $(ODIR)/%.o : $(SSDIR)/%.cc
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
 $(ODIR)/%.o : $(SSDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
+
+#TopTagger Repo
+$(ODIR)/%.o : $(STTDir)/%.C
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
+
+$(ODIR)/%.o : $(STTDir)/%.c
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
+
+$(ODIR)/%.o : $(STTDir)/%.cc
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
+
+$(ODIR)/%.o : $(STTDir)/%.cpp
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
 #Working Directory 
 $(ODIR)/%.o : $(WDIR)/%.C
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
 $(ODIR)/%.o : $(WDIR)/%.c
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
 $(ODIR)/%.o : $(WDIR)/%.cc
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
 $(ODIR)/%.o : $(WDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
 MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/ExploreBackground.o $(ODIR)/ExploreTopTagger.o $(ODIR)/ExploreEventSelection.o $(ODIR)/NtupleClass.o $(ODIR)/Utility.o $(ODIR)/samples.o $(ODIR)/EventShapeVariables.o $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
 
+simpleAnalyzer: $(ODIR)/simpleAnalyzer.o $(ODIR)/samples.o $(ODIR)/NTupleReader.o $(ODIR)/SATException.o 
+	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
 clean:
 	rm -rf $(ODIR)/*.o $(ODIR)/*.so $(ODIR)/*.d $(PROGRAMS) core $(ODIR)
 
