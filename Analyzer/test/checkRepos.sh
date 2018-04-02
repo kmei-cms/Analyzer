@@ -1,6 +1,8 @@
 #!/bin/bash
 
 dir=${CMSSW_BASE}/src
+ssh=git@github.com:
+https=https://github.com/
 
 # Make sure directory ends with "/"
 if [[ $dir != */ ]]
@@ -19,6 +21,7 @@ do
     # Check if directory is a git repository
     if [ -d "$f/.git" ]
     then
+        echo ""
         echo -en "\033[0;35m"
         echo "${f}"
         echo -en "\033[0m"
@@ -27,18 +30,18 @@ do
         cd $f
         
         # Fetch and check for changes
-        if [ $(git remote | grep test -c) -ne 0 ]
+        if [ $(git remote | grep origin -c) -ne 0 ]
         then
-            git fetch test 
+            git fetch origin 
             git status -uno
         else
-            echo "Need to:       git remote add test repo"
+            echo "Need to:       git remote add origin repo"
             echo "Repo options:" 
-            echo "               https://github.com/StealthStop/Framework.git"
-            echo "               https://github.com/StealthStop/Analyzer.git"
-            echo "               https://github.com/susy2015/TopTagger.git"
-            echo "               https://github.com/susy2015/TopTaggerTools.git"
-            echo "               https://github.com/susy2015/SusyAnaTools.git"
+            echo "               ${ssh}StealthStop/Framework.git"
+            echo "               ${ssh}StealthStop/Analyzer.git"
+            echo "               ${ssh}susy2015/TopTagger.git"
+            echo "               ${ssh}susy2015/TopTaggerTools.git"
+            echo "               ${ssh}susy2015/SusyAnaTools.git"
         fi
 
         # Check for modified files
