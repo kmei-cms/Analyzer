@@ -1,12 +1,17 @@
 #!/bin/tcsh
 
-cmsenv
+set SCRIPTSDIR=${CMSSW_BASE}/src/Framework/Framework/scripts
+if ( $PATH:q =~ *${SCRIPTSDIR}:q* ) then
+    setenv  PATH ${SCRIPTSDIR}:$PATH
+    echo "adding ${SCRIPTSDIR} to the path"
+endif
 
 # set up the top tagger libraries etc
 echo "|-----------------------------|"
 echo "|      Set up top tagger      |"
 echo "|-----------------------------|"
 echo ""
+cmsenv
 source ${CMSSW_BASE}/src/TopTagger/TopTagger/test/taggerSetup.csh
 echo "sourced taggerSetup"
 
@@ -15,7 +20,7 @@ echo ""
 echo "|--------------------------------------|"
 echo "|      Checking repos for updates      |"
 echo "|--------------------------------------|"
-./checkRepos.sh
+status.sh
 
 # Copy over filelists if they are not present or have changed
 echo""
