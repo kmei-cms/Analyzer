@@ -6,19 +6,23 @@ cmsenv
 echo "|-----------------------------|"
 echo "|      Set up top tagger      |"
 echo "|-----------------------------|"
+echo ""
 source ${CMSSW_BASE}/src/TopTagger/TopTagger/test/taggerSetup.csh
 echo "sourced taggerSetup"
 
 # Check repos for updates
+echo ""
 echo "|--------------------------------------|"
 echo "|      Checking repos for updates      |"
 echo "|--------------------------------------|"
 ./checkRepos.sh
 
 # Copy over filelists if they are not present or have changed
+echo""
 echo "|-----------------------------|"
 echo "|      Copying filelists      |"
 echo "|-----------------------------|"
+echo""
 if (! -d condor/filelists ) then
     echo "No filelists found, copying from eos"
     mkdir condor/filelists/
