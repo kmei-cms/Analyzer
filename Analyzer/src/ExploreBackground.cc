@@ -87,7 +87,7 @@ void ExploreBackground::InitHistos()
     }
 }
 
-void ExploreBackground::Loop(double weight, int maxevents, std::string type, std::string filetag, bool isQuiet)
+void ExploreBackground::Loop(double weight, int maxevents, std::string runtype, std::string filetag, bool isQuiet)
 {
    if (fChain == 0) return;
 
@@ -165,7 +165,7 @@ void ExploreBackground::Loop(double weight, int maxevents, std::string type, std
 
       // Make sure event weight is not 0 for data
       double eventweight = 1.;
-      if(type != "Data")
+      if(runtype != "Data")
           double eventweight = Weight;
 
       // -----------------
@@ -179,7 +179,7 @@ void ExploreBackground::Loop(double weight, int maxevents, std::string type, std
       std::vector<TLorentzVector> neutralinos;
       std::vector<TLorentzVector> singlets;
       std::vector<TLorentzVector> singlinos;
-      if(type != "Data")
+      if(runtype != "Data")
       {
           for ( unsigned int gpi=0; gpi < GenParticles->size() ; gpi++ ) 
           {
@@ -265,7 +265,7 @@ void ExploreBackground::Loop(double weight, int maxevents, std::string type, std
       bool passTriggerAllHad = PassTriggerAllHad();
       bool passTriggerMuon = PassTriggerMuon();
       bool passTriggerElectron = PassTriggerElectron();
-      if (type == "Data")
+      if (runtype == "Data")
       {
           if (filetag == "Data_JetHT")
           {
@@ -457,7 +457,7 @@ void ExploreBackground::Loop(double weight, int maxevents, std::string type, std
       bool passTrigger0l = false;
       bool passTrigger1l = false;
       bool passTrigger2l = false;
-      if(type == "Data")
+      if(runtype == "Data")
       {
           if (rec_muon_pt30.size() > 0)
           {

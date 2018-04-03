@@ -1,10 +1,33 @@
 #!/bin/tcsh
 
+set SCRIPTSDIR=${CMSSW_BASE}/src/Framework/Framework/scripts
+if ( $PATH:q =~ *${SCRIPTSDIR}:q* ) then
+    setenv  PATH ${SCRIPTSDIR}:$PATH
+    echo "adding ${SCRIPTSDIR} to the path"
+endif
+
 # set up the top tagger libraries etc
-echo "Set up top tagger"
+echo "|-----------------------------|"
+echo "|      Set up top tagger      |"
+echo "|-----------------------------|"
+echo ""
+cmsenv
 source ${CMSSW_BASE}/src/TopTagger/TopTagger/test/taggerSetup.csh
+echo "sourced taggerSetup"
+
+# Check repos for updates
+echo ""
+echo "|--------------------------------------|"
+echo "|      Checking repos for updates      |"
+echo "|--------------------------------------|"
+status.sh
 
 # Copy over filelists if they are not present or have changed
+echo""
+echo "|-----------------------------|"
+echo "|      Copying filelists      |"
+echo "|-----------------------------|"
+echo""
 if (! -d condor/filelists ) then
     echo "No filelists found, copying from eos"
     mkdir condor/filelists/

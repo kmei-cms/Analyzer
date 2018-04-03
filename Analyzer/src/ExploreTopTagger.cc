@@ -284,7 +284,7 @@ void ExploreTopTagger::InitHistos()
 
 }
 
-void ExploreTopTagger::Loop(std::string runtype, double weight, int maxevents, bool isQuiet)
+void ExploreTopTagger::Loop(double weight, int maxevents, std::string runtype, std::string filetag, bool isQuiet)
 {
    if (fChain == 0) return;
 
