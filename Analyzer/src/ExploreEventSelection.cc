@@ -37,8 +37,8 @@ void ExploreEventSelection::InitHistos()
     std::vector<std::string> btag_types_tags        { "medium" , "tight" };
     std::vector<std::string> pt_threshold_tags      { "pt30" , "pt40" , "pt45" };
     std::vector<std::string> nleptons_tags          { "0l" , "1l" , "2l" };
-    std::vector<std::string> n_med_btags            { "0", "1", "2", "3", "4", "5", "6" };
-    std::vector<std::string> n_tight_btags          { "0", "1", "2", "3", "4", "5", "6" };
+    std::vector<std::string> n_med_btags            { "0", "1", "2", "3", "4", "5", "6", "7", "8" };
+    std::vector<std::string> n_tight_btags          { "0", "1", "2", "3", "4", "5", "6", "7", "8" };
     std::vector<std::string> n_subjets_top_tags     { "1", "2", "3" };
 
     for( std::string btagTag : btag_types_tags ) {
@@ -599,8 +599,8 @@ void ExploreEventSelection::Loop(double weight, int maxevents, std::string type,
       }//END of jet loop
       //Now filling the histograms
       
-      std::vector<std::string> n_medium_btags   { "0", "1", "2", "3", "4", "5", "6" };
-      std::vector<std::string> n_tight_btags    { "0", "1", "2", "3", "4", "5", "6" };
+      std::vector<std::string> n_medium_btags   { "0", "1", "2", "3", "4", "5", "6", "7", "8" };
+      std::vector<std::string> n_tight_btags    { "0", "1", "2", "3", "4", "5", "6", "7", "8" };
 
       if( passBaseline0l ) {
           
@@ -615,7 +615,7 @@ void ExploreEventSelection::Loop(double weight, int maxevents, std::string type,
           my_2d_histos["h_nbtags_pt40_0l"]->Fill(rec_njet_passMediumBtag_pt40, rec_njet_passTightBtag_pt40, eventweight);
           my_2d_histos["h_nbtags_pt45_0l"]->Fill(rec_njet_passMediumBtag_pt45, rec_njet_passTightBtag_pt45, eventweight);
           
-          for( int i = 0; i < 6; i++ ) {
+          for( int i = 0; i < 8; i++ ) {
             
             //Event Efficiency Plots
             
@@ -639,7 +639,7 @@ void ExploreEventSelection::Loop(double weight, int maxevents, std::string type,
                        my_histos["h_ntops_1j_pt30_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
                        my_histos["h_ntops_2j_pt30_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
                        my_histos["h_ntops_3j_pt30_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
-                       my_histos["h_njets_pt30_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt30, eventweight);
+                       my_histos["h_njets_pt30_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_KM_pt30, eventweight);
                     }
                 }
             }
@@ -660,7 +660,7 @@ void ExploreEventSelection::Loop(double weight, int maxevents, std::string type,
                        my_histos["h_ntops_1j_pt40_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
                        my_histos["h_ntops_2j_pt40_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
                        my_histos["h_ntops_3j_pt40_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
-                       my_histos["h_njets_pt40_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt40, eventweight);
+                       my_histos["h_njets_pt40_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_KM_pt40, eventweight);
                     }
                 }
             }
@@ -681,7 +681,7 @@ void ExploreEventSelection::Loop(double weight, int maxevents, std::string type,
                        my_histos["h_ntops_1j_pt45_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
                        my_histos["h_ntops_2j_pt45_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
                        my_histos["h_ntops_3j_pt45_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
-                       my_histos["h_njets_pt45_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt45, eventweight);                       
+                       my_histos["h_njets_pt45_0l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_KM_pt45, eventweight);                       
                     }
                 }
             }
@@ -701,7 +701,7 @@ void ExploreEventSelection::Loop(double weight, int maxevents, std::string type,
           my_2d_histos["h_nbtags_pt40_1l"]->Fill(rec_njet_passMediumBtag_pt40, rec_njet_passTightBtag_pt40, eventweight);
           my_2d_histos["h_nbtags_pt45_1l"]->Fill(rec_njet_passMediumBtag_pt45, rec_njet_passTightBtag_pt45, eventweight);
           
-          for( int i = 0; i < 6; i++ ) {
+          for( int i = 0; i < 8; i++ ) {
             
             //Event Efficiency Plots
             
@@ -725,7 +725,7 @@ void ExploreEventSelection::Loop(double weight, int maxevents, std::string type,
                        my_histos["h_ntops_1j_pt30_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
                        my_histos["h_ntops_2j_pt30_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
                        my_histos["h_ntops_3j_pt30_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
-                       my_histos["h_njets_pt30_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt30, eventweight);
+                       my_histos["h_njets_pt30_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_KM_pt30, eventweight);
                     }
                 }
             }
@@ -746,7 +746,7 @@ void ExploreEventSelection::Loop(double weight, int maxevents, std::string type,
                        my_histos["h_ntops_1j_pt40_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
                        my_histos["h_ntops_2j_pt40_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
                        my_histos["h_ntops_3j_pt40_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
-                       my_histos["h_njets_pt40_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt40, eventweight);
+                       my_histos["h_njets_pt40_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_KM_pt40, eventweight);
                     }
                 }
             }
@@ -767,7 +767,7 @@ void ExploreEventSelection::Loop(double weight, int maxevents, std::string type,
                        my_histos["h_ntops_1j_pt45_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
                        my_histos["h_ntops_2j_pt45_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
                        my_histos["h_ntops_3j_pt45_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
-                       my_histos["h_njets_pt45_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt45, eventweight);                       
+                       my_histos["h_njets_pt45_1l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_KM_pt45, eventweight);                       
                     }
                 }
             }
@@ -787,7 +787,7 @@ void ExploreEventSelection::Loop(double weight, int maxevents, std::string type,
           my_2d_histos["h_nbtags_pt40_2l"]->Fill(rec_njet_passMediumBtag_pt40, rec_njet_passTightBtag_pt40, eventweight);
           my_2d_histos["h_nbtags_pt45_2l"]->Fill(rec_njet_passMediumBtag_pt45, rec_njet_passTightBtag_pt45, eventweight);
           
-          for( int i = 0; i < 6; i++ ) {
+          for( int i = 0; i < 8; i++ ) {
             
             //Event Efficiency Plots
             
@@ -811,7 +811,7 @@ void ExploreEventSelection::Loop(double weight, int maxevents, std::string type,
                        my_histos["h_ntops_1j_pt30_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
                        my_histos["h_ntops_2j_pt30_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
                        my_histos["h_ntops_3j_pt30_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
-                       my_histos["h_njets_pt30_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt30, eventweight);
+                       my_histos["h_njets_pt30_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_KM_pt30, eventweight);
                     }
                 }
             }
@@ -832,7 +832,7 @@ void ExploreEventSelection::Loop(double weight, int maxevents, std::string type,
                        my_histos["h_ntops_1j_pt40_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
                        my_histos["h_ntops_2j_pt40_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
                        my_histos["h_ntops_3j_pt40_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
-                       my_histos["h_njets_pt40_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt40, eventweight);
+                       my_histos["h_njets_pt40_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_KM_pt40, eventweight);
                     }
                 }
             }
@@ -853,7 +853,7 @@ void ExploreEventSelection::Loop(double weight, int maxevents, std::string type,
                        my_histos["h_ntops_1j_pt45_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_1jet, eventweight);
                        my_histos["h_ntops_2j_pt45_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_2jet, eventweight);
                        my_histos["h_ntops_3j_pt45_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(ntops_3jet, eventweight);
-                       my_histos["h_njets_pt45_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_passTightBtag_pt45, eventweight);                       
+                       my_histos["h_njets_pt45_2l_"+n_medium_btags[i]+"mTag_"+n_tight_btags[j]+"tTag"]->Fill(rec_njet_KM_pt45, eventweight);                       
                     }
                 }
             }
