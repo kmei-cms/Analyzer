@@ -4,25 +4,26 @@
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TEfficiency.h>
-
-#include "Framework/Framework/include/NtupleClass.h"
-//#include "Framework/Framework/include/samples.h"
+#include <TTree.h>
 
 #include <map>
 #include <string>
 
-class ExploreTopTagger : public NtupleClass {
-public :
+class NTupleReader;
+
+class ExploreTopTagger
+{
+public:
    std::map<std::string, TH1D*>  my_histos;
    std::map<std::string, TH2D*>  my_2d_histos;
    std::map<std::string, TEfficiency*>  my_efficiencies;
 
-   ExploreTopTagger(TTree* tree) : NtupleClass(tree) {}
+   ExploreTopTagger(){};
+   ~ExploreTopTagger(){};
 
-   //virtual void Loop(std::string runtype);
-   void     Loop(double weight, int maxevents = -1, std::string runtype="", std::string filetag= "", bool isQuiet = false);
-   virtual void     InitHistos();
-   virtual void     WriteHistos();
+   void Loop(NTupleReader& tr, double weight, int maxevents = -1, std::string type = "", std::string filetag = "", bool isQuiet = false);
+   void     InitHistos();
+   void     WriteHistos();
 
 };
 

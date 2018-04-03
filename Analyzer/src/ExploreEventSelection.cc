@@ -134,31 +134,6 @@ void ExploreEventSelection::InitHistos()
 
 void ExploreEventSelection::Loop(NTupleReader& tr, double weight, int maxevents, std::string type, std::string filetag, bool isQuiet)
 {
-    const double& madHT  = tr.getVar<double>("madHT");
-    const double& Weight = tr.getVar<double>("Weight");
-    const double& MET    = tr.getVar<double>("MET");
-    const double& METPhi = tr.getVar<double>("METPhi");
-    const double& HT     = tr.getVar<double>("HT");
-
-    const std::vector<TLorentzVector>& GenParticles = tr.getVec<TLorentzVector>("GenParticles");
-    const std::vector<TLorentzVector>& Muons        = tr.getVec<TLorentzVector>("Muons");
-    const std::vector<TLorentzVector>& Electrons    = tr.getVec<TLorentzVector>("Electrons");
-    const std::vector<TLorentzVector>& Jets         = tr.getVec<TLorentzVector>("Jets");
-
-    const std::vector<int>& GenParticles_PdgId      = tr.getVec<int>("GenParticles_PdgId");
-    const std::vector<int>& GenParticles_ParentId   = tr.getVec<int>("GenParticles_ParentId");
-    const std::vector<int>& GenParticles_ParentIdx  = tr.getVec<int>("GenParticles_ParentIdx");
-    const std::vector<int>& GenParticles_Status     = tr.getVec<int>("GenParticles_Status");
-    const std::vector<int>& Muons_charge            = tr.getVec<int>("Muons_charge");
-    const std::vector<int>& Electrons_charge        = tr.getVec<int>("Electrons_charge");
-    const std::vector<bool>& Electrons_tightID      = tr.getVec<bool>("Electrons_tightID");
-    const std::vector<bool>& Electrons_passIso      = tr.getVec<bool>("Electrons_passIso");
-    const std::vector<bool>& Muons_passIso          = tr.getVec<bool>("Muons_passIso");
-
-    const std::vector<double>&      Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
-    const std::vector<std::string>& TriggerNames           = tr.getVec<std::string>("TriggerNames");
-    const std::vector<int>&         TriggerPass            = tr.getVec<int>("TriggerPass");
-
     // Make a toptagger object
     TopTagger tt;
     tt.setCfgFile("TopTagger.cfg");
@@ -192,6 +167,31 @@ void ExploreEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
 
     while(tr.getNextEvent())
     {
+        const double& madHT  = tr.getVar<double>("madHT");
+        const double& Weight = tr.getVar<double>("Weight");
+        const double& MET    = tr.getVar<double>("MET");
+        const double& METPhi = tr.getVar<double>("METPhi");
+        const double& HT     = tr.getVar<double>("HT");
+
+        const std::vector<TLorentzVector>& GenParticles = tr.getVec<TLorentzVector>("GenParticles");
+        const std::vector<TLorentzVector>& Muons        = tr.getVec<TLorentzVector>("Muons");
+        const std::vector<TLorentzVector>& Electrons    = tr.getVec<TLorentzVector>("Electrons");
+        const std::vector<TLorentzVector>& Jets         = tr.getVec<TLorentzVector>("Jets");
+
+        const std::vector<int>& GenParticles_PdgId      = tr.getVec<int>("GenParticles_PdgId");
+        const std::vector<int>& GenParticles_ParentId   = tr.getVec<int>("GenParticles_ParentId");
+        const std::vector<int>& GenParticles_ParentIdx  = tr.getVec<int>("GenParticles_ParentIdx");
+        const std::vector<int>& GenParticles_Status     = tr.getVec<int>("GenParticles_Status");
+        const std::vector<int>& Muons_charge            = tr.getVec<int>("Muons_charge");
+        const std::vector<int>& Electrons_charge        = tr.getVec<int>("Electrons_charge");
+        const std::vector<bool>& Electrons_tightID      = tr.getVec<bool>("Electrons_tightID");
+        const std::vector<bool>& Electrons_passIso      = tr.getVec<bool>("Electrons_passIso");
+        const std::vector<bool>& Muons_passIso          = tr.getVec<bool>("Muons_passIso");
+
+        const std::vector<double>&      Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
+        const std::vector<std::string>& TriggerNames           = tr.getVec<std::string>("TriggerNames");
+        const std::vector<int>&         TriggerPass            = tr.getVec<int>("TriggerPass");
+
         if(maxevents != -1 && tr.getEvtNum() >= maxevents) break;
 
         if ( tr.getEvtNum() % 10000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;
@@ -390,7 +390,8 @@ void ExploreEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         int rec_njet_pt45_btag(0) ;
         double HT_trigger = 0.0;
         std::vector<TLorentzVector> rec_bjets_pt30;
-        for ( unsigned int rji=0; rji < Jets.size() ; rji++ ) {
+        for ( unsigned int rji=0; rji < Jets.size() ; rji++ ) 
+        {
             TLorentzVector jlv( Jets.at(rji) ) ;
             if (abs(jlv.Eta()) > 2.4) continue;
             if ( jlv.Pt() > 30 )

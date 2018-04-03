@@ -6,9 +6,6 @@
 #include <TEfficiency.h>
 #include <TTree.h>
 
-//#include "Framework/Framework/include/NtupleClass.h"
-//#include "Framework/Framework/include/samples.h"
-
 #include <map>
 #include <string>
 
@@ -16,7 +13,7 @@ class NTupleReader;
 
 class ExploreEventSelection 
 {
-public :
+public:
     std::map<std::string, TH1D*>  my_histos;
     std::map<std::string, TH2D*>  my_2d_histos;
     std::map<std::string, TEfficiency*>  my_efficiencies;
