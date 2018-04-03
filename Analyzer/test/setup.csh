@@ -1,7 +1,7 @@
 #!/bin/tcsh
 
 set SCRIPTSDIR=${CMSSW_BASE}/src/Framework/Framework/scripts
-if ( $PATH:q =~ *${SCRIPTSDIR}:q* ) then
+if ! ( $PATH:q =~ *${SCRIPTSDIR}:q* ) then
     setenv  PATH ${SCRIPTSDIR}:$PATH
     echo "adding ${SCRIPTSDIR} to the path"
 endif
