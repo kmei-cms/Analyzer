@@ -1,8 +1,10 @@
-#include "Analyzer/Analyzer/include/ExploreBackground.h"
-#include "Analyzer/Analyzer/include/ExploreTopTagger.h"
-#include "Analyzer/Analyzer/include/ExploreEventSelection.h"
+#include "Analyzer/Analyzer/include/AnalyzeBackground.h"
+#include "Analyzer/Analyzer/include/AnalyzeTopTagger.h"
+#include "Analyzer/Analyzer/include/AnalyzeEventSelection.h"
 #include "Framework/Framework/include/samples.h"
 #include "TopTaggerTools/Tools/include/HistoContainer.h"
+#include "SusyAnaTools/Tools/NTupleReader.h"
+#include "Framework/Framework/include/RunTopTagger.h"
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -11,25 +13,37 @@
 #include <iostream>
 #include <getopt.h>
 
-template<typename Explore> void run(TChain* ch, std::set<AnaSamples::FileSummary> vvf, 
+template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
                                     std::string runType, int startFile, int nFiles, int maxEvts)
 {
-    Explore t = Explore(ch);
+    Analyze t = Analyze();
     std::cout << "Initializing..." << std::endl;
     t.InitHistos();
     for(const AnaSamples::FileSummary& file : vvf)
     {
+        // Define what is needed per sample set
         std::cout << "Running over sample " << file.tag << std::endl;
-        TChain* new_ch = new TChain( (AnaSamples::treeName).c_str() );
-        t.Init(new_ch);
-        file.addFilesToChain(new_ch, startFile, nFiles);
+        TChain* ch = new TChain( (file.treePath).c_str() );
+        file.addFilesToChain(ch, startFile, nFiles);
+        NTupleReader tr(ch);
         double weight = file.getWeight();
         std::string runtype = "";
         if(file.tag.find(runType) != std::string::npos)
+        {
             runtype = runType;
+        }
         std::cout << "Starting loop" << std::endl;
         printf( "weight: %f nFiles: %i startFile: %i maxEvts: %i \n",weight,nFiles,startFile,maxEvts );
-        t.Loop(weight, maxEvts, runtype, file.tag);
+        tr.registerDerivedVar<std::string>("runtype",runtype);
+
+        // Define classes/functions that add variables on the fly
+        RunTopTagger runTopTagger;
+
+        // Register classes/functions that add variables on the fly
+        tr.registerFunction( std::move(runTopTagger) );
+
+        // Loop over all of the events and fill histos
+        t.Loop(tr, weight, maxEvts, file.tag);
     }
     std::cout << "Writing histograms..." << std::endl;
     t.WriteHistos();
@@ -110,19 +124,18 @@ int main(int argc, char *argv[])
 
     std::set<AnaSamples::FileSummary> vvf = setFS(sampleloc, dataSets); 
     TFile* myfile = TFile::Open(histFile.c_str(), "RECREATE");
-    TChain* ch = new TChain( (AnaSamples::treeName).c_str() ) ;
 
     if(doBackground)
     {
-        run<ExploreBackground>(ch,vvf,"Data",startFile,nFiles,maxEvts);
+        run<AnalyzeBackground>(vvf,"Data",startFile,nFiles,maxEvts);
     }
     else if(doTopTagger)
     {
-        run<ExploreTopTagger>(ch,vvf,"qcd",startFile,nFiles,maxEvts);
+        run<AnalyzeTopTagger>(vvf,"qcd",startFile,nFiles,maxEvts);
     }
     else if(doEventSelection)
     {
-        run<ExploreEventSelection>(ch,vvf,"Data",startFile,nFiles,maxEvts);
+        run<AnalyzeEventSelection>(vvf,"Data",startFile,nFiles,maxEvts);
     }
 
     myfile->Close();
