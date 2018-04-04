@@ -4,6 +4,7 @@
 #include "Framework/Framework/include/samples.h"
 #include "TopTaggerTools/Tools/include/HistoContainer.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
+#include "Framework/Framework/include/RunTopTagger.h"
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -20,6 +21,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
     t.InitHistos();
     for(const AnaSamples::FileSummary& file : vvf)
     {
+        // Define what is needed per sample set
         std::cout << "Running over sample " << file.tag << std::endl;
         TChain* ch = new TChain( (file.treePath).c_str() );
         file.addFilesToChain(ch, startFile, nFiles);
@@ -32,6 +34,15 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         }
         std::cout << "Starting loop" << std::endl;
         printf( "weight: %f nFiles: %i startFile: %i maxEvts: %i \n",weight,nFiles,startFile,maxEvts );
+        tr.registerDerivedVar<std::string>("runtype",runtype);
+
+        // Define classes/functions that add variables on the fly
+        RunTopTagger runTopTagger;
+
+        // Register classes/functions that add variables on the fly
+        tr.registerFunction( std::move(runTopTagger) );
+
+        // Loop over all of the events and fill histos
         t.Loop(tr, weight, maxEvts, runtype, file.tag);
     }
     std::cout << "Writing histograms..." << std::endl;
