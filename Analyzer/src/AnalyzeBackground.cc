@@ -88,7 +88,7 @@ void AnalyzeBackground::InitHistos()
     }
 }
 
-void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std::string runtype, std::string filetag, bool isQuiet)
+void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std::string filetag, bool isQuiet)
 {
     // Set up Event shape BDT
     std::vector<std::string> inputVarNames_top6 ;
@@ -142,8 +142,12 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
 
     while(tr.getNextEvent())
     {
-        const double& madHT  = tr.getVar<double>("madHT");
-        const double& Weight = tr.getVar<double>("Weight");
+        const double& madHT   = tr.getVar<double>("madHT");
+        const double& Weight  = tr.getVar<double>("Weight");
+        const int& ntops_3jet = tr.getVar<int>("ntops_3jet");
+        const int& ntops_2jet = tr.getVar<int>("ntops_2jet");
+        const int& ntops_1jet = tr.getVar<int>("ntops_1jet");
+        const std::string& runtype = tr.getVar<std::string>("runtype");
         const std::vector<TLorentzVector>& Muons        = tr.getVec<TLorentzVector>("Muons");
         const std::vector<TLorentzVector>& Electrons    = tr.getVec<TLorentzVector>("Electrons");
         const std::vector<TLorentzVector>& Jets         = tr.getVec<TLorentzVector>("Jets");
@@ -155,10 +159,8 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
         const std::vector<double>&      Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
         const std::vector<std::string>& TriggerNames           = tr.getVec<std::string>("TriggerNames");
         const std::vector<int>&         TriggerPass            = tr.getVec<int>("TriggerPass");
-        const std::vector<TopObject*>& tops = tr.getVec<TopObject*>("tops");
-        const int& ntops_3jet = tr.getVar<int>("ntops_3jet");
-        const int& ntops_2jet = tr.getVar<int>("ntops_2jet");
-        const int& ntops_1jet = tr.getVar<int>("ntops_1jet");
+        const TopTaggerResults* ttr         = tr.getVar<TopTaggerResults*>("ttr");
+        const std::vector<TopObject*>& tops = ttr->getTops(); 
 
         if (maxevents > 0 && tr.getEvtNum() >= maxevents) break;
         

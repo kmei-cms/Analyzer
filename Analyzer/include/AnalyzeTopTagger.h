@@ -21,7 +21,7 @@ public:
    AnalyzeTopTagger(){};
    ~AnalyzeTopTagger(){};
 
-   void Loop(NTupleReader& tr, double weight, int maxevents = -1, std::string type = "", std::string filetag = "", bool isQuiet = false);
+   void Loop(NTupleReader& tr, double weight, int maxevents = -1, std::string filetag = "", bool isQuiet = false);
    void     InitHistos();
    void     WriteHistos();
 

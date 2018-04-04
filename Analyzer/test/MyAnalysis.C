@@ -43,7 +43,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerFunction( std::move(runTopTagger) );
 
         // Loop over all of the events and fill histos
-        t.Loop(tr, weight, maxEvts, runtype, file.tag);
+        t.Loop(tr, weight, maxEvts, file.tag);
     }
     std::cout << "Writing histograms..." << std::endl;
     t.WriteHistos();

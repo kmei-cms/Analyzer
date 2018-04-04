@@ -285,24 +285,23 @@ void AnalyzeTopTagger::InitHistos()
 
 }
 
-void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, std::string runtype, std::string filetag, bool isQuiet)
+void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, std::string filetag, bool isQuiet)
 {
     TRandom3 rand = TRandom3(123);
     
     while(tr.getNextEvent())
     {
-        const double& MET    = tr.getVar<double>("MET");
-        const double& HT     = tr.getVar<double>("HT");
-        const int& NJets     = tr.getVar<int>("NJets");
-        const std::vector<TLorentzVector>& Jets           = tr.getVec<TLorentzVector>("Jets");
-        const std::vector<double>& Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
-        const std::vector<TopObject*>& tops = tr.getVec<TopObject*>("tops");
-        const TopTaggerResults& ttr = tr.getVar<TopTaggerResults>("ttr");
-        const std::set<Constituent const *>& usedConstituents = tr.getVar<std::set<Constituent const *>>("usedConstituents");
+        const double& MET     = tr.getVar<double>("MET");
+        const double& HT      = tr.getVar<double>("HT");
+        const int& NJets      = tr.getVar<int>("NJets");
         const int& ntops_3jet = tr.getVar<int>("ntops_3jet");
         const int& ntops_2jet = tr.getVar<int>("ntops_2jet");
         const int& ntops_1jet = tr.getVar<int>("ntops_1jet");
         const int& nhadWs     = tr.getVar<int>("nhadWs");
+        const std::string runtype = tr.getVar<std::string>("runtype");
+        const std::vector<TLorentzVector>& Jets           = tr.getVec<TLorentzVector>("Jets");
+        const std::vector<double>& Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
+        const TopTaggerResults* ttr         = tr.getVar<TopTaggerResults*>("ttr");
         const std::vector<std::vector<const TLorentzVector*>>& hadtopdaughters = tr.getVec<std::vector<const TLorentzVector*>>("hadtopdaughters");
         const std::vector<TLorentzVector>& hadtops     = tr.getVec<TLorentzVector>("hadtops");
         const std::vector<TLorentzVector>& hadWs       = tr.getVec<TLorentzVector>("hadWs");
@@ -368,8 +367,8 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, std:
 
         // ------------------
         // --- TOP TAGGER ---
-        // ------------------
-      
+        // ------------------        
+        const std::vector<TopObject*>& tops = ttr->getTops();
         my_histos["h_ntops"]->Fill(tops.size(), weight);
 
         if (tr.getEvtNum() < 10) 
@@ -397,6 +396,10 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, std:
             }        
 
             std::cout << "Properties of all used constituents" << std::endl;
+
+            //get set of individual top used constituent jets
+            const std::set<Constituent const *>& usedConstituents = ttr->getUsedConstituents();
+
             // Print properties of individual top constituent jets 
             for(const Constituent* constituent : usedConstituents)
             {
@@ -544,7 +547,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, std:
         TIC.setPtr(mydata.data());
 
         // --- Check input variables for resolved tagger ---
-        const std::vector<TopObject> topcandidates = ttr.getTopCandidates();
+        const std::vector<TopObject>& topcandidates = ttr->getTopCandidates();
         for(const TopObject top : topcandidates)
         {
             TIC.calculateVars(top, 0);
