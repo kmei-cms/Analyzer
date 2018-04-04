@@ -18,12 +18,12 @@ cmsenv
 source ${CMSSW_BASE}/src/TopTagger/TopTagger/test/taggerSetup.csh
 echo "sourced taggerSetup"
 
-# Check repos for updates
-echo ""
-echo "|--------------------------------------|"
-echo "|      Checking repos for updates      |"
-echo "|--------------------------------------|"
-status.sh
+## Check repos for updates
+#echo ""
+#echo "|--------------------------------------|"
+#echo "|      Checking repos for updates      |"
+#echo "|--------------------------------------|"
+#status.sh
 
 # Copy over filelists if they are not present or have changed
 echo""
