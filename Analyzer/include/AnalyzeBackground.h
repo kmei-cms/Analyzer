@@ -1,5 +1,5 @@
-#ifndef ExploreBackground_h
-#define ExploreBackground_h
+#ifndef AnalyzeBackground_h
+#define AnalyzeBackground_h
 
 #include <TH1D.h>
 #include <TH2D.h>
@@ -11,15 +11,15 @@
 
 class NTupleReader;
 
-class ExploreBackground
+class AnalyzeBackground
 {
 public:
     std::map<std::string, TH1D*>  my_histos;
     std::map<std::string, TH2D*>  my_2d_histos;
     std::map<std::string, TEfficiency*>  my_efficiencies;
     
-    ExploreBackground(){};
-    ~ExploreBackground(){};
+    AnalyzeBackground(){};
+    ~AnalyzeBackground(){};
     
     void Loop(NTupleReader& tr, double weight, int maxevents = -1, std::string type = "", std::string filetag = "", bool isQuiet = false);
     void InitHistos();

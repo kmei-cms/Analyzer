@@ -1,5 +1,5 @@
-#ifndef ExploreEventSelection_h
-#define ExploreEventSelection_h
+#ifndef AnalyzeEventSelection_h
+#define AnalyzeEventSelection_h
 
 #include <TH1D.h>
 #include <TH2D.h>
@@ -11,15 +11,15 @@
 
 class NTupleReader;
 
-class ExploreEventSelection 
+class AnalyzeEventSelection 
 {
 public:
     std::map<std::string, TH1D*>  my_histos;
     std::map<std::string, TH2D*>  my_2d_histos;
     std::map<std::string, TEfficiency*>  my_efficiencies;
     
-    ExploreEventSelection(){};
-    ~ExploreEventSelection(){};
+    AnalyzeEventSelection(){};
+    ~AnalyzeEventSelection(){};
     
     void Loop(NTupleReader& tr, double weight, int maxevents = -1, std::string type = "", std::string filetag = "", bool isQuiet = false);
     void InitHistos();

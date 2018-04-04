@@ -1,6 +1,6 @@
-#include "Analyzer/Analyzer/include/ExploreBackground.h"
-#include "Analyzer/Analyzer/include/ExploreTopTagger.h"
-#include "Analyzer/Analyzer/include/ExploreEventSelection.h"
+#include "Analyzer/Analyzer/include/AnalyzeBackground.h"
+#include "Analyzer/Analyzer/include/AnalyzeTopTagger.h"
+#include "Analyzer/Analyzer/include/AnalyzeEventSelection.h"
 #include "Framework/Framework/include/samples.h"
 #include "TopTaggerTools/Tools/include/HistoContainer.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
@@ -12,10 +12,10 @@
 #include <iostream>
 #include <getopt.h>
 
-template<typename Explore> void run(std::set<AnaSamples::FileSummary> vvf, 
+template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
                                     std::string runType, int startFile, int nFiles, int maxEvts)
 {
-    Explore t = Explore();
+    Analyze t = Analyze();
     std::cout << "Initializing..." << std::endl;
     t.InitHistos();
     for(const AnaSamples::FileSummary& file : vvf)
@@ -116,15 +116,15 @@ int main(int argc, char *argv[])
 
     if(doBackground)
     {
-        run<ExploreBackground>(vvf,"Data",startFile,nFiles,maxEvts);
+        run<AnalyzeBackground>(vvf,"Data",startFile,nFiles,maxEvts);
     }
     else if(doTopTagger)
     {
-        run<ExploreTopTagger>(vvf,"qcd",startFile,nFiles,maxEvts);
+        run<AnalyzeTopTagger>(vvf,"qcd",startFile,nFiles,maxEvts);
     }
     else if(doEventSelection)
     {
-        run<ExploreEventSelection>(vvf,"Data",startFile,nFiles,maxEvts);
+        run<AnalyzeEventSelection>(vvf,"Data",startFile,nFiles,maxEvts);
     }
 
     myfile->Close();

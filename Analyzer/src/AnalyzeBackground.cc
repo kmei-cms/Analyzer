@@ -1,7 +1,8 @@
-#define ExploreBackground_cxx
-#include "Analyzer/Analyzer/include/ExploreBackground.h"
+#define AnalyzeBackground_cxx
+#include "Analyzer/Analyzer/include/AnalyzeBackground.h"
 #include "Framework/Framework/include/Utility.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
+#include "Framework/Framework/include/RunTopTagger.h"
 
 #include <TH1D.h>
 #include <TH2D.h>
@@ -24,7 +25,7 @@
 #include "Framework/Framework/src/fisher_350to650_fwm10_jmtev_top6.c"
 #include "Framework/Framework/src/fisher_350to650_fwm6_jmtev_top6_gt_v2.c"
 
-void ExploreBackground::InitHistos()
+void AnalyzeBackground::InitHistos()
 {
     TH1::SetDefaultSumw2();
 
@@ -88,11 +89,20 @@ void ExploreBackground::InitHistos()
     }
 }
 
-void ExploreBackground::Loop(NTupleReader& tr, double weight, int maxevents, std::string runtype, std::string filetag, bool isQuiet)
+void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std::string runtype, std::string filetag, bool isQuiet)
 {
-    // Make a toptagger object
-    TopTagger tt;
-    tt.setCfgFile("TopTagger.cfg");
+    //// Make a toptagger object
+    //TopTagger tt;
+    //tt.setCfgFile("TopTagger.cfg");
+
+    // Register type of data set
+    tr.registerDerivedVar<std::string>("type",runtype);
+    
+    // Define classes/functions that add variables on the fly
+    RunTopTagger runTopTagger;
+    
+    // Register classes/functions that add variables on the fly
+    tr.registerFunction( std::move(runTopTagger) );
 
     // Set up Event shape BDT
     std::vector<std::string> inputVarNames_top6 ;
@@ -144,23 +154,21 @@ void ExploreBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
 
     ReadFisherG_350to650_fwm6_jmtev_top6_gt_v2 read_fisher_350to650_fwm6_jmtev_top6_gt_v2( inputVarNames_top6_fwm6 ) ;
 
-
-
     while(tr.getNextEvent())
     {
         const double& madHT  = tr.getVar<double>("madHT");
         const double& Weight = tr.getVar<double>("Weight");
         //const double& HT     = tr.getVar<double>("HT");
 
-        const std::vector<TLorentzVector>& GenParticles = tr.getVec<TLorentzVector>("GenParticles");
+        //const std::vector<TLorentzVector>& GenParticles = tr.getVec<TLorentzVector>("GenParticles");
         const std::vector<TLorentzVector>& Muons        = tr.getVec<TLorentzVector>("Muons");
         const std::vector<TLorentzVector>& Electrons    = tr.getVec<TLorentzVector>("Electrons");
         const std::vector<TLorentzVector>& Jets         = tr.getVec<TLorentzVector>("Jets");
 
-        const std::vector<int>& GenParticles_PdgId      = tr.getVec<int>("GenParticles_PdgId");
-        const std::vector<int>& GenParticles_ParentId   = tr.getVec<int>("GenParticles_ParentId");
-        const std::vector<int>& GenParticles_ParentIdx  = tr.getVec<int>("GenParticles_ParentIdx");
-        const std::vector<int>& GenParticles_Status     = tr.getVec<int>("GenParticles_Status");
+        //const std::vector<int>& GenParticles_PdgId      = tr.getVec<int>("GenParticles_PdgId");
+        //const std::vector<int>& GenParticles_ParentId   = tr.getVec<int>("GenParticles_ParentId");
+        //const std::vector<int>& GenParticles_ParentIdx  = tr.getVec<int>("GenParticles_ParentIdx");
+        //const std::vector<int>& GenParticles_Status     = tr.getVec<int>("GenParticles_Status");
         const std::vector<int>& Muons_charge            = tr.getVec<int>("Muons_charge");
         const std::vector<int>& Electrons_charge        = tr.getVec<int>("Electrons_charge");
         const std::vector<bool>& Electrons_tightID      = tr.getVec<bool>("Electrons_tightID");
@@ -171,106 +179,111 @@ void ExploreBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
         const std::vector<std::string>& TriggerNames           = tr.getVec<std::string>("TriggerNames");
         const std::vector<int>&         TriggerPass            = tr.getVec<int>("TriggerPass");
 
+        const std::vector<TopObject*>& tops = tr.getVec<TopObject*>("tops");
+        const int& ntops_3jet = tr.getVar<int>("ntops_3jet");
+        const int& ntops_2jet = tr.getVar<int>("ntops_2jet");
+        const int& ntops_1jet = tr.getVar<int>("ntops_1jet");
+
         if (maxevents > 0 && tr.getEvtNum() >= maxevents) break;
-
+        
         if ( tr.getEvtNum() % 1000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;
-
+        
         // Exclude events with MadGraph HT > 100 from the DY inclusive sample
         if(filetag == "DYJetsToLL_M-50_Incl" && madHT > 100) continue;
 
         // Make sure event weight is not 0 for data
         double eventweight = 1.;
-            if(runtype != "Data")
+        if(runtype != "Data")
             eventweight = Weight;
-
+        
         // -----------------
         // check for number of hadronic tops at gen level
         // -----------------
-        int nhadWs = 0;
-        std::vector<TLorentzVector> hadtops;
-        std::vector<TLorentzVector> hadWs;
-        std::vector<int> hadtops_idx;
-        std::vector<std::vector<const TLorentzVector*> > hadtopdaughters;
-        std::vector<TLorentzVector> neutralinos;
-        std::vector<TLorentzVector> singlets;
-        std::vector<TLorentzVector> singlinos;
-        if(runtype != "Data")
-        {
-            for ( unsigned int gpi=0; gpi < GenParticles.size() ; gpi++ ) 
-            {
-                int pdgid = abs( GenParticles_PdgId.at(gpi) ) ;
-                int momid = abs( GenParticles_ParentId.at(gpi) ) ;
-                int momidx = GenParticles_ParentIdx.at(gpi);
-                int status = GenParticles_Status.at(gpi);
-                if(pdgid == 1000022 && (status==22 || status == 52))
-                {
-                    neutralinos.push_back(GenParticles.at(gpi));
-                }
-                if(pdgid == 5000001 && (status == 22 || status == 52))
-                {
-                    singlinos.push_back(GenParticles.at(gpi));
-                }
-                if(pdgid == 5000002 && (status == 22 || status == 52))
-                {
-                    singlets.push_back(GenParticles.at(gpi));
-                }
-                if(status == 23 && momid == 24 && pdgid < 6)
-                {
-                    // Should be the quarks from W decay
-                    nhadWs++;
-                    // find the top
-                    int Wmotherid = GenParticles_ParentId.at(momidx);
-                    if (abs(Wmotherid) == 6){
-                        int Wmotheridx = GenParticles_ParentIdx.at(momidx);
-                        std::vector<int>::iterator found = std::find(hadtops_idx.begin(), hadtops_idx.end(), Wmotheridx);
-                        if (found != hadtops_idx.end())
-                        {
-                            // already found before
-                            // std::cout << "Found this top before: " << *found << std::endl;
-                            int position = distance(hadtops_idx.begin(),found);
-                            // add the daughter to the list
-                            hadtopdaughters[position].push_back(&(GenParticles.at(gpi)));
-                        } else
-                        {
-                            // not yet found
-                            hadtops_idx.push_back(Wmotheridx);
-                            hadtops.push_back(GenParticles.at(Wmotheridx));
-                            hadWs.push_back(GenParticles.at(momidx));
-                            std::vector<const TLorentzVector*> daughters;
-                            daughters.push_back(&(GenParticles.at(gpi)));
-                            hadtopdaughters.push_back(daughters);
-                            //std::cout << "Found a new top at idx " << Wmotheridx << std::endl;
-                        }
-                    }
-                } 
-            }          
-            // Now check the b quarks (we only want the ones associated with a hadronic W decay for now)
-            for ( unsigned int gpi=0; gpi < GenParticles.size() ; gpi++ ) 
-            {
-                int pdgid = abs( GenParticles_PdgId.at(gpi) ) ;
-                int momid = abs( GenParticles_ParentId.at(gpi) ) ;
-                int momidx = GenParticles_ParentIdx.at(gpi);
-                int status = GenParticles_Status.at(gpi);
-              
-                if(status == 23 && momid == 6 && pdgid == 5)
-                {
-                    // found a b quark from top decay, need to add this to the list of daughters
-                    std::vector<int>::iterator found = std::find(hadtops_idx.begin(), hadtops_idx.end(), momidx);
-                    if (found != hadtops_idx.end())
-                    {
-                        // already found
-                        int position = distance(hadtops_idx.begin(),found);
-                        hadtopdaughters[position].push_back(&(GenParticles.at(gpi)));
-                        //std::cout << "(b) Found this top before: " << *found << std::endl;
-                    } 
-                    //else
-                    //{
-                    // not yet found
-                    //std::cout << "(b) Found a new leptonic top at idx " << momidx << std::endl;
-                    //}
-                }
-            }
-        }
+        //int nhadWs = 0;
+        //std::vector<TLorentzVector> hadtops;
+        //std::vector<TLorentzVector> hadWs;
+        //std::vector<int> hadtops_idx;
+        //std::vector<std::vector<const TLorentzVector*> > hadtopdaughters;
+        //std::vector<TLorentzVector> neutralinos;
+        //std::vector<TLorentzVector> singlets;
+        //std::vector<TLorentzVector> singlinos;
+        //if(runtype != "Data")
+        //{
+        //    for ( unsigned int gpi=0; gpi < GenParticles.size() ; gpi++ ) 
+        //    {
+        //        int pdgid = abs( GenParticles_PdgId.at(gpi) ) ;
+        //        int momid = abs( GenParticles_ParentId.at(gpi) ) ;
+        //        int momidx = GenParticles_ParentIdx.at(gpi);
+        //        int status = GenParticles_Status.at(gpi);
+        //        if(pdgid == 1000022 && (status==22 || status == 52))
+        //        {
+        //            neutralinos.push_back(GenParticles.at(gpi));
+        //        }
+        //        if(pdgid == 5000001 && (status == 22 || status == 52))
+        //        {
+        //            singlinos.push_back(GenParticles.at(gpi));
+        //        }
+        //        if(pdgid == 5000002 && (status == 22 || status == 52))
+        //        {
+        //            singlets.push_back(GenParticles.at(gpi));
+        //        }
+        //        if(status == 23 && momid == 24 && pdgid < 6)
+        //        {
+        //            // Should be the quarks from W decay
+        //            nhadWs++;
+        //            // find the top
+        //            int Wmotherid = GenParticles_ParentId.at(momidx);
+        //            if (abs(Wmotherid) == 6){
+        //                int Wmotheridx = GenParticles_ParentIdx.at(momidx);
+        //                std::vector<int>::iterator found = std::find(hadtops_idx.begin(), hadtops_idx.end(), Wmotheridx);
+        //                if (found != hadtops_idx.end())
+        //                {
+        //                    // already found before
+        //                    // std::cout << "Found this top before: " << *found << std::endl;
+        //                    int position = distance(hadtops_idx.begin(),found);
+        //                    // add the daughter to the list
+        //                    hadtopdaughters[position].push_back(&(GenParticles.at(gpi)));
+        //                } else
+        //                {
+        //                    // not yet found
+        //                    hadtops_idx.push_back(Wmotheridx);
+        //                    hadtops.push_back(GenParticles.at(Wmotheridx));
+        //                    hadWs.push_back(GenParticles.at(momidx));
+        //                    std::vector<const TLorentzVector*> daughters;
+        //                    daughters.push_back(&(GenParticles.at(gpi)));
+        //                    hadtopdaughters.push_back(daughters);
+        //                    //std::cout << "Found a new top at idx " << Wmotheridx << std::endl;
+        //                }
+        //            }
+        //        } 
+        //    }          
+        //    // Now check the b quarks (we only want the ones associated with a hadronic W decay for now)
+        //    for ( unsigned int gpi=0; gpi < GenParticles.size() ; gpi++ ) 
+        //    {
+        //        int pdgid = abs( GenParticles_PdgId.at(gpi) ) ;
+        //        int momid = abs( GenParticles_ParentId.at(gpi) ) ;
+        //        int momidx = GenParticles_ParentIdx.at(gpi);
+        //        int status = GenParticles_Status.at(gpi);
+        //      
+        //        if(status == 23 && momid == 6 && pdgid == 5)
+        //        {
+        //            // found a b quark from top decay, need to add this to the list of daughters
+        //            std::vector<int>::iterator found = std::find(hadtops_idx.begin(), hadtops_idx.end(), momidx);
+        //            if (found != hadtops_idx.end())
+        //            {
+        //                // already found
+        //                int position = distance(hadtops_idx.begin(),found);
+        //                hadtopdaughters[position].push_back(&(GenParticles.at(gpi)));
+        //                //std::cout << "(b) Found this top before: " << *found << std::endl;
+        //            } 
+        //            //else
+        //            //{
+        //            // not yet found
+        //            //std::cout << "(b) Found a new leptonic top at idx " << momidx << std::endl;
+        //            //}
+        //        }
+        //    }
+        //}
 
         // ------------------------------
         // -- Trigger for data
@@ -313,42 +326,42 @@ void ExploreBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
         // ------------------
         // --- TOP TAGGER ---
         // ------------------
-      
-        // setup variables needed for top tagger
-        SetUpTopTagger st(tr, hadtops, hadtopdaughters);
-        std::vector<Constituent> constituents = st.getConstituents();
-      
-        // run the top tagger
-        tt.runTagger(constituents);
+        //
+        //// setup variables needed for top tagger
+        //SetUpTopTagger st(tr, hadtops, hadtopdaughters);
+        //std::vector<Constituent> constituents = st.getConstituents();
+        //
+        //// run the top tagger
+        //tt.runTagger(constituents);
+        //
+        //// retrieve the top tagger results object
+        //const TopTaggerResults& ttr = tt.getResults();
+        //
+        //// get reconstructed top
+        //const std::vector<TopObject*>& tops = ttr.getTops();
+        //
+        //// get set of all constituents (i.e. AK4 and AK8 jets) used in one of the tops
+        //std::set<Constituent const *> usedConstituents = ttr.getUsedConstituents();
 
-        // retrieve the top tagger results object
-        const TopTaggerResults& ttr = tt.getResults();
-
-        // get reconstructed top
-        const std::vector<TopObject*>& tops = ttr.getTops();
-
-        // get set of all constituents (i.e. AK4 and AK8 jets) used in one of the tops
-        std::set<Constituent const *> usedConstituents = ttr.getUsedConstituents();
-
-        // count number of tops per type
-        int ntops_3jet=0;
-        int ntops_2jet=0;
-        int ntops_1jet=0;
-        for (const TopObject* top : tops)
-        {
-            if(top->getNConstituents() == 3 )
-            {
-                ntops_3jet++;
-            }
-            else if(top->getNConstituents() == 2 )
-            {
-                ntops_2jet++;
-            }
-            else if(top->getNConstituents() == 1 )
-            {
-                ntops_1jet++;
-            }
-        }
+        //// count number of tops per type
+        //int ntops_3jet=0;
+        //int ntops_2jet=0;
+        //int ntops_1jet=0;
+        //for (const TopObject* top : tops)
+        //{
+        //    if(top->getNConstituents() == 3 )
+        //    {
+        //        ntops_3jet++;
+        //    }
+        //    else if(top->getNConstituents() == 2 )
+        //    {
+        //        ntops_2jet++;
+        //    }
+        //    else if(top->getNConstituents() == 1 )
+        //    {
+        //        ntops_1jet++;
+        //    }
+        //}
           
         // -------------------------------
         // -- Event shape BDT
@@ -699,7 +712,7 @@ void ExploreBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
 }
 
 
-bool ExploreBackground::PassTriggerGeneral(std::vector<std::string> &mytriggers, const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
+bool AnalyzeBackground::PassTriggerGeneral(std::vector<std::string> &mytriggers, const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
 {
     bool passTrigger = false;
     for(unsigned int i=0; i<TriggerNames.size(); ++i)
@@ -717,7 +730,7 @@ bool ExploreBackground::PassTriggerGeneral(std::vector<std::string> &mytriggers,
 
 }
 
-bool ExploreBackground::PassTriggerAllHad(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
+bool AnalyzeBackground::PassTriggerAllHad(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
 {
     std::vector<std::string> mytriggers {
         //"HLT_PFHT1050", // 2017 trigger
@@ -730,19 +743,19 @@ bool ExploreBackground::PassTriggerAllHad(const std::vector<std::string>& Trigge
     return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
 }
 
-bool ExploreBackground::PassTriggerMuon(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
+bool AnalyzeBackground::PassTriggerMuon(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
 {
     std::vector<std::string> mytriggers {"HLT_IsoMu24","HLT_IsoTkMu24_v"};
     return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
 }
 
-bool ExploreBackground::PassTriggerElectron(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
+bool AnalyzeBackground::PassTriggerElectron(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
 {
     std::vector<std::string> mytriggers {"HLT_Ele27_WPTight_Gsf"};
     return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
 }
 
-void ExploreBackground::WriteHistos()
+void AnalyzeBackground::WriteHistos()
 {
     for (const auto &p : my_histos) {
         p.second->Write();
