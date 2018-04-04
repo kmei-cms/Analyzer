@@ -162,6 +162,11 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
         const TopTaggerResults* ttr         = tr.getVar<TopTaggerResults*>("ttr");
         const std::vector<TopObject*>& tops = ttr->getTops(); 
 
+        const std::vector<TLorentzVector>& GoodMuons = tr.getVec<TLorentzVector>("GoodMuons");
+        const std::vector<int>& GoodMuonsCharge = tr.getVec<int>("GoodMuonsCharge");
+        const std::vector<TLorentzVector>& GoodElectrons = tr.getVec<TLorentzVector>("GoodElectrons");
+        const std::vector<int>& GoodElectronsCharge = tr.getVec<int>("GoodElectronsCharge");
+
         if (maxevents > 0 && tr.getEvtNum() >= maxevents) break;
         
         if ( tr.getEvtNum() % 1000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;
@@ -308,28 +313,28 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
         }
 
         // Count leptons > 30 GeV
-        std::vector<TLorentzVector> rec_muon_pt30;
-        std::vector<int> rec_charge_muon_pt30;
-        for (unsigned int imu = 0; imu < Muons.size(); ++imu)
-        {
-            TLorentzVector lvmu(Muons.at(imu));
-            if( abs(lvmu.Eta()) < 2.4 && lvmu.Pt() > 30 && Muons_passIso.at(imu))
-            {
-                rec_muon_pt30.push_back(lvmu);
-                rec_charge_muon_pt30.push_back(Muons_charge.at(imu));
-            }
-        }
-        std::vector<TLorentzVector> rec_electron_pt30;
-        std::vector<int> rec_charge_electron_pt30;
-        for (unsigned int iel = 0; iel < Electrons.size(); ++iel)
-        {
-            TLorentzVector lvel(Electrons.at(iel));
-            if( abs(lvel.Eta()) < 2.4 && lvel.Pt() > 30 && Electrons_tightID.at(iel) && Electrons_passIso.at(iel))
-            {
-                rec_electron_pt30.push_back(lvel);
-                rec_charge_electron_pt30.push_back(Electrons_charge.at(iel));
-            }
-        }
+        // std::vector<TLorentzVector> rec_muon_pt30;
+        // std::vector<int> rec_charge_muon_pt30;
+        // for (unsigned int imu = 0; imu < Muons.size(); ++imu)
+        // {
+        //     TLorentzVector lvmu(Muons.at(imu));
+        //     if( abs(lvmu.Eta()) < 2.4 && lvmu.Pt() > 30 && Muons_passIso.at(imu))
+        //     {
+        //         rec_muon_pt30.push_back(lvmu);
+        //         rec_charge_muon_pt30.push_back(Muons_charge.at(imu));
+        //     }
+        // }
+        // std::vector<TLorentzVector> rec_electron_pt30;
+        // std::vector<int> rec_charge_electron_pt30;
+        // for (unsigned int iel = 0; iel < Electrons.size(); ++iel)
+        // {
+        //     TLorentzVector lvel(Electrons.at(iel));
+        //     if( abs(lvel.Eta()) < 2.4 && lvel.Pt() > 30 && Electrons_tightID.at(iel) && Electrons_passIso.at(iel))
+        //     {
+        //         rec_electron_pt30.push_back(lvel);
+        //         rec_charge_electron_pt30.push_back(Electrons_charge.at(iel));
+        //     }
+        // }
 
 
         bool passTrigger0l = false;
@@ -337,12 +342,12 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
         bool passTrigger2l = false;
         if(runtype == "Data")
         {
-            if (rec_muon_pt30.size() > 0)
+            if (GoodMuons.size() > 0)
             {
                 passTrigger1l = passTriggerMuon && (filetag == "Data_SingleMuon");
                 passTrigger2l = passTriggerMuon && (filetag == "Data_SingleMuon");
             } 
-            else if (rec_electron_pt30.size() > 0)
+            else if (GoodElectrons.size() > 0)
             {
                 passTrigger1l = passTriggerElectron && (filetag == "Data_SingleElectron");
                 passTrigger2l = passTriggerElectron && (filetag == "Data_SingleElectron");
@@ -360,7 +365,7 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
         }
 
 
-        int nleptons = rec_muon_pt30.size() + rec_electron_pt30.size();
+        int nleptons = GoodMuons.size() + GoodElectrons.size();
         bool passBaseline0l = nleptons==0 && rec_njet_pt45>=6 && HT_trigger > 500 && rec_njet_pt45_btag >= 1;
         bool passBaseline1l = nleptons==1 && rec_njet_pt30>=6 ;
         bool passBaseline2l = nleptons==2;
@@ -369,35 +374,35 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
         bool passNb = rec_njet_pt45_btag >= 1;
         bool onZ = false;
         bool passMbl_2l = false;
-        if ( (rec_muon_pt30.size() == 2) && (rec_charge_muon_pt30[0] != rec_charge_muon_pt30[1]) )
+        if ( (GoodMuons.size() == 2) && (GoodMuonsCharge[0] != GoodMuonsCharge[1]) )
         {
-            double mll = (rec_muon_pt30[0] + rec_muon_pt30[1]).M();
+            double mll = (GoodMuons[0] + GoodMuons[1]).M();
             if( mll > 81.2 && mll < 101.2)
                 onZ = true;          
 
             // check whether a bl pair passes the M(b,l) cut
             for (TLorentzVector myb : rec_bjets_pt30)
             {
-                double mass_bl_1 = (rec_muon_pt30[0] + myb).M();
+                double mass_bl_1 = (GoodMuons[0] + myb).M();
                 if(mass_bl_1 < 180 && mass_bl_1 > 30)
                     passMbl_2l = true;
-                double mass_bl_2 = (rec_muon_pt30[1] + myb).M();
+                double mass_bl_2 = (GoodMuons[1] + myb).M();
                 if(mass_bl_2 < 180 && mass_bl_2 > 30)
                     passMbl_2l = true;
             }
         } 
-        else if ( (rec_electron_pt30.size() == 2) && (rec_charge_electron_pt30[0] != rec_charge_electron_pt30[1]) )
+        else if ( (GoodElectrons.size() == 2) && (GoodElectronsCharge[0] != GoodElectronsCharge[1]) )
         {
-            double mll = (rec_electron_pt30[0] + rec_electron_pt30[1]).M();
+            double mll = (GoodElectrons[0] + GoodElectrons[1]).M();
             if( mll > 81.2 && mll < 101.2)
                 onZ = true;  
             // check whether a bl pair passes the M(b,l) cut
             for (TLorentzVector myb : rec_bjets_pt30)
             {
-                double mass_bl_1 = (rec_electron_pt30[0] + myb).M();
+                double mass_bl_1 = (GoodElectrons[0] + myb).M();
                 if(mass_bl_1 < 180 && mass_bl_1 > 30)
                     passMbl_2l = true;
-                double mass_bl_2 = (rec_electron_pt30[1] + myb).M();
+                double mass_bl_2 = (GoodElectrons[1] + myb).M();
                 if(mass_bl_2 < 180 && mass_bl_2 > 30)
                     passMbl_2l = true;
             }
@@ -471,7 +476,7 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
             // Dedicated 1l region
             if(nleptons == 1 && passNb && passTrigger1l)
             {
-                TLorentzVector mylepton = (rec_electron_pt30.size() == 1) ? rec_electron_pt30[0] : rec_muon_pt30[0];
+                TLorentzVector mylepton = (GoodElectrons.size() == 1) ? GoodElectrons[0] : GoodMuons[0];
                 bool passMtop = false;
                 for (TLorentzVector myb : rec_bjets_pt30)
                 {
@@ -619,3 +624,5 @@ void AnalyzeBackground::WriteHistos()
     }
     
 }
+
+//  LocalWords:  GoodMuonsCharge
