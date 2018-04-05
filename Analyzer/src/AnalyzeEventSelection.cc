@@ -18,12 +18,6 @@
 #include "TopTagger/CfgParser/include/TTException.h"
 #include "Framework/Framework/include/SetUpTopTagger.h"
 
-// includes for the event shapes
-#include "Framework/Framework/include/bdt_350to650_fwm10_jmtev_top6.h"
-#include "Framework/Framework/include/EventShapeVariables.h"
-#include "Framework/Framework/src/get_cmframe_jets.c"
-//#include "Framework/Framework/include/fisher_350to650_fwm10_jmtev_top6.h"
-
 void AnalyzeEventSelection::InitHistos()
 {
     TH1::SetDefaultSumw2();
@@ -134,33 +128,6 @@ void AnalyzeEventSelection::InitHistos()
 
 void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents, std::string filetag, bool isQuiet)
 {
-    // Set up Event shape BDT
-    std::vector<std::string> inputVarNames_top6 ;
-    std::vector<double> bdtInputVals_top6 ;
-    
-    {
-        std::string vname ;
-        vname = "fwm2_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "fwm3_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "fwm4_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "fwm5_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "fwm6_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "fwm7_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "fwm8_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "fwm9_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "fwm10_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "jmt_ev0_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "jmt_ev1_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "jmt_ev2_top6" ; inputVarNames_top6.push_back( vname ) ;
-       
-        for ( unsigned int i=0; i < inputVarNames_top6.size() ; i++ ) {
-            bdtInputVals_top6.push_back( 0.5 ) ; //--- load vector with dummy values.
-        } // i
-       
-    }
-    ReadBDT_350to650_fwm10_jmtev_top6 eventshapeBDT( inputVarNames_top6 ) ;
-    //ReadFisher_350to650_fwm10_jmtev_top6 read_fisher_350to650_fwm10_jmtev_top6( inputVarNames_top6 ) ;
-
     while( tr.getNextEvent() )
     {
         const double& madHT   = tr.getVar<double>("madHT");
@@ -185,7 +152,16 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         const std::vector<int>&         TriggerPass            = tr.getVec<int>("TriggerPass");
         const TopTaggerResults* ttr         = tr.getVar<TopTaggerResults*>("ttr");
         const std::vector<TopObject*>& tops = ttr->getTops();
-        
+        const bool& fisher_bin1 = tr.getVar<bool>("fisher_bin1");
+        const bool& fisher_bin2 = tr.getVar<bool>("fisher_bin2");
+        const bool& fisher_bin3 = tr.getVar<bool>("fisher_bin3");
+        const bool& fisher_bin4 = tr.getVar<bool>("fisher_bin4");
+        const bool& bdt_bin1    = tr.getVar<bool>("bdt_bin1");
+        const bool& bdt_bin2    = tr.getVar<bool>("bdt_bin2");
+        const bool& bdt_bin3    = tr.getVar<bool>("bdt_bin3");
+        const bool& bdt_bin4    = tr.getVar<bool>("bdt_bin4");
+        const double& eventshape_bdt_val = tr.getVar<double>("eventshape_bdt_val");
+       
         if(maxevents != -1 && tr.getEvtNum() >= maxevents) break;        
         if ( tr.getEvtNum() % 1000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;
         
@@ -215,35 +191,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         // --- TOP TAGGER ---
         // ------------------
         my_histos["h_ntops"]->Fill(tops.size(), eventweight);
-        
-        // -------------------------------
-        // -- Event shape BDT
-        // -------------------------------
-        
-        std::vector<math::RThetaPhiVector> cm_frame_jets ;
-        get_cmframe_jets( &Jets, cm_frame_jets, 6 ) ;
-        EventShapeVariables esv_top6( cm_frame_jets ) ;
-        TVectorD eigen_vals_norm_top6 = esv_top6.getEigenValues() ;
-        
-        {
-            int vi(0) ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(2) ; vi++ ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(3) ; vi++ ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(4) ; vi++ ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(5) ; vi++ ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(6) ; vi++ ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(7) ; vi++ ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(8) ; vi++ ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(9) ; vi++ ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(10) ; vi++ ;
-            bdtInputVals_top6.at(vi) = eigen_vals_norm_top6[0] ; vi++ ;
-            bdtInputVals_top6.at(vi) = eigen_vals_norm_top6[1] ; vi++ ;
-            bdtInputVals_top6.at(vi) = eigen_vals_norm_top6[2] ; vi++ ;
-        }
-        
-        double eventshape_bdt_val = eventshapeBDT.GetMvaValue( bdtInputVals_top6 ) ;
-        //double fisher_val = read_fisher_350to650_fwm10_jmtev_top6.GetMvaValue( bdtInputVals_top6 ) ;
-        
+                
         // -------------------------------
         // -- Basic event selection stuff
         // -------------------------------
@@ -438,12 +386,6 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
             //std::cout << "New top counting: " << pass_0t << " " << pass_1t << " " << pass_2t << " " << pass_1t1 << " " << pass_1t2 << " " << pass_1t3 << std::endl;
         }
         
-        bool bdt_bin1 = eventshape_bdt_val > -1.   && eventshape_bdt_val <= -0.04;
-        bool bdt_bin2 = eventshape_bdt_val > -0.04 && eventshape_bdt_val <= 0;
-        bool bdt_bin3 = eventshape_bdt_val > 0     && eventshape_bdt_val <= 0.04;
-        bool bdt_bin4 = eventshape_bdt_val > 0.04  && eventshape_bdt_val <= 1;
-        
-        
         const std::map<std::string, bool> cut_map_0l {
             {"g6j_HT500_g1b", passBaseline0l},
             {"g6j_HT500_g1b_0t", passBaseline0l && pass_0t},
@@ -515,8 +457,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
             {"6j_g1b_mbl_1t2", passBaseline1el && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t2},
             {"6j_g1b_mbl_1t3", passBaseline1el && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t3},
                 };
-        
-        
+                
         for(auto& kv : cut_map_1l)
         {
             if(kv.second)
