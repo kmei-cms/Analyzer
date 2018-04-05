@@ -5,6 +5,7 @@
 #include "TopTaggerTools/Tools/include/HistoContainer.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
 #include "Framework/Framework/include/RunTopTagger.h"
+#include "Framework/Framework/include/RunFisher.h"
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -38,9 +39,11 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
 
         // Define classes/functions that add variables on the fly
         RunTopTagger runTopTagger;
-
+        RunFisher    runFisher;
+        
         // Register classes/functions that add variables on the fly
         tr.registerFunction( std::move(runTopTagger) );
+        tr.registerFunction( std::move(runFisher) );
 
         // Loop over all of the events and fill histos
         t.Loop(tr, weight, maxEvts, file.tag);

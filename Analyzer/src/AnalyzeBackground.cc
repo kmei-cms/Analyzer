@@ -17,13 +17,6 @@
 #include "TopTagger/CfgParser/include/TTException.h"
 #include "Framework/Framework/include/SetUpTopTagger.h"
 
-// includes for the event shapes
-#include "Framework/Framework/include/bdt_350to650_fwm10_jmtev_top6.h"
-#include "Framework/Framework/include/EventShapeVariables.h"
-#include "Framework/Framework/src/get_cmframe_jets.c"
-#include "Framework/Framework/src/fisher_350to650_fwm10_jmtev_top6.c"
-#include "Framework/Framework/src/fisher_350to650_fwm6_jmtev_top6_gt_v2.c"
-
 void AnalyzeBackground::InitHistos()
 {
     TH1::SetDefaultSumw2();
@@ -90,56 +83,6 @@ void AnalyzeBackground::InitHistos()
 
 void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std::string filetag, bool isQuiet)
 {
-    // Set up Event shape BDT
-    std::vector<std::string> inputVarNames_top6 ;
-    std::vector<double> bdtInputVals_top6 ;
-
-    {
-        std::string vname ;
-        vname = "fwm2_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "fwm3_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "fwm4_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "fwm5_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "fwm6_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "fwm7_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "fwm8_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "fwm9_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "fwm10_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "jmt_ev0_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "jmt_ev1_top6" ; inputVarNames_top6.push_back( vname ) ;
-        vname = "jmt_ev2_top6" ; inputVarNames_top6.push_back( vname ) ;
-       
-        for ( unsigned int i=0; i < inputVarNames_top6.size() ; i++ ) {
-            bdtInputVals_top6.push_back( 0.5 ) ; //--- load vector with dummy values.
-        } // i
-       
-    }
-
-    ReadBDT_350to650_fwm10_jmtev_top6 eventshapeBDT( inputVarNames_top6 ) ;
-    ReadFisher_350to650_fwm10_jmtev_top6 read_fisher_350to650_fwm10_jmtev_top6( inputVarNames_top6 ) ;
-
-    std::vector<std::string> inputVarNames_top6_fwm6 ;
-    std::vector<double> bdtInputVals_top6_fwm6 ;
-
-    {
-        std::string vname ;
-        vname = "fwm2_top6" ; inputVarNames_top6_fwm6.push_back( vname ) ;
-        vname = "fwm3_top6" ; inputVarNames_top6_fwm6.push_back( vname ) ;
-        vname = "fwm4_top6" ; inputVarNames_top6_fwm6.push_back( vname ) ;
-        vname = "fwm5_top6" ; inputVarNames_top6_fwm6.push_back( vname ) ;
-        vname = "fwm6_top6" ; inputVarNames_top6_fwm6.push_back( vname ) ;
-        vname = "jmt_ev0_top6" ; inputVarNames_top6_fwm6.push_back( vname ) ;
-        vname = "jmt_ev1_top6" ; inputVarNames_top6_fwm6.push_back( vname ) ;
-        vname = "jmt_ev2_top6" ; inputVarNames_top6_fwm6.push_back( vname ) ;
-
-        for ( unsigned int i=0; i < inputVarNames_top6_fwm6.size() ; i++ ) {
-            bdtInputVals_top6_fwm6.push_back( 0.5 ) ; //--- load vector with dummy values.
-        } // i
-
-    }
-
-    ReadFisherG_350to650_fwm6_jmtev_top6_gt_v2 read_fisher_350to650_fwm6_jmtev_top6_gt_v2( inputVarNames_top6_fwm6 ) ;
-
     while(tr.getNextEvent())
     {
         const double& madHT   = tr.getVar<double>("madHT");
@@ -161,9 +104,16 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
         const std::vector<int>&         TriggerPass            = tr.getVec<int>("TriggerPass");
         const TopTaggerResults* ttr         = tr.getVar<TopTaggerResults*>("ttr");
         const std::vector<TopObject*>& tops = ttr->getTops(); 
+        const bool& fisher_bin1 = tr.getVar<bool>("fisher_bin1");
+        const bool& fisher_bin2 = tr.getVar<bool>("fisher_bin2");
+        const bool& fisher_bin3 = tr.getVar<bool>("fisher_bin3");
+        const bool& fisher_bin4 = tr.getVar<bool>("fisher_bin4");
+        const bool& bdt_bin1    = tr.getVar<bool>("bdt_bin1");
+        const bool& bdt_bin2    = tr.getVar<bool>("bdt_bin2");
+        const bool& bdt_bin3    = tr.getVar<bool>("bdt_bin3");
+        const bool& bdt_bin4    = tr.getVar<bool>("bdt_bin4");
 
-        if (maxevents > 0 && tr.getEvtNum() >= maxevents) break;
-        
+        if (maxevents > 0 && tr.getEvtNum() >= maxevents) break;        
         if ( tr.getEvtNum() % 1000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;
         
         // Exclude events with MadGraph HT > 100 from the DY inclusive sample
@@ -211,60 +161,6 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
                 }
             }
         }
-
-        // -------------------------------
-        // -- Event shape BDT
-        // -------------------------------
-
-        std::vector<math::RThetaPhiVector> cm_frame_jets ;
-        get_cmframe_jets( &Jets, cm_frame_jets, 6 ) ;
-        EventShapeVariables esv_top6( cm_frame_jets ) ;
-        TVectorD eigen_vals_norm_top6 = esv_top6.getEigenValues() ;
-
-        {
-            int vi(0) ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(2) ; vi++ ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(3) ; vi++ ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(4) ; vi++ ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(5) ; vi++ ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(6) ; vi++ ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(7) ; vi++ ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(8) ; vi++ ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(9) ; vi++ ;
-            bdtInputVals_top6.at(vi) = esv_top6.getFWmoment(10) ; vi++ ;
-            bdtInputVals_top6.at(vi) = eigen_vals_norm_top6[0] ; vi++ ;
-            bdtInputVals_top6.at(vi) = eigen_vals_norm_top6[1] ; vi++ ;
-            bdtInputVals_top6.at(vi) = eigen_vals_norm_top6[2] ; vi++ ;
-        }
-
-        double eventshape_bdt_val = eventshapeBDT.GetMvaValue( bdtInputVals_top6 ) ;
-        double fisher_val = read_fisher_350to650_fwm10_jmtev_top6.GetMvaValue( bdtInputVals_top6 ) ;
-
-        {
-            int vi(0) ;
-            bdtInputVals_top6_fwm6.at(vi) = esv_top6.getFWmoment(2) ; vi++ ;
-            bdtInputVals_top6_fwm6.at(vi) = esv_top6.getFWmoment(3) ; vi++ ;
-            bdtInputVals_top6_fwm6.at(vi) = esv_top6.getFWmoment(4) ; vi++ ;
-            bdtInputVals_top6_fwm6.at(vi) = esv_top6.getFWmoment(5) ; vi++ ;
-            bdtInputVals_top6_fwm6.at(vi) = esv_top6.getFWmoment(6) ; vi++ ;
-            bdtInputVals_top6_fwm6.at(vi) = eigen_vals_norm_top6[0] ; vi++ ;
-            bdtInputVals_top6_fwm6.at(vi) = eigen_vals_norm_top6[1] ; vi++ ;
-            bdtInputVals_top6_fwm6.at(vi) = eigen_vals_norm_top6[2] ; vi++ ;
-        }
-
-        double fisher_val_v2 = read_fisher_350to650_fwm6_jmtev_top6_gt_v2.GetMvaValue( bdtInputVals_top6_fwm6 ) ;
-
-
-
-        bool bdt_bin1 = eventshape_bdt_val > -1.   && eventshape_bdt_val <= -0.04;
-        bool bdt_bin2 = eventshape_bdt_val > -0.04 && eventshape_bdt_val <= 0;
-        bool bdt_bin3 = eventshape_bdt_val > 0     && eventshape_bdt_val <= 0.04;
-        bool bdt_bin4 = eventshape_bdt_val > 0.04  && eventshape_bdt_val <= 1;
-
-        bool fisher_bin1 = fisher_val_v2 > -1.    && fisher_val_v2 <= -0.035;
-        bool fisher_bin2 = fisher_val_v2 > -0.035 && fisher_val_v2 <= 0.03;
-        bool fisher_bin3 = fisher_val_v2 > 0.03   && fisher_val_v2 <= 0.095;
-        bool fisher_bin4 = fisher_val_v2 > 0.095  && fisher_val_v2 <= 1;
 
         // -------------------------------
         // -- Basic event selection stuff
@@ -358,7 +254,6 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
             passTrigger1l = true;
             passTrigger2l = true;
         }
-
 
         int nleptons = rec_muon_pt30.size() + rec_electron_pt30.size();
         bool passBaseline0l = nleptons==0 && rec_njet_pt45>=6 && HT_trigger > 500 && rec_njet_pt45_btag >= 1;
