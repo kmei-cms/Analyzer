@@ -41,7 +41,7 @@ LIBSTOPTAGGER += -L$(TTTDIR) -lTopTagger
 #OBJS       = $(patsubst %, $(ODIR)/%, $(OBJ))
 
 
-PROGRAMS = MyAnalysis simpleAnalyzer
+PROGRAMS = MyAnalysis simpleAnalyzer plot
 
 
 all: mkobj sampPyWrap $(PROGRAMS)
@@ -131,6 +131,10 @@ MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopT
 
 simpleAnalyzer: $(ODIR)/simpleAnalyzer.o $(ODIR)/samples.o $(ODIR)/NTupleReader.o $(ODIR)/SATException.o 
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
+
+plot: $(ODIR)/plot.o
+	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
+
 clean:
 	rm -rf $(ODIR)/*.o $(ODIR)/*.so $(ODIR)/*.d $(PROGRAMS) core $(ODIR)
 
