@@ -1,6 +1,7 @@
 #include "Analyzer/Analyzer/include/AnalyzeBackground.h"
 #include "Analyzer/Analyzer/include/AnalyzeTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeEventSelection.h"
+#include "Analyzer/Analyzer/include/Analyze0Lep.h"
 #include "Framework/Framework/include/samples.h"
 #include "TopTaggerTools/Tools/include/HistoContainer.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
@@ -84,7 +85,7 @@ std::set<AnaSamples::FileSummary> setFS(std::string sampleloc, std::string dataS
 int main(int argc, char *argv[])
 {
     int opt, option_index = 0;
-    bool doBackground = false, doTopTagger = false, doEventSelection = false;
+    bool doBackground = false, doTopTagger = false, doEventSelection = false, do0Lep = false;
     bool runOnCondor = false;
     std::string histFile = "", dataSets = "", sampleloc = AnaSamples::fileDir;
     int nFiles = -1, startFile = 0, maxEvts = -1;
@@ -93,6 +94,7 @@ int main(int argc, char *argv[])
         {"doBackground",       no_argument, 0, 'b'},
         {"doTopTagger",        no_argument, 0, 't'},
         {"doEventSelection",   no_argument, 0, 's'},
+        {"do0Lep",             no_argument, 0, 'z'},
         {"condor",             no_argument, 0, 'c'},
         {"histFile",     required_argument, 0, 'H'},
         {"dataSets",     required_argument, 0, 'D'},
@@ -101,13 +103,14 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-    while((opt = getopt_long(argc, argv, "btscH:D:N:M:E:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "btszcH:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
             case 'b': doBackground     = true;              break;
             case 't': doTopTagger      = true;              break;
             case 's': doEventSelection = true;              break;
+            case 'z': do0Lep           = true;              break;
             case 'c': runOnCondor      = true;              break;
             case 'H': histFile         = optarg;            break;
             case 'D': dataSets         = optarg;            break;
@@ -139,6 +142,10 @@ int main(int argc, char *argv[])
     else if(doEventSelection)
     {
         run<AnalyzeEventSelection>(vvf,"Data",startFile,nFiles,maxEvts);
+    }
+    else if(do0Lep)
+    {
+        run<Analyze0Lep>(vvf,"Data",startFile,nFiles,maxEvts);
     }
 
     myfile->Close();

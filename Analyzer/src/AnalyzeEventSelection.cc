@@ -135,18 +135,19 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         const double& MET     = tr.getVar<double>("MET");
         const double& METPhi  = tr.getVar<double>("METPhi");
         const double& HT      = tr.getVar<double>("HT");
+        const int& ntops      = tr.getVar<int>("ntops");
         const int& ntops_3jet = tr.getVar<int>("ntops_3jet");
         const int& ntops_2jet = tr.getVar<int>("ntops_2jet");
         const int& ntops_1jet = tr.getVar<int>("ntops_1jet");
         const std::string& runtype = tr.getVar<std::string>("runtype");
-        const std::vector<TLorentzVector>& Muons        = tr.getVec<TLorentzVector>("Muons");
-        const std::vector<TLorentzVector>& Electrons    = tr.getVec<TLorentzVector>("Electrons");
-        const std::vector<TLorentzVector>& Jets         = tr.getVec<TLorentzVector>("Jets");
-        const std::vector<int>& Muons_charge            = tr.getVec<int>("Muons_charge");
-        const std::vector<int>& Electrons_charge        = tr.getVec<int>("Electrons_charge");
-        const std::vector<bool>& Electrons_tightID      = tr.getVec<bool>("Electrons_tightID");
-        const std::vector<bool>& Electrons_passIso      = tr.getVec<bool>("Electrons_passIso");
-        const std::vector<bool>& Muons_passIso          = tr.getVec<bool>("Muons_passIso");
+        const std::vector<TLorentzVector>& Muons     = tr.getVec<TLorentzVector>("Muons");
+        const std::vector<TLorentzVector>& Electrons = tr.getVec<TLorentzVector>("Electrons");
+        const std::vector<TLorentzVector>& Jets      = tr.getVec<TLorentzVector>("Jets");
+        const std::vector<int>&  Muons_charge        = tr.getVec<int>("Muons_charge");
+        const std::vector<int>&  Electrons_charge    = tr.getVec<int>("Electrons_charge");
+        const std::vector<bool>& Electrons_tightID   = tr.getVec<bool>("Electrons_tightID");
+        const std::vector<bool>& Electrons_passIso   = tr.getVec<bool>("Electrons_passIso");
+        const std::vector<bool>& Muons_passIso       = tr.getVec<bool>("Muons_passIso");
         const std::vector<double>&      Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
         const std::vector<std::string>& TriggerNames           = tr.getVec<std::string>("TriggerNames");
         const std::vector<int>&         TriggerPass            = tr.getVec<int>("TriggerPass");
@@ -177,8 +178,8 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         // -- Trigger for data
         // ------------------------------
         
-        bool passTriggerAllHad = PassTriggerAllHad(TriggerNames, TriggerPass);
-        bool passTriggerMuon = PassTriggerMuon(TriggerNames, TriggerPass);
+        bool passTriggerAllHad   = PassTriggerAllHad(TriggerNames, TriggerPass);
+        bool passTriggerMuon     = PassTriggerMuon(TriggerNames, TriggerPass);
         bool passTriggerElectron = PassTriggerElectron(TriggerNames, TriggerPass);
         if (runtype == "Data")
         {
@@ -190,7 +191,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         // ------------------
         // --- TOP TAGGER ---
         // ------------------
-        my_histos["h_ntops"]->Fill(tops.size(), eventweight);
+        my_histos["h_ntops"]->Fill(ntops, eventweight);
                 
         // -------------------------------
         // -- Basic event selection stuff
@@ -312,8 +313,8 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
             }
         }
         bool pass_g1b = rec_njet_pt30_btag >= 1;
-        bool pass_0t = tops.size()==0, pass_1t = tops.size()==1, pass_2t = tops.size()==2;
-        bool pass_1t1 = tops.size()==1 && ntops_1jet==1, pass_1t2 = tops.size()==1 && ntops_2jet==1, pass_1t3 = tops.size()==1 && ntops_3jet==1;
+        bool pass_0t = ntops==0, pass_1t = ntops==1, pass_2t = ntops==2;
+        bool pass_1t1 = ntops==1 && ntops_1jet==1, pass_1t2 = ntops==1 && ntops_2jet==1, pass_1t3 = ntops==1 && ntops_3jet==1;
         double mbl = -1;
         TLorentzVector used_bjet;
         double mblmet = -1;
@@ -376,9 +377,9 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
             //std::cout << "Old top counting: " << pass_0t << " " << pass_1t << " " << pass_2t << " " << pass_1t1 << " " << pass_1t2 << " " << pass_1t3 << std::endl;
             if (ntops_to_remove > 0)
             {
-                pass_0t = (tops.size() - ntops_to_remove) == 0;
-                pass_1t = (tops.size() - ntops_to_remove) == 1;
-                pass_2t = (tops.size() - ntops_to_remove) == 2;
+                pass_0t = (ntops - ntops_to_remove) == 0;
+                pass_1t = (ntops - ntops_to_remove) == 1;
+                pass_2t = (ntops - ntops_to_remove) == 2;
                 pass_1t1 = (ntops_1jet - top_type1_to_remove) == 1;
                 pass_1t2 = (ntops_2jet - top_type2_to_remove) == 1;
                 pass_1t3 = (ntops_3jet - top_type3_to_remove) == 1;
@@ -387,15 +388,15 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         }
         
         const std::map<std::string, bool> cut_map_0l {
-            {"g6j_HT500_g1b", passBaseline0l},
-            {"g6j_HT500_g1b_0t", passBaseline0l && pass_0t},
-            {"g6j_HT500_g1b_1t", passBaseline0l && pass_1t},
-            {"g6j_HT500_g1b_2t", passBaseline0l && pass_2t},
-            {"6j_HT500_g1b_0t",  passBaseline0l && rec_njet_pt30==6 && pass_0t},
-            {"6j_HT500_g1b_1t1", passBaseline0l && rec_njet_pt30==6 && pass_1t1},
-            {"6j_HT500_g1b_1t2", passBaseline0l && rec_njet_pt30==6 && pass_1t2},
-            {"6j_HT500_g1b_1t3", passBaseline0l && rec_njet_pt30==6 && pass_1t3},
-            {"6j_HT500_g1b_2t",  passBaseline0l && rec_njet_pt30==6 && pass_2t},
+            {"g6j_HT500_g1b",     passBaseline0l},
+            {"g6j_HT500_g1b_0t",  passBaseline0l && pass_0t},
+            {"g6j_HT500_g1b_1t",  passBaseline0l && pass_1t},
+            {"g6j_HT500_g1b_2t",  passBaseline0l && pass_2t},
+            {"6j_HT500_g1b_0t",   passBaseline0l && rec_njet_pt30==6 && pass_0t},
+            {"6j_HT500_g1b_1t1",  passBaseline0l && rec_njet_pt30==6 && pass_1t1},
+            {"6j_HT500_g1b_1t2",  passBaseline0l && rec_njet_pt30==6 && pass_1t2},
+            {"6j_HT500_g1b_1t3",  passBaseline0l && rec_njet_pt30==6 && pass_1t3},
+            {"6j_HT500_g1b_2t",   passBaseline0l && rec_njet_pt30==6 && pass_2t},
             {"g7j_HT500_g1b_0t",  passBaseline0l && rec_njet_pt30>=7 && pass_0t},
             {"g7j_HT500_g1b_1t1", passBaseline0l && rec_njet_pt30>=7 && pass_1t1},
             {"g7j_HT500_g1b_1t2", passBaseline0l && rec_njet_pt30>=7 && pass_1t2},
@@ -408,7 +409,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
             if(kv.second)
             {
                 my_histos["h_njets_0l_"+kv.first]->Fill(rec_njet_pt30, eventweight);
-                my_histos["h_ntops_0l_"+kv.first]->Fill(tops.size(), eventweight);
+                my_histos["h_ntops_0l_"+kv.first]->Fill(ntops, eventweight);
                 my_histos["h_nb_0l_"+kv.first]->Fill(rec_njet_pt30_btag, eventweight);
                 my_histos["h_HT_0l_"+kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_0l_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
@@ -417,41 +418,41 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         }
         
         const std::map<std::string, bool> cut_map_1l {
-            {"g6j", passBaseline1l},
-            {"g6j_g1b", passBaseline1l && pass_g1b},
-            {"g6j_g1b_mbl", passBaseline1l && pass_g1b && pass_mbl},
+            {"g6j",             passBaseline1l},
+            {"g6j_g1b",         passBaseline1l && pass_g1b},
+            {"g6j_g1b_mbl",     passBaseline1l && pass_g1b && pass_mbl},
             {"g6j_g1b_mbl_0t",  passBaseline1l && pass_g1b && pass_mbl && pass_0t},
             {"g6j_g1b_mbl_1t1", passBaseline1l && pass_g1b && pass_mbl && pass_1t1},
             {"g6j_g1b_mbl_1t2", passBaseline1l && pass_g1b && pass_mbl && pass_1t2},
             {"g6j_g1b_mbl_1t3", passBaseline1l && pass_g1b && pass_mbl && pass_1t3},
-            {"6j", passBaseline1l && rec_njet_pt30==6},
-            {"6j_g1b", passBaseline1l && rec_njet_pt30==6 && pass_g1b},
-            {"6j_g1b_mbl", passBaseline1l && rec_njet_pt30==6 && pass_g1b && pass_mbl},
-            {"6j_g1b_mbl_0t",  passBaseline1l && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_0t},
-            {"6j_g1b_mbl_1t1", passBaseline1l && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t1},
-            {"6j_g1b_mbl_1t2", passBaseline1l && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t2},
-            {"6j_g1b_mbl_1t3", passBaseline1l && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t3},
-            {"g7j", passBaseline1l && rec_njet_pt30>=7},
-            {"g7j_g1b", passBaseline1l && rec_njet_pt30>=7 && pass_g1b},
-            {"g7j_g1b_mbl", passBaseline1l && rec_njet_pt30>=7 && pass_g1b && pass_mbl},
+            {"6j",              passBaseline1l && rec_njet_pt30==6},
+            {"6j_g1b",          passBaseline1l && rec_njet_pt30==6 && pass_g1b},
+            {"6j_g1b_mbl",      passBaseline1l && rec_njet_pt30==6 && pass_g1b && pass_mbl},
+            {"6j_g1b_mbl_0t",   passBaseline1l && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_0t},
+            {"6j_g1b_mbl_1t1",  passBaseline1l && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t1},
+            {"6j_g1b_mbl_1t2",  passBaseline1l && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t2},
+            {"6j_g1b_mbl_1t3",  passBaseline1l && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t3},
+            {"g7j",             passBaseline1l && rec_njet_pt30>=7},
+            {"g7j_g1b",         passBaseline1l && rec_njet_pt30>=7 && pass_g1b},
+            {"g7j_g1b_mbl",     passBaseline1l && rec_njet_pt30>=7 && pass_g1b && pass_mbl},
             {"g7j_g1b_mbl_0t",  passBaseline1l && rec_njet_pt30>=7 && pass_g1b && pass_mbl && pass_0t},
             {"g7j_g1b_mbl_1t1", passBaseline1l && rec_njet_pt30>=7 && pass_g1b && pass_mbl && pass_1t1},
             {"g7j_g1b_mbl_1t2", passBaseline1l && rec_njet_pt30>=7 && pass_g1b && pass_mbl && pass_1t2},
             {"g7j_g1b_mbl_1t3", passBaseline1l && rec_njet_pt30>=7 && pass_g1b && pass_mbl && pass_1t3},
                 };
         const std::map<std::string, bool> cut_map_1mu {
-            {"6j", passBaseline1mu && rec_njet_pt30==6},
-            {"6j_g1b", passBaseline1mu && rec_njet_pt30==6 && pass_g1b},
-            {"6j_g1b_mbl", passBaseline1mu && rec_njet_pt30==6 && pass_g1b && pass_mbl},
+            {"6j",             passBaseline1mu && rec_njet_pt30==6},
+            {"6j_g1b",         passBaseline1mu && rec_njet_pt30==6 && pass_g1b},
+            {"6j_g1b_mbl",     passBaseline1mu && rec_njet_pt30==6 && pass_g1b && pass_mbl},
             {"6j_g1b_mbl_0t",  passBaseline1mu && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_0t},
             {"6j_g1b_mbl_1t1", passBaseline1mu && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t1},
             {"6j_g1b_mbl_1t2", passBaseline1mu && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t2},
             {"6j_g1b_mbl_1t3", passBaseline1mu && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t3},
                 };
         const std::map<std::string, bool> cut_map_1el {
-            {"6j", passBaseline1el && rec_njet_pt30==6},
-            {"6j_g1b", passBaseline1el && rec_njet_pt30==6 && pass_g1b},
-            {"6j_g1b_mbl", passBaseline1el && rec_njet_pt30==6 && pass_g1b && pass_mbl},
+            {"6j",             passBaseline1el && rec_njet_pt30==6},
+            {"6j_g1b",         passBaseline1el && rec_njet_pt30==6 && pass_g1b},
+            {"6j_g1b_mbl",     passBaseline1el && rec_njet_pt30==6 && pass_g1b && pass_mbl},
             {"6j_g1b_mbl_0t",  passBaseline1el && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_0t},
             {"6j_g1b_mbl_1t1", passBaseline1el && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t1},
             {"6j_g1b_mbl_1t2", passBaseline1el && rec_njet_pt30==6 && pass_g1b && pass_mbl && pass_1t2},
@@ -463,7 +464,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
             if(kv.second)
             {
                 my_histos["h_njets_1l_"+kv.first]->Fill(rec_njet_pt30, eventweight);
-                my_histos["h_ntops_1l_"+kv.first]->Fill(tops.size(), eventweight);
+                my_histos["h_ntops_1l_"+kv.first]->Fill(ntops, eventweight);
                 my_histos["h_nb_1l_"+kv.first]->Fill(rec_njet_pt30_btag, eventweight);
                 my_histos["h_HT_1l_"+kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_1l_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
@@ -477,7 +478,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
             {
                 my_histos["h_mupt_1mu_"+kv.first]->Fill(rec_muon_pt30[0].Pt(), eventweight);
                 my_histos["h_njets_1mu_"+kv.first]->Fill(rec_njet_pt30, eventweight);
-                my_histos["h_ntops_1mu_"+kv.first]->Fill(tops.size(), eventweight);
+                my_histos["h_ntops_1mu_"+kv.first]->Fill(ntops, eventweight);
                 my_histos["h_nb_1mu_"+kv.first]->Fill(rec_njet_pt30_btag, eventweight);
                 my_histos["h_HT_1mu_"+kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_1mu_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
@@ -491,7 +492,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
             {
                 my_histos["h_elpt_1el_"+kv.first]->Fill(rec_electron_pt30[0].Pt(), eventweight);
                 my_histos["h_njets_1el_"+kv.first]->Fill(rec_njet_pt30, eventweight);
-                my_histos["h_ntops_1el_"+kv.first]->Fill(tops.size(), eventweight);
+                my_histos["h_ntops_1el_"+kv.first]->Fill(ntops, eventweight);
                 my_histos["h_nb_1el_"+kv.first]->Fill(rec_njet_pt30_btag, eventweight);
                 my_histos["h_HT_1el_"+kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_1el_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
@@ -501,16 +502,16 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         }
         
         const std::map<std::string, bool> cut_map_2l {
-            {"onZ", passBaseline2l && onZ},
-            {"onZ_g1b", passBaseline2l && onZ && pass_g1b},
-            {"onZ_g1b_nombl", passBaseline2l && onZ && pass_g1b && !passMbl_2l},
+            {"onZ",                passBaseline2l && onZ},
+            {"onZ_g1b",            passBaseline2l && onZ && pass_g1b},
+            {"onZ_g1b_nombl",      passBaseline2l && onZ && pass_g1b && !passMbl_2l},
             {"onZ_g1b_nombl_bdt1", passBaseline2l && onZ && pass_g1b && !passMbl_2l && bdt_bin1},
             {"onZ_g1b_nombl_bdt2", passBaseline2l && onZ && pass_g1b && !passMbl_2l && bdt_bin2},
             {"onZ_g1b_nombl_bdt3", passBaseline2l && onZ && pass_g1b && !passMbl_2l && bdt_bin3},
             {"onZ_g1b_nombl_bdt4", passBaseline2l && onZ && pass_g1b && !passMbl_2l && bdt_bin4},
-            {"onZ_g1b_g1t", passBaseline2l && onZ && pass_g1b && pass_1t}, 
-            {"onZ_g1b_nombl_g1t", passBaseline2l && onZ && pass_g1b && !passMbl_2l && pass_1t}, 
-            {"2b", passBaseline2l && rec_njet_pt30_btag == 2} 
+            {"onZ_g1b_g1t",        passBaseline2l && onZ && pass_g1b && pass_1t}, 
+            {"onZ_g1b_nombl_g1t",  passBaseline2l && onZ && pass_g1b && !passMbl_2l && pass_1t}, 
+            {"2b",                 passBaseline2l && rec_njet_pt30_btag == 2} 
         };
         
         for(auto& kv : cut_map_2l)
@@ -518,7 +519,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
             if(kv.second)
             {
                 my_histos["h_njets_2l_"+kv.first]->Fill(rec_njet_pt30, eventweight);
-                my_histos["h_ntops_2l_"+kv.first]->Fill(tops.size(), eventweight);
+                my_histos["h_ntops_2l_"+kv.first]->Fill(ntops, eventweight);
                 my_histos["h_nb_2l_"+kv.first]->Fill(rec_njet_pt30_btag, eventweight);
                 my_histos["h_HT_2l_"+kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_2l_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
@@ -531,10 +532,10 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         my_efficiencies["event_sel_total"]->Fill(HT_trigger>500,1);
         my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 ,2);
         my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 ,3);
-        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && tops.size()>0 ,4);
-        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && tops.size()>0 && rec_njet_pt45_btag>1 ,5);
-        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && tops.size()>0 && rec_njet_pt45_btag>1 && tops.size()>1 ,6);
-        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && tops.size()>0 && rec_njet_pt45_btag>1 && tops.size()>1 && rec_njet_pt30>=8 ,7);
+        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && ntops>0 ,4);
+        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && ntops>0 && rec_njet_pt45_btag>1 ,5);
+        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && ntops>0 && rec_njet_pt45_btag>1 && ntops>1 ,6);
+        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && ntops>0 && rec_njet_pt45_btag>1 && ntops>1 && rec_njet_pt30>=8 ,7);
         
         my_efficiencies["event_sel"]->Fill(true,0);
         my_efficiencies["event_sel"]->Fill(HT_trigger>500,1);
@@ -546,14 +547,14 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
                 my_efficiencies["event_sel"]->Fill(rec_njet_pt45_btag>0,3);
                 if (rec_njet_pt45_btag>0)
                 {
-                    my_efficiencies["event_sel"]->Fill(tops.size()>0,4);
-                    if (tops.size()>0)
+                    my_efficiencies["event_sel"]->Fill(ntops>0,4);
+                    if (ntops>0)
                     {
                         my_efficiencies["event_sel"]->Fill(rec_njet_pt45_btag>1,5);
                         if (rec_njet_pt45_btag>1)
                         {
-                            my_efficiencies["event_sel"]->Fill(tops.size()>1,6);
-                            if (tops.size()>1)
+                            my_efficiencies["event_sel"]->Fill(ntops>1,6);
+                            if (ntops>1)
                             {
                                 my_efficiencies["event_sel"]->Fill(rec_njet_pt30>=8,7);
                             }
