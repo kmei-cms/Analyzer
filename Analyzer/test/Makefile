@@ -41,7 +41,7 @@ LIBSTOPTAGGER += -L$(TTTDIR) -lTopTagger
 #OBJS       = $(patsubst %, $(ODIR)/%, $(OBJ))
 
 
-PROGRAMS = MyAnalysis simpleAnalyzer
+PROGRAMS = MyAnalysis simpleAnalyzer plot
 
 
 all: mkobj sampPyWrap $(PROGRAMS)
@@ -126,11 +126,15 @@ $(ODIR)/%.o : $(WDIR)/%.cc
 $(ODIR)/%.o : $(WDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
-MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o $(ODIR)/EventShapeVariables.o $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o
+MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o $(ODIR)/EventShapeVariables.o $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
 
 simpleAnalyzer: $(ODIR)/simpleAnalyzer.o $(ODIR)/samples.o $(ODIR)/NTupleReader.o $(ODIR)/SATException.o 
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
+
+plot: $(ODIR)/plot.o
+	$(LD) $^ $(LIBS) -o $@
+
 clean:
 	rm -rf $(ODIR)/*.o $(ODIR)/*.so $(ODIR)/*.d $(PROGRAMS) core $(ODIR)
 

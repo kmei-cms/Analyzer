@@ -23,265 +23,265 @@ void AnalyzeTopTagger::InitHistos()
     TH1::SetDefaultSumw2();
 
     // Declare all your histograms here, that way we can fill them for multiple chains
-    my_histos.emplace("HT",new TH1D("HT","HT",60,0,3000));
+    my_histos.emplace("HT",std::make_shared<TH1D>("HT","HT",60,0,3000));
 
     // -----------------------
     // make some histograms
     // -----------------------
-    my_histos.emplace("myHisto", new TH1D("njets","njets", 20, 0, 20));
-    my_histos.emplace("h_met", new TH1D("h_met","h_met", 20, 0, 200));
-    my_histos.emplace("h_ht", new TH1D("h_ht","h_ht", 60, 0, 3000));
-    my_histos.emplace("h_ntops", new TH1D("h_ntops","h_ntops", 5, 0, 5));
-    my_histos.emplace("h_ntops_presel", new TH1D("h_ntops_presel","h_ntops_presel;Ntop;Events", 5, 0, 5));
-    my_histos.emplace("h_ntops_3jet", new TH1D("h_ntops_3jet","h_ntops_3jet", 5, 0, 5));
-    my_histos.emplace("h_ntops_3jet_presel", new TH1D("h_ntops_3jet_presel","h_ntops_3jet_presel;Ntop(trijet);Events", 5, 0, 5));
-    my_histos.emplace("h_ntops_2jet", new TH1D("h_ntops_2jet","h_ntops_2jet", 5, 0, 5));
-    my_histos.emplace("h_ntops_1jet", new TH1D("h_ntops_1jet","h_ntops_1jet", 5, 0, 5));
-    my_histos.emplace("h_baseline_ntops", new TH1D("h_baseline_ntops","h_baseline_ntops", 5, 0, 5));
-    my_histos.emplace("h_baseline_ntops_3jet", new TH1D("h_baseline_ntops_3jet","h_baseline_ntops_3jet", 5, 0, 5));
-    my_histos.emplace("h_baseline_ntops_2jet", new TH1D("h_baseline_ntops_2jet","h_baseline_ntops_2jet", 5, 0, 5));
-    my_histos.emplace("h_baseline_ntops_1jet", new TH1D("h_baseline_ntops_1jet","h_baseline_ntops_1jet", 5, 0, 5));
+    my_histos.emplace("myHisto", std::make_shared<TH1D>("njets","njets", 20, 0, 20));
+    my_histos.emplace("h_met", std::make_shared<TH1D>("h_met","h_met", 20, 0, 200));
+    my_histos.emplace("h_ht", std::make_shared<TH1D>("h_ht","h_ht", 60, 0, 3000));
+    my_histos.emplace("h_ntops", std::make_shared<TH1D>("h_ntops","h_ntops", 5, 0, 5));
+    my_histos.emplace("h_ntops_presel", std::make_shared<TH1D>("h_ntops_presel","h_ntops_presel;Ntop;Events", 5, 0, 5));
+    my_histos.emplace("h_ntops_3jet", std::make_shared<TH1D>("h_ntops_3jet","h_ntops_3jet", 5, 0, 5));
+    my_histos.emplace("h_ntops_3jet_presel", std::make_shared<TH1D>("h_ntops_3jet_presel","h_ntops_3jet_presel;Ntop(trijet);Events", 5, 0, 5));
+    my_histos.emplace("h_ntops_2jet", std::make_shared<TH1D>("h_ntops_2jet","h_ntops_2jet", 5, 0, 5));
+    my_histos.emplace("h_ntops_1jet", std::make_shared<TH1D>("h_ntops_1jet","h_ntops_1jet", 5, 0, 5));
+    my_histos.emplace("h_baseline_ntops", std::make_shared<TH1D>("h_baseline_ntops","h_baseline_ntops", 5, 0, 5));
+    my_histos.emplace("h_baseline_ntops_3jet", std::make_shared<TH1D>("h_baseline_ntops_3jet","h_baseline_ntops_3jet", 5, 0, 5));
+    my_histos.emplace("h_baseline_ntops_2jet", std::make_shared<TH1D>("h_baseline_ntops_2jet","h_baseline_ntops_2jet", 5, 0, 5));
+    my_histos.emplace("h_baseline_ntops_1jet", std::make_shared<TH1D>("h_baseline_ntops_1jet","h_baseline_ntops_1jet", 5, 0, 5));
 
-    my_histos.emplace("h_dphi_2tops", new TH1D("dphi_2tops","dphi_2tops", 40, -4, 4));
+    my_histos.emplace("h_dphi_2tops", std::make_shared<TH1D>("dphi_2tops","dphi_2tops", 40, -4, 4));
 
     // -----------------------
     // Histograms without event selection (only presence of 2 hadronic gen tops
     // -----------------------
-    my_2d_histos.emplace("h_gentop_pT_daughterDR", new TH2D("h_gentop_pT_daughterDR","h_gentop_pT_daughterDR",50,0,1000,60,0,3));
-    my_histos.emplace("h_gentop_pT", new TH1D("h_gentop_pT","h_gentop_pT",50,0,1000));
-    my_histos.emplace("h_gentop_pT_type1", new TH1D("h_gentop_pT_type1","h_gentop_pT_type1",50,0,1000));
-    my_histos.emplace("h_gentop_pT_type2", new TH1D("h_gentop_pT_type2","h_gentop_pT_type2",50,0,1000));
-    my_histos.emplace("h_gentop_pT_type3", new TH1D("h_gentop_pT_type3","h_gentop_pT_type3",50,0,1000));
+    my_2d_histos.emplace("h_gentop_pT_daughterDR", std::make_shared<TH2D>("h_gentop_pT_daughterDR","h_gentop_pT_daughterDR",50,0,1000,60,0,3));
+    my_histos.emplace("h_gentop_pT", std::make_shared<TH1D>("h_gentop_pT","h_gentop_pT",50,0,1000));
+    my_histos.emplace("h_gentop_pT_type1", std::make_shared<TH1D>("h_gentop_pT_type1","h_gentop_pT_type1",50,0,1000));
+    my_histos.emplace("h_gentop_pT_type2", std::make_shared<TH1D>("h_gentop_pT_type2","h_gentop_pT_type2",50,0,1000));
+    my_histos.emplace("h_gentop_pT_type3", std::make_shared<TH1D>("h_gentop_pT_type3","h_gentop_pT_type3",50,0,1000));
 
-    my_histos.emplace("h_top_gentop_minDR", new TH1D("h_top_gentop_minDR","h_top_gentop_minDR", 60, 0, 3));
-    my_histos.emplace("h_top_gentop_Dpt", new TH1D("h_top_gentop_Dpt","h_top_gentop_Dpt", 50, 0, 5));
-    my_2d_histos.emplace("h_top_gentop_minDR_Dpt", new TH2D("h_top_gentop_minDR_Dpt", "h_top_gentop_minDR_Dpt", 60, 0, 3, 50, 0, 5));
+    my_histos.emplace("h_top_gentop_minDR", std::make_shared<TH1D>("h_top_gentop_minDR","h_top_gentop_minDR", 60, 0, 3));
+    my_histos.emplace("h_top_gentop_Dpt", std::make_shared<TH1D>("h_top_gentop_Dpt","h_top_gentop_Dpt", 50, 0, 5));
+    my_2d_histos.emplace("h_top_gentop_minDR_Dpt", std::make_shared<TH2D>("h_top_gentop_minDR_Dpt", "h_top_gentop_minDR_Dpt", 60, 0, 3, 50, 0, 5));
 
-    my_histos.emplace("h_top_3jet_gentop_minDR", new TH1D("h_top_3jet_gentop_minDR","h_top_3jet_gentop_minDR", 60, 0, 3));
-    my_histos.emplace("h_top_3jet_gentop_Dpt", new TH1D("h_top_3jet_gentop_Dpt","h_top_3jet_gentop_Dpt", 50, 0, 5));
-    my_2d_histos.emplace("h_top_3jet_gentop_minDR_Dpt", new TH2D("h_top_3jet_gentop_minDR_Dpt", "h_top_3jet_gentop_minDR_Dpt", 60, 0, 3, 50, 0, 5));
-    my_histos.emplace("h_top_2jet_gentop_minDR", new TH1D("h_top_2jet_gentop_minDR","h_top_2jet_gentop_minDR", 60, 0, 3));
-    my_histos.emplace("h_top_2jet_gentop_Dpt", new TH1D("h_top_2jet_gentop_Dpt","h_top_2jet_gentop_Dpt", 50, 0, 5));
-    my_2d_histos.emplace("h_top_2jet_gentop_minDR_Dpt", new TH2D("h_top_2jet_gentop_minDR_Dpt", "h_top_2jet_gentop_minDR_Dpt", 60, 0, 3, 50, 0, 5));
-    my_histos.emplace("h_top_1jet_gentop_minDR", new TH1D("h_top_1jet_gentop_minDR","h_top_1jet_gentop_minDR", 60, 0, 3));
-    my_histos.emplace("h_top_1jet_gentop_Dpt", new TH1D("h_top_1jet_gentop_Dpt","h_top_1jet_gentop_Dpt", 50, 0, 5));
-    my_2d_histos.emplace("h_top_1jet_gentop_minDR_Dpt", new TH2D("h_top_1jet_gentop_minDR_Dpt", "h_top_1jet_gentop_minDR_Dpt", 60, 0, 3, 50, 0, 5));
+    my_histos.emplace("h_top_3jet_gentop_minDR", std::make_shared<TH1D>("h_top_3jet_gentop_minDR","h_top_3jet_gentop_minDR", 60, 0, 3));
+    my_histos.emplace("h_top_3jet_gentop_Dpt", std::make_shared<TH1D>("h_top_3jet_gentop_Dpt","h_top_3jet_gentop_Dpt", 50, 0, 5));
+    my_2d_histos.emplace("h_top_3jet_gentop_minDR_Dpt", std::make_shared<TH2D>("h_top_3jet_gentop_minDR_Dpt", "h_top_3jet_gentop_minDR_Dpt", 60, 0, 3, 50, 0, 5));
+    my_histos.emplace("h_top_2jet_gentop_minDR", std::make_shared<TH1D>("h_top_2jet_gentop_minDR","h_top_2jet_gentop_minDR", 60, 0, 3));
+    my_histos.emplace("h_top_2jet_gentop_Dpt", std::make_shared<TH1D>("h_top_2jet_gentop_Dpt","h_top_2jet_gentop_Dpt", 50, 0, 5));
+    my_2d_histos.emplace("h_top_2jet_gentop_minDR_Dpt", std::make_shared<TH2D>("h_top_2jet_gentop_minDR_Dpt", "h_top_2jet_gentop_minDR_Dpt", 60, 0, 3, 50, 0, 5));
+    my_histos.emplace("h_top_1jet_gentop_minDR", std::make_shared<TH1D>("h_top_1jet_gentop_minDR","h_top_1jet_gentop_minDR", 60, 0, 3));
+    my_histos.emplace("h_top_1jet_gentop_Dpt", std::make_shared<TH1D>("h_top_1jet_gentop_Dpt","h_top_1jet_gentop_Dpt", 50, 0, 5));
+    my_2d_histos.emplace("h_top_1jet_gentop_minDR_Dpt", std::make_shared<TH2D>("h_top_1jet_gentop_minDR_Dpt", "h_top_1jet_gentop_minDR_Dpt", 60, 0, 3, 50, 0, 5));
 
-    my_histos.emplace("h_top_gentop_minDR_3jet_daughters", new TH1D("h_top_gentop_minDR_3jet_daughters", "h_top_gentop_minDR_3jet_daughters", 60, 0, 3)); 
-    my_histos.emplace("h_top_gentop_Dpt_3jet_daughters", new TH1D("h_top_gentop_Dpt_3jet_daughters", "h_top_gentop_Dpt_3jet_daughters", 50, 0, 5)); 
-    my_2d_histos.emplace("h_top_gentop_minDR_Dpt_3jet_daughters", new TH2D("h_top_gentop_minDR_Dpt_3jet_daughters", "h_top_gentop_minDR_Dpt_3jet_daughters", 60, 0, 3, 50, 0, 5)); 
-    my_histos.emplace("h_top_gentop_topmatch_minDR_3jet_daughters", new TH1D("h_top_gentop_topmatch_minDR_3jet_daughters", "h_top_gentop_topmatch_minDR_3jet_daughters", 60, 0, 3)); 
-    my_histos.emplace("h_top_gentop_topmatch_Dpt_3jet_daughters", new TH1D("h_top_gentop_topmatch_Dpt_3jet_daughters", "h_top_gentop_topmatch_Dpt_3jet_daughters", 50, 0, 5)); 
-    my_2d_histos.emplace("h_top_gentop_topmatch_minDR_Dpt_3jet_daughters", new TH2D("h_top_gentop_topmatch_minDR_Dpt_3jet_daughters", "h_top_gentop_topmatch_minDR_Dpt_3jet_daughters", 60, 0, 3, 50, 0, 5)); 
+    my_histos.emplace("h_top_gentop_minDR_3jet_daughters", std::make_shared<TH1D>("h_top_gentop_minDR_3jet_daughters", "h_top_gentop_minDR_3jet_daughters", 60, 0, 3)); 
+    my_histos.emplace("h_top_gentop_Dpt_3jet_daughters", std::make_shared<TH1D>("h_top_gentop_Dpt_3jet_daughters", "h_top_gentop_Dpt_3jet_daughters", 50, 0, 5)); 
+    my_2d_histos.emplace("h_top_gentop_minDR_Dpt_3jet_daughters", std::make_shared<TH2D>("h_top_gentop_minDR_Dpt_3jet_daughters", "h_top_gentop_minDR_Dpt_3jet_daughters", 60, 0, 3, 50, 0, 5)); 
+    my_histos.emplace("h_top_gentop_topmatch_minDR_3jet_daughters", std::make_shared<TH1D>("h_top_gentop_topmatch_minDR_3jet_daughters", "h_top_gentop_topmatch_minDR_3jet_daughters", 60, 0, 3)); 
+    my_histos.emplace("h_top_gentop_topmatch_Dpt_3jet_daughters", std::make_shared<TH1D>("h_top_gentop_topmatch_Dpt_3jet_daughters", "h_top_gentop_topmatch_Dpt_3jet_daughters", 50, 0, 5)); 
+    my_2d_histos.emplace("h_top_gentop_topmatch_minDR_Dpt_3jet_daughters", std::make_shared<TH2D>("h_top_gentop_topmatch_minDR_Dpt_3jet_daughters", "h_top_gentop_topmatch_minDR_Dpt_3jet_daughters", 60, 0, 3, 50, 0, 5)); 
 
-    my_histos.emplace("h_top_trijet_n_matched_constituents", new TH1D("h_top_trijet_n_matched_constituents", "h_top_trijet_n_matched_constituents", 4, -0.5, 3.5));
-    my_histos.emplace("h_top_trijet_match_n_matched_constituents", new TH1D("h_top_trijet_match_n_matched_constituents", "h_top_trijet_match_n_matched_constituents", 4, -0.5, 3.5));
-    my_2d_histos.emplace("h_top_gentop_minDR_Dpt_anymatch", new TH2D("h_top_gentop_minDR_Dpt_anymatch", "h_top_gentop_minDR_Dpt_anymatch", 60, 0, 3, 50, 0, 5));
-    my_2d_histos.emplace("h_top_gentop_minDR_Dpt_3match", new TH2D("h_top_gentop_minDR_Dpt_3match", "h_top_gentop_minDR_Dpt_3match", 60, 0, 3, 50, 0, 5));
-    my_2d_histos.emplace("h_top_gentop_minDR_Dpt_2match", new TH2D("h_top_gentop_minDR_Dpt_2match", "h_top_gentop_minDR_Dpt_2match", 60, 0, 3, 50, 0, 5));
-    my_2d_histos.emplace("h_top_gentop_minDR_Dpt_1match", new TH2D("h_top_gentop_minDR_Dpt_1match", "h_top_gentop_minDR_Dpt_1match", 60, 0, 3, 50, 0, 5));
-    my_2d_histos.emplace("h_top_gentop_minDR_Dpt_0match", new TH2D("h_top_gentop_minDR_Dpt_0match", "h_top_gentop_minDR_Dpt_0match", 60, 0, 3, 50, 0, 5));
+    my_histos.emplace("h_top_trijet_n_matched_constituents", std::make_shared<TH1D>("h_top_trijet_n_matched_constituents", "h_top_trijet_n_matched_constituents", 4, -0.5, 3.5));
+    my_histos.emplace("h_top_trijet_match_n_matched_constituents", std::make_shared<TH1D>("h_top_trijet_match_n_matched_constituents", "h_top_trijet_match_n_matched_constituents", 4, -0.5, 3.5));
+    my_2d_histos.emplace("h_top_gentop_minDR_Dpt_anymatch", std::make_shared<TH2D>("h_top_gentop_minDR_Dpt_anymatch", "h_top_gentop_minDR_Dpt_anymatch", 60, 0, 3, 50, 0, 5));
+    my_2d_histos.emplace("h_top_gentop_minDR_Dpt_3match", std::make_shared<TH2D>("h_top_gentop_minDR_Dpt_3match", "h_top_gentop_minDR_Dpt_3match", 60, 0, 3, 50, 0, 5));
+    my_2d_histos.emplace("h_top_gentop_minDR_Dpt_2match", std::make_shared<TH2D>("h_top_gentop_minDR_Dpt_2match", "h_top_gentop_minDR_Dpt_2match", 60, 0, 3, 50, 0, 5));
+    my_2d_histos.emplace("h_top_gentop_minDR_Dpt_1match", std::make_shared<TH2D>("h_top_gentop_minDR_Dpt_1match", "h_top_gentop_minDR_Dpt_1match", 60, 0, 3, 50, 0, 5));
+    my_2d_histos.emplace("h_top_gentop_minDR_Dpt_0match", std::make_shared<TH2D>("h_top_gentop_minDR_Dpt_0match", "h_top_gentop_minDR_Dpt_0match", 60, 0, 3, 50, 0, 5));
     
-    my_histos.emplace("h_top_gentop_discr_anymatch", new TH1D("h_top_gentop_discr_anymatch", "h_top_gentop_discr_anymatch", 40, 0.8, 1));
-    my_histos.emplace("h_top_gentop_discr_3match", new TH1D("h_top_gentop_discr_3match", "h_top_gentop_discr_3match", 40, 0.8, 1));
-    my_histos.emplace("h_top_gentop_discr_2match", new TH1D("h_top_gentop_discr_2match", "h_top_gentop_discr_2match", 40, 0.8, 1));
-    my_histos.emplace("h_top_gentop_discr_1match", new TH1D("h_top_gentop_discr_1match", "h_top_gentop_discr_1match", 40, 0.8, 1));
-    my_histos.emplace("h_top_gentop_discr_0match", new TH1D("h_top_gentop_discr_0match", "h_top_gentop_discr_0match", 40, 0.8, 1));
+    my_histos.emplace("h_top_gentop_discr_anymatch", std::make_shared<TH1D>("h_top_gentop_discr_anymatch", "h_top_gentop_discr_anymatch", 40, 0.8, 1));
+    my_histos.emplace("h_top_gentop_discr_3match", std::make_shared<TH1D>("h_top_gentop_discr_3match", "h_top_gentop_discr_3match", 40, 0.8, 1));
+    my_histos.emplace("h_top_gentop_discr_2match", std::make_shared<TH1D>("h_top_gentop_discr_2match", "h_top_gentop_discr_2match", 40, 0.8, 1));
+    my_histos.emplace("h_top_gentop_discr_1match", std::make_shared<TH1D>("h_top_gentop_discr_1match", "h_top_gentop_discr_1match", 40, 0.8, 1));
+    my_histos.emplace("h_top_gentop_discr_0match", std::make_shared<TH1D>("h_top_gentop_discr_0match", "h_top_gentop_discr_0match", 40, 0.8, 1));
 
-    my_histos.emplace("h_top_gentop_discr_anymatch_topmatch", new TH1D("h_top_gentop_discr_anymatch_topmatch", "h_top_gentop_discr_anymatch_topmatch", 40, 0.8, 1));
-    my_histos.emplace("h_top_gentop_discr_3match_topmatch", new TH1D("h_top_gentop_discr_3match_topmatch", "h_top_gentop_discr_3match_topmatch", 40, 0.8, 1));
-    my_histos.emplace("h_top_gentop_discr_2match_topmatch", new TH1D("h_top_gentop_discr_2match_topmatch", "h_top_gentop_discr_2match_topmatch", 40, 0.8, 1));
-    my_histos.emplace("h_top_gentop_discr_1match_topmatch", new TH1D("h_top_gentop_discr_1match_topmatch", "h_top_gentop_discr_1match_topmatch", 40, 0.8, 1));
-    my_histos.emplace("h_top_gentop_discr_0match_topmatch", new TH1D("h_top_gentop_discr_0match_topmatch", "h_top_gentop_discr_0match_topmatch", 40, 0.8, 1));
+    my_histos.emplace("h_top_gentop_discr_anymatch_topmatch", std::make_shared<TH1D>("h_top_gentop_discr_anymatch_topmatch", "h_top_gentop_discr_anymatch_topmatch", 40, 0.8, 1));
+    my_histos.emplace("h_top_gentop_discr_3match_topmatch", std::make_shared<TH1D>("h_top_gentop_discr_3match_topmatch", "h_top_gentop_discr_3match_topmatch", 40, 0.8, 1));
+    my_histos.emplace("h_top_gentop_discr_2match_topmatch", std::make_shared<TH1D>("h_top_gentop_discr_2match_topmatch", "h_top_gentop_discr_2match_topmatch", 40, 0.8, 1));
+    my_histos.emplace("h_top_gentop_discr_1match_topmatch", std::make_shared<TH1D>("h_top_gentop_discr_1match_topmatch", "h_top_gentop_discr_1match_topmatch", 40, 0.8, 1));
+    my_histos.emplace("h_top_gentop_discr_0match_topmatch", std::make_shared<TH1D>("h_top_gentop_discr_0match_topmatch", "h_top_gentop_discr_0match_topmatch", 40, 0.8, 1));
 
-    my_histos.emplace("h_gentop_top_minDR", new TH1D("h_gentop_top_minDR",     "h_gentop_top_minDR", 60, 0, 3));
-    my_histos.emplace("h_gentop_top_Dpt", new TH1D("h_gentop_top_Dpt",       "h_gentop_top_Dpt", 50, 0, 5));
-    my_2d_histos.emplace("h_gentop_top_minDR_Dpt", new TH2D("h_gentop_top_minDR_Dpt", "h_gentop_top_minDR_Dpt", 60, 0, 3, 50, 0, 5));
+    my_histos.emplace("h_gentop_top_minDR", std::make_shared<TH1D>("h_gentop_top_minDR",     "h_gentop_top_minDR", 60, 0, 3));
+    my_histos.emplace("h_gentop_top_Dpt", std::make_shared<TH1D>("h_gentop_top_Dpt",       "h_gentop_top_Dpt", 50, 0, 5));
+    my_2d_histos.emplace("h_gentop_top_minDR_Dpt", std::make_shared<TH2D>("h_gentop_top_minDR_Dpt", "h_gentop_top_minDR_Dpt", 60, 0, 3, 50, 0, 5));
 
-    my_histos.emplace("h_top_type1_matched_nsub", new TH1D("h_top_type1_matched_nsub","h_top_type1_matched_nsub",50,0,1));
-    my_histos.emplace("h_top_type1_unmatched_nsub", new TH1D("h_top_type1_unmatched_nsub","h_top_type1_unmatched_nsub",50,0,1));
-    my_histos.emplace("h_top_type1_matched_softdrop", new TH1D("h_top_type1_matched_softdrop","h_top_type1_matched_softdrop",60,0,300));
-    my_histos.emplace("h_top_type1_unmatched_softdrop", new TH1D("h_top_type1_unmatched_softdrop","h_top_type1_unmatched_softdrop",60,0,300));
+    my_histos.emplace("h_top_type1_matched_nsub", std::make_shared<TH1D>("h_top_type1_matched_nsub","h_top_type1_matched_nsub",50,0,1));
+    my_histos.emplace("h_top_type1_unmatched_nsub", std::make_shared<TH1D>("h_top_type1_unmatched_nsub","h_top_type1_unmatched_nsub",50,0,1));
+    my_histos.emplace("h_top_type1_matched_softdrop", std::make_shared<TH1D>("h_top_type1_matched_softdrop","h_top_type1_matched_softdrop",60,0,300));
+    my_histos.emplace("h_top_type1_unmatched_softdrop", std::make_shared<TH1D>("h_top_type1_unmatched_softdrop","h_top_type1_unmatched_softdrop",60,0,300));
 
-    my_efficiencies.emplace("toptag_eff", new TEfficiency("toptag_eff","Top tagging efficiency;gentop p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_eff_type1", new TEfficiency("toptag_eff_type1","Top tagging efficiency;type1 gentop p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_eff_type2", new TEfficiency("toptag_eff_type2","Top tagging efficiency;type2 gentop p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_eff_type3", new TEfficiency("toptag_eff_type3","Top tagging efficiency;type3 gentop p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_eff", std::make_shared<TEfficiency>("toptag_eff","Top tagging efficiency;gentop p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_eff_type1", std::make_shared<TEfficiency>("toptag_eff_type1","Top tagging efficiency;type1 gentop p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_eff_type2", std::make_shared<TEfficiency>("toptag_eff_type2","Top tagging efficiency;type2 gentop p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_eff_type3", std::make_shared<TEfficiency>("toptag_eff_type3","Top tagging efficiency;type3 gentop p_T;#epsilon",10,0,1000));
 
     // -----------------------
     // Histograms after baseline event selection
     // -----------------------
-    my_2d_histos.emplace("h_baseline_gentop_pT_daughterDR", new TH2D("h_baseline_gentop_pT_daughterDR","h_baseline_gentop_pT_daughterDR",50,0,1000,60,0,3));
-    my_histos.emplace("h_baseline_gentop_pT", new TH1D("h_baseline_gentop_pT","h_baseline_gentop_pT",50,0,1000));
-    my_histos.emplace("h_baseline_gentop_pT_type1", new TH1D("h_baseline_gentop_pT_type1","h_baseline_gentop_pT_type1",50,0,1000));
-    my_histos.emplace("h_baseline_gentop_pT_type2", new TH1D("h_baseline_gentop_pT_type2","h_baseline_gentop_pT_type2",50,0,1000));
-    my_histos.emplace("h_baseline_gentop_pT_type3", new TH1D("h_baseline_gentop_pT_type3","h_baseline_gentop_pT_type3",50,0,1000));
+    my_2d_histos.emplace("h_baseline_gentop_pT_daughterDR", std::make_shared<TH2D>("h_baseline_gentop_pT_daughterDR","h_baseline_gentop_pT_daughterDR",50,0,1000,60,0,3));
+    my_histos.emplace("h_baseline_gentop_pT", std::make_shared<TH1D>("h_baseline_gentop_pT","h_baseline_gentop_pT",50,0,1000));
+    my_histos.emplace("h_baseline_gentop_pT_type1", std::make_shared<TH1D>("h_baseline_gentop_pT_type1","h_baseline_gentop_pT_type1",50,0,1000));
+    my_histos.emplace("h_baseline_gentop_pT_type2", std::make_shared<TH1D>("h_baseline_gentop_pT_type2","h_baseline_gentop_pT_type2",50,0,1000));
+    my_histos.emplace("h_baseline_gentop_pT_type3", std::make_shared<TH1D>("h_baseline_gentop_pT_type3","h_baseline_gentop_pT_type3",50,0,1000));
 
-    my_histos.emplace("h_baseline_top_gentop_minDR", new TH1D("h_baseline_top_gentop_minDR","h_baseline_top_gentop_minDR", 60, 0, 3));
-    my_histos.emplace("h_baseline_top_gentop_Dpt", new TH1D("h_baseline_top_gentop_Dpt","h_baseline_top_gentop_Dpt", 50, 0, 5));
-    my_2d_histos.emplace("h_baseline_top_gentop_minDR_Dpt", new TH2D("h_baseline_top_gentop_minDR_Dpt", "h_baseline_top_gentop_minDR_Dpt", 60, 0, 3, 50, 0, 5));
+    my_histos.emplace("h_baseline_top_gentop_minDR", std::make_shared<TH1D>("h_baseline_top_gentop_minDR","h_baseline_top_gentop_minDR", 60, 0, 3));
+    my_histos.emplace("h_baseline_top_gentop_Dpt", std::make_shared<TH1D>("h_baseline_top_gentop_Dpt","h_baseline_top_gentop_Dpt", 50, 0, 5));
+    my_2d_histos.emplace("h_baseline_top_gentop_minDR_Dpt", std::make_shared<TH2D>("h_baseline_top_gentop_minDR_Dpt", "h_baseline_top_gentop_minDR_Dpt", 60, 0, 3, 50, 0, 5));
 
-    my_histos.emplace("h_baseline_top_3jet_gentop_minDR", new TH1D("h_baseline_top_3jet_gentop_minDR","h_baseline_top_3jet_gentop_minDR", 60, 0, 3));
-    my_histos.emplace("h_baseline_top_3jet_gentop_Dpt", new TH1D("h_baseline_top_3jet_gentop_Dpt","h_baseline_top_3jet_gentop_Dpt", 50, 0, 5));
-    my_2d_histos.emplace("h_baseline_top_3jet_gentop_minDR_Dpt", new TH2D("h_baseline_top_3jet_gentop_minDR_Dpt", "h_baseline_top_3jet_gentop_minDR_Dpt", 60, 0, 3, 50, 0, 5));
-    my_histos.emplace("h_baseline_top_2jet_gentop_minDR", new TH1D("h_baseline_top_2jet_gentop_minDR","h_baseline_top_2jet_gentop_minDR", 60, 0, 3));
-    my_histos.emplace("h_baseline_top_2jet_gentop_Dpt", new TH1D("h_baseline_top_2jet_gentop_Dpt","h_baseline_top_2jet_gentop_Dpt", 50, 0, 5));
-    my_2d_histos.emplace("h_baseline_top_2jet_gentop_minDR_Dpt", new TH2D("h_baseline_top_2jet_gentop_minDR_Dpt", "h_baseline_top_2jet_gentop_minDR_Dpt", 60, 0, 3, 50, 0, 5));
-    my_histos.emplace("h_baseline_top_1jet_gentop_minDR", new TH1D("h_baseline_top_1jet_gentop_minDR","h_baseline_top_1jet_gentop_minDR", 60, 0, 3));
-    my_histos.emplace("h_baseline_top_1jet_gentop_Dpt", new TH1D("h_baseline_top_1jet_gentop_Dpt","h_baseline_top_1jet_gentop_Dpt", 50, 0, 5));
-    my_2d_histos.emplace("h_baseline_top_1jet_gentop_minDR_Dpt", new TH2D("h_baseline_top_1jet_gentop_minDR_Dpt", "h_baseline_top_1jet_gentop_minDR_Dpt", 60, 0, 3, 50, 0, 5));
+    my_histos.emplace("h_baseline_top_3jet_gentop_minDR", std::make_shared<TH1D>("h_baseline_top_3jet_gentop_minDR","h_baseline_top_3jet_gentop_minDR", 60, 0, 3));
+    my_histos.emplace("h_baseline_top_3jet_gentop_Dpt", std::make_shared<TH1D>("h_baseline_top_3jet_gentop_Dpt","h_baseline_top_3jet_gentop_Dpt", 50, 0, 5));
+    my_2d_histos.emplace("h_baseline_top_3jet_gentop_minDR_Dpt", std::make_shared<TH2D>("h_baseline_top_3jet_gentop_minDR_Dpt", "h_baseline_top_3jet_gentop_minDR_Dpt", 60, 0, 3, 50, 0, 5));
+    my_histos.emplace("h_baseline_top_2jet_gentop_minDR", std::make_shared<TH1D>("h_baseline_top_2jet_gentop_minDR","h_baseline_top_2jet_gentop_minDR", 60, 0, 3));
+    my_histos.emplace("h_baseline_top_2jet_gentop_Dpt", std::make_shared<TH1D>("h_baseline_top_2jet_gentop_Dpt","h_baseline_top_2jet_gentop_Dpt", 50, 0, 5));
+    my_2d_histos.emplace("h_baseline_top_2jet_gentop_minDR_Dpt", std::make_shared<TH2D>("h_baseline_top_2jet_gentop_minDR_Dpt", "h_baseline_top_2jet_gentop_minDR_Dpt", 60, 0, 3, 50, 0, 5));
+    my_histos.emplace("h_baseline_top_1jet_gentop_minDR", std::make_shared<TH1D>("h_baseline_top_1jet_gentop_minDR","h_baseline_top_1jet_gentop_minDR", 60, 0, 3));
+    my_histos.emplace("h_baseline_top_1jet_gentop_Dpt", std::make_shared<TH1D>("h_baseline_top_1jet_gentop_Dpt","h_baseline_top_1jet_gentop_Dpt", 50, 0, 5));
+    my_2d_histos.emplace("h_baseline_top_1jet_gentop_minDR_Dpt", std::make_shared<TH2D>("h_baseline_top_1jet_gentop_minDR_Dpt", "h_baseline_top_1jet_gentop_minDR_Dpt", 60, 0, 3, 50, 0, 5));
 
-    my_histos.emplace("h_baseline_top_gentop_minDR_3jet_daughters", new TH1D("h_baseline_top_gentop_minDR_3jet_daughters", "h_baseline_top_gentop_minDR_3jet_daughters", 60, 0, 3)); 
-    my_histos.emplace("h_baseline_top_gentop_Dpt_3jet_daughters", new TH1D("h_baseline_top_gentop_Dpt_3jet_daughters", "h_baseline_top_gentop_Dpt_3jet_daughters", 50, 0, 5)); 
-    my_2d_histos.emplace("h_baseline_top_gentop_minDR_Dpt_3jet_daughters", new TH2D("h_baseline_top_gentop_minDR_Dpt_3jet_daughters", "h_baseline_top_gentop_minDR_Dpt_3jet_daughters", 60, 0, 3, 50, 0, 5)); 
-    my_histos.emplace("h_baseline_top_gentop_topmatch_minDR_3jet_daughters", new TH1D("h_baseline_top_gentop_topmatch_minDR_3jet_daughters", "h_baseline_top_gentop_topmatch_minDR_3jet_daughters", 60, 0, 3)); 
-    my_histos.emplace("h_baseline_top_gentop_topmatch_Dpt_3jet_daughters", new TH1D("h_baseline_top_gentop_topmatch_Dpt_3jet_daughters", "h_baseline_top_gentop_topmatch_Dpt_3jet_daughters", 50, 0, 5)); 
-    my_2d_histos.emplace("h_baseline_top_gentop_topmatch_minDR_Dpt_3jet_daughters", new TH2D("h_baseline_top_gentop_topmatch_minDR_Dpt_3jet_daughters", "h_baseline_top_gentop_topmatch_minDR_Dpt_3jet_daughters", 60, 0, 3, 50, 0, 5)); 
+    my_histos.emplace("h_baseline_top_gentop_minDR_3jet_daughters", std::make_shared<TH1D>("h_baseline_top_gentop_minDR_3jet_daughters", "h_baseline_top_gentop_minDR_3jet_daughters", 60, 0, 3)); 
+    my_histos.emplace("h_baseline_top_gentop_Dpt_3jet_daughters", std::make_shared<TH1D>("h_baseline_top_gentop_Dpt_3jet_daughters", "h_baseline_top_gentop_Dpt_3jet_daughters", 50, 0, 5)); 
+    my_2d_histos.emplace("h_baseline_top_gentop_minDR_Dpt_3jet_daughters", std::make_shared<TH2D>("h_baseline_top_gentop_minDR_Dpt_3jet_daughters", "h_baseline_top_gentop_minDR_Dpt_3jet_daughters", 60, 0, 3, 50, 0, 5)); 
+    my_histos.emplace("h_baseline_top_gentop_topmatch_minDR_3jet_daughters", std::make_shared<TH1D>("h_baseline_top_gentop_topmatch_minDR_3jet_daughters", "h_baseline_top_gentop_topmatch_minDR_3jet_daughters", 60, 0, 3)); 
+    my_histos.emplace("h_baseline_top_gentop_topmatch_Dpt_3jet_daughters", std::make_shared<TH1D>("h_baseline_top_gentop_topmatch_Dpt_3jet_daughters", "h_baseline_top_gentop_topmatch_Dpt_3jet_daughters", 50, 0, 5)); 
+    my_2d_histos.emplace("h_baseline_top_gentop_topmatch_minDR_Dpt_3jet_daughters", std::make_shared<TH2D>("h_baseline_top_gentop_topmatch_minDR_Dpt_3jet_daughters", "h_baseline_top_gentop_topmatch_minDR_Dpt_3jet_daughters", 60, 0, 3, 50, 0, 5)); 
 
-    my_histos.emplace("h_baseline_top_trijet_n_matched_constituents", new TH1D("h_baseline_top_trijet_n_matched_constituents", "h_baseline_top_trijet_n_matched_constituents", 4, -0.5, 3.5));
-    my_histos.emplace("h_baseline_top_trijet_match_n_matched_constituents", new TH1D("h_baseline_top_trijet_match_n_matched_constituents", "h_baseline_top_trijet_match_n_matched_constituents", 4, -0.5, 3.5));
-    my_2d_histos.emplace("h_baseline_top_gentop_minDR_Dpt_anymatch", new TH2D("h_baseline_top_gentop_minDR_Dpt_anymatch", "h_baseline_top_gentop_minDR_Dpt_anymatch", 60, 0, 3, 50, 0, 5));
-    my_2d_histos.emplace("h_baseline_top_gentop_minDR_Dpt_3match", new TH2D("h_baseline_top_gentop_minDR_Dpt_3match", "h_baseline_top_gentop_minDR_Dpt_3match", 60, 0, 3, 50, 0, 5));
-    my_2d_histos.emplace("h_baseline_top_gentop_minDR_Dpt_2match", new TH2D("h_baseline_top_gentop_minDR_Dpt_2match", "h_baseline_top_gentop_minDR_Dpt_2match", 60, 0, 3, 50, 0, 5));
-    my_2d_histos.emplace("h_baseline_top_gentop_minDR_Dpt_1match", new TH2D("h_baseline_top_gentop_minDR_Dpt_1match", "h_baseline_top_gentop_minDR_Dpt_1match", 60, 0, 3, 50, 0, 5));
-    my_2d_histos.emplace("h_baseline_top_gentop_minDR_Dpt_0match", new TH2D("h_baseline_top_gentop_minDR_Dpt_0match", "h_baseline_top_gentop_minDR_Dpt_0match", 60, 0, 3, 50, 0, 5));
+    my_histos.emplace("h_baseline_top_trijet_n_matched_constituents", std::make_shared<TH1D>("h_baseline_top_trijet_n_matched_constituents", "h_baseline_top_trijet_n_matched_constituents", 4, -0.5, 3.5));
+    my_histos.emplace("h_baseline_top_trijet_match_n_matched_constituents", std::make_shared<TH1D>("h_baseline_top_trijet_match_n_matched_constituents", "h_baseline_top_trijet_match_n_matched_constituents", 4, -0.5, 3.5));
+    my_2d_histos.emplace("h_baseline_top_gentop_minDR_Dpt_anymatch", std::make_shared<TH2D>("h_baseline_top_gentop_minDR_Dpt_anymatch", "h_baseline_top_gentop_minDR_Dpt_anymatch", 60, 0, 3, 50, 0, 5));
+    my_2d_histos.emplace("h_baseline_top_gentop_minDR_Dpt_3match", std::make_shared<TH2D>("h_baseline_top_gentop_minDR_Dpt_3match", "h_baseline_top_gentop_minDR_Dpt_3match", 60, 0, 3, 50, 0, 5));
+    my_2d_histos.emplace("h_baseline_top_gentop_minDR_Dpt_2match", std::make_shared<TH2D>("h_baseline_top_gentop_minDR_Dpt_2match", "h_baseline_top_gentop_minDR_Dpt_2match", 60, 0, 3, 50, 0, 5));
+    my_2d_histos.emplace("h_baseline_top_gentop_minDR_Dpt_1match", std::make_shared<TH2D>("h_baseline_top_gentop_minDR_Dpt_1match", "h_baseline_top_gentop_minDR_Dpt_1match", 60, 0, 3, 50, 0, 5));
+    my_2d_histos.emplace("h_baseline_top_gentop_minDR_Dpt_0match", std::make_shared<TH2D>("h_baseline_top_gentop_minDR_Dpt_0match", "h_baseline_top_gentop_minDR_Dpt_0match", 60, 0, 3, 50, 0, 5));
 
-    my_histos.emplace("h_baseline_top_gentop_discr_anymatch", new TH1D("h_baseline_top_gentop_discr_anymatch", "h_baseline_top_gentop_discr_anymatch", 40, 0.8, 1));
-    my_histos.emplace("h_baseline_top_gentop_discr_3match", new TH1D("h_baseline_top_gentop_discr_3match", "h_baseline_top_gentop_discr_3match", 40, 0.8, 1));
-    my_histos.emplace("h_baseline_top_gentop_discr_2match", new TH1D("h_baseline_top_gentop_discr_2match", "h_baseline_top_gentop_discr_2match", 40, 0.8, 1));
-    my_histos.emplace("h_baseline_top_gentop_discr_1match", new TH1D("h_baseline_top_gentop_discr_1match", "h_baseline_top_gentop_discr_1match", 40, 0.8, 1));
-    my_histos.emplace("h_baseline_top_gentop_discr_0match", new TH1D("h_baseline_top_gentop_discr_0match", "h_baseline_top_gentop_discr_0match", 40, 0.8, 1));
+    my_histos.emplace("h_baseline_top_gentop_discr_anymatch", std::make_shared<TH1D>("h_baseline_top_gentop_discr_anymatch", "h_baseline_top_gentop_discr_anymatch", 40, 0.8, 1));
+    my_histos.emplace("h_baseline_top_gentop_discr_3match", std::make_shared<TH1D>("h_baseline_top_gentop_discr_3match", "h_baseline_top_gentop_discr_3match", 40, 0.8, 1));
+    my_histos.emplace("h_baseline_top_gentop_discr_2match", std::make_shared<TH1D>("h_baseline_top_gentop_discr_2match", "h_baseline_top_gentop_discr_2match", 40, 0.8, 1));
+    my_histos.emplace("h_baseline_top_gentop_discr_1match", std::make_shared<TH1D>("h_baseline_top_gentop_discr_1match", "h_baseline_top_gentop_discr_1match", 40, 0.8, 1));
+    my_histos.emplace("h_baseline_top_gentop_discr_0match", std::make_shared<TH1D>("h_baseline_top_gentop_discr_0match", "h_baseline_top_gentop_discr_0match", 40, 0.8, 1));
 
-    my_histos.emplace("h_baseline_top_gentop_discr_anymatch_topmatch", new TH1D("h_baseline_top_gentop_discr_anymatch_topmatch", "h_baseline_top_gentop_discr_anymatch_topmatch", 40, 0.8, 1));
-    my_histos.emplace("h_baseline_top_gentop_discr_3match_topmatch", new TH1D("h_baseline_top_gentop_discr_3match_topmatch", "h_baseline_top_gentop_discr_3match_topmatch", 40, 0.8, 1));
-    my_histos.emplace("h_baseline_top_gentop_discr_2match_topmatch", new TH1D("h_baseline_top_gentop_discr_2match_topmatch", "h_baseline_top_gentop_discr_2match_topmatch", 40, 0.8, 1));
-    my_histos.emplace("h_baseline_top_gentop_discr_1match_topmatch", new TH1D("h_baseline_top_gentop_discr_1match_topmatch", "h_baseline_top_gentop_discr_1match_topmatch", 40, 0.8, 1));
-    my_histos.emplace("h_baseline_top_gentop_discr_0match_topmatch", new TH1D("h_baseline_top_gentop_discr_0match_topmatch", "h_baseline_top_gentop_discr_0match_topmatch", 40, 0.8, 1));
+    my_histos.emplace("h_baseline_top_gentop_discr_anymatch_topmatch", std::make_shared<TH1D>("h_baseline_top_gentop_discr_anymatch_topmatch", "h_baseline_top_gentop_discr_anymatch_topmatch", 40, 0.8, 1));
+    my_histos.emplace("h_baseline_top_gentop_discr_3match_topmatch", std::make_shared<TH1D>("h_baseline_top_gentop_discr_3match_topmatch", "h_baseline_top_gentop_discr_3match_topmatch", 40, 0.8, 1));
+    my_histos.emplace("h_baseline_top_gentop_discr_2match_topmatch", std::make_shared<TH1D>("h_baseline_top_gentop_discr_2match_topmatch", "h_baseline_top_gentop_discr_2match_topmatch", 40, 0.8, 1));
+    my_histos.emplace("h_baseline_top_gentop_discr_1match_topmatch", std::make_shared<TH1D>("h_baseline_top_gentop_discr_1match_topmatch", "h_baseline_top_gentop_discr_1match_topmatch", 40, 0.8, 1));
+    my_histos.emplace("h_baseline_top_gentop_discr_0match_topmatch", std::make_shared<TH1D>("h_baseline_top_gentop_discr_0match_topmatch", "h_baseline_top_gentop_discr_0match_topmatch", 40, 0.8, 1));
 
-    my_histos.emplace("h_baseline_gentop_top_minDR", new TH1D("h_baseline_gentop_top_minDR",     "h_baseline_gentop_top_minDR", 60, 0, 3));
-    my_histos.emplace("h_baseline_gentop_top_Dpt", new TH1D("h_baseline_gentop_top_Dpt",       "h_baseline_gentop_top_Dpt", 50, 0, 5));
-    my_2d_histos.emplace("h_baseline_gentop_top_minDR_Dpt", new TH2D("h_baseline_gentop_top_minDR_Dpt", "h_baseline_gentop_top_minDR_Dpt", 60, 0, 3, 50, 0, 5));
+    my_histos.emplace("h_baseline_gentop_top_minDR", std::make_shared<TH1D>("h_baseline_gentop_top_minDR",     "h_baseline_gentop_top_minDR", 60, 0, 3));
+    my_histos.emplace("h_baseline_gentop_top_Dpt", std::make_shared<TH1D>("h_baseline_gentop_top_Dpt",       "h_baseline_gentop_top_Dpt", 50, 0, 5));
+    my_2d_histos.emplace("h_baseline_gentop_top_minDR_Dpt", std::make_shared<TH2D>("h_baseline_gentop_top_minDR_Dpt", "h_baseline_gentop_top_minDR_Dpt", 60, 0, 3, 50, 0, 5));
 
-    my_histos.emplace("h_baseline_top_type1_matched_nsub", new TH1D("h_baseline_top_type1_matched_nsub","h_baseline_top_type1_matched_nsub",50,0,1));
-    my_histos.emplace("h_baseline_top_type1_unmatched_nsub", new TH1D("h_baseline_top_type1_unmatched_nsub","h_baseline_top_type1_unmatched_nsub",50,0,1));
-    my_histos.emplace("h_baseline_top_type1_matched_softdrop", new TH1D("h_baseline_top_type1_matched_softdrop","h_baseline_top_type1_matched_softdrop",60,0,300));
-    my_histos.emplace("h_baseline_top_type1_unmatched_softdrop", new TH1D("h_baseline_top_type1_unmatched_softdrop","h_baseline_top_type1_unmatched_softdrop",60,0,300));
+    my_histos.emplace("h_baseline_top_type1_matched_nsub", std::make_shared<TH1D>("h_baseline_top_type1_matched_nsub","h_baseline_top_type1_matched_nsub",50,0,1));
+    my_histos.emplace("h_baseline_top_type1_unmatched_nsub", std::make_shared<TH1D>("h_baseline_top_type1_unmatched_nsub","h_baseline_top_type1_unmatched_nsub",50,0,1));
+    my_histos.emplace("h_baseline_top_type1_matched_softdrop", std::make_shared<TH1D>("h_baseline_top_type1_matched_softdrop","h_baseline_top_type1_matched_softdrop",60,0,300));
+    my_histos.emplace("h_baseline_top_type1_unmatched_softdrop", std::make_shared<TH1D>("h_baseline_top_type1_unmatched_softdrop","h_baseline_top_type1_unmatched_softdrop",60,0,300));
 
-    my_efficiencies.emplace("toptag_eff_baseline", new TEfficiency("toptag_eff_baseline","Top tagging efficiency;gentop p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_eff_type1_baseline", new TEfficiency("toptag_eff_type1_baseline","Top tagging efficiency;type1 gentop p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_eff_type2_baseline", new TEfficiency("toptag_eff_type2_baseline","Top tagging efficiency;type2 gentop p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_eff_type3_baseline", new TEfficiency("toptag_eff_type3_baseline","Top tagging efficiency;type3 gentop p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_eff_baseline", std::make_shared<TEfficiency>("toptag_eff_baseline","Top tagging efficiency;gentop p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_eff_type1_baseline", std::make_shared<TEfficiency>("toptag_eff_type1_baseline","Top tagging efficiency;type1 gentop p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_eff_type2_baseline", std::make_shared<TEfficiency>("toptag_eff_type2_baseline","Top tagging efficiency;type2 gentop p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_eff_type3_baseline", std::make_shared<TEfficiency>("toptag_eff_type3_baseline","Top tagging efficiency;type3 gentop p_T;#epsilon",10,0,1000));
 
-    my_efficiencies.emplace("toptag_fakerate_baseline", new TEfficiency("toptag_fakerate_baseline","Top tagging fake rate;reco top p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_fakerate", new TEfficiency("toptag_fakerate","Top tagging fake rate;reco top p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_fakerate_excl_baseline", new TEfficiency("toptag_fakerate_excl_baseline","Top tagging fake rate;reco top p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_fakerate_excl", new TEfficiency("toptag_fakerate_excl","Top tagging fake rate;reco top p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_chitagrate", new TEfficiency("toptag_chitagrate","Tagged top fraction that matches a neutralino;reco top p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_chitagrate_baseline", new TEfficiency("toptag_chitagrate_baseline","Tagged top fraction that matches a neutralino;reco top p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_chitagrate_excl", new TEfficiency("toptag_chitagrate_excl","Tagged top fraction that matches a neutralino and no tops;reco top p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_chitagrate_excl_baseline", new TEfficiency("toptag_chitagrate_excl_baseline","Tagged top fraction that matches a neutralino and no tops;reco top p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_singletrate", new TEfficiency("toptag_singletrate","Tagged top fraction that matches a singlet or singlino;reco top p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_singletrate_baseline", new TEfficiency("toptag_singletrate_baseline","Tagged top fraction that matches a singlet or singlino;reco top p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_singletrate_excl", new TEfficiency("toptag_singletrate_excl","Tagged top fraction that matches a singlet or singlino and no tops;reco top p_T;#epsilon",10,0,1000));
-    my_efficiencies.emplace("toptag_singletrate_excl_baseline", new TEfficiency("toptag_singletrate_excl_baseline","Tagged top fraction that matches a singlet or singlino and no tops;reco top p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_fakerate_baseline", std::make_shared<TEfficiency>("toptag_fakerate_baseline","Top tagging fake rate;reco top p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_fakerate", std::make_shared<TEfficiency>("toptag_fakerate","Top tagging fake rate;reco top p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_fakerate_excl_baseline", std::make_shared<TEfficiency>("toptag_fakerate_excl_baseline","Top tagging fake rate;reco top p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_fakerate_excl", std::make_shared<TEfficiency>("toptag_fakerate_excl","Top tagging fake rate;reco top p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_chitagrate", std::make_shared<TEfficiency>("toptag_chitagrate","Tagged top fraction that matches a neutralino;reco top p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_chitagrate_baseline", std::make_shared<TEfficiency>("toptag_chitagrate_baseline","Tagged top fraction that matches a neutralino;reco top p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_chitagrate_excl", std::make_shared<TEfficiency>("toptag_chitagrate_excl","Tagged top fraction that matches a neutralino and no tops;reco top p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_chitagrate_excl_baseline", std::make_shared<TEfficiency>("toptag_chitagrate_excl_baseline","Tagged top fraction that matches a neutralino and no tops;reco top p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_singletrate", std::make_shared<TEfficiency>("toptag_singletrate","Tagged top fraction that matches a singlet or singlino;reco top p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_singletrate_baseline", std::make_shared<TEfficiency>("toptag_singletrate_baseline","Tagged top fraction that matches a singlet or singlino;reco top p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_singletrate_excl", std::make_shared<TEfficiency>("toptag_singletrate_excl","Tagged top fraction that matches a singlet or singlino and no tops;reco top p_T;#epsilon",10,0,1000));
+    my_efficiencies.emplace("toptag_singletrate_excl_baseline", std::make_shared<TEfficiency>("toptag_singletrate_excl_baseline","Tagged top fraction that matches a singlet or singlino and no tops;reco top p_T;#epsilon",10,0,1000));
 
-    my_efficiencies.emplace("toptag_fully_matched", new TEfficiency("toptag_fully_matched","Both tops matched;top[0] category;top[1] category;#epsilon",3,0.5,3.5,3,0.5,3.5));
-    my_efficiencies.emplace("toptag_partially_matched", new TEfficiency("toptag_partially_matched","One top matched;top[0] category;top[1] category;#epsilon",3,0.5,3.5,3,0.5,3.5));
-    my_efficiencies.emplace("toptag_unmatched", new TEfficiency("toptag_unmatched","Both tops not matched;top[0] category;top[1] category;#epsilon",3,0.5,3.5,3,0.5,3.5));
+    my_efficiencies.emplace("toptag_fully_matched", std::make_shared<TEfficiency>("toptag_fully_matched","Both tops matched;top[0] category;top[1] category;#epsilon",3,0.5,3.5,3,0.5,3.5));
+    my_efficiencies.emplace("toptag_partially_matched", std::make_shared<TEfficiency>("toptag_partially_matched","One top matched;top[0] category;top[1] category;#epsilon",3,0.5,3.5,3,0.5,3.5));
+    my_efficiencies.emplace("toptag_unmatched", std::make_shared<TEfficiency>("toptag_unmatched","Both tops not matched;top[0] category;top[1] category;#epsilon",3,0.5,3.5,3,0.5,3.5));
 
-    my_efficiencies.emplace("real_fakerate", new TEfficiency("real_fakerate", "Fake rate;reco cand pT[GeV];fake rate",10,0,1000 ));
-    my_efficiencies.emplace("real_fakerate_weighted", new TEfficiency("real_fakerate_weighted", "Fake rate;reco cand pT[GeV];fake rate",10,0,1000 ));
+    my_efficiencies.emplace("real_fakerate", std::make_shared<TEfficiency>("real_fakerate", "Fake rate;reco cand pT[GeV];fake rate",10,0,1000 ));
+    my_efficiencies.emplace("real_fakerate_weighted", std::make_shared<TEfficiency>("real_fakerate_weighted", "Fake rate;reco cand pT[GeV];fake rate",10,0,1000 ));
 
     my_2d_histos.emplace("toptag_breakdown", new TH2D("toptag_breakdown","Number of events/category;top[0] category;top[1] category;#Events",3,0.5,3.5,3,0.5,3.5));
 
     // Histograms of tagger inputs
-    my_histos.emplace("h_cand_m", new TH1D("h_cand_m", "h_cand_m", 50, 50, 300));
-    my_histos.emplace("h_cand_p", new TH1D("h_cand_p", "h_cand_p", 50, 0, 2000));
-    my_histos.emplace("h_j12_m", new TH1D("h_j12_m", "h_j12_m", 50, 0, 250));
-    my_histos.emplace("h_j23_m", new TH1D("h_j23_m", "h_j23_m", 50, 0, 200));
-    my_histos.emplace("h_j13_m", new TH1D("h_j13_m", "h_j13_m", 50, 0, 200));
-    my_histos.emplace("h_dTheta12", new TH1D("h_dTheta12", "h_dTheta12", 60, 1, 4));
-    my_histos.emplace("h_dTheta23", new TH1D("h_dTheta23", "h_dTheta23", 60, 0, 3));
-    my_histos.emplace("h_dTheta13", new TH1D("h_dTheta13", "h_dTheta13", 60, 1, 4));
-    my_histos.emplace("h_j1_m", new TH1D("h_j1_m", "h_j1_m", 50, 0, 100));
-    my_histos.emplace("h_j1_p", new TH1D("h_j1_p", "h_j1_p", 50, 0, 250));
-    my_histos.emplace("h_j1_QGL", new TH1D("h_j1_QGL", "h_j1_QGL", 50, 0, 1));
-    my_histos.emplace("h_j1_CSV", new TH1D("h_j1_CSV", "h_j1_CSV", 50, 0, 1));
-    my_histos.emplace("h_j2_m", new TH1D("h_j2_m", "h_j2_m", 50, 0, 100));
-    my_histos.emplace("h_j2_p", new TH1D("h_j2_p", "h_j2_p", 50, 0, 250));
-    my_histos.emplace("h_j2_QGL", new TH1D("h_j2_QGL", "h_j2_QGL", 50, 0, 1));
-    my_histos.emplace("h_j2_CSV", new TH1D("h_j2_CSV", "h_j2_CSV", 50, 0, 1));
-    my_histos.emplace("h_j3_m", new TH1D("h_j3_m", "h_j3_m", 50, 0, 100));
-    my_histos.emplace("h_j3_p", new TH1D("h_j3_p", "h_j3_p", 50, 0, 250));
-    my_histos.emplace("h_j3_QGL", new TH1D("h_j3_QGL", "h_j3_QGL", 50, 0, 1));
-    my_histos.emplace("h_j3_CSV", new TH1D("h_j3_CSV", "h_j3_CSV", 50, 0, 1));
+    my_histos.emplace("h_cand_m", std::make_shared<TH1D>("h_cand_m", "h_cand_m", 50, 50, 300));
+    my_histos.emplace("h_cand_p", std::make_shared<TH1D>("h_cand_p", "h_cand_p", 50, 0, 2000));
+    my_histos.emplace("h_j12_m", std::make_shared<TH1D>("h_j12_m", "h_j12_m", 50, 0, 250));
+    my_histos.emplace("h_j23_m", std::make_shared<TH1D>("h_j23_m", "h_j23_m", 50, 0, 200));
+    my_histos.emplace("h_j13_m", std::make_shared<TH1D>("h_j13_m", "h_j13_m", 50, 0, 200));
+    my_histos.emplace("h_dTheta12", std::make_shared<TH1D>("h_dTheta12", "h_dTheta12", 60, 1, 4));
+    my_histos.emplace("h_dTheta23", std::make_shared<TH1D>("h_dTheta23", "h_dTheta23", 60, 0, 3));
+    my_histos.emplace("h_dTheta13", std::make_shared<TH1D>("h_dTheta13", "h_dTheta13", 60, 1, 4));
+    my_histos.emplace("h_j1_m", std::make_shared<TH1D>("h_j1_m", "h_j1_m", 50, 0, 100));
+    my_histos.emplace("h_j1_p", std::make_shared<TH1D>("h_j1_p", "h_j1_p", 50, 0, 250));
+    my_histos.emplace("h_j1_QGL", std::make_shared<TH1D>("h_j1_QGL", "h_j1_QGL", 50, 0, 1));
+    my_histos.emplace("h_j1_CSV", std::make_shared<TH1D>("h_j1_CSV", "h_j1_CSV", 50, 0, 1));
+    my_histos.emplace("h_j2_m", std::make_shared<TH1D>("h_j2_m", "h_j2_m", 50, 0, 100));
+    my_histos.emplace("h_j2_p", std::make_shared<TH1D>("h_j2_p", "h_j2_p", 50, 0, 250));
+    my_histos.emplace("h_j2_QGL", std::make_shared<TH1D>("h_j2_QGL", "h_j2_QGL", 50, 0, 1));
+    my_histos.emplace("h_j2_CSV", std::make_shared<TH1D>("h_j2_CSV", "h_j2_CSV", 50, 0, 1));
+    my_histos.emplace("h_j3_m", std::make_shared<TH1D>("h_j3_m", "h_j3_m", 50, 0, 100));
+    my_histos.emplace("h_j3_p", std::make_shared<TH1D>("h_j3_p", "h_j3_p", 50, 0, 250));
+    my_histos.emplace("h_j3_QGL", std::make_shared<TH1D>("h_j3_QGL", "h_j3_QGL", 50, 0, 1));
+    my_histos.emplace("h_j3_CSV", std::make_shared<TH1D>("h_j3_CSV", "h_j3_CSV", 50, 0, 1));
     
-    my_histos.emplace("h_cand_m_topmatch", new TH1D("h_cand_m_topmatch", "h_cand_m_topmatch", 50, 50, 300));
-    my_histos.emplace("h_cand_p_topmatch", new TH1D("h_cand_p_topmatch", "h_cand_p_topmatch", 50, 0, 2000));
-    my_histos.emplace("h_j12_m_topmatch", new TH1D("h_j12_m_topmatch", "h_j12_m_topmatch", 50, 0, 250));
-    my_histos.emplace("h_j23_m_topmatch", new TH1D("h_j23_m_topmatch", "h_j23_m_topmatch", 50, 0, 200));
-    my_histos.emplace("h_j13_m_topmatch", new TH1D("h_j13_m_topmatch", "h_j13_m_topmatch", 50, 0, 200));
-    my_histos.emplace("h_dTheta12_topmatch", new TH1D("h_dTheta12_topmatch", "h_dTheta12_topmatch", 60, 1, 4));
-    my_histos.emplace("h_dTheta23_topmatch", new TH1D("h_dTheta23_topmatch", "h_dTheta23_topmatch", 60, 0, 3));
-    my_histos.emplace("h_dTheta13_topmatch", new TH1D("h_dTheta13_topmatch", "h_dTheta13_topmatch", 60, 1, 4));
-    my_histos.emplace("h_j1_m_topmatch", new TH1D("h_j1_m_topmatch", "h_j1_m_topmatch", 50, 0, 100));
-    my_histos.emplace("h_j1_p_topmatch", new TH1D("h_j1_p_topmatch", "h_j1_p_topmatch", 50, 0, 250));
-    my_histos.emplace("h_j1_QGL_topmatch", new TH1D("h_j1_QGL_topmatch", "h_j1_QGL_topmatch", 50, 0, 1));
-    my_histos.emplace("h_j1_CSV_topmatch", new TH1D("h_j1_CSV_topmatch", "h_j1_CSV_topmatch", 50, 0, 1));
-    my_histos.emplace("h_j2_m_topmatch", new TH1D("h_j2_m_topmatch", "h_j2_m_topmatch", 50, 0, 100));
-    my_histos.emplace("h_j2_p_topmatch", new TH1D("h_j2_p_topmatch", "h_j2_p_topmatch", 50, 0, 250));
-    my_histos.emplace("h_j2_QGL_topmatch", new TH1D("h_j2_QGL_topmatch", "h_j2_QGL_topmatch", 50, 0, 1));
-    my_histos.emplace("h_j2_CSV_topmatch", new TH1D("h_j2_CSV_topmatch", "h_j2_CSV_topmatch", 50, 0, 1));
-    my_histos.emplace("h_j3_m_topmatch", new TH1D("h_j3_m_topmatch", "h_j3_m_topmatch", 50, 0, 100));
-    my_histos.emplace("h_j3_p_topmatch", new TH1D("h_j3_p_topmatch", "h_j3_p_topmatch", 50, 0, 250));
-    my_histos.emplace("h_j3_QGL_topmatch", new TH1D("h_j3_QGL_topmatch", "h_j3_QGL_topmatch", 50, 0, 1));
-    my_histos.emplace("h_j3_CSV_topmatch", new TH1D("h_j3_CSV_topmatch", "h_j3_CSV_topmatch", 50, 0, 1));
+    my_histos.emplace("h_cand_m_topmatch", std::make_shared<TH1D>("h_cand_m_topmatch", "h_cand_m_topmatch", 50, 50, 300));
+    my_histos.emplace("h_cand_p_topmatch", std::make_shared<TH1D>("h_cand_p_topmatch", "h_cand_p_topmatch", 50, 0, 2000));
+    my_histos.emplace("h_j12_m_topmatch", std::make_shared<TH1D>("h_j12_m_topmatch", "h_j12_m_topmatch", 50, 0, 250));
+    my_histos.emplace("h_j23_m_topmatch", std::make_shared<TH1D>("h_j23_m_topmatch", "h_j23_m_topmatch", 50, 0, 200));
+    my_histos.emplace("h_j13_m_topmatch", std::make_shared<TH1D>("h_j13_m_topmatch", "h_j13_m_topmatch", 50, 0, 200));
+    my_histos.emplace("h_dTheta12_topmatch", std::make_shared<TH1D>("h_dTheta12_topmatch", "h_dTheta12_topmatch", 60, 1, 4));
+    my_histos.emplace("h_dTheta23_topmatch", std::make_shared<TH1D>("h_dTheta23_topmatch", "h_dTheta23_topmatch", 60, 0, 3));
+    my_histos.emplace("h_dTheta13_topmatch", std::make_shared<TH1D>("h_dTheta13_topmatch", "h_dTheta13_topmatch", 60, 1, 4));
+    my_histos.emplace("h_j1_m_topmatch", std::make_shared<TH1D>("h_j1_m_topmatch", "h_j1_m_topmatch", 50, 0, 100));
+    my_histos.emplace("h_j1_p_topmatch", std::make_shared<TH1D>("h_j1_p_topmatch", "h_j1_p_topmatch", 50, 0, 250));
+    my_histos.emplace("h_j1_QGL_topmatch", std::make_shared<TH1D>("h_j1_QGL_topmatch", "h_j1_QGL_topmatch", 50, 0, 1));
+    my_histos.emplace("h_j1_CSV_topmatch", std::make_shared<TH1D>("h_j1_CSV_topmatch", "h_j1_CSV_topmatch", 50, 0, 1));
+    my_histos.emplace("h_j2_m_topmatch", std::make_shared<TH1D>("h_j2_m_topmatch", "h_j2_m_topmatch", 50, 0, 100));
+    my_histos.emplace("h_j2_p_topmatch", std::make_shared<TH1D>("h_j2_p_topmatch", "h_j2_p_topmatch", 50, 0, 250));
+    my_histos.emplace("h_j2_QGL_topmatch", std::make_shared<TH1D>("h_j2_QGL_topmatch", "h_j2_QGL_topmatch", 50, 0, 1));
+    my_histos.emplace("h_j2_CSV_topmatch", std::make_shared<TH1D>("h_j2_CSV_topmatch", "h_j2_CSV_topmatch", 50, 0, 1));
+    my_histos.emplace("h_j3_m_topmatch", std::make_shared<TH1D>("h_j3_m_topmatch", "h_j3_m_topmatch", 50, 0, 100));
+    my_histos.emplace("h_j3_p_topmatch", std::make_shared<TH1D>("h_j3_p_topmatch", "h_j3_p_topmatch", 50, 0, 250));
+    my_histos.emplace("h_j3_QGL_topmatch", std::make_shared<TH1D>("h_j3_QGL_topmatch", "h_j3_QGL_topmatch", 50, 0, 1));
+    my_histos.emplace("h_j3_CSV_topmatch", std::make_shared<TH1D>("h_j3_CSV_topmatch", "h_j3_CSV_topmatch", 50, 0, 1));
     
-    my_histos.emplace("h_cand_m_susymatch", new TH1D("h_cand_m_susymatch", "h_cand_m_susymatch", 50, 50, 300));
-    my_histos.emplace("h_cand_p_susymatch", new TH1D("h_cand_p_susymatch", "h_cand_p_susymatch", 50, 0, 2000));
-    my_histos.emplace("h_j12_m_susymatch", new TH1D("h_j12_m_susymatch", "h_j12_m_susymatch", 50, 0, 250));
-    my_histos.emplace("h_j23_m_susymatch", new TH1D("h_j23_m_susymatch", "h_j23_m_susymatch", 50, 0, 200));
-    my_histos.emplace("h_j13_m_susymatch", new TH1D("h_j13_m_susymatch", "h_j13_m_susymatch", 50, 0, 200));
-    my_histos.emplace("h_dTheta12_susymatch", new TH1D("h_dTheta12_susymatch", "h_dTheta12_susymatch", 60, 1, 4));
-    my_histos.emplace("h_dTheta23_susymatch", new TH1D("h_dTheta23_susymatch", "h_dTheta23_susymatch", 60, 0, 3));
-    my_histos.emplace("h_dTheta13_susymatch", new TH1D("h_dTheta13_susymatch", "h_dTheta13_susymatch", 60, 1, 4));
-    my_histos.emplace("h_j1_m_susymatch", new TH1D("h_j1_m_susymatch", "h_j1_m_susymatch", 50, 0, 100));
-    my_histos.emplace("h_j1_p_susymatch", new TH1D("h_j1_p_susymatch", "h_j1_p_susymatch", 50, 0, 250));
-    my_histos.emplace("h_j1_QGL_susymatch", new TH1D("h_j1_QGL_susymatch", "h_j1_QGL_susymatch", 50, 0, 1));
-    my_histos.emplace("h_j1_CSV_susymatch", new TH1D("h_j1_CSV_susymatch", "h_j1_CSV_susymatch", 50, 0, 1));
-    my_histos.emplace("h_j2_m_susymatch", new TH1D("h_j2_m_susymatch", "h_j2_m_susymatch", 50, 0, 100));
-    my_histos.emplace("h_j2_p_susymatch", new TH1D("h_j2_p_susymatch", "h_j2_p_susymatch", 50, 0, 250));
-    my_histos.emplace("h_j2_QGL_susymatch", new TH1D("h_j2_QGL_susymatch", "h_j2_QGL_susymatch", 50, 0, 1));
-    my_histos.emplace("h_j2_CSV_susymatch", new TH1D("h_j2_CSV_susymatch", "h_j2_CSV_susymatch", 50, 0, 1));
-    my_histos.emplace("h_j3_m_susymatch", new TH1D("h_j3_m_susymatch", "h_j3_m_susymatch", 50, 0, 100));
-    my_histos.emplace("h_j3_p_susymatch", new TH1D("h_j3_p_susymatch", "h_j3_p_susymatch", 50, 0, 250));
-    my_histos.emplace("h_j3_QGL_susymatch", new TH1D("h_j3_QGL_susymatch", "h_j3_QGL_susymatch", 50, 0, 1));
-    my_histos.emplace("h_j3_CSV_susymatch", new TH1D("h_j3_CSV_susymatch", "h_j3_CSV_susymatch", 50, 0, 1));
+    my_histos.emplace("h_cand_m_susymatch", std::make_shared<TH1D>("h_cand_m_susymatch", "h_cand_m_susymatch", 50, 50, 300));
+    my_histos.emplace("h_cand_p_susymatch", std::make_shared<TH1D>("h_cand_p_susymatch", "h_cand_p_susymatch", 50, 0, 2000));
+    my_histos.emplace("h_j12_m_susymatch", std::make_shared<TH1D>("h_j12_m_susymatch", "h_j12_m_susymatch", 50, 0, 250));
+    my_histos.emplace("h_j23_m_susymatch", std::make_shared<TH1D>("h_j23_m_susymatch", "h_j23_m_susymatch", 50, 0, 200));
+    my_histos.emplace("h_j13_m_susymatch", std::make_shared<TH1D>("h_j13_m_susymatch", "h_j13_m_susymatch", 50, 0, 200));
+    my_histos.emplace("h_dTheta12_susymatch", std::make_shared<TH1D>("h_dTheta12_susymatch", "h_dTheta12_susymatch", 60, 1, 4));
+    my_histos.emplace("h_dTheta23_susymatch", std::make_shared<TH1D>("h_dTheta23_susymatch", "h_dTheta23_susymatch", 60, 0, 3));
+    my_histos.emplace("h_dTheta13_susymatch", std::make_shared<TH1D>("h_dTheta13_susymatch", "h_dTheta13_susymatch", 60, 1, 4));
+    my_histos.emplace("h_j1_m_susymatch", std::make_shared<TH1D>("h_j1_m_susymatch", "h_j1_m_susymatch", 50, 0, 100));
+    my_histos.emplace("h_j1_p_susymatch", std::make_shared<TH1D>("h_j1_p_susymatch", "h_j1_p_susymatch", 50, 0, 250));
+    my_histos.emplace("h_j1_QGL_susymatch", std::make_shared<TH1D>("h_j1_QGL_susymatch", "h_j1_QGL_susymatch", 50, 0, 1));
+    my_histos.emplace("h_j1_CSV_susymatch", std::make_shared<TH1D>("h_j1_CSV_susymatch", "h_j1_CSV_susymatch", 50, 0, 1));
+    my_histos.emplace("h_j2_m_susymatch", std::make_shared<TH1D>("h_j2_m_susymatch", "h_j2_m_susymatch", 50, 0, 100));
+    my_histos.emplace("h_j2_p_susymatch", std::make_shared<TH1D>("h_j2_p_susymatch", "h_j2_p_susymatch", 50, 0, 250));
+    my_histos.emplace("h_j2_QGL_susymatch", std::make_shared<TH1D>("h_j2_QGL_susymatch", "h_j2_QGL_susymatch", 50, 0, 1));
+    my_histos.emplace("h_j2_CSV_susymatch", std::make_shared<TH1D>("h_j2_CSV_susymatch", "h_j2_CSV_susymatch", 50, 0, 1));
+    my_histos.emplace("h_j3_m_susymatch", std::make_shared<TH1D>("h_j3_m_susymatch", "h_j3_m_susymatch", 50, 0, 100));
+    my_histos.emplace("h_j3_p_susymatch", std::make_shared<TH1D>("h_j3_p_susymatch", "h_j3_p_susymatch", 50, 0, 250));
+    my_histos.emplace("h_j3_QGL_susymatch", std::make_shared<TH1D>("h_j3_QGL_susymatch", "h_j3_QGL_susymatch", 50, 0, 1));
+    my_histos.emplace("h_j3_CSV_susymatch", std::make_shared<TH1D>("h_j3_CSV_susymatch", "h_j3_CSV_susymatch", 50, 0, 1));
     
-    my_histos.emplace("h_cand_m_nomatch", new TH1D("h_cand_m_nomatch", "h_cand_m_nomatch", 50, 50, 300));
-    my_histos.emplace("h_cand_p_nomatch", new TH1D("h_cand_p_nomatch", "h_cand_p_nomatch", 50, 0, 2000));
-    my_histos.emplace("h_j12_m_nomatch", new TH1D("h_j12_m_nomatch", "h_j12_m_nomatch", 50, 0, 250));
-    my_histos.emplace("h_j23_m_nomatch", new TH1D("h_j23_m_nomatch", "h_j23_m_nomatch", 50, 0, 200));
-    my_histos.emplace("h_j13_m_nomatch", new TH1D("h_j13_m_nomatch", "h_j13_m_nomatch", 50, 0, 200));
-    my_histos.emplace("h_dTheta12_nomatch", new TH1D("h_dTheta12_nomatch", "h_dTheta12_nomatch", 60, 1, 4));
-    my_histos.emplace("h_dTheta23_nomatch", new TH1D("h_dTheta23_nomatch", "h_dTheta23_nomatch", 60, 0, 3));
-    my_histos.emplace("h_dTheta13_nomatch", new TH1D("h_dTheta13_nomatch", "h_dTheta13_nomatch", 60, 1, 4));
-    my_histos.emplace("h_j1_m_nomatch", new TH1D("h_j1_m_nomatch", "h_j1_m_nomatch", 50, 0, 100));
-    my_histos.emplace("h_j1_p_nomatch", new TH1D("h_j1_p_nomatch", "h_j1_p_nomatch", 50, 0, 250));
-    my_histos.emplace("h_j1_QGL_nomatch", new TH1D("h_j1_QGL_nomatch", "h_j1_QGL_nomatch", 50, 0, 1));
-    my_histos.emplace("h_j1_CSV_nomatch", new TH1D("h_j1_CSV_nomatch", "h_j1_CSV_nomatch", 50, 0, 1));
-    my_histos.emplace("h_j2_m_nomatch", new TH1D("h_j2_m_nomatch", "h_j2_m_nomatch", 50, 0, 100));
-    my_histos.emplace("h_j2_p_nomatch", new TH1D("h_j2_p_nomatch", "h_j2_p_nomatch", 50, 0, 250));
-    my_histos.emplace("h_j2_QGL_nomatch", new TH1D("h_j2_QGL_nomatch", "h_j2_QGL_nomatch", 50, 0, 1));
-    my_histos.emplace("h_j2_CSV_nomatch", new TH1D("h_j2_CSV_nomatch", "h_j2_CSV_nomatch", 50, 0, 1));
-    my_histos.emplace("h_j3_m_nomatch", new TH1D("h_j3_m_nomatch", "h_j3_m_nomatch", 50, 0, 100));
-    my_histos.emplace("h_j3_p_nomatch", new TH1D("h_j3_p_nomatch", "h_j3_p_nomatch", 50, 0, 250));
-    my_histos.emplace("h_j3_QGL_nomatch", new TH1D("h_j3_QGL_nomatch", "h_j3_QGL_nomatch", 50, 0, 1));
-    my_histos.emplace("h_j3_CSV_nomatch", new TH1D("h_j3_CSV_nomatch", "h_j3_CSV_nomatch", 50, 0, 1));
+    my_histos.emplace("h_cand_m_nomatch", std::make_shared<TH1D>("h_cand_m_nomatch", "h_cand_m_nomatch", 50, 50, 300));
+    my_histos.emplace("h_cand_p_nomatch", std::make_shared<TH1D>("h_cand_p_nomatch", "h_cand_p_nomatch", 50, 0, 2000));
+    my_histos.emplace("h_j12_m_nomatch", std::make_shared<TH1D>("h_j12_m_nomatch", "h_j12_m_nomatch", 50, 0, 250));
+    my_histos.emplace("h_j23_m_nomatch", std::make_shared<TH1D>("h_j23_m_nomatch", "h_j23_m_nomatch", 50, 0, 200));
+    my_histos.emplace("h_j13_m_nomatch", std::make_shared<TH1D>("h_j13_m_nomatch", "h_j13_m_nomatch", 50, 0, 200));
+    my_histos.emplace("h_dTheta12_nomatch", std::make_shared<TH1D>("h_dTheta12_nomatch", "h_dTheta12_nomatch", 60, 1, 4));
+    my_histos.emplace("h_dTheta23_nomatch", std::make_shared<TH1D>("h_dTheta23_nomatch", "h_dTheta23_nomatch", 60, 0, 3));
+    my_histos.emplace("h_dTheta13_nomatch", std::make_shared<TH1D>("h_dTheta13_nomatch", "h_dTheta13_nomatch", 60, 1, 4));
+    my_histos.emplace("h_j1_m_nomatch", std::make_shared<TH1D>("h_j1_m_nomatch", "h_j1_m_nomatch", 50, 0, 100));
+    my_histos.emplace("h_j1_p_nomatch", std::make_shared<TH1D>("h_j1_p_nomatch", "h_j1_p_nomatch", 50, 0, 250));
+    my_histos.emplace("h_j1_QGL_nomatch", std::make_shared<TH1D>("h_j1_QGL_nomatch", "h_j1_QGL_nomatch", 50, 0, 1));
+    my_histos.emplace("h_j1_CSV_nomatch", std::make_shared<TH1D>("h_j1_CSV_nomatch", "h_j1_CSV_nomatch", 50, 0, 1));
+    my_histos.emplace("h_j2_m_nomatch", std::make_shared<TH1D>("h_j2_m_nomatch", "h_j2_m_nomatch", 50, 0, 100));
+    my_histos.emplace("h_j2_p_nomatch", std::make_shared<TH1D>("h_j2_p_nomatch", "h_j2_p_nomatch", 50, 0, 250));
+    my_histos.emplace("h_j2_QGL_nomatch", std::make_shared<TH1D>("h_j2_QGL_nomatch", "h_j2_QGL_nomatch", 50, 0, 1));
+    my_histos.emplace("h_j2_CSV_nomatch", std::make_shared<TH1D>("h_j2_CSV_nomatch", "h_j2_CSV_nomatch", 50, 0, 1));
+    my_histos.emplace("h_j3_m_nomatch", std::make_shared<TH1D>("h_j3_m_nomatch", "h_j3_m_nomatch", 50, 0, 100));
+    my_histos.emplace("h_j3_p_nomatch", std::make_shared<TH1D>("h_j3_p_nomatch", "h_j3_p_nomatch", 50, 0, 250));
+    my_histos.emplace("h_j3_QGL_nomatch", std::make_shared<TH1D>("h_j3_QGL_nomatch", "h_j3_QGL_nomatch", 50, 0, 1));
+    my_histos.emplace("h_j3_CSV_nomatch", std::make_shared<TH1D>("h_j3_CSV_nomatch", "h_j3_CSV_nomatch", 50, 0, 1));
     
     // Cut flows
-    my_efficiencies.emplace("event_sel", new TEfficiency("event_sel","Event selection efficiency wrt previous cut;Cut;#epsilon",8,0,8));
-    my_efficiencies.emplace("event_sel_total", new TEfficiency("event_sel_total","Total event selection efficiency;Cut;#epsilon",8,0,8));
+    my_efficiencies.emplace("event_sel", std::make_shared<TEfficiency>("event_sel","Event selection efficiency wrt previous cut;Cut;#epsilon",8,0,8));
+    my_efficiencies.emplace("event_sel_total", std::make_shared<TEfficiency>("event_sel_total","Total event selection efficiency;Cut;#epsilon",8,0,8));
 
 }
 
@@ -291,24 +291,23 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, std:
     
     while(tr.getNextEvent())
     {
-        const double& MET     = tr.getVar<double>("MET");
-        const double& HT      = tr.getVar<double>("HT");
-        const int& NJets      = tr.getVar<int>("NJets");
-        const int& ntops_3jet = tr.getVar<int>("ntops_3jet");
-        const int& ntops_2jet = tr.getVar<int>("ntops_2jet");
-        const int& ntops_1jet = tr.getVar<int>("ntops_1jet");
-        const int& nhadWs     = tr.getVar<int>("nhadWs");
-        const std::string runtype = tr.getVar<std::string>("runtype");
-        const std::vector<TLorentzVector>& Jets           = tr.getVec<TLorentzVector>("Jets");
-        const std::vector<double>& Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
-        const TopTaggerResults* ttr         = tr.getVar<TopTaggerResults*>("ttr");
-        const std::vector<std::vector<const TLorentzVector*>>& hadtopdaughters = tr.getVec<std::vector<const TLorentzVector*>>("hadtopdaughters");
-        const std::vector<TLorentzVector>& hadtops     = tr.getVec<TLorentzVector>("hadtops");
-        const std::vector<TLorentzVector>& hadWs       = tr.getVec<TLorentzVector>("hadWs");
-        const std::vector<TLorentzVector>& neutralinos = tr.getVec<TLorentzVector>("neutralinos");
-        const std::vector<TLorentzVector>& singlinos   = tr.getVec<TLorentzVector>("singlinos");
-        const std::vector<TLorentzVector>& singlets    = tr.getVec<TLorentzVector>("singlets");
-        const std::vector<int>& hadtops_idx            = tr.getVec<int>("hadtops_idx");
+        const auto& MET                    = tr.getVar<double>("MET");
+        const auto& HT                     = tr.getVar<double>("HT");
+        const auto& NJets                  = tr.getVar<int>("NJets");
+        const auto& ntops_3jet             = tr.getVar<int>("ntops_3jet");
+        const auto& ntops_2jet             = tr.getVar<int>("ntops_2jet");
+        const auto& ntops_1jet             = tr.getVar<int>("ntops_1jet");
+        const auto& nhadWs                 = tr.getVar<int>("nhadWs");
+        const auto& Jets                   = tr.getVec<TLorentzVector>("Jets");
+        const auto& Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
+        const auto* ttr                    = tr.getVar<TopTaggerResults*>("ttr");
+        const auto& hadtopdaughters        = tr.getVec<std::vector<const TLorentzVector*>>("hadtopdaughters");
+        const auto& hadtops                = tr.getVec<TLorentzVector>("hadtops");
+        const auto& hadWs                  = tr.getVec<TLorentzVector>("hadWs");
+        const auto& neutralinos            = tr.getVec<TLorentzVector>("neutralinos");
+        const auto& singlinos              = tr.getVec<TLorentzVector>("singlinos");
+        const auto& singlets               = tr.getVec<TLorentzVector>("singlets");
+        const auto& hadtops_idx            = tr.getVec<int>("hadtops_idx");
         
         if(maxevents != -1 && tr.getEvtNum() >= maxevents) break;
         if ( tr.getEvtNum() % 1000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;
@@ -330,7 +329,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, std:
         }
 
         // Only keep events with two hadronic top decays
-        if (runtype.find("qcd") == std::string::npos && nhadWs != 4) continue;  
+        if (filetag.find("QCD") == std::string::npos && nhadWs != 4) continue;  
         
         // Figure out whether the gentop is more similar to a monojet, dijet or trijet reco top
         // Monojet criterion: pT>400, DR(daughter,top)<0.8
