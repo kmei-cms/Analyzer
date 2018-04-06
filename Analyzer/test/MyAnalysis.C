@@ -4,6 +4,7 @@
 #include "Framework/Framework/include/samples.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
 #include "Framework/Framework/include/RunTopTagger.h"
+#include "Framework/Framework/include/RunFisher.h"
 #include "Framework/Framework/include/Muon.h"
 #include "Framework/Framework/include/Electron.h"
 #include "Framework/Framework/include/BJet.h"
@@ -41,6 +42,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
 
         // Define classes/functions that add variables on the fly
         RunTopTagger runTopTagger;
+        RunFisher    runFisher;
         Muon muon;
         Electron electron;
         BJet bjet;
@@ -48,6 +50,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
 
         // Register classes/functions that add variables on the fly
         tr.registerFunction( std::move(runTopTagger) );
+        tr.registerFunction( std::move(runFisher) );
         tr.registerFunction( std::move(muon) );
         tr.registerFunction( std::move(electron) );
         tr.registerFunction( std::move(bjet) );
