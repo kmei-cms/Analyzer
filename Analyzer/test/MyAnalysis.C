@@ -1,6 +1,7 @@
 #include "Analyzer/Analyzer/include/AnalyzeBackground.h"
 #include "Analyzer/Analyzer/include/AnalyzeTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeEventSelection.h"
+#include "Analyzer/Analyzer/include/AnalyzeEventShape.h"
 #include "Framework/Framework/include/samples.h"
 #include "TopTaggerTools/Tools/include/HistoContainer.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
@@ -15,7 +16,7 @@
 #include <getopt.h>
 
 template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
-                                    std::string runType, int startFile, int nFiles, int maxEvts)
+                                    std::string runType, int startFile, int nFiles, int maxEvts, bool isSkim)
 {
     Analyze t = Analyze();
     std::cout << "Initializing..." << std::endl;
@@ -33,16 +34,18 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         {
             runtype = runType;
         }
-        std::cout << "Starting loop" << std::endl;
-        printf( "weight: %f nFiles: %i startFile: %i maxEvts: %i \n",weight,nFiles,startFile,maxEvts );
+        std::cout << "Starting loop (in run)" << std::endl;
+        fflush( stdout ) ;
+        printf( "weight: %f nFiles: %i startFile: %i maxEvts: %i \n",weight,nFiles,startFile,maxEvts ); fflush( stdout ) ;
         tr.registerDerivedVar<std::string>("runtype",runtype);
 
         // Define classes/functions that add variables on the fly
-        RunTopTagger runTopTagger;
+        RunTopTagger* rtt(0x0) ;
+        if ( !isSkim ) rtt = new RunTopTagger() ;
         RunFisher    runFisher;
         
         // Register classes/functions that add variables on the fly
-        tr.registerFunction( std::move(runTopTagger) );
+        if ( !isSkim ) tr.registerFunction( std::move(*rtt) );
         tr.registerFunction( std::move(runFisher) );
 
         // Loop over all of the events and fill histos
@@ -84,7 +87,7 @@ std::set<AnaSamples::FileSummary> setFS(std::string sampleloc, std::string dataS
 int main(int argc, char *argv[])
 {
     int opt, option_index = 0;
-    bool doBackground = false, doTopTagger = false, doEventSelection = false;
+    bool doBackground = false, doTopTagger = false, doEventSelection = false, doEventShape = false;
     bool runOnCondor = false;
     std::string histFile = "", dataSets = "", sampleloc = AnaSamples::fileDir;
     int nFiles = -1, startFile = 0, maxEvts = -1;
@@ -93,6 +96,7 @@ int main(int argc, char *argv[])
         {"doBackground",       no_argument, 0, 'b'},
         {"doTopTagger",        no_argument, 0, 't'},
         {"doEventSelection",   no_argument, 0, 's'},
+        {"doEventShape",       no_argument, 0, 'p'},
         {"condor",             no_argument, 0, 'c'},
         {"histFile",     required_argument, 0, 'H'},
         {"dataSets",     required_argument, 0, 'D'},
@@ -101,13 +105,14 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-    while((opt = getopt_long(argc, argv, "btscH:D:N:M:E:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "btspcH:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
             case 'b': doBackground     = true;              break;
             case 't': doTopTagger      = true;              break;
             case 's': doEventSelection = true;              break;
+            case 'p': doEventShape     = true;              break;
             case 'c': runOnCondor      = true;              break;
             case 'H': histFile         = optarg;            break;
             case 'D': dataSets         = optarg;            break;
@@ -115,6 +120,19 @@ int main(int argc, char *argv[])
             case 'M': startFile        = int(atoi(optarg)); break;
             case 'E': maxEvts          = int(atoi(optarg)); break;
         }
+    }
+
+    TString ts_dsname( dataSets.c_str() ) ;
+    bool isSkim(false) ;
+    if ( ts_dsname.Contains( "skim" ) ) isSkim = true ;
+    bool isData(false) ;
+    if ( ts_dsname.Contains( "Data" ) ) isData = true ;
+
+    char runtype[100] ;
+    if ( isData ) {
+       sprintf( runtype, "Data" ) ;
+    } else {
+       sprintf( runtype, "mc" ) ;
     }
 
     if(runOnCondor)
@@ -130,15 +148,23 @@ int main(int argc, char *argv[])
 
     if(doBackground)
     {
-        run<AnalyzeBackground>(vvf,"Data",startFile,nFiles,maxEvts);
+        printf("\n\n running AnalyzeBackground\n\n" ) ;
+        run<AnalyzeBackground>(vvf,"Data",startFile,nFiles,maxEvts,isSkim);
     }
     else if(doTopTagger)
     {
-        run<AnalyzeTopTagger>(vvf,"qcd",startFile,nFiles,maxEvts);
+        printf("\n\n running AnalyzeTopTagger\n\n" ) ;
+        run<AnalyzeTopTagger>(vvf,"qcd",startFile,nFiles,maxEvts,isSkim);
     }
     else if(doEventSelection)
     {
-        run<AnalyzeEventSelection>(vvf,"Data",startFile,nFiles,maxEvts);
+        printf("\n\n running AnalyzeEventSelection\n\n") ;
+        run<AnalyzeEventSelection>(vvf,"Data",startFile,nFiles,maxEvts,isSkim);
+    }
+    else if(doEventShape)
+    {
+        printf("\n\n running AnalyzeEventShape\n\n") ;
+        run<AnalyzeEventShape>(vvf,runtype,startFile,nFiles,maxEvts,isSkim);
     }
 
     myfile->Close();
