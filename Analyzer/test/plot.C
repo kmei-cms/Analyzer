@@ -297,8 +297,8 @@ public:
         //mark.DrawLatex(1 - gPad->GetRightMargin(), 1 - (gPad->GetTopMargin() - 0.017), lumistamp);
 
         //save new plot to file
-        c->Print(("outputPlots/" + histName + ".pdf").c_str());
-        //c->Print((histName + ".png").c_str());
+        //c->Print(("outputPlots/" + histName + ".pdf").c_str());
+        c->Print(("outputPlots/" + histName + ".png").c_str());
 
         //clean up dynamic memory
         delete c;
@@ -353,30 +353,30 @@ int main()
         "g6j_HT500_g2b_2t22"   ,
         "g6j_HT500_g2b_2t23"   ,
         "g6j_HT500_g2b_2t33"   ,
-        //"g6j_HT500_g2b_2t11_f1",
-        //"g6j_HT500_g2b_2t11_f2",
-        //"g6j_HT500_g2b_2t11_f3",
-        //"g6j_HT500_g2b_2t11_f4",
-        //"g6j_HT500_g2b_2t12_f1",
-        //"g6j_HT500_g2b_2t12_f2",
-        //"g6j_HT500_g2b_2t12_f3",
-        //"g6j_HT500_g2b_2t12_f4",
-        //"g6j_HT500_g2b_2t13_f1",
-        //"g6j_HT500_g2b_2t13_f2",
-        //"g6j_HT500_g2b_2t13_f3",
-        //"g6j_HT500_g2b_2t13_f4",
-        //"g6j_HT500_g2b_2t22_f1",
-        //"g6j_HT500_g2b_2t22_f2",
-        //"g6j_HT500_g2b_2t22_f3",
-        //"g6j_HT500_g2b_2t22_f4",
-        //"g6j_HT500_g2b_2t23_f1",
-        //"g6j_HT500_g2b_2t23_f2",
-        //"g6j_HT500_g2b_2t23_f3",
-        //"g6j_HT500_g2b_2t23_f4",
-        //"g6j_HT500_g2b_2t33_f1",
-        //"g6j_HT500_g2b_2t33_f2",
-        //"g6j_HT500_g2b_2t33_f3",
-        //"g6j_HT500_g2b_2t33_f4"
+        "g6j_HT500_g2b_2t11_f1",
+        "g6j_HT500_g2b_2t11_f2",
+        "g6j_HT500_g2b_2t11_f3",
+        "g6j_HT500_g2b_2t11_f4",
+        "g6j_HT500_g2b_2t12_f1",
+        "g6j_HT500_g2b_2t12_f2",
+        "g6j_HT500_g2b_2t12_f3",
+        "g6j_HT500_g2b_2t12_f4",
+        "g6j_HT500_g2b_2t13_f1",
+        "g6j_HT500_g2b_2t13_f2",
+        "g6j_HT500_g2b_2t13_f3",
+        "g6j_HT500_g2b_2t13_f4",
+        "g6j_HT500_g2b_2t22_f1",
+        "g6j_HT500_g2b_2t22_f2",
+        "g6j_HT500_g2b_2t22_f3",
+        "g6j_HT500_g2b_2t22_f4",
+        "g6j_HT500_g2b_2t23_f1",
+        "g6j_HT500_g2b_2t23_f2",
+        "g6j_HT500_g2b_2t23_f3",
+        "g6j_HT500_g2b_2t23_f4",
+        "g6j_HT500_g2b_2t33_f1",
+        "g6j_HT500_g2b_2t33_f2",
+        "g6j_HT500_g2b_2t33_f3",
+        "g6j_HT500_g2b_2t33_f4"
     };
 
     //plt.plot( "h_njets_0l_g6j_HT500_g2b_2t", "N_{J}" );

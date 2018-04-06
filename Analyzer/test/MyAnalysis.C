@@ -16,7 +16,7 @@
 #include <getopt.h>
 
 template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
-                                    std::string runType, int startFile, int nFiles, int maxEvts)
+                                    int startFile, int nFiles, int maxEvts)
 {
     Analyze t = Analyze();
     std::cout << "Initializing..." << std::endl;
@@ -30,12 +30,16 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         NTupleReader tr(ch);
         double weight = file.getWeight();
         std::string runtype = "";
-        if(file.tag.find(runType) != std::string::npos)
+        if(file.tag.find("Data") != std::string::npos)
         {
-            runtype = runType;
+            runtype = "Data";
+        }
+        else
+        {
+            runtype = "MC";
         }
         std::cout << "Starting loop" << std::endl;
-        printf( "weight: %f nFiles: %i startFile: %i maxEvts: %i \n",weight,nFiles,startFile,maxEvts );
+        printf( "runtype: %s weight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts );
         tr.registerDerivedVar<std::string>("runtype",runtype);
 
         // Define classes/functions that add variables on the fly
@@ -133,19 +137,19 @@ int main(int argc, char *argv[])
 
     if(doBackground)
     {
-        run<AnalyzeBackground>(vvf,"Data",startFile,nFiles,maxEvts);
+        run<AnalyzeBackground>(vvf,startFile,nFiles,maxEvts);
     }
     else if(doTopTagger)
     {
-        run<AnalyzeTopTagger>(vvf,"qcd",startFile,nFiles,maxEvts);
+        run<AnalyzeTopTagger>(vvf,startFile,nFiles,maxEvts);
     }
     else if(doEventSelection)
     {
-        run<AnalyzeEventSelection>(vvf,"Data",startFile,nFiles,maxEvts);
+        run<AnalyzeEventSelection>(vvf,startFile,nFiles,maxEvts);
     }
     else if(do0Lep)
     {
-        run<Analyze0Lep>(vvf,"Data",startFile,nFiles,maxEvts);
+        run<Analyze0Lep>(vvf,startFile,nFiles,maxEvts);
     }
 
     myfile->Close();

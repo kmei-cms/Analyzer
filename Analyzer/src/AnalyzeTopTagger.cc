@@ -298,7 +298,6 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, std:
         const int& ntops_2jet = tr.getVar<int>("ntops_2jet");
         const int& ntops_1jet = tr.getVar<int>("ntops_1jet");
         const int& nhadWs     = tr.getVar<int>("nhadWs");
-        const std::string runtype = tr.getVar<std::string>("runtype");
         const std::vector<TLorentzVector>& Jets           = tr.getVec<TLorentzVector>("Jets");
         const std::vector<double>& Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
         const TopTaggerResults* ttr         = tr.getVar<TopTaggerResults*>("ttr");
@@ -330,7 +329,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, std:
         }
 
         // Only keep events with two hadronic top decays
-        if (runtype.find("qcd") == std::string::npos && nhadWs != 4) continue;  
+        if (filetag.find("QCD") == std::string::npos && nhadWs != 4) continue;  
         
         // Figure out whether the gentop is more similar to a monojet, dijet or trijet reco top
         // Monojet criterion: pT>400, DR(daughter,top)<0.8
