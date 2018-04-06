@@ -47,8 +47,8 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerDerivedVar<std::string>("runtype",runtype);
 
         // Define classes/functions that add variables on the fly
-        RunTopTagger* rtt(nullptr);
-        if ( !isSkim ) rtt = new RunTopTagger();
+        std::shared_ptr<RunTopTagger> rtt;
+        if ( !isSkim ) rtt = std::make_shared<RunTopTagger>();
         RunFisher runFisher;
         Muon muon;
         Electron electron;
@@ -66,9 +66,8 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         // Loop over all of the events and fill histos
         t.Loop(tr, weight, maxEvts, file.tag);
 
-        // Clean up dynamic memory
+        // Cleaning up dynamic memory
         delete ch;
-        delete rtt;
     }
     std::cout << "Writing histograms..." << std::endl;
     t.WriteHistos();
@@ -108,6 +107,7 @@ int main(int argc, char *argv[])
     int opt, option_index = 0;
     bool doBackground = false, doTopTagger = false, doEventSelection = false, doEventShape = false, do0Lep = false;
     bool runOnCondor = false;
+    bool isSkim = false;
     std::string histFile = "", dataSets = "", sampleloc = AnaSamples::fileDir;
     int nFiles = -1, startFile = 0, maxEvts = -1;
 
@@ -143,11 +143,6 @@ int main(int argc, char *argv[])
         }
     }
 
-    //TString ts_dsname( dataSets.c_str() ) ;
-    //bool isSkim(false) ;
-    //if ( ts_dsname.Contains( "skim" ) ) isSkim = true ;
-
-    bool isSkim = false;
     if(dataSets.find("skim") != std::string::npos) isSkim = true;  
 
     if(runOnCondor)
