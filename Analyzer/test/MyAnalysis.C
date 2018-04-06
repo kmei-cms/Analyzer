@@ -1,6 +1,7 @@
 #include "Analyzer/Analyzer/include/AnalyzeBackground.h"
 #include "Analyzer/Analyzer/include/AnalyzeTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeEventSelection.h"
+#include "Analyzer/Analyzer/include/AnalyzeEventShape.h"
 #include "Analyzer/Analyzer/include/Analyze0Lep.h"
 #include "Framework/Framework/include/samples.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
@@ -19,7 +20,7 @@
 #include <getopt.h>
 
 template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
-                                    int startFile, int nFiles, int maxEvts)
+                                    int startFile, int nFiles, int maxEvts, bool isSkim)
 {
     Analyze t = Analyze();
     std::cout << "Initializing..." << std::endl;
@@ -41,20 +42,21 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         {
             runtype = "MC";
         }
-        std::cout << "Starting loop" << std::endl;
-        printf( "runtype: %s weight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts );
+        std::cout << "Starting loop (in run)" << std::endl;
+        printf( "runtype: %s weight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts ); fflush( stdout );
         tr.registerDerivedVar<std::string>("runtype",runtype);
 
         // Define classes/functions that add variables on the fly
-        RunTopTagger runTopTagger;
-        RunFisher    runFisher;
+        RunTopTagger* rtt(nullptr);
+        if ( !isSkim ) rtt = new RunTopTagger();
+        RunFisher runFisher;
         Muon muon;
         Electron electron;
         BJet bjet;
         CommonVariables commonVariables;
 
         // Register classes/functions that add variables on the fly
-        tr.registerFunction( std::move(runTopTagger) );
+        if ( !isSkim ) tr.registerFunction( std::move(*rtt) );
         tr.registerFunction( std::move(runFisher) );
         tr.registerFunction( std::move(muon) );
         tr.registerFunction( std::move(electron) );
@@ -63,6 +65,10 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
 
         // Loop over all of the events and fill histos
         t.Loop(tr, weight, maxEvts, file.tag);
+
+        // Clean up dynamic memory
+        delete ch;
+        delete rtt;
     }
     std::cout << "Writing histograms..." << std::endl;
     t.WriteHistos();
@@ -100,7 +106,7 @@ std::set<AnaSamples::FileSummary> setFS(std::string sampleloc, std::string dataS
 int main(int argc, char *argv[])
 {
     int opt, option_index = 0;
-    bool doBackground = false, doTopTagger = false, doEventSelection = false, do0Lep = false;
+    bool doBackground = false, doTopTagger = false, doEventSelection = false, doEventShape = false, do0Lep = false;
     bool runOnCondor = false;
     std::string histFile = "", dataSets = "", sampleloc = AnaSamples::fileDir;
     int nFiles = -1, startFile = 0, maxEvts = -1;
@@ -109,6 +115,7 @@ int main(int argc, char *argv[])
         {"doBackground",       no_argument, 0, 'b'},
         {"doTopTagger",        no_argument, 0, 't'},
         {"doEventSelection",   no_argument, 0, 's'},
+        {"doEventShape",       no_argument, 0, 'p'},
         {"do0Lep",             no_argument, 0, 'z'},
         {"condor",             no_argument, 0, 'c'},
         {"histFile",     required_argument, 0, 'H'},
@@ -118,13 +125,14 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-    while((opt = getopt_long(argc, argv, "btszcH:D:N:M:E:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "btspzcH:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
             case 'b': doBackground     = true;              break;
             case 't': doTopTagger      = true;              break;
             case 's': doEventSelection = true;              break;
+            case 'p': doEventShape     = true;              break;
             case 'z': do0Lep           = true;              break;
             case 'c': runOnCondor      = true;              break;
             case 'H': histFile         = optarg;            break;
@@ -134,6 +142,13 @@ int main(int argc, char *argv[])
             case 'E': maxEvts          = int(atoi(optarg)); break;
         }
     }
+
+    //TString ts_dsname( dataSets.c_str() ) ;
+    //bool isSkim(false) ;
+    //if ( ts_dsname.Contains( "skim" ) ) isSkim = true ;
+
+    bool isSkim = false;
+    if(dataSets.find("skim") != std::string::npos) isSkim = true;  
 
     if(runOnCondor)
     {
@@ -148,19 +163,28 @@ int main(int argc, char *argv[])
 
     if(doBackground)
     {
-        run<AnalyzeBackground>(vvf,startFile,nFiles,maxEvts);
+        printf("\n\n running AnalyzeBackground\n\n" ) ;
+        run<AnalyzeBackground>(vvf,startFile,nFiles,maxEvts,isSkim);
     }
     else if(doTopTagger)
     {
-        run<AnalyzeTopTagger>(vvf,startFile,nFiles,maxEvts);
+        printf("\n\n running AnalyzeTopTagger\n\n" ) ;
+        run<AnalyzeTopTagger>(vvf,startFile,nFiles,maxEvts,isSkim);
     }
     else if(doEventSelection)
     {
-        run<AnalyzeEventSelection>(vvf,startFile,nFiles,maxEvts);
+        printf("\n\n running AnalyzeEventSelection\n\n") ;
+        run<AnalyzeEventSelection>(vvf,startFile,nFiles,maxEvts,isSkim);
+    }
+    else if(doEventShape)
+    {
+        printf("\n\n running AnalyzeEventShape\n\n") ;
+        run<AnalyzeEventShape>(vvf,startFile,nFiles,maxEvts,isSkim);
     }
     else if(do0Lep)
     {
-        run<Analyze0Lep>(vvf,startFile,nFiles,maxEvts);
+        printf("\n\n running Analyze0Lep\n\n") ;
+        run<Analyze0Lep>(vvf,startFile,nFiles,maxEvts,isSkim);
     }
 
     myfile->Close();
