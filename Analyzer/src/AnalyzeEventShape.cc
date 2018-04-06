@@ -26,8 +26,8 @@ void AnalyzeEventShape::InitHistos()
     TH1::SetDefaultSumw2();
 
     // Declare all your histograms here, that way we can fill them for multiple chains
-    my_histos.emplace("h_met", new TH1D("h_met","h_met", 20, 0, 200));
-    my_histos.emplace("h_ht", new TH1D("h_ht","h_ht", 60, 0, 3000));
+    my_histos.emplace("h_met", std::make_shared<TH1D>("h_met","h_met", 20, 0, 200));
+    my_histos.emplace("h_ht", std::make_shared<TH1D>("h_ht","h_ht", 60, 0, 3000));
 
 
 }
