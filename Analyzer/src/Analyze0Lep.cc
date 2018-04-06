@@ -85,38 +85,37 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
 {
     while( tr.getNextEvent() )
     {
-        const double& MET     = tr.getVar<double>("MET");
-        const double& METPhi  = tr.getVar<double>("METPhi");
-        const double& HT      = tr.getVar<double>("HT");
-        const int& ntops      = tr.getVar<int>("ntops");
-        const int& ntops_3jet = tr.getVar<int>("ntops_3jet");
-        const int& ntops_2jet = tr.getVar<int>("ntops_2jet");
-        const int& ntops_1jet = tr.getVar<int>("ntops_1jet");
-        const std::string& runtype = tr.getVar<std::string>("runtype");     
-        const std::vector<TLorentzVector>& Muons     = tr.getVec<TLorentzVector>("Muons");
-        const std::vector<TLorentzVector>& Electrons = tr.getVec<TLorentzVector>("Electrons");
-        const std::vector<TLorentzVector>& Jets      = tr.getVec<TLorentzVector>("Jets");
-        const std::vector<int>&  Muons_charge        = tr.getVec<int>("Muons_charge");
-        const std::vector<int>&  Electrons_charge    = tr.getVec<int>("Electrons_charge");
-        const std::vector<bool>& Electrons_tightID   = tr.getVec<bool>("Electrons_tightID");
-        const std::vector<bool>& Electrons_passIso   = tr.getVec<bool>("Electrons_passIso");
-        const std::vector<bool>& Muons_passIso       = tr.getVec<bool>("Muons_passIso");
-        const std::vector<double>&      Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
-        const std::vector<std::string>& TriggerNames           = tr.getVec<std::string>("TriggerNames");
-        const std::vector<int>&         TriggerPass            = tr.getVec<int>("TriggerPass");
-        const TopTaggerResults* ttr         = tr.getVar<TopTaggerResults*>("ttr");
+        const auto& MET                    = tr.getVar<double>("MET");
+        const auto& METPhi                 = tr.getVar<double>("METPhi");
+        const auto& HT                     = tr.getVar<double>("HT");
+        const auto& ntops                  = tr.getVar<int>("ntops");
+        const auto& ntops_3jet             = tr.getVar<int>("ntops_3jet");
+        const auto& ntops_2jet             = tr.getVar<int>("ntops_2jet");
+        const auto& ntops_1jet             = tr.getVar<int>("ntops_1jet");
+        const auto& runtype                = tr.getVar<std::string>("runtype");     
+        const auto& Muons                  = tr.getVec<TLorentzVector>("Muons");
+        const auto& Electrons              = tr.getVec<TLorentzVector>("Electrons");
+        const auto& Jets                   = tr.getVec<TLorentzVector>("Jets");
+        const auto& Muons_charge           = tr.getVec<int>("Muons_charge");
+        const auto& Electrons_charge       = tr.getVec<int>("Electrons_charge");
+        const auto& Electrons_tightID      = tr.getVec<bool>("Electrons_tightID");
+        const auto& Electrons_passIso      = tr.getVec<bool>("Electrons_passIso");
+        const auto& Muons_passIso          = tr.getVec<bool>("Muons_passIso");
+        const auto& Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
+        const auto& TriggerNames           = tr.getVec<std::string>("TriggerNames");
+        const auto& TriggerPass            = tr.getVec<int>("TriggerPass");
+        const auto& fisher_bin1            = tr.getVar<bool>("fisher_bin1");
+        const auto& fisher_bin2            = tr.getVar<bool>("fisher_bin2");
+        const auto& fisher_bin3            = tr.getVar<bool>("fisher_bin3");
+        const auto& fisher_bin4            = tr.getVar<bool>("fisher_bin4");
+        const auto& bdt_bin1               = tr.getVar<bool>("bdt_bin1");
+        const auto& bdt_bin2               = tr.getVar<bool>("bdt_bin2");
+        const auto& bdt_bin3               = tr.getVar<bool>("bdt_bin3");
+        const auto& bdt_bin4               = tr.getVar<bool>("bdt_bin4");
+        const auto& eventshape_bdt_val     = tr.getVar<double>("eventshape_bdt_val");
+        const auto& fisher_val             = tr.getVar<double>("fisher_val");
+        const auto* ttr                    = tr.getVar<TopTaggerResults*>("ttr");
         const std::vector<TopObject*>& tops = ttr->getTops();
-        const bool& fisher_bin1 = tr.getVar<bool>("fisher_bin1");
-        const bool& fisher_bin2 = tr.getVar<bool>("fisher_bin2");
-        const bool& fisher_bin3 = tr.getVar<bool>("fisher_bin3");
-        const bool& fisher_bin4 = tr.getVar<bool>("fisher_bin4");
-        const bool& bdt_bin1    = tr.getVar<bool>("bdt_bin1");
-        const bool& bdt_bin2    = tr.getVar<bool>("bdt_bin2");
-        const bool& bdt_bin3    = tr.getVar<bool>("bdt_bin3");
-        const bool& bdt_bin4    = tr.getVar<bool>("bdt_bin4");
-        const double& eventshape_bdt_val = tr.getVar<double>("eventshape_bdt_val");
-        const double& fisher_val = tr.getVar<double>("fisher_val");
-
         // ------------------------
         // -- Print event number
         // -----------------------        
@@ -137,8 +136,8 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
         // -----------------------
                 
         if(runtype == "MC"){
-            const double& madHT   = tr.getVar<double>("madHT");
-            const double& Weight  = tr.getVar<double>("Weight");
+            const auto& madHT   = tr.getVar<double>("madHT");
+            const auto& Weight  = tr.getVar<double>("Weight");
 
             // Exclude events with MadGraph HT > 100 from the DY inclusive sample
             if(filetag == "DYJetsToLL_M-50_Incl" && madHT > 100) continue;
