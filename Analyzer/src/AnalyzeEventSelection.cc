@@ -163,8 +163,6 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
 
     while( tr.getNextEvent() )
     {
-        const double& madHT   = tr.getVar<double>("madHT");
-        const double& Weight  = tr.getVar<double>("Weight");
         const double& MET     = tr.getVar<double>("MET");
         const double& METPhi  = tr.getVar<double>("METPhi");
         const double& HT      = tr.getVar<double>("HT");
@@ -172,15 +170,15 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         const int& ntops_2jet = tr.getVar<int>("ntops_2jet");
         const int& ntops_1jet = tr.getVar<int>("ntops_1jet");
         const std::string& runtype = tr.getVar<std::string>("runtype");
-        const std::vector<TLorentzVector>& Muons        = tr.getVec<TLorentzVector>("Muons");
-        const std::vector<TLorentzVector>& Electrons    = tr.getVec<TLorentzVector>("Electrons");
+        //const std::vector<TLorentzVector>& Muons        = tr.getVec<TLorentzVector>("Muons");
+        //const std::vector<TLorentzVector>& Electrons    = tr.getVec<TLorentzVector>("Electrons");
         const std::vector<TLorentzVector>& Jets         = tr.getVec<TLorentzVector>("Jets");
-        const std::vector<int>& Muons_charge            = tr.getVec<int>("Muons_charge");
-        const std::vector<int>& Electrons_charge        = tr.getVec<int>("Electrons_charge");
-        const std::vector<bool>& Electrons_tightID      = tr.getVec<bool>("Electrons_tightID");
-        const std::vector<bool>& Electrons_passIso      = tr.getVec<bool>("Electrons_passIso");
-        const std::vector<bool>& Muons_passIso          = tr.getVec<bool>("Muons_passIso");
-        const std::vector<double>&      Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
+        //const std::vector<int>& Muons_charge            = tr.getVec<int>("Muons_charge");
+        //const std::vector<int>& Electrons_charge        = tr.getVec<int>("Electrons_charge");
+        //const std::vector<bool>& Electrons_tightID      = tr.getVec<bool>("Electrons_tightID");
+        //const std::vector<bool>& Electrons_passIso      = tr.getVec<bool>("Electrons_passIso");
+        //const std::vector<bool>& Muons_passIso          = tr.getVec<bool>("Muons_passIso");
+        //const std::vector<double>&      Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
         const std::vector<std::string>& TriggerNames           = tr.getVec<std::string>("TriggerNames");
         const std::vector<int>&         TriggerPass            = tr.getVec<int>("TriggerPass");
         const TopTaggerResults* ttr         = tr.getVar<TopTaggerResults*>("ttr");
@@ -205,12 +203,16 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         if ( tr.getEvtNum() % 1000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;
         
         // Exclude events with MadGraph HT > 100 from the DY inclusive sample
-        if(filetag == "DYJetsToLL_M-50_Incl" && madHT > 100) continue;
+        if(filetag == "DYJetsToLL_M-50_Incl")
+        {
+            const double& madHT   = tr.getVar<double>("madHT");
+            if(madHT > 100) continue;
+        } 
         
         // Make sure event weight is not 0 for data
         double eventweight = 1.;
         if(runtype != "Data")
-            eventweight = Weight;
+            eventweight = tr.getVar<double>("Weight");
         
         // ------------------------------
         // -- Trigger for data

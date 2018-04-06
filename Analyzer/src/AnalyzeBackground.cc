@@ -142,8 +142,6 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
 
     while(tr.getNextEvent())
     {
-        const double& madHT   = tr.getVar<double>("madHT");
-        const double& Weight  = tr.getVar<double>("Weight");
         const int& ntops_3jet = tr.getVar<int>("ntops_3jet");
         const int& ntops_2jet = tr.getVar<int>("ntops_2jet");
         const int& ntops_1jet = tr.getVar<int>("ntops_1jet");
@@ -173,13 +171,18 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
         if ( tr.getEvtNum() % 1000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;
         
         // Exclude events with MadGraph HT > 100 from the DY inclusive sample
-        if(filetag == "DYJetsToLL_M-50_Incl" && madHT > 100) continue;
+        if(filetag == "DYJetsToLL_M-50_Incl")
+        {
+            const double& madHT = tr.getVar<double>("madHT");
+            if (madHT > 100) continue;
+        }
 
         // Make sure event weight is not 0 for data
         double eventweight = 1.;
         if(runtype != "Data")
-            eventweight = Weight;
-        
+        {
+            eventweight = tr.getVar<double>("Weight");
+        }        
         // ------------------------------
         // -- Trigger for data
         // ------------------------------
