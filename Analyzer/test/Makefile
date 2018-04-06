@@ -133,7 +133,7 @@ simpleAnalyzer: $(ODIR)/simpleAnalyzer.o $(ODIR)/samples.o $(ODIR)/NTupleReader.
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
 
 plot: $(ODIR)/plot.o
-	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
+	$(LD) $^ $(LIBS) -o $@
 
 clean:
 	rm -rf $(ODIR)/*.o $(ODIR)/*.so $(ODIR)/*.d $(PROGRAMS) core $(ODIR)
