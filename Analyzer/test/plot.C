@@ -106,6 +106,11 @@ public:
         else              h->SetFillColor(color);
     }
 
+    void setLineStyle(int style = 1)
+    {
+        h->SetLineStyle(style);
+    }
+
     histInfo(const std::string& legEntry, const std::string& histFile, const std::string& drawOptions, const int color) : legEntry(legEntry), histFile(histFile), histName(""), drawOptions(drawOptions), color(color), rebin(-1), h(nullptr)
     {
     }
@@ -123,15 +128,14 @@ class Plotter
 {
 private:
     //entry for data
-    histInfo data_;
+    std::vector<histInfo> data_;
     //vector summarizing background histograms to include in the plot
     std::vector<histInfo> bgEntries_;
     //vector summarizing signal histograms to include in the plot
     std::vector<histInfo> sigEntries_;
     
 public:
-    Plotter(histInfo&& data, std::vector<histInfo>&& bgEntries, std::vector<histInfo>&& sigEntries) : data_(data), bgEntries_(bgEntries), sigEntries_(sigEntries) {}
-    Plotter(std::vector<histInfo>&& bgEntries, std::vector<histInfo>&& sigEntries) : data_(nullptr), bgEntries_(bgEntries), sigEntries_(sigEntries) {}
+    Plotter(std::vector<histInfo>&& data, std::vector<histInfo>&& bgEntries, std::vector<histInfo>&& sigEntries) : data_(data), bgEntries_(bgEntries), sigEntries_(sigEntries) {}
 
     void plot(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 36100)
     {
@@ -144,11 +148,12 @@ public:
         c->cd();
 
         //Create TLegend
-        TLegend *leg = new TLegend(0.50, 0.56, 0.89, 0.88);
+        TLegend *leg = new TLegend(0.20, 0.76, 0.89, 0.88);
+        //TLegend *leg = new TLegend(0.50, 0.56, 0.89, 0.88);
         leg->SetFillStyle(0);
         leg->SetBorderSize(0);
         leg->SetLineWidth(1);
-        leg->SetNColumns(1);
+        leg->SetNColumns(3);
         leg->SetTextFont(42);
 
         //get maximum from histos and fill TLegend
@@ -174,11 +179,14 @@ public:
 
         //data
         //get new histogram from file
-        data_.histName = histName;
-        data_.rebin = rebin;
-        data_.retrieveHistogram();
-        leg->AddEntry(data_.h.get(), data_.legEntry.c_str(), data_.drawOptions.c_str());
-        smartMax(hbgSum, leg, static_cast<TPad*>(gPad), min, max, lmax, true);
+        for(auto& entry : data_)
+        {
+            entry.histName = histName;
+            entry.rebin = rebin;
+            entry.retrieveHistogram();
+            leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), entry.drawOptions.c_str());
+            smartMax(hbgSum, leg, static_cast<TPad*>(gPad), min, max, lmax, true);
+        }
 
         //background
         for(auto& entry : bgEntries_)
@@ -198,6 +206,7 @@ public:
             entry.histName = histName;
             entry.rebin = rebin;
             entry.retrieveHistogram();
+            entry.setLineStyle(2);
 
             //add histograms to TLegend
             leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), "L");
@@ -211,7 +220,7 @@ public:
         gPad->SetBottomMargin(0.12);
 
         //create a dummy histogram to act as the axes
-        histInfo dummy(new TH1D("dummy", "dummy", 1000, data_.h->GetBinLowEdge(1), data_.h->GetBinLowEdge(data_.h->GetNbinsX()) + data_.h->GetBinWidth(data_.h->GetNbinsX())));
+        histInfo dummy(new TH1D("dummy", "dummy", 1000, hbgSum->GetBinLowEdge(1), hbgSum->GetBinLowEdge(hbgSum->GetNbinsX()) + hbgSum->GetBinWidth(hbgSum->GetNbinsX())));
         dummy.setupAxes();
         dummy.h->GetYaxis()->SetTitle(yAxisLabel.c_str());
         dummy.h->GetXaxis()->SetTitle(xAxisLabel.c_str());
@@ -255,7 +264,10 @@ public:
         }
 
         //plot data histogram
-        data_.draw();
+        for(const auto& entry : data_)
+        {
+            entry.draw();
+        }
 
         //plot legend
         leg->Draw("same");
@@ -301,22 +313,26 @@ int main()
     //entry for data
     //this uses the initializer syntax to initialize the histInfo object
     //               leg entry root file                 draw options  draw color
-    histInfo data = {"All BG", "allBG.root"            , "PEX0",       kBlack};
+    std::vector<histInfo> data = {
+        //{"All BG", "allBG.root"            , "PEX0",       kBlack}
+    };
 
     //vector summarizing background histograms to include in the plot
     std::vector<histInfo> bgEntries = {
-        {"DYJetsToLL_M-50", "condor/output-files/DYJetsToLL_M-50/DYJetsToLL_M-50.root", "hist", kGreen + 2 },
-        {"Diboson",         "condor/output-files/Diboson/Diboson.root",                 "hist", kBlue      },
-        {"QCD",             "condor/output-files/QCD/QCD.root",                         "hist", kMagenta   },
-        {"Rare",            "condor/output-files/Rare/Rare.root",                       "hist", kGray      },
-        {"ST",              "condor/output-files/ST/ST.root",                           "hist", kYellow + 2},
-        {"t#bar{t}",        "condor/output-files/TT/TT.root",                           "hist", kRed       },
-        {"WJetsToLNu",      "condor/output-files/WJetsToLNu/WJetsToLNu.root",           "hist", kBlue + 1  },
+        {"DYJetsToLL_M-50", "condor/output-files/DYJetsToLL_M-50/DYJetsToLL_M-50.root", "hist", kOrange + 2 },
+        {"Rare",            "condor/output-files/Rare/Rare.root",                       "hist", kCyan + 1   },
+        {"Diboson",         "condor/output-files/Diboson/Diboson.root",                 "hist", kMagenta + 1},
+        {"WJetsToLNu",      "condor/output-files/WJetsToLNu/WJetsToLNu.root",           "hist", kYellow + 1 },
+        {"ST",              "condor/output-files/ST/ST.root",                           "hist", kRed + 1    },
+        {"QCD",             "condor/output-files/QCD/QCD.root",                         "hist", kGreen + 1  },
+        {"T#bar{T}",        "condor/output-files/TT/TT.root",                           "hist", kBlue - 7   },
+
     };
 
     //vector summarizing signal histograms to include in the plot
     std::vector<histInfo> sigEntries = {
-        {"Rare", "condor/output-files/Rare/Rare.root", "hist", kGreen + 2},
+        {"RPV 350", "condor/output-files/AllSignal/MyAnalysis_rpv_stop_350_0.root",         "hist", kMagenta + 2},
+        {"SYY 650", "condor/output-files/AllSignal/MyAnalysis_stealth_stop_650_SYY_0.root", "hist", kGreen + 1  },
     };
 
     //make plotter object with the required sources for histograms specified
@@ -324,6 +340,12 @@ int main()
 
     std::vector<std::string> mycuts_0l 
     {
+        "all"                  ,
+        "0l"                   ,
+        "g6j"                  ,
+        "HT500"                ,
+        "g2b"                  ,
+        "g6j_HT500_g2b"        ,
         "g6j_HT500_g2b_2t"     ,
         "g6j_HT500_g2b_2t11"   ,
         "g6j_HT500_g2b_2t12"   ,
@@ -331,39 +353,39 @@ int main()
         "g6j_HT500_g2b_2t22"   ,
         "g6j_HT500_g2b_2t23"   ,
         "g6j_HT500_g2b_2t33"   ,
-        "g6j_HT500_g2b_2t11_f1",
-        "g6j_HT500_g2b_2t11_f2",
-        "g6j_HT500_g2b_2t11_f3",
-        "g6j_HT500_g2b_2t11_f4",
-        "g6j_HT500_g2b_2t12_f1",
-        "g6j_HT500_g2b_2t12_f2",
-        "g6j_HT500_g2b_2t12_f3",
-        "g6j_HT500_g2b_2t12_f4",
-        "g6j_HT500_g2b_2t13_f1",
-        "g6j_HT500_g2b_2t13_f2",
-        "g6j_HT500_g2b_2t13_f3",
-        "g6j_HT500_g2b_2t13_f4",
-        "g6j_HT500_g2b_2t22_f1",
-        "g6j_HT500_g2b_2t22_f2",
-        "g6j_HT500_g2b_2t22_f3",
-        "g6j_HT500_g2b_2t22_f4",
-        "g6j_HT500_g2b_2t23_f1",
-        "g6j_HT500_g2b_2t23_f2",
-        "g6j_HT500_g2b_2t23_f3",
-        "g6j_HT500_g2b_2t23_f4",
-        "g6j_HT500_g2b_2t33_f1",
-        "g6j_HT500_g2b_2t33_f2",
-        "g6j_HT500_g2b_2t33_f3",
-        "g6j_HT500_g2b_2t33_f4"
+        //"g6j_HT500_g2b_2t11_f1",
+        //"g6j_HT500_g2b_2t11_f2",
+        //"g6j_HT500_g2b_2t11_f3",
+        //"g6j_HT500_g2b_2t11_f4",
+        //"g6j_HT500_g2b_2t12_f1",
+        //"g6j_HT500_g2b_2t12_f2",
+        //"g6j_HT500_g2b_2t12_f3",
+        //"g6j_HT500_g2b_2t12_f4",
+        //"g6j_HT500_g2b_2t13_f1",
+        //"g6j_HT500_g2b_2t13_f2",
+        //"g6j_HT500_g2b_2t13_f3",
+        //"g6j_HT500_g2b_2t13_f4",
+        //"g6j_HT500_g2b_2t22_f1",
+        //"g6j_HT500_g2b_2t22_f2",
+        //"g6j_HT500_g2b_2t22_f3",
+        //"g6j_HT500_g2b_2t22_f4",
+        //"g6j_HT500_g2b_2t23_f1",
+        //"g6j_HT500_g2b_2t23_f2",
+        //"g6j_HT500_g2b_2t23_f3",
+        //"g6j_HT500_g2b_2t23_f4",
+        //"g6j_HT500_g2b_2t33_f1",
+        //"g6j_HT500_g2b_2t33_f2",
+        //"g6j_HT500_g2b_2t33_f3",
+        //"g6j_HT500_g2b_2t33_f4"
     };
 
     //plt.plot( "h_njets_0l_g6j_HT500_g2b_2t", "N_{J}" );
 
     for(std::string mycut : mycuts_0l)
     {
-        plt.plot( "h_njets_0l_"+mycut, "N_{J}" );
-        plt.plot( "h_ntops_0l_"+mycut, "N_{T}" );
-        plt.plot( "h_nb_0l_"   +mycut, "N_{B}" );        
+        plt.plot( "h_njets_0l_"+mycut, "N_{J}" , "Events", true);
+        plt.plot( "h_ntops_0l_"+mycut, "N_{T}" , "Events", true);
+        plt.plot( "h_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
     }
     
     //plt.plot("HT", "H_{T} [GeV]", "Events", true, -1, -1, 5);

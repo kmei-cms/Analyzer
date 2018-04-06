@@ -26,6 +26,11 @@ do
     # Get the name of the sample collection
     sc=$(strip "$f" "$dir/")
     
+    if [ "${sc}" = "AllSignal" ] 
+    then 
+        continue
+    fi
+
     #echo "hadd ${sc}.root *.root"
     hadd -fk ${f}/${sc}.root ${f}/*.root
 
