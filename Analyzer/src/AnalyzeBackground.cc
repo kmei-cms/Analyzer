@@ -85,38 +85,38 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
 {
     while(tr.getNextEvent())
     {
-        const int& ntops_3jet = tr.getVar<int>("ntops_3jet");
-        const int& ntops_2jet = tr.getVar<int>("ntops_2jet");
-        const int& ntops_1jet = tr.getVar<int>("ntops_1jet");
-        const std::string& runtype = tr.getVar<std::string>("runtype");
-        const std::vector<TLorentzVector>& Jets         = tr.getVec<TLorentzVector>("Jets");
-        const std::vector<double>&      Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
-        const std::vector<std::string>& TriggerNames           = tr.getVec<std::string>("TriggerNames");
-        const std::vector<int>&         TriggerPass            = tr.getVec<int>("TriggerPass");
-        const TopTaggerResults* ttr         = tr.getVar<TopTaggerResults*>("ttr");
+        const auto& ntops_3jet              = tr.getVar<int>("ntops_3jet");
+        const auto& ntops_2jet              = tr.getVar<int>("ntops_2jet");
+        const auto& ntops_1jet              = tr.getVar<int>("ntops_1jet");
+        const auto& runtype                 = tr.getVar<std::string>("runtype");
+        const auto& Jets                    = tr.getVec<TLorentzVector>("Jets");
+        const auto& Jets_bDiscriminatorCSV  = tr.getVec<double>("Jets_bDiscriminatorCSV");
+        const auto& TriggerNames            = tr.getVec<std::string>("TriggerNames");
+        const auto& TriggerPass             = tr.getVec<int>("TriggerPass");
+        const auto* ttr                     = tr.getVar<TopTaggerResults*>("ttr");
         const std::vector<TopObject*>& tops = ttr->getTops(); 
 
-        const std::vector<TLorentzVector>& BJets = tr.getVec<TLorentzVector>("BJets");
-        const int& NBJets = tr.getVar<int>("NBJets");
-        const std::vector<TLorentzVector>& BJets_pt45 = tr.getVec<TLorentzVector>("BJets_pt45");
-        const int& NBJets_pt45 = tr.getVar<int>("NBJets_pt45");
-        const std::vector<TLorentzVector>& GoodMuons = tr.getVec<TLorentzVector>("GoodMuons");
-        const std::vector<int>& GoodMuonsCharge      = tr.getVec<int>("GoodMuonsCharge");
-        const std::vector<TLorentzVector>& GoodElectrons = tr.getVec<TLorentzVector>("GoodElectrons");
-        const std::vector<int>& GoodElectronsCharge      = tr.getVec<int>("GoodElectronsCharge");
-        const std::vector<TLorentzVector>& GoodLeptons = tr.getVec<TLorentzVector>("GoodLeptons");
-        const int& NGoodLeptons = tr.getVar<int>("NGoodLeptons");
-        const double& HT_trigger = tr.getVar<double>("HT_trigger");
-        const double& Mbl        = tr.getVar<double>("Mbl");
+        const auto& BJets               = tr.getVec<TLorentzVector>("BJets");
+        const auto& NBJets              = tr.getVar<int>("NBJets");
+        const auto& BJets_pt45          = tr.getVec<TLorentzVector>("BJets_pt45");
+        const auto& NBJets_pt45         = tr.getVar<int>("NBJets_pt45");
+        const auto& GoodMuons           = tr.getVec<TLorentzVector>("GoodMuons");
+        const auto& GoodMuonsCharge     = tr.getVec<int>("GoodMuonsCharge");
+        const auto& GoodElectrons       = tr.getVec<TLorentzVector>("GoodElectrons");
+        const auto& GoodElectronsCharge = tr.getVec<int>("GoodElectronsCharge");
+        const auto& GoodLeptons         = tr.getVec<TLorentzVector>("GoodLeptons");
+        const auto& NGoodLeptons        = tr.getVar<int>("NGoodLeptons");
+        const auto& HT_trigger          = tr.getVar<double>("HT_trigger");
+        const auto& Mbl                 = tr.getVar<double>("Mbl");
 
-        const bool& fisher_bin1 = tr.getVar<bool>("fisher_bin1");
-        const bool& fisher_bin2 = tr.getVar<bool>("fisher_bin2");
-        const bool& fisher_bin3 = tr.getVar<bool>("fisher_bin3");
-        const bool& fisher_bin4 = tr.getVar<bool>("fisher_bin4");
-        const bool& bdt_bin1    = tr.getVar<bool>("bdt_bin1");
-        const bool& bdt_bin2    = tr.getVar<bool>("bdt_bin2");
-        const bool& bdt_bin3    = tr.getVar<bool>("bdt_bin3");
-        const bool& bdt_bin4    = tr.getVar<bool>("bdt_bin4");
+        const auto& fisher_bin1 = tr.getVar<bool>("fisher_bin1");
+        const auto& fisher_bin2 = tr.getVar<bool>("fisher_bin2");
+        const auto& fisher_bin3 = tr.getVar<bool>("fisher_bin3");
+        const auto& fisher_bin4 = tr.getVar<bool>("fisher_bin4");
+        const auto& bdt_bin1    = tr.getVar<bool>("bdt_bin1");
+        const auto& bdt_bin2    = tr.getVar<bool>("bdt_bin2");
+        const auto& bdt_bin3    = tr.getVar<bool>("bdt_bin3");
+        const auto& bdt_bin4    = tr.getVar<bool>("bdt_bin4");
 
         if (maxevents > 0 && tr.getEvtNum() >= maxevents) break;        
 

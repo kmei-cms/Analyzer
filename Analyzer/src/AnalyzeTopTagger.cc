@@ -291,23 +291,23 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, std:
     
     while(tr.getNextEvent())
     {
-        const double& MET     = tr.getVar<double>("MET");
-        const double& HT      = tr.getVar<double>("HT");
-        const int& NJets      = tr.getVar<int>("NJets");
-        const int& ntops_3jet = tr.getVar<int>("ntops_3jet");
-        const int& ntops_2jet = tr.getVar<int>("ntops_2jet");
-        const int& ntops_1jet = tr.getVar<int>("ntops_1jet");
-        const int& nhadWs     = tr.getVar<int>("nhadWs");
-        const std::vector<TLorentzVector>& Jets           = tr.getVec<TLorentzVector>("Jets");
-        const std::vector<double>& Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
-        const TopTaggerResults* ttr         = tr.getVar<TopTaggerResults*>("ttr");
-        const std::vector<std::vector<const TLorentzVector*>>& hadtopdaughters = tr.getVec<std::vector<const TLorentzVector*>>("hadtopdaughters");
-        const std::vector<TLorentzVector>& hadtops     = tr.getVec<TLorentzVector>("hadtops");
-        const std::vector<TLorentzVector>& hadWs       = tr.getVec<TLorentzVector>("hadWs");
-        const std::vector<TLorentzVector>& neutralinos = tr.getVec<TLorentzVector>("neutralinos");
-        const std::vector<TLorentzVector>& singlinos   = tr.getVec<TLorentzVector>("singlinos");
-        const std::vector<TLorentzVector>& singlets    = tr.getVec<TLorentzVector>("singlets");
-        const std::vector<int>& hadtops_idx            = tr.getVec<int>("hadtops_idx");
+        const auto& MET                    = tr.getVar<double>("MET");
+        const auto& HT                     = tr.getVar<double>("HT");
+        const auto& NJets                  = tr.getVar<int>("NJets");
+        const auto& ntops_3jet             = tr.getVar<int>("ntops_3jet");
+        const auto& ntops_2jet             = tr.getVar<int>("ntops_2jet");
+        const auto& ntops_1jet             = tr.getVar<int>("ntops_1jet");
+        const auto& nhadWs                 = tr.getVar<int>("nhadWs");
+        const auto& Jets                   = tr.getVec<TLorentzVector>("Jets");
+        const auto& Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
+        const auto* ttr                    = tr.getVar<TopTaggerResults*>("ttr");
+        const auto& hadtopdaughters        = tr.getVec<std::vector<const TLorentzVector*>>("hadtopdaughters");
+        const auto& hadtops                = tr.getVec<TLorentzVector>("hadtops");
+        const auto& hadWs                  = tr.getVec<TLorentzVector>("hadWs");
+        const auto& neutralinos            = tr.getVec<TLorentzVector>("neutralinos");
+        const auto& singlinos              = tr.getVec<TLorentzVector>("singlinos");
+        const auto& singlets               = tr.getVec<TLorentzVector>("singlets");
+        const auto& hadtops_idx            = tr.getVec<int>("hadtops_idx");
         
         if(maxevents != -1 && tr.getEvtNum() >= maxevents) break;
         if ( tr.getEvtNum() % 1000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;
