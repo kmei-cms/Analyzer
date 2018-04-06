@@ -23,10 +23,10 @@ void AnalyzeEventSelection::InitHistos()
     TH1::SetDefaultSumw2();
 
     // Declare all your histograms here, that way we can fill them for multiple chains
-    my_histos.emplace("h_met", new TH1D("h_met","h_met", 20, 0, 200));
-    my_histos.emplace("h_ht", new TH1D("h_ht","h_ht", 60, 0, 3000));
-    my_histos.emplace("h_ntops", new TH1D("h_ntops","h_ntops", 5, 0, 5));
-    my_histos.emplace("h_mbl_2l_test", new TH1D("h_mbl_2l_test","h_mbl_2l_test", 50, 0, 200));
+    my_histos.emplace("h_met", std::make_shared<TH1D>("h_met","h_met", 20, 0, 200));
+    my_histos.emplace("h_ht", std::make_shared<TH1D>("h_ht","h_ht", 60, 0, 3000));
+    my_histos.emplace("h_ntops", std::make_shared<TH1D>("h_ntops","h_ntops", 5, 0, 5));
+    my_histos.emplace("h_mbl_2l_test", std::make_shared<TH1D>("h_mbl_2l_test","h_mbl_2l_test", 50, 0, 200));
     
     // 0 lepton plots
     // "6j" is the control region only. Only look at data for that region
@@ -36,13 +36,13 @@ void AnalyzeEventSelection::InitHistos()
             "g7j_HT500_g1b_0t", "g7j_HT500_g1b_1t1", "g7j_HT500_g1b_1t2", "g7j_HT500_g1b_1t3", "g7j_HT500_g1b_2t"};
     for(std::string mycut : mycuts_0l)
     {
-        my_histos.emplace("h_njets_0l_"+mycut, new TH1D(("h_njets_0l_"+mycut).c_str(),("h_njets_0l_"+mycut).c_str(), 19, 0, 19));
-        my_histos.emplace("h_ntops_0l_"+mycut, new TH1D(("h_ntops_0l_"+mycut).c_str(),("h_ntops_0l_"+mycut).c_str(), 5, 0, 5));
-        my_histos.emplace("h_nb_0l_"+mycut, new TH1D(("h_nb_0l_"+mycut).c_str(),("h_nb_0l_"+mycut).c_str(), 10, 0, 10));
-        my_histos.emplace("h_HT_0l_"+mycut, new TH1D(("h_HT_0l_"+mycut).c_str(),("h_HT_0l_"+mycut).c_str(), 60, 0, 3000));
-        my_histos.emplace("h_bdt_0l_"+mycut, new TH1D(("h_bdt_0l_"+mycut).c_str(),("h_bdt_0l_"+mycut).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("h_njets_0l_"+mycut, std::make_shared<TH1D>(("h_njets_0l_"+mycut).c_str(),("h_njets_0l_"+mycut).c_str(), 19, 0, 19));
+        my_histos.emplace("h_ntops_0l_"+mycut, std::make_shared<TH1D>(("h_ntops_0l_"+mycut).c_str(),("h_ntops_0l_"+mycut).c_str(), 5, 0, 5));
+        my_histos.emplace("h_nb_0l_"+mycut, std::make_shared<TH1D>(("h_nb_0l_"+mycut).c_str(),("h_nb_0l_"+mycut).c_str(), 10, 0, 10));
+        my_histos.emplace("h_HT_0l_"+mycut, std::make_shared<TH1D>(("h_HT_0l_"+mycut).c_str(),("h_HT_0l_"+mycut).c_str(), 60, 0, 3000));
+        my_histos.emplace("h_bdt_0l_"+mycut, std::make_shared<TH1D>(("h_bdt_0l_"+mycut).c_str(),("h_bdt_0l_"+mycut).c_str(), 40, -0.5, 0.5));
 
-        my_2d_histos.emplace("h_njets_bdt_0l_"+mycut, new TH2D(("h_njets_bdt_0l_"+mycut).c_str(),("h_njets_bdt_0l_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("h_njets_bdt_0l_"+mycut, std::make_shared<TH2D>(("h_njets_bdt_0l_"+mycut).c_str(),("h_njets_bdt_0l_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
     }
 
     // 1 lepton plots
@@ -60,38 +60,38 @@ void AnalyzeEventSelection::InitHistos()
             };
     for(std::string mycut : mycuts_1l)
     {
-        my_histos.emplace("h_njets_1l_"+mycut, new TH1D(("h_njets_1l_"+mycut).c_str(),("h_njets_1l_"+mycut).c_str(), 15, 0, 15));
-        my_histos.emplace("h_ntops_1l_"+mycut, new TH1D(("h_ntops_1l_"+mycut).c_str(),("h_ntops_1l_"+mycut).c_str(), 5, 0, 5));
-        my_histos.emplace("h_nb_1l_"+mycut, new TH1D(("h_nb_1l_"+mycut).c_str(),("h_nb_1l_"+mycut).c_str(), 10, 0, 10));
-        my_histos.emplace("h_HT_1l_"+mycut, new TH1D(("h_HT_1l_"+mycut).c_str(),("h_HT_1l_"+mycut).c_str(), 60, 0, 3000));
-        my_histos.emplace("h_mbl_1l_"+mycut, new TH1D(("h_mbl_1l_"+mycut).c_str(),("h_mbl_1l_"+mycut).c_str(), 30, 0, 300));
-        my_histos.emplace("h_bdt_1l_"+mycut, new TH1D(("h_bdt_1l_"+mycut).c_str(),("h_bdt_1l_"+mycut).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("h_njets_1l_"+mycut, std::make_shared<TH1D>(("h_njets_1l_"+mycut).c_str(),("h_njets_1l_"+mycut).c_str(), 15, 0, 15));
+        my_histos.emplace("h_ntops_1l_"+mycut, std::make_shared<TH1D>(("h_ntops_1l_"+mycut).c_str(),("h_ntops_1l_"+mycut).c_str(), 5, 0, 5));
+        my_histos.emplace("h_nb_1l_"+mycut, std::make_shared<TH1D>(("h_nb_1l_"+mycut).c_str(),("h_nb_1l_"+mycut).c_str(), 10, 0, 10));
+        my_histos.emplace("h_HT_1l_"+mycut, std::make_shared<TH1D>(("h_HT_1l_"+mycut).c_str(),("h_HT_1l_"+mycut).c_str(), 60, 0, 3000));
+        my_histos.emplace("h_mbl_1l_"+mycut, std::make_shared<TH1D>(("h_mbl_1l_"+mycut).c_str(),("h_mbl_1l_"+mycut).c_str(), 30, 0, 300));
+        my_histos.emplace("h_bdt_1l_"+mycut, std::make_shared<TH1D>(("h_bdt_1l_"+mycut).c_str(),("h_bdt_1l_"+mycut).c_str(), 40, -0.5, 0.5));
 
-        my_2d_histos.emplace("h_njets_bdt_1l_"+mycut, new TH2D(("h_njets_bdt_1l_"+mycut).c_str(),("h_njets_bdt_1l_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("h_njets_bdt_1l_"+mycut, std::make_shared<TH2D>(("h_njets_bdt_1l_"+mycut).c_str(),("h_njets_bdt_1l_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
     }
     for(std::string mycut : mycuts_1mu)
     {
-        my_histos.emplace("h_mupt_1mu_"+mycut, new TH1D(("h_mupt_1mu_"+mycut).c_str(),("h_mupt_1mu_"+mycut).c_str(), 50, 0, 500));
-        my_histos.emplace("h_njets_1mu_"+mycut, new TH1D(("h_njets_1mu_"+mycut).c_str(),("h_njets_1mu_"+mycut).c_str(), 15, 0, 15));
-        my_histos.emplace("h_ntops_1mu_"+mycut, new TH1D(("h_ntops_1mu_"+mycut).c_str(),("h_ntops_1mu_"+mycut).c_str(), 5, 0, 5));
-        my_histos.emplace("h_nb_1mu_"+mycut, new TH1D(("h_nb_1mu_"+mycut).c_str(),("h_nb_1mu_"+mycut).c_str(), 10, 0, 10));
-        my_histos.emplace("h_HT_1mu_"+mycut, new TH1D(("h_HT_1mu_"+mycut).c_str(),("h_HT_1mu_"+mycut).c_str(), 60, 0, 3000));
-        my_histos.emplace("h_mbl_1mu_"+mycut, new TH1D(("h_mbl_1mu_"+mycut).c_str(),("h_mbl_1mu_"+mycut).c_str(), 30, 0, 300));
-        my_histos.emplace("h_bdt_1mu_"+mycut, new TH1D(("h_bdt_1mu_"+mycut).c_str(),("h_bdt_1mu_"+mycut).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("h_mupt_1mu_"+mycut, std::make_shared<TH1D>(("h_mupt_1mu_"+mycut).c_str(),("h_mupt_1mu_"+mycut).c_str(), 50, 0, 500));
+        my_histos.emplace("h_njets_1mu_"+mycut, std::make_shared<TH1D>(("h_njets_1mu_"+mycut).c_str(),("h_njets_1mu_"+mycut).c_str(), 15, 0, 15));
+        my_histos.emplace("h_ntops_1mu_"+mycut, std::make_shared<TH1D>(("h_ntops_1mu_"+mycut).c_str(),("h_ntops_1mu_"+mycut).c_str(), 5, 0, 5));
+        my_histos.emplace("h_nb_1mu_"+mycut, std::make_shared<TH1D>(("h_nb_1mu_"+mycut).c_str(),("h_nb_1mu_"+mycut).c_str(), 10, 0, 10));
+        my_histos.emplace("h_HT_1mu_"+mycut, std::make_shared<TH1D>(("h_HT_1mu_"+mycut).c_str(),("h_HT_1mu_"+mycut).c_str(), 60, 0, 3000));
+        my_histos.emplace("h_mbl_1mu_"+mycut, std::make_shared<TH1D>(("h_mbl_1mu_"+mycut).c_str(),("h_mbl_1mu_"+mycut).c_str(), 30, 0, 300));
+        my_histos.emplace("h_bdt_1mu_"+mycut, std::make_shared<TH1D>(("h_bdt_1mu_"+mycut).c_str(),("h_bdt_1mu_"+mycut).c_str(), 40, -0.5, 0.5));
 
-        my_2d_histos.emplace("h_njets_bdt_1mu_"+mycut, new TH2D(("h_njets_bdt_1mu_"+mycut).c_str(),("h_njets_bdt_1mu_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("h_njets_bdt_1mu_"+mycut, std::make_shared<TH2D>(("h_njets_bdt_1mu_"+mycut).c_str(),("h_njets_bdt_1mu_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
     }
     for(std::string mycut : mycuts_1el)
     {
-        my_histos.emplace("h_elpt_1el_"+mycut, new TH1D(("h_elpt_1el_"+mycut).c_str(),("h_elpt_1el_"+mycut).c_str(), 50, 0, 500));
-        my_histos.emplace("h_njets_1el_"+mycut, new TH1D(("h_njets_1el_"+mycut).c_str(),("h_njets_1el_"+mycut).c_str(), 15, 0, 15));
-        my_histos.emplace("h_ntops_1el_"+mycut, new TH1D(("h_ntops_1el_"+mycut).c_str(),("h_ntops_1el_"+mycut).c_str(), 5, 0, 5));
-        my_histos.emplace("h_nb_1el_"+mycut, new TH1D(("h_nb_1el_"+mycut).c_str(),("h_nb_1el_"+mycut).c_str(), 10, 0, 10));
-        my_histos.emplace("h_HT_1el_"+mycut, new TH1D(("h_HT_1el_"+mycut).c_str(),("h_HT_1el_"+mycut).c_str(), 60, 0, 3000));
-        my_histos.emplace("h_mbl_1el_"+mycut, new TH1D(("h_mbl_1el_"+mycut).c_str(),("h_mbl_1el_"+mycut).c_str(), 30, 0, 300));
-        my_histos.emplace("h_bdt_1el_"+mycut, new TH1D(("h_bdt_1el_"+mycut).c_str(),("h_bdt_1el_"+mycut).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("h_elpt_1el_"+mycut, std::make_shared<TH1D>(("h_elpt_1el_"+mycut).c_str(),("h_elpt_1el_"+mycut).c_str(), 50, 0, 500));
+        my_histos.emplace("h_njets_1el_"+mycut, std::make_shared<TH1D>(("h_njets_1el_"+mycut).c_str(),("h_njets_1el_"+mycut).c_str(), 15, 0, 15));
+        my_histos.emplace("h_ntops_1el_"+mycut, std::make_shared<TH1D>(("h_ntops_1el_"+mycut).c_str(),("h_ntops_1el_"+mycut).c_str(), 5, 0, 5));
+        my_histos.emplace("h_nb_1el_"+mycut, std::make_shared<TH1D>(("h_nb_1el_"+mycut).c_str(),("h_nb_1el_"+mycut).c_str(), 10, 0, 10));
+        my_histos.emplace("h_HT_1el_"+mycut, std::make_shared<TH1D>(("h_HT_1el_"+mycut).c_str(),("h_HT_1el_"+mycut).c_str(), 60, 0, 3000));
+        my_histos.emplace("h_mbl_1el_"+mycut, std::make_shared<TH1D>(("h_mbl_1el_"+mycut).c_str(),("h_mbl_1el_"+mycut).c_str(), 30, 0, 300));
+        my_histos.emplace("h_bdt_1el_"+mycut, std::make_shared<TH1D>(("h_bdt_1el_"+mycut).c_str(),("h_bdt_1el_"+mycut).c_str(), 40, -0.5, 0.5));
 
-        my_2d_histos.emplace("h_njets_bdt_1el_"+mycut, new TH2D(("h_njets_bdt_1el_"+mycut).c_str(),("h_njets_bdt_1el_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("h_njets_bdt_1el_"+mycut, std::make_shared<TH2D>(("h_njets_bdt_1el_"+mycut).c_str(),("h_njets_bdt_1el_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
     }
 
     
@@ -101,28 +101,28 @@ void AnalyzeEventSelection::InitHistos()
             "onZ_g1b_nombl_bdt1","onZ_g1b_nombl_bdt2","onZ_g1b_nombl_bdt3","onZ_g1b_nombl_bdt4"};
     for(std::string mycut : mycuts_2l)
     {
-        my_histos.emplace("h_njets_2l_"+mycut, new TH1D(("h_njets_2l_"+mycut).c_str(),("h_njets_2l_"+mycut).c_str(), 15, 0, 15));
-        my_histos.emplace("h_ntops_2l_"+mycut, new TH1D(("h_ntops_2l_"+mycut).c_str(),("h_ntops_2l_"+mycut).c_str(), 5, 0, 5));
-        my_histos.emplace("h_nb_2l_"+mycut, new TH1D(("h_nb_2l_"+mycut).c_str(),("h_nb_2l_"+mycut).c_str(), 10, 0, 10));
-        my_histos.emplace("h_HT_2l_"+mycut, new TH1D(("h_HT_2l_"+mycut).c_str(),("h_HT_2l_"+mycut).c_str(), 60, 0, 3000));
-        my_histos.emplace("h_bdt_2l_"+mycut, new TH1D(("h_bdt_2l_"+mycut).c_str(),("h_bdt_2l_"+mycut).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("h_njets_2l_"+mycut, std::make_shared<TH1D>(("h_njets_2l_"+mycut).c_str(),("h_njets_2l_"+mycut).c_str(), 15, 0, 15));
+        my_histos.emplace("h_ntops_2l_"+mycut, std::make_shared<TH1D>(("h_ntops_2l_"+mycut).c_str(),("h_ntops_2l_"+mycut).c_str(), 5, 0, 5));
+        my_histos.emplace("h_nb_2l_"+mycut, std::make_shared<TH1D>(("h_nb_2l_"+mycut).c_str(),("h_nb_2l_"+mycut).c_str(), 10, 0, 10));
+        my_histos.emplace("h_HT_2l_"+mycut, std::make_shared<TH1D>(("h_HT_2l_"+mycut).c_str(),("h_HT_2l_"+mycut).c_str(), 60, 0, 3000));
+        my_histos.emplace("h_bdt_2l_"+mycut, std::make_shared<TH1D>(("h_bdt_2l_"+mycut).c_str(),("h_bdt_2l_"+mycut).c_str(), 40, -0.5, 0.5));
 
-        my_2d_histos.emplace("h_njets_bdt_2l_"+mycut, new TH2D(("h_njets_bdt_2l_"+mycut).c_str(),("h_njets_bdt_2l_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("h_njets_bdt_2l_"+mycut, std::make_shared<TH2D>(("h_njets_bdt_2l_"+mycut).c_str(),("h_njets_bdt_2l_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
 
     }
 
     // Cut flows
-    my_efficiencies.emplace("event_sel", new TEfficiency("event_sel","Event selection efficiency wrt previous cut;Cut;#epsilon",8,0,8));
-    my_efficiencies.emplace("event_sel_total", new TEfficiency("event_sel_total","Total event selection efficiency;Cut;#epsilon",8,0,8));
+    my_efficiencies.emplace("event_sel", std::make_shared<TEfficiency>("event_sel","Event selection efficiency wrt previous cut;Cut;#epsilon",8,0,8));
+    my_efficiencies.emplace("event_sel_total", std::make_shared<TEfficiency>("event_sel_total","Total event selection efficiency;Cut;#epsilon",8,0,8));
 
-    my_efficiencies.emplace("event_sel_0l", new TEfficiency("event_sel_0l","0 lepton event selection efficiency wrt previous cut;Cut;#epsilon",8,0,8));
-    my_efficiencies.emplace("event_sel_total_0l", new TEfficiency("event_sel_total_0l","Total 0 lepton event selection efficiency;Cut;#epsilon",8,0,8));
+    my_efficiencies.emplace("event_sel_0l", std::make_shared<TEfficiency>("event_sel_0l","0 lepton event selection efficiency wrt previous cut;Cut;#epsilon",8,0,8));
+    my_efficiencies.emplace("event_sel_total_0l", std::make_shared<TEfficiency>("event_sel_total_0l","Total 0 lepton event selection efficiency;Cut;#epsilon",8,0,8));
 
-    my_efficiencies.emplace("event_sel_1l", new TEfficiency("event_sel_1l","1 lepton event selection efficiency wrt previous cut;Cut;#epsilon",8,0,8));
-    my_efficiencies.emplace("event_sel_total_1l", new TEfficiency("event_sel_total_1l","Total 1 lepton event selection efficiency;Cut;#epsilon",8,0,8));
+    my_efficiencies.emplace("event_sel_1l", std::make_shared<TEfficiency>("event_sel_1l","1 lepton event selection efficiency wrt previous cut;Cut;#epsilon",8,0,8));
+    my_efficiencies.emplace("event_sel_total_1l", std::make_shared<TEfficiency>("event_sel_total_1l","Total 1 lepton event selection efficiency;Cut;#epsilon",8,0,8));
 
-    my_efficiencies.emplace("event_sel_2l", new TEfficiency("event_sel_2l","2 lepton event selection efficiency wrt previous cut;Cut;#epsilon",8,0,8));
-    my_efficiencies.emplace("event_sel_total_2l", new TEfficiency("event_sel_total_2l","Total 2 lepton event selection efficiency;Cut;#epsilon",8,0,8));
+    my_efficiencies.emplace("event_sel_2l", std::make_shared<TEfficiency>("event_sel_2l","2 lepton event selection efficiency wrt previous cut;Cut;#epsilon",8,0,8));
+    my_efficiencies.emplace("event_sel_total_2l", std::make_shared<TEfficiency>("event_sel_total_2l","Total 2 lepton event selection efficiency;Cut;#epsilon",8,0,8));
 
 }
 

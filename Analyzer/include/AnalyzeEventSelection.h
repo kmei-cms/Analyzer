@@ -14,9 +14,9 @@ class NTupleReader;
 class AnalyzeEventSelection 
 {
 public:
-    std::map<std::string, TH1D*>  my_histos;
-    std::map<std::string, TH2D*>  my_2d_histos;
-    std::map<std::string, TEfficiency*>  my_efficiencies;
+    std::map<std::string, std::shared_ptr<TH1D>>  my_histos;
+    std::map<std::string, std::shared_ptr<TH2D>>  my_2d_histos;
+    std::map<std::string, std::shared_ptr<TEfficiency>>  my_efficiencies;
     
     AnalyzeEventSelection(){};
     ~AnalyzeEventSelection(){};
