@@ -131,6 +131,7 @@ private:
     
 public:
     Plotter(histInfo&& data, std::vector<histInfo>&& bgEntries, std::vector<histInfo>&& sigEntries) : data_(data), bgEntries_(bgEntries), sigEntries_(sigEntries) {}
+    Plotter(std::vector<histInfo>&& bgEntries, std::vector<histInfo>&& sigEntries) : data_(nullptr), bgEntries_(bgEntries), sigEntries_(sigEntries) {}
 
     void plot(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 36100)
     {
@@ -214,6 +215,7 @@ public:
         dummy.setupAxes();
         dummy.h->GetYaxis()->SetTitle(yAxisLabel.c_str());
         dummy.h->GetXaxis()->SetTitle(xAxisLabel.c_str());
+        dummy.h->SetTitle(histName.c_str());
         //Set the y-range of the histogram
         if(isLogY)
         {
@@ -272,18 +274,19 @@ public:
         mark.SetTextAlign(11);
         mark.SetTextSize(0.050);
         mark.SetTextFont(61);
-        mark.DrawLatex(gPad->GetLeftMargin(), 1 - (gPad->GetTopMargin() - 0.017), "CMS"); // #scale[0.8]{#it{Preliminary}}");
+        //mark.DrawLatex(gPad->GetLeftMargin(), 1 - (gPad->GetTopMargin() - 0.017), "CMS"); // #scale[0.8]{#it{Preliminary}}");
         mark.SetTextSize(0.040);
         mark.SetTextFont(52);
-        mark.DrawLatex(gPad->GetLeftMargin() + 0.11, 1 - (gPad->GetTopMargin() - 0.017), "DAS 2018");
+        //mark.DrawLatex(gPad->GetLeftMargin() + 0.11, 1 - (gPad->GetTopMargin() - 0.017), "Stealth 2018");
 
         //Draw lumistamp
         mark.SetTextFont(42);
         mark.SetTextAlign(31);
-        mark.DrawLatex(1 - gPad->GetRightMargin(), 1 - (gPad->GetTopMargin() - 0.017), lumistamp);
+        //mark.DrawLatex(1 - gPad->GetRightMargin(), 1 - (gPad->GetTopMargin() - 0.017), lumistamp);
 
         //save new plot to file
-        c->Print((histName + ".png").c_str());
+        c->Print(("outputPlots/" + histName + ".pdf").c_str());
+        //c->Print((histName + ".png").c_str());
 
         //clean up dynamic memory
         delete c;
@@ -298,17 +301,17 @@ int main()
     //entry for data
     //this uses the initializer syntax to initialize the histInfo object
     //               leg entry root file                 draw options  draw color
-    histInfo data = {"Rare",   "condor/output-files/Rare/Rare.root", "PEX0",       kBlack};
+    histInfo data = {"All BG", "allBG.root"            , "PEX0",       kBlack};
 
     //vector summarizing background histograms to include in the plot
     std::vector<histInfo> bgEntries = {
         {"DYJetsToLL_M-50", "condor/output-files/DYJetsToLL_M-50/DYJetsToLL_M-50.root", "hist", kGreen + 2 },
         {"Diboson",         "condor/output-files/Diboson/Diboson.root",                 "hist", kBlue      },
         {"QCD",             "condor/output-files/QCD/QCD.root",                         "hist", kMagenta   },
-        {"Rare",            "condor/output-files/Rare.root",                            "hist", kGray      },
+        {"Rare",            "condor/output-files/Rare/Rare.root",                       "hist", kGray      },
         {"ST",              "condor/output-files/ST/ST.root",                           "hist", kYellow + 2},
         {"t#bar{t}",        "condor/output-files/TT/TT.root",                           "hist", kRed       },
-        {"WJetsToLNu",      "condor/output-files/WJetsToLNu/WJetsToLNu.root",           "hist", kRed       },
+        {"WJetsToLNu",      "condor/output-files/WJetsToLNu/WJetsToLNu.root",           "hist", kBlue + 1  },
     };
 
     //vector summarizing signal histograms to include in the plot
@@ -354,11 +357,17 @@ int main()
         "g6j_HT500_g2b_2t33_f4"
     };
 
+    //plt.plot( "h_njets_0l_g6j_HT500_g2b_2t", "N_{J}" );
+
     for(std::string mycut : mycuts_0l)
     {
-        pt.plot( "h_njets_0l_"+mycut, "N_{J}" );
-        //pt.plot( "h_ntops_0l_"+mycut, "N_{T}" );
-        //pt.plot( "h_nb_0l_"   +mycut, "N_{B}" );        
+        plt.plot( "h_njets_0l_"+mycut, "N_{J}" );
+        plt.plot( "h_ntops_0l_"+mycut, "N_{T}" );
+        plt.plot( "h_nb_0l_"   +mycut, "N_{B}" );        
     }
+    
+    //plt.plot("HT", "H_{T} [GeV]", "Events", true, -1, -1, 5);
+    //plt.plot("Nt", "N_{T}");
+    //plt.plot("counts", "bins", "Events", true);
 
 }

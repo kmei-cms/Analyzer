@@ -25,10 +25,19 @@ void Analyze0Lep::InitHistos()
     // Declare all your histograms here, that way we can fill them for multiple chains
     my_histos.emplace("h_met", new TH1D("h_met","h_met", 20, 0, 200));
     my_histos.emplace("h_ht", new TH1D("h_ht","h_ht", 60, 0, 3000));
-    my_histos.emplace("h_ntops", new TH1D("h_ntops","h_ntops", 5, 0, 5));
-    
+    my_histos.emplace("h_ntops", new TH1D("h_ntops","h_ntops", 10, 0, 10));
+    my_histos.emplace("h_ntops_j1", new TH1D("h_ntops_j1","h_ntops_j1", 10, 0, 10));
+    my_histos.emplace("h_ntops_j2", new TH1D("h_ntops_j2","h_ntops_j2", 10, 0, 10));
+    my_histos.emplace("h_ntops_j3", new TH1D("h_ntops_j3","h_ntops_j3", 10, 0, 10));
+
     std::vector<std::string> mycuts_0l 
     {
+        "all"                  ,
+        "0l"                   ,
+        "g6j"                  ,
+        "HT500"                ,
+        "g2b"                  ,
+        "g6j_HT500_g2b"        ,
         "g6j_HT500_g2b_2t"     ,
         "g6j_HT500_g2b_2t11"   ,
         "g6j_HT500_g2b_2t12"   ,
@@ -64,11 +73,11 @@ void Analyze0Lep::InitHistos()
 
     for(std::string mycut : mycuts_0l)
     {
-        my_histos.emplace("h_njets_0l_"+mycut, new TH1D(("h_njets_0l_"+mycut).c_str(),("h_njets_0l_"+mycut).c_str(), 19, 0, 19));
-        my_histos.emplace("h_ntops_0l_"+mycut, new TH1D(("h_ntops_0l_"+mycut).c_str(),("h_ntops_0l_"+mycut).c_str(), 5, 0, 5));
-        my_histos.emplace("h_nb_0l_"+mycut, new TH1D(("h_nb_0l_"+mycut).c_str(),("h_nb_0l_"+mycut).c_str(), 10, 0, 10));
-        my_histos.emplace("h_HT_0l_"+mycut, new TH1D(("h_HT_0l_"+mycut).c_str(),("h_HT_0l_"+mycut).c_str(), 60, 0, 3000));
-        my_histos.emplace("h_bdt_0l_"+mycut, new TH1D(("h_bdt_0l_"+mycut).c_str(),("h_bdt_0l_"+mycut).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("h_njets_0l_"+mycut, new TH1D(("h_njets_0l_"+mycut).c_str(),("h_njets_0l_"+mycut).c_str(), 20, 0, 20));
+        my_histos.emplace("h_ntops_0l_"+mycut, new TH1D(("h_ntops_0l_"+mycut).c_str(),("h_ntops_0l_"+mycut).c_str(), 10, 0, 10));
+        my_histos.emplace("h_nb_0l_"+mycut,    new TH1D(("h_nb_0l_"+mycut).c_str(),("h_nb_0l_"+mycut).c_str(), 10, 0, 10));
+        my_histos.emplace("h_HT_0l_"+mycut,    new TH1D(("h_HT_0l_"+mycut).c_str(),("h_HT_0l_"+mycut).c_str(), 60, 0, 3000));
+        my_histos.emplace("h_bdt_0l_"+mycut,   new TH1D(("h_bdt_0l_"+mycut).c_str(),("h_bdt_0l_"+mycut).c_str(), 40, -0.5, 0.5));
 
         my_2d_histos.emplace("h_njets_bdt_0l_"+mycut, new TH2D(("h_njets_bdt_0l_"+mycut).c_str(),("h_njets_bdt_0l_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
     }
@@ -215,6 +224,11 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
         {
             passBaseline0l = passBaseline0l && passTriggerAllHad && (filetag == "Data_JetHT");
         }
+        
+        bool pass_0l             = nleptons==0;
+        bool pass_njet_pt45      = nleptons==0 && rec_njet_pt45>=6;
+        bool pass_HT_trigger     = nleptons==0 && HT_trigger > 500;
+        bool pass_njet_pt45_btag = nleptons==0 && rec_njet_pt45_btag >= 2;
 
         // 2 Top selection
         bool pass_2t   = ntops==2;
@@ -254,6 +268,12 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
         // --- Fill Histos ---
         // -------------------                        
         const std::map<std::string, bool> cut_map_0l {
+            {"all"                  , true                          },
+            {"0l"                   , pass_0l                       },
+            {"g6j"                  , pass_njet_pt45                },
+            {"HT500"                , pass_HT_trigger               },
+            {"g2b"                  , pass_njet_pt45_btag           },
+            {"g6j_HT500_g2b"        , passBaseline0l                },
             {"g6j_HT500_g2b_2t"     , passBaseline0l && pass_2t     },
             {"g6j_HT500_g2b_2t11"   , passBaseline0l && pass_2t11   },
             {"g6j_HT500_g2b_2t12"   , passBaseline0l && pass_2t12   },
@@ -291,13 +311,13 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
         {
             if(kv.second)
             {
-                my_histos["h_njets_0l_"+kv.first]->Fill(rec_njet_pt45, eventweight);
+                my_histos["h_njets_0l_"+kv.first]->Fill(rec_njet_pt30, eventweight);
                 my_histos["h_ntops_0l_"+kv.first]->Fill(ntops, eventweight);
-                my_histos["h_nb_0l_"   +kv.first]->Fill(rec_njet_pt45_btag, eventweight);
+                my_histos["h_nb_0l_"   +kv.first]->Fill(rec_njet_pt30_btag, eventweight);
                 my_histos["h_HT_0l_"   +kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_0l_"  +kv.first]->Fill(eventshape_bdt_val, eventweight);
 
-                my_2d_histos["h_njets_bdt_0l_"+kv.first]->Fill(rec_njet_pt45, eventshape_bdt_val, eventweight);
+                my_2d_histos["h_njets_bdt_0l_"+kv.first]->Fill(rec_njet_pt30, eventshape_bdt_val, eventweight);
             }
         }
 
@@ -309,7 +329,7 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
         my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && ntops>0 ,4);
         my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && ntops>0 && rec_njet_pt45_btag>1 ,5);
         my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && ntops>0 && rec_njet_pt45_btag>1 && ntops>1 ,6);
-        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && ntops>0 && rec_njet_pt45_btag>1 && ntops>1 && rec_njet_pt45>=8 ,7);
+        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && ntops>0 && rec_njet_pt45_btag>1 && ntops>1 && rec_njet_pt30>=8 ,7);
         
         my_efficiencies["event_sel"]->Fill(true,0);
         my_efficiencies["event_sel"]->Fill(HT_trigger>500,1);
@@ -330,7 +350,7 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
                             my_efficiencies["event_sel"]->Fill(ntops>1,6);
                             if (ntops>1)
                             {
-                                my_efficiencies["event_sel"]->Fill(rec_njet_pt45>=8,7);
+                                my_efficiencies["event_sel"]->Fill(rec_njet_pt30>=8,7);
                             }
                         }
                     }
@@ -339,6 +359,9 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
         }
 
         my_histos["h_ntops"]->Fill(ntops, eventweight);        
+        my_histos["h_ntops_j1"]->Fill(ntops_1jet, eventweight);
+        my_histos["h_ntops_j2"]->Fill(ntops_2jet, eventweight);
+        my_histos["h_ntops_j3"]->Fill(ntops_3jet, eventweight);        
         my_histos["h_met"]->Fill(MET, eventweight);
         my_histos["h_ht"]->Fill(HT, eventweight);
 
