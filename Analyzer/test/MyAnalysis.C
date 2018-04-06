@@ -2,10 +2,13 @@
 #include "Analyzer/Analyzer/include/AnalyzeTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeEventSelection.h"
 #include "Framework/Framework/include/samples.h"
-#include "TopTaggerTools/Tools/include/HistoContainer.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
 #include "Framework/Framework/include/RunTopTagger.h"
 #include "Framework/Framework/include/RunFisher.h"
+#include "Framework/Framework/include/Muon.h"
+#include "Framework/Framework/include/Electron.h"
+#include "Framework/Framework/include/BJet.h"
+#include "Framework/Framework/include/CommonVariables.h"
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -40,10 +43,18 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         // Define classes/functions that add variables on the fly
         RunTopTagger runTopTagger;
         RunFisher    runFisher;
-        
+        Muon muon;
+        Electron electron;
+        BJet bjet;
+        CommonVariables commonVariables;
+
         // Register classes/functions that add variables on the fly
         tr.registerFunction( std::move(runTopTagger) );
         tr.registerFunction( std::move(runFisher) );
+        tr.registerFunction( std::move(muon) );
+        tr.registerFunction( std::move(electron) );
+        tr.registerFunction( std::move(bjet) );
+        tr.registerFunction( std::move(commonVariables) );
 
         // Loop over all of the events and fill histos
         t.Loop(tr, weight, maxEvts, file.tag);
