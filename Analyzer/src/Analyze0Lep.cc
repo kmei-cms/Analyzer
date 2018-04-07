@@ -61,9 +61,10 @@ void Analyze0Lep::InitHistos()
         my_histos.emplace("h_nb_0l_"+mycut,    std::make_shared<TH1D>(("h_nb_0l_"+mycut).c_str(),("h_nb_0l_"+mycut).c_str(), 10, 0, 10));
         my_histos.emplace("h_HT_0l_"+mycut,    std::make_shared<TH1D>(("h_HT_0l_"+mycut).c_str(),("h_HT_0l_"+mycut).c_str(), 60, 0, 3000));
         my_histos.emplace("h_bdt_0l_"+mycut,   std::make_shared<TH1D>(("h_bdt_0l_"+mycut).c_str(),("h_bdt_0l_"+mycut).c_str(), 40, -0.5, 0.5));
-        my_histos.emplace("h_fisher_0l_"+mycut,   std::make_shared<TH1D>(("h_fisher_0l_"+mycut).c_str(),("h_fisher_0l_"+mycut).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("h_fisher_0l_"+mycut,std::make_shared<TH1D>(("h_fisher_0l_"+mycut).c_str(),("h_fisher_0l_"+mycut).c_str(), 40, -0.5, 0.5));
 
         my_2d_histos.emplace("h_njets_bdt_0l_"+mycut, std::make_shared<TH2D>(("h_njets_bdt_0l_"+mycut).c_str(),("h_njets_bdt_0l_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("h_njets_fisher_0l_"+mycut, std::make_shared<TH2D>(("h_njets_fisher_0l_"+mycut).c_str(),("h_njets_fisher_0l_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
     }
 
     // Cut flows
@@ -85,37 +86,31 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
 {
     while( tr.getNextEvent() )
     {
-        const auto& MET                    = tr.getVar<double>("MET");
-        const auto& METPhi                 = tr.getVar<double>("METPhi");
-        const auto& HT                     = tr.getVar<double>("HT");
-        const auto& ntops                  = tr.getVar<int>("ntops");
-        const auto& ntops_3jet             = tr.getVar<int>("ntops_3jet");
-        const auto& ntops_2jet             = tr.getVar<int>("ntops_2jet");
-        const auto& ntops_1jet             = tr.getVar<int>("ntops_1jet");
-        const auto& runtype                = tr.getVar<std::string>("runtype");     
-        const auto& Muons                  = tr.getVec<TLorentzVector>("Muons");
-        const auto& Electrons              = tr.getVec<TLorentzVector>("Electrons");
-        const auto& Jets                   = tr.getVec<TLorentzVector>("Jets");
-        const auto& Muons_charge           = tr.getVec<int>("Muons_charge");
-        const auto& Electrons_charge       = tr.getVec<int>("Electrons_charge");
-        const auto& Electrons_tightID      = tr.getVec<bool>("Electrons_tightID");
-        const auto& Electrons_passIso      = tr.getVec<bool>("Electrons_passIso");
-        const auto& Muons_passIso          = tr.getVec<bool>("Muons_passIso");
-        const auto& Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
-        const auto& TriggerNames           = tr.getVec<std::string>("TriggerNames");
-        const auto& TriggerPass            = tr.getVec<int>("TriggerPass");
-        const auto& fisher_bin1            = tr.getVar<bool>("fisher_bin1");
-        const auto& fisher_bin2            = tr.getVar<bool>("fisher_bin2");
-        const auto& fisher_bin3            = tr.getVar<bool>("fisher_bin3");
-        const auto& fisher_bin4            = tr.getVar<bool>("fisher_bin4");
-        const auto& bdt_bin1               = tr.getVar<bool>("bdt_bin1");
-        const auto& bdt_bin2               = tr.getVar<bool>("bdt_bin2");
-        const auto& bdt_bin3               = tr.getVar<bool>("bdt_bin3");
-        const auto& bdt_bin4               = tr.getVar<bool>("bdt_bin4");
-        const auto& eventshape_bdt_val     = tr.getVar<double>("eventshape_bdt_val");
-        const auto& fisher_val             = tr.getVar<double>("fisher_val");
-        const auto* ttr                    = tr.getVar<TopTaggerResults*>("ttr");
-        const std::vector<TopObject*>& tops = ttr->getTops();
+        const auto& MET                = tr.getVar<double>("MET");
+        const auto& HT                 = tr.getVar<double>("HT");
+        const auto& ntops              = tr.getVar<int>("ntops");
+        const auto& ntops_3jet         = tr.getVar<int>("ntops_3jet");
+        const auto& ntops_2jet         = tr.getVar<int>("ntops_2jet");
+        const auto& ntops_1jet         = tr.getVar<int>("ntops_1jet");
+        const auto& runtype            = tr.getVar<std::string>("runtype");     
+        const auto& TriggerNames       = tr.getVec<std::string>("TriggerNames");
+        const auto& TriggerPass        = tr.getVec<int>("TriggerPass");
+        const auto& Jets               = tr.getVec<TLorentzVector>("Jets");
+        const auto& NBJets             = tr.getVar<int>("NBJets");
+        const auto& NBJets_pt45        = tr.getVar<int>("NBJets_pt45");
+        const auto& NGoodLeptons       = tr.getVar<int>("NGoodLeptons");
+        const auto& HT_trigger         = tr.getVar<double>("HT_trigger");
+        const auto& fisher_bin1        = tr.getVar<bool>("fisher_bin1");
+        const auto& fisher_bin2        = tr.getVar<bool>("fisher_bin2");
+        const auto& fisher_bin3        = tr.getVar<bool>("fisher_bin3");
+        const auto& fisher_bin4        = tr.getVar<bool>("fisher_bin4");
+        //const auto& bdt_bin1           = tr.getVar<bool>("bdt_bin1");
+        //const auto& bdt_bin2           = tr.getVar<bool>("bdt_bin2");
+        //const auto& bdt_bin3           = tr.getVar<bool>("bdt_bin3");
+        //const auto& bdt_bin4           = tr.getVar<bool>("bdt_bin4");
+        const auto& eventshape_bdt_val = tr.getVar<double>("eventshape_bdt_val");
+        const auto& fisher_val         = tr.getVar<double>("fisher_val");
+
         // ------------------------
         // -- Print event number
         // -----------------------        
@@ -134,7 +129,7 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
         // ------------------------
         // -- MC dependent stuff
         // -----------------------
-                
+
         if(runtype == "MC"){
             const auto& madHT   = tr.getVar<double>("madHT");
             const auto& Weight  = tr.getVar<double>("Weight");
@@ -164,13 +159,9 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
         // -- Basic event selection stuff
         // -------------------------------
         
-        // Count jets & bjets
+        // Count jets
         int rec_njet_pt45(0) ;
         int rec_njet_pt30(0) ;
-        int rec_njet_pt30_btag(0) ;
-        int rec_njet_pt45_btag(0) ;
-        double HT_trigger = 0.0;
-        std::vector<TLorentzVector> rec_bjets_pt30;
         for ( unsigned int rji=0; rji < Jets.size() ; rji++ ) 
         {
             TLorentzVector jlv( Jets.at(rji) ) ;
@@ -178,93 +169,42 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
             if ( jlv.Pt() > 30 )
             { 
                 rec_njet_pt30++;
-                if ( Jets_bDiscriminatorCSV.at(rji) > 0.8484) 
-                {
-                    rec_njet_pt30_btag++;
-                    rec_bjets_pt30.push_back(jlv);
-                }
             }
-            if (jlv.Pt() > 40)
-                HT_trigger += jlv.Pt();
             if ( jlv.Pt() > 45 ) 
             {
                 rec_njet_pt45++ ;
-                if ( Jets_bDiscriminatorCSV.at(rji) > 0.8484) 
-                    rec_njet_pt45_btag++;
             }
         }         
-
-        // Count leptons > 30 GeV
-        std::vector<TLorentzVector> rec_muon_pt30;
-        std::vector<int> rec_charge_muon_pt30;
-        for (unsigned int imu = 0; imu < Muons.size(); ++imu)
-        {
-            TLorentzVector lvmu(Muons.at(imu));
-            if( abs(lvmu.Eta()) < 2.4 && lvmu.Pt() > 30 && Muons_passIso.at(imu))
-            {
-                rec_muon_pt30.push_back(lvmu);
-                rec_charge_muon_pt30.push_back(Muons_charge.at(imu));
-            }
-        }
-        std::vector<TLorentzVector> rec_electron_pt30;
-        std::vector<int> rec_charge_electron_pt30;
-        for (unsigned int iel = 0; iel < Electrons.size(); ++iel)
-        {
-            TLorentzVector lvel(Electrons.at(iel));
-            if( abs(lvel.Eta()) < 2.4 && lvel.Pt() > 30 && Electrons_tightID.at(iel) && Electrons_passIso.at(iel))
-            {
-                rec_electron_pt30.push_back(lvel);
-                rec_charge_electron_pt30.push_back(Electrons_charge.at(iel));
-            }
-        }
-        int nleptons = rec_muon_pt30.size() + rec_electron_pt30.size();
         
         // Define selections
-        bool passBaseline0l = nleptons==0 && rec_njet_pt45>=6 && HT_trigger > 500 && rec_njet_pt45_btag >= 2;
+        bool passBaseline0l = NGoodLeptons==0 && rec_njet_pt45>=6 && HT_trigger > 500 && NBJets_pt45 >= 2;
         if(runtype == "Data" && filetag == "Data_JetHT")
         {
             passBaseline0l = passBaseline0l && passTriggerAllHad;
         }
         
-        bool pass_0l              = nleptons==0;
+        bool pass_0l              = NGoodLeptons==0;
         bool pass_njet_pt45       = rec_njet_pt45>=6;
         bool pass_HT_trigger      = HT_trigger > 500;
-        bool pass_njet_pt45_1btag = rec_njet_pt45_btag >= 1;
-        bool pass_njet_pt45_2btag = rec_njet_pt45_btag >= 2;
+        bool pass_njet_pt45_1btag = NBJets_pt45 >= 1;
+        bool pass_njet_pt45_2btag = NBJets_pt45 >= 2;
 
         // 2 Top selection
         bool pass_2t   = ntops>=2;
-        bool pass_2t11 = ntops>=2 && ntops_1jet>=2;
-        bool pass_2t12 = ntops>=2 && ntops_1jet>=1 && ntops_2jet>=1;
-        bool pass_2t13 = ntops>=2 && ntops_1jet>=1 && ntops_3jet>=1;
-        bool pass_2t22 = ntops>=2 && ntops_2jet>=1 && ntops_2jet>=1;
-        bool pass_2t23 = ntops>=2 && ntops_2jet>=1 && ntops_3jet>=1;
-        bool pass_2t33 = ntops>=2 && ntops_3jet>=2;
 
-        bool pass_2t11_f1 = pass_2t11 && fisher_bin1;
-        bool pass_2t11_f2 = pass_2t11 && fisher_bin2;
-        bool pass_2t11_f3 = pass_2t11 && fisher_bin3;
-        bool pass_2t11_f4 = pass_2t11 && fisher_bin4;
-        bool pass_2t12_f1 = pass_2t12 && fisher_bin1;
-        bool pass_2t12_f2 = pass_2t12 && fisher_bin2;
-        bool pass_2t12_f3 = pass_2t12 && fisher_bin3;
-        bool pass_2t12_f4 = pass_2t12 && fisher_bin4;
-        bool pass_2t13_f1 = pass_2t13 && fisher_bin1;
-        bool pass_2t13_f2 = pass_2t13 && fisher_bin2;
-        bool pass_2t13_f3 = pass_2t13 && fisher_bin3;
-        bool pass_2t13_f4 = pass_2t13 && fisher_bin4;
-        bool pass_2t22_f1 = pass_2t22 && fisher_bin1;
-        bool pass_2t22_f2 = pass_2t22 && fisher_bin2;
-        bool pass_2t22_f3 = pass_2t22 && fisher_bin3;
-        bool pass_2t22_f4 = pass_2t22 && fisher_bin4;
-        bool pass_2t23_f1 = pass_2t23 && fisher_bin1;
-        bool pass_2t23_f2 = pass_2t23 && fisher_bin2;
-        bool pass_2t23_f3 = pass_2t23 && fisher_bin3;
-        bool pass_2t23_f4 = pass_2t23 && fisher_bin4;
-        bool pass_2t33_f1 = pass_2t33 && fisher_bin1;
-        bool pass_2t33_f2 = pass_2t33 && fisher_bin2;
-        bool pass_2t33_f3 = pass_2t33 && fisher_bin3;
-        bool pass_2t33_f4 = pass_2t33 && fisher_bin4;
+        bool pass_2t11 = pass_2t && ntops_1jet>=2;
+        bool pass_2t12 = pass_2t && ntops_1jet>=1 && ntops_2jet>=1;
+        bool pass_2t13 = pass_2t && ntops_1jet>=1 && ntops_3jet>=1;
+        bool pass_2t22 = pass_2t && ntops_2jet>=1 && ntops_2jet>=1;
+        bool pass_2t23 = pass_2t && ntops_2jet>=1 && ntops_3jet>=1;
+        bool pass_2t33 = pass_2t && ntops_3jet>=2;
+
+        bool pass_2t11_f1 = pass_2t11 && fisher_bin1, pass_2t11_f2 = pass_2t11 && fisher_bin2, pass_2t11_f3 = pass_2t11 && fisher_bin3, pass_2t11_f4 = pass_2t11 && fisher_bin4;
+        bool pass_2t12_f1 = pass_2t12 && fisher_bin1, pass_2t12_f2 = pass_2t12 && fisher_bin2, pass_2t12_f3 = pass_2t12 && fisher_bin3, pass_2t12_f4 = pass_2t12 && fisher_bin4;
+        bool pass_2t13_f1 = pass_2t13 && fisher_bin1, pass_2t13_f2 = pass_2t13 && fisher_bin2, pass_2t13_f3 = pass_2t13 && fisher_bin3, pass_2t13_f4 = pass_2t13 && fisher_bin4;
+        bool pass_2t22_f1 = pass_2t22 && fisher_bin1, pass_2t22_f2 = pass_2t22 && fisher_bin2, pass_2t22_f3 = pass_2t22 && fisher_bin3, pass_2t22_f4 = pass_2t22 && fisher_bin4;
+        bool pass_2t23_f1 = pass_2t23 && fisher_bin1, pass_2t23_f2 = pass_2t23 && fisher_bin2, pass_2t23_f3 = pass_2t23 && fisher_bin3, pass_2t23_f4 = pass_2t23 && fisher_bin4;
+        bool pass_2t33_f1 = pass_2t33 && fisher_bin1, pass_2t33_f2 = pass_2t33 && fisher_bin2, pass_2t33_f3 = pass_2t33 && fisher_bin3, pass_2t33_f4 = pass_2t33 && fisher_bin4;
 
         // -------------------
         // --- Fill Histos ---
@@ -317,12 +257,13 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
             {
                 my_histos["h_njets_0l_"   +kv.first]->Fill(rec_njet_pt30, eventweight);
                 my_histos["h_ntops_0l_"   +kv.first]->Fill(ntops, eventweight);
-                my_histos["h_nb_0l_"      +kv.first]->Fill(rec_njet_pt30_btag, eventweight);
+                my_histos["h_nb_0l_"      +kv.first]->Fill(NBJets, eventweight);
                 my_histos["h_HT_0l_"      +kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_0l_"     +kv.first]->Fill(eventshape_bdt_val, eventweight);
                 my_histos["h_fisher_0l_"  +kv.first]->Fill(fisher_val, eventweight);
 
                 my_2d_histos["h_njets_bdt_0l_"+kv.first]->Fill(rec_njet_pt30, eventshape_bdt_val, eventweight);
+                my_2d_histos["h_njets_fisher_0l_"+kv.first]->Fill(rec_njet_pt30, fisher_val, eventweight);
             }
         }
 
@@ -330,11 +271,11 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
         my_efficiencies["event_sel_total"]->Fill(true,0);
         my_efficiencies["event_sel_total"]->Fill(HT_trigger>500,1);
         my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 ,2);
-        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 ,3);
-        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && ntops>0 ,4);
-        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && ntops>0 && rec_njet_pt45_btag>1 ,5);
-        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && ntops>0 && rec_njet_pt45_btag>1 && ntops>1 ,6);
-        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && rec_njet_pt45_btag>0 && ntops>0 && rec_njet_pt45_btag>1 && ntops>1 && rec_njet_pt30>=8 ,7);
+        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && NBJets_pt45>0 ,3);
+        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && NBJets_pt45>0 && ntops>0 ,4);
+        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && NBJets_pt45>0 && ntops>0 && NBJets_pt45>1 ,5);
+        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && NBJets_pt45>0 && ntops>0 && NBJets_pt45>1 && ntops>1 ,6);
+        my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && rec_njet_pt45>=6 && NBJets_pt45>0 && ntops>0 && NBJets_pt45>1 && ntops>1 && rec_njet_pt30>=8 ,7);
         
         my_efficiencies["event_sel"]->Fill(true,0);
         my_efficiencies["event_sel"]->Fill(HT_trigger>500,1);
@@ -343,14 +284,14 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
             my_efficiencies["event_sel"]->Fill(rec_njet_pt45>=6,2);
             if (rec_njet_pt45>=6)
             {
-                my_efficiencies["event_sel"]->Fill(rec_njet_pt45_btag>0,3);
-                if (rec_njet_pt45_btag>0)
+                my_efficiencies["event_sel"]->Fill(NBJets_pt45>0,3);
+                if (NBJets_pt45>0)
                 {
                     my_efficiencies["event_sel"]->Fill(ntops>0,4);
                     if (ntops>0)
                     {
-                        my_efficiencies["event_sel"]->Fill(rec_njet_pt45_btag>1,5);
-                        if (rec_njet_pt45_btag>1)
+                        my_efficiencies["event_sel"]->Fill(NBJets_pt45>1,5);
+                        if (NBJets_pt45>1)
                         {
                             my_efficiencies["event_sel"]->Fill(ntops>1,6);
                             if (ntops>1)
@@ -364,13 +305,13 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
         }
         
         // Not cuts applied here
-        my_histos["h_met"]->Fill(MET, eventweight);
-        my_histos["h_ht"]->Fill(HT, eventweight);
-        my_histos["h_bdt"]->Fill(eventshape_bdt_val, eventweight);
-        my_histos["h_fisher"]->Fill(fisher_val, eventweight);
-        my_histos["h_njets"]->Fill(rec_njet_pt30, eventweight);
-        my_histos["h_nb"]->Fill(rec_njet_pt30_btag, eventweight);
-        my_histos["h_ntops"]->Fill(ntops, eventweight);        
+        my_histos["h_met"     ]->Fill(MET, eventweight);
+        my_histos["h_ht"      ]->Fill(HT, eventweight);
+        my_histos["h_bdt"     ]->Fill(eventshape_bdt_val, eventweight);
+        my_histos["h_fisher"  ]->Fill(fisher_val, eventweight);
+        my_histos["h_njets"   ]->Fill(rec_njet_pt30, eventweight);
+        my_histos["h_nb"      ]->Fill(NBJets, eventweight);
+        my_histos["h_ntops"   ]->Fill(ntops, eventweight);        
         my_histos["h_ntops_j1"]->Fill(ntops_1jet, eventweight);
         my_histos["h_ntops_j2"]->Fill(ntops_2jet, eventweight);
         my_histos["h_ntops_j3"]->Fill(ntops_3jet, eventweight);        
