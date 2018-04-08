@@ -1,6 +1,5 @@
 #define Analyze0Lep_cxx
 #include "Analyzer/Analyzer/include/Analyze0Lep.h"
-#include "Framework/Framework/include/Utility.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
 
 #include <TH1D.h>
@@ -10,13 +9,6 @@
 #include <TEfficiency.h>
 #include <TRandom3.h>
 #include <iostream>
-
-//mandatory includes to use top tagger
-#include "TopTagger/TopTagger/include/TopTagger.h"
-#include "TopTagger/TopTagger/include/TopTaggerResults.h"
-#include "TopTagger/TopTagger/include/TopTaggerUtilities.h"
-#include "TopTagger/CfgParser/include/TTException.h"
-#include "Framework/Framework/include/SetUpTopTagger.h"
 
 void Analyze0Lep::InitHistos()
 {
@@ -40,11 +32,23 @@ void Analyze0Lep::InitHistos()
         "g6j"                  ,
         "HT500"                ,
         "g2b"                  ,
+        "1t"                   ,
         "2t"                   ,
         "g6j_HT500"            ,
         "g6j_HT500_g1b"        ,
         "g6j_HT500_g2b"        ,
+
+        "g6j_HT500_g2b_1t"     ,
+        "g6j_HT500_g2b_1t_f1"  , "g6j_HT500_g2b_1t_f2"  , "g6j_HT500_g2b_1t_f3"  , "g6j_HT500_g2b_1t_f4"  ,
+
+        "g6j_HT500_g2b_1t1"    , "g6j_HT500_g2b_1t2"    , "g6j_HT500_g2b_1t3"    ,
+        "g6j_HT500_g2b_1t1_f1" , "g6j_HT500_g2b_1t1_f2" , "g6j_HT500_g2b_1t1_f3" , "g6j_HT500_g2b_1t1_f4" ,
+        "g6j_HT500_g2b_1t2_f1" , "g6j_HT500_g2b_1t2_f2" , "g6j_HT500_g2b_1t2_f3" , "g6j_HT500_g2b_1t2_f4" ,
+        "g6j_HT500_g2b_1t3_f1" , "g6j_HT500_g2b_1t3_f2" , "g6j_HT500_g2b_1t3_f3" , "g6j_HT500_g2b_1t3_f4" ,
+
         "g6j_HT500_g2b_2t"     ,
+        "g6j_HT500_g2b_2t_f1"  , "g6j_HT500_g2b_2t_f2"  , "g6j_HT500_g2b_2t_f3"  , "g6j_HT500_g2b_2t_f4"  ,
+
         "g6j_HT500_g2b_2t11"   , "g6j_HT500_g2b_2t12"   , "g6j_HT500_g2b_2t13"   , "g6j_HT500_g2b_2t22"   , "g6j_HT500_g2b_2t23", "g6j_HT500_g2b_2t33",
         "g6j_HT500_g2b_2t11_f1", "g6j_HT500_g2b_2t11_f2", "g6j_HT500_g2b_2t11_f3", "g6j_HT500_g2b_2t11_f4",
         "g6j_HT500_g2b_2t12_f1", "g6j_HT500_g2b_2t12_f2", "g6j_HT500_g2b_2t12_f3", "g6j_HT500_g2b_2t12_f4",
@@ -133,12 +137,13 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
         if(runtype == "MC"){
             const auto& madHT   = tr.getVar<double>("madHT");
             const auto& Weight  = tr.getVar<double>("Weight");
+            double lumi = 35900; // Lumi for 2016
 
             // Exclude events with MadGraph HT > 100 from the DY inclusive sample
             if(filetag == "DYJetsToLL_M-50_Incl" && madHT > 100) continue;
 
-            // Weight from NTuples
-            eventweight = Weight;
+            // Weight from NTuples            
+            eventweight = lumi*Weight;
         }
         
         // ------------------------------
@@ -189,13 +194,26 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
         bool pass_njet_pt45_1btag = NBJets_pt45 >= 1;
         bool pass_njet_pt45_2btag = NBJets_pt45 >= 2;
 
+        // 1 Top selection
+        bool pass_1t    = ntops>=1;
+        bool pass_1t_f1 = pass_1t && fisher_bin1, pass_1t_f2 = pass_1t && fisher_bin2, pass_1t_f3 = pass_1t && fisher_bin3, pass_1t_f4 = pass_1t && fisher_bin4;
+
+        bool pass_1t1 = pass_1t && ntops_1jet>=1;
+        bool pass_1t2 = pass_1t && ntops_2jet>=1;
+        bool pass_1t3 = pass_1t && ntops_3jet>=1;
+
+        bool pass_1t1_f1 = pass_1t1 && fisher_bin1, pass_1t1_f2 = pass_1t1 && fisher_bin2, pass_1t1_f3 = pass_1t1 && fisher_bin3, pass_1t1_f4 = pass_1t1 && fisher_bin4;
+        bool pass_1t2_f1 = pass_1t2 && fisher_bin1, pass_1t2_f2 = pass_1t2 && fisher_bin2, pass_1t2_f3 = pass_1t2 && fisher_bin3, pass_1t2_f4 = pass_1t2 && fisher_bin4;
+        bool pass_1t3_f1 = pass_1t3 && fisher_bin1, pass_1t3_f2 = pass_1t3 && fisher_bin2, pass_1t3_f3 = pass_1t3 && fisher_bin3, pass_1t3_f4 = pass_1t3 && fisher_bin4;
+
         // 2 Top selection
-        bool pass_2t   = ntops>=2;
+        bool pass_2t    = ntops>=2;
+        bool pass_2t_f1 = pass_2t && fisher_bin1, pass_2t_f2 = pass_2t && fisher_bin2, pass_2t_f3 = pass_2t && fisher_bin3, pass_2t_f4 = pass_2t && fisher_bin4;
 
         bool pass_2t11 = pass_2t && ntops_1jet>=2;
         bool pass_2t12 = pass_2t && ntops_1jet>=1 && ntops_2jet>=1;
         bool pass_2t13 = pass_2t && ntops_1jet>=1 && ntops_3jet>=1;
-        bool pass_2t22 = pass_2t && ntops_2jet>=1 && ntops_2jet>=1;
+        bool pass_2t22 = pass_2t && ntops_2jet>=2;
         bool pass_2t23 = pass_2t && ntops_2jet>=1 && ntops_3jet>=1;
         bool pass_2t33 = pass_2t && ntops_3jet>=2;
 
@@ -214,11 +232,40 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
             {"g6j"                  , pass_0l && pass_njet_pt45                                           },
             {"HT500"                , pass_0l && pass_HT_trigger                                          },
             {"g2b"                  , pass_0l && pass_njet_pt45_2btag                                     },
+            {"1t"                   , pass_0l && pass_1t                                                  },
             {"2t"                   , pass_0l && pass_2t                                                  },
             {"g6j_HT500"            , pass_0l && pass_njet_pt45 && pass_HT_trigger                        },
             {"g6j_HT500_g1b"        , pass_0l && pass_njet_pt45 && pass_HT_trigger && pass_njet_pt45_1btag},
             {"g6j_HT500_g2b"        , passBaseline0l                                                      },                         
+
+            {"g6j_HT500_g2b_1t"     , passBaseline0l && pass_1t                                           },
+            {"g6j_HT500_g2b_1t_f1"  , passBaseline0l && pass_1t_f1                                        },
+            {"g6j_HT500_g2b_1t_f2"  , passBaseline0l && pass_1t_f2                                        }, 
+            {"g6j_HT500_g2b_1t_f3"  , passBaseline0l && pass_1t_f3                                        }, 
+            {"g6j_HT500_g2b_1t_f4"  , passBaseline0l && pass_1t_f4                                        },
+
+            {"g6j_HT500_g2b_1t1"    , passBaseline0l && pass_1t1                                          },
+            {"g6j_HT500_g2b_1t2"    , passBaseline0l && pass_1t2                                          },
+            {"g6j_HT500_g2b_1t3"    , passBaseline0l && pass_1t3                                          },
+            {"g6j_HT500_g2b_1t1_f1" , passBaseline0l && pass_1t1_f1                                       },
+            {"g6j_HT500_g2b_1t1_f2" , passBaseline0l && pass_1t1_f2                                       },
+            {"g6j_HT500_g2b_1t1_f3" , passBaseline0l && pass_1t1_f3                                       },
+            {"g6j_HT500_g2b_1t1_f4" , passBaseline0l && pass_1t1_f4                                       },
+            {"g6j_HT500_g2b_1t2_f1" , passBaseline0l && pass_1t2_f1                                       },
+            {"g6j_HT500_g2b_1t2_f2" , passBaseline0l && pass_1t2_f2                                       },
+            {"g6j_HT500_g2b_1t2_f3" , passBaseline0l && pass_1t2_f3                                       },
+            {"g6j_HT500_g2b_1t2_f4" , passBaseline0l && pass_1t2_f4                                       },
+            {"g6j_HT500_g2b_1t3_f1" , passBaseline0l && pass_1t3_f1                                       },
+            {"g6j_HT500_g2b_1t3_f2" , passBaseline0l && pass_1t3_f2                                       },
+            {"g6j_HT500_g2b_1t3_f3" , passBaseline0l && pass_1t3_f3                                       },
+            {"g6j_HT500_g2b_1t3_f4" , passBaseline0l && pass_1t3_f4                                       },
+
             {"g6j_HT500_g2b_2t"     , passBaseline0l && pass_2t                                           },
+            {"g6j_HT500_g2b_2t_f1"  , passBaseline0l && pass_2t_f1                                        },
+            {"g6j_HT500_g2b_2t_f2"  , passBaseline0l && pass_2t_f2                                        }, 
+            {"g6j_HT500_g2b_2t_f3"  , passBaseline0l && pass_2t_f3                                        }, 
+            {"g6j_HT500_g2b_2t_f4"  , passBaseline0l && pass_2t_f4                                        },
+
             {"g6j_HT500_g2b_2t11"   , passBaseline0l && pass_2t11                                         },
             {"g6j_HT500_g2b_2t12"   , passBaseline0l && pass_2t12                                         },
             {"g6j_HT500_g2b_2t13"   , passBaseline0l && pass_2t13                                         },
