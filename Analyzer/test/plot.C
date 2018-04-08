@@ -10,30 +10,6 @@
 #include <string>
 #include <cstdio>
 
-//This is a helper function which will keep the plot from overlapping with the legend
-void smartMax(const TH1 * const h, const TLegend* const l, const TPad* const p, double& gmin, double& gmax, double& gpThreshMax, const bool error)
-{
-    const bool isLog = p->GetLogy();
-    double min = 9e99;
-    double max = -9e99;
-    double pThreshMax = -9e99;
-    int threshold = static_cast<int>(h->GetNbinsX()*(l->GetX1() - p->GetLeftMargin())/((1 - p->GetRightMargin()) - p->GetLeftMargin()));
-
-    for(int i = 1; i <= h->GetNbinsX(); ++i)
-    {
-        double bin = 0.0;
-        if(error) bin = h->GetBinContent(i) + h->GetBinError(i);
-        else      bin = h->GetBinContent(i);
-        if(bin > max) max = bin;
-        else if(bin > 1e-10 && bin < min) min = bin;
-        if(i >= threshold && bin > pThreshMax) pThreshMax = bin;
-    }
-
-    gpThreshMax = std::max(gpThreshMax, pThreshMax);
-    gmax = std::max(gmax, max);
-    gmin = std::min(gmin, min);
-}
-
 //Class to hold TH1* with various helper functions 
 class histInfo
 {
@@ -136,6 +112,30 @@ private:
     
 public:
     Plotter(std::vector<histInfo>&& data, std::vector<histInfo>&& bgEntries, std::vector<histInfo>&& sigEntries) : data_(data), bgEntries_(bgEntries), sigEntries_(sigEntries) {}
+
+    //This is a helper function which will keep the plot from overlapping with the legend
+    void smartMax(const TH1 * const h, const TLegend* const l, const TPad* const p, double& gmin, double& gmax, double& gpThreshMax, const bool error)
+    {
+        const bool isLog = p->GetLogy();
+        double min = 9e99;
+        double max = -9e99;
+        double pThreshMax = -9e99;
+        int threshold = static_cast<int>(h->GetNbinsX()*(l->GetX1() - p->GetLeftMargin())/((1 - p->GetRightMargin()) - p->GetLeftMargin()));
+
+        for(int i = 1; i <= h->GetNbinsX(); ++i)
+        {
+            double bin = 0.0;
+            if(error) bin = h->GetBinContent(i) + h->GetBinError(i);
+            else      bin = h->GetBinContent(i);
+            if(bin > max) max = bin;
+            else if(bin > 1e-10 && bin < min) min = bin;
+            if(i >= threshold && bin > pThreshMax) pThreshMax = bin;
+        }
+        
+        gpThreshMax = std::max(gpThreshMax, pThreshMax);
+        gmax = std::max(gmax, max);
+        gmin = std::min(gmin, min);
+    }
 
     void plot(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 36100)
     {
