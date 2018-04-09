@@ -317,7 +317,6 @@ public:
         // -----------------------
         
         std::vector<TH1*> hbgSumVec;
-
         int index = -1;
         double scale = 1;
         for(auto& histName : histNameVec)
@@ -335,13 +334,22 @@ public:
                 else        hbgSum->Add(entry.h.get());
 
             }
-            std::cout<<index<<std::endl;
-            smartMax(hbgSum, leg, static_cast<TPad*>(gPad), min, max, lmax, false);
+            //std::cout<<"Index = "<<index<<"  histName = "<<histName<<std::endl;
             hbgSum->SetLineColor(color[index]);
             hbgSum->SetMarkerColor(color[index]);
             leg->AddEntry(hbgSum,(fisherNames[index]).c_str(), "l");
-            
-            //if()
+
+            double num6Jets = hbgSum->GetBinContent(7);
+            if(index==0)
+            {
+                scale = num6Jets;
+            }
+            else
+            {
+                hbgSum->Scale(scale/num6Jets);
+            }            
+
+            smartMax(hbgSum, leg, static_cast<TPad*>(gPad), min, max, lmax, false);
             hbgSumVec.push_back(hbgSum);
         }
         
@@ -371,10 +379,8 @@ public:
         //drawLables(lumi);
 
         //save new plot to file
-        c->Print( (histTitle + "_fisher.pdf").c_str() );
-
-        //c->Print(("outputPlots/" + histName + ".pdf").c_str());
-        //c->Print(("outputPlots/" + histName + ".png").c_str());
+        c->Print( ("outputPlots/" + histTitle + "_fisher.pdf").c_str() );
+        c->Print( ("outputPlots/" + histTitle + "_fisher.png").c_str() );
 
         //clean up dynamic memory
         delete c;
