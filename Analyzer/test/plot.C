@@ -1,10 +1,17 @@
 #include "Analyzer/Analyzer/test/plotter.h"
 
-void plot()
+class FisherHolder
 {
-    //std::string path = "";
+public:
+    std::vector<std::string> cutNames_;
+    std::string plotName_;
+};
+
+int main()
+{
+    std::string path = "";
     //std::string path = "atleast2Tops";
-    std::string path = "exactly2Tops";
+    //std::string path = "exactly2Tops";
 
     //entry for data
     //this uses the initializer syntax to initialize the histInfo object
@@ -40,121 +47,107 @@ void plot()
 
     std::vector<std::string> mycuts_0l 
     {
-        //""                     ,
-        //"g6j"                  ,
-        //"HT500"                ,
-        //"g2b"                  ,
-        //"1t"                   ,
-        //"2t"                   ,
-        //"g6j_HT500"            ,
-        //"g6j_HT500_g1b"        ,
-        //"g6j_HT500_g2b"        ,
-        //
-        //"g6j_HT500_g2b_1t"     ,
-        //"g6j_HT500_g2b_1t_f1"  , "g6j_HT500_g2b_1t_f2"  , "g6j_HT500_g2b_1t_f3"  , "g6j_HT500_g2b_1t_f4"  ,
-        //
-        //"g6j_HT500_g2b_1t1"    , "g6j_HT500_g2b_1t2"    , "g6j_HT500_g2b_1t3"    ,
-        //"g6j_HT500_g2b_1t1_f1" , "g6j_HT500_g2b_1t1_f2" , "g6j_HT500_g2b_1t1_f3" , "g6j_HT500_g2b_1t1_f4" ,
-        //"g6j_HT500_g2b_1t2_f1" , "g6j_HT500_g2b_1t2_f2" , "g6j_HT500_g2b_1t2_f3" , "g6j_HT500_g2b_1t2_f4" ,
-        //"g6j_HT500_g2b_1t3_f1" , "g6j_HT500_g2b_1t3_f2" , "g6j_HT500_g2b_1t3_f3" , "g6j_HT500_g2b_1t3_f4" ,
-        //
-        //"g6j_HT500_g2b_2t"     ,
-        //"g6j_HT500_g2b_2t_f1"  , "g6j_HT500_g2b_2t_f2"  , "g6j_HT500_g2b_2t_f3"  , "g6j_HT500_g2b_2t_f4"  ,
-        //
-        //"g6j_HT500_g2b_2t11"   , "g6j_HT500_g2b_2t12"   , "g6j_HT500_g2b_2t13"   , "g6j_HT500_g2b_2t22"   , "g6j_HT500_g2b_2t23", "g6j_HT500_g2b_2t33", 
-        //"g6j_HT500_g2b_2t11_f1", "g6j_HT500_g2b_2t11_f2", "g6j_HT500_g2b_2t11_f3", "g6j_HT500_g2b_2t11_f4",
-        //"g6j_HT500_g2b_2t12_f1", "g6j_HT500_g2b_2t12_f2", "g6j_HT500_g2b_2t12_f3", "g6j_HT500_g2b_2t12_f4",
-        //"g6j_HT500_g2b_2t13_f1", "g6j_HT500_g2b_2t13_f2", "g6j_HT500_g2b_2t13_f3", "g6j_HT500_g2b_2t13_f4",
-        //"g6j_HT500_g2b_2t22_f1", "g6j_HT500_g2b_2t22_f2", "g6j_HT500_g2b_2t22_f3", "g6j_HT500_g2b_2t22_f4",
-        //"g6j_HT500_g2b_2t23_f1", "g6j_HT500_g2b_2t23_f2", "g6j_HT500_g2b_2t23_f3", "g6j_HT500_g2b_2t23_f4",
-        //"g6j_HT500_g2b_2t33_f1", "g6j_HT500_g2b_2t33_f2", "g6j_HT500_g2b_2t33_f3", "g6j_HT500_g2b_2t33_f4",
+        ""                      ,
+        "ge6j"                   ,
+        "HT500"                 ,
+        "ge2b"                   ,
+        "1t"                    ,
+        "2t"                    ,
+        "ge1t"                   ,
+        "ge2t"                   ,
+        "ge6j_HT500"             ,
+        "ge6j_HT500_ge1b"         ,
+        "ge6j_HT500_ge2b"         ,
+
+        "ge6j_HT500_ge2b_1t"      ,
+        "ge6j_HT500_ge2b_1t_f1"   , "ge6j_HT500_ge2b_1t_f2"   , "ge6j_HT500_ge2b_1t_f3"   , "ge6j_HT500_ge2b_1t_f4"   ,
+        "ge6j_HT500_ge2b_ge1t"     ,
+        "ge6j_HT500_ge2b_ge1t_f1"  , "ge6j_HT500_ge2b_ge1t_f2"  , "ge6j_HT500_ge2b_ge1t_f3"  , "ge6j_HT500_ge2b_ge1t_f4"  ,
+
+        "ge6j_HT500_ge2b_1t1"     , "ge6j_HT500_ge2b_1t2"     , "ge6j_HT500_ge2b_1t3"     ,
+        "ge6j_HT500_ge2b_1t1_f1"  , "ge6j_HT500_ge2b_1t1_f2"  , "ge6j_HT500_ge2b_1t1_f3"  , "ge6j_HT500_ge2b_1t1_f4"  ,
+        "ge6j_HT500_ge2b_1t2_f1"  , "ge6j_HT500_ge2b_1t2_f2"  , "ge6j_HT500_ge2b_1t2_f3"  , "ge6j_HT500_ge2b_1t2_f4"  ,
+        "ge6j_HT500_ge2b_1t3_f1"  , "ge6j_HT500_ge2b_1t3_f2"  , "ge6j_HT500_ge2b_1t3_f3"  , "ge6j_HT500_ge2b_1t3_f4"  ,
+        "ge6j_HT500_ge2b_ge1t1"    , "ge6j_HT500_ge2b_ge1t2"    , "ge6j_HT500_ge2b_ge1t3"    ,
+        "ge6j_HT500_ge2b_ge1t1_f1" , "ge6j_HT500_ge2b_ge1t1_f2" , "ge6j_HT500_ge2b_ge1t1_f3" , "ge6j_HT500_ge2b_ge1t1_f4" ,
+        "ge6j_HT500_ge2b_ge1t2_f1" , "ge6j_HT500_ge2b_ge1t2_f2" , "ge6j_HT500_ge2b_ge1t2_f3" , "ge6j_HT500_ge2b_ge1t2_f4" ,
+        "ge6j_HT500_ge2b_ge1t3_f1" , "ge6j_HT500_ge2b_ge1t3_f2" , "ge6j_HT500_ge2b_ge1t3_f3" , "ge6j_HT500_ge2b_ge1t3_f4" ,
+
+        "ge6j_HT500_ge2b_2t"      ,
+        "ge6j_HT500_ge2b_2t_f1"   , "ge6j_HT500_ge2b_2t_f2"   , "ge6j_HT500_ge2b_2t_f3"   , "ge6j_HT500_ge2b_2t_f4"   ,
+        "ge6j_HT500_ge2b_ge2t"     ,
+        "ge6j_HT500_ge2b_ge2t_f1"  , "ge6j_HT500_ge2b_ge2t_f2"  , "ge6j_HT500_ge2b_ge2t_f3"  , "ge6j_HT500_ge2b_ge2t_f4"  ,
+
+        "ge6j_HT500_ge2b_2t11"    , "ge6j_HT500_ge2b_2t12"    , "ge6j_HT500_ge2b_2t13"    , "ge6j_HT500_ge2b_2t22"    , "ge6j_HT500_ge2b_2t23" , "ge6j_HT500_ge2b_2t33" ,
+        "ge6j_HT500_ge2b_2t11_f1" , "ge6j_HT500_ge2b_2t11_f2" , "ge6j_HT500_ge2b_2t11_f3" , "ge6j_HT500_ge2b_2t11_f4" ,
+        "ge6j_HT500_ge2b_2t12_f1" , "ge6j_HT500_ge2b_2t12_f2" , "ge6j_HT500_ge2b_2t12_f3" , "ge6j_HT500_ge2b_2t12_f4" ,
+        "ge6j_HT500_ge2b_2t13_f1" , "ge6j_HT500_ge2b_2t13_f2" , "ge6j_HT500_ge2b_2t13_f3" , "ge6j_HT500_ge2b_2t13_f4" ,
+        "ge6j_HT500_ge2b_2t22_f1" , "ge6j_HT500_ge2b_2t22_f2" , "ge6j_HT500_ge2b_2t22_f3" , "ge6j_HT500_ge2b_2t22_f4" ,
+        "ge6j_HT500_ge2b_2t23_f1" , "ge6j_HT500_ge2b_2t23_f2" , "ge6j_HT500_ge2b_2t23_f3" , "ge6j_HT500_ge2b_2t23_f4" ,
+        "ge6j_HT500_ge2b_2t33_f1" , "ge6j_HT500_ge2b_2t33_f2" , "ge6j_HT500_ge2b_2t33_f3" , "ge6j_HT500_ge2b_2t33_f4" ,
+        "ge6j_HT500_ge2b_ge2t11"   , "ge6j_HT500_ge2b_ge2t12"   , "ge6j_HT500_ge2b_ge2t13"   , "ge6j_HT500_ge2b_ge2t22"   , "ge6j_HT500_ge2b_ge2t23", "ge6j_HT500_ge2b_ge2t33",
+        "ge6j_HT500_ge2b_ge2t11_f1", "ge6j_HT500_ge2b_ge2t11_f2", "ge6j_HT500_ge2b_ge2t11_f3", "ge6j_HT500_ge2b_ge2t11_f4",
+        "ge6j_HT500_ge2b_ge2t12_f1", "ge6j_HT500_ge2b_ge2t12_f2", "ge6j_HT500_ge2b_ge2t12_f3", "ge6j_HT500_ge2b_ge2t12_f4",
+        "ge6j_HT500_ge2b_ge2t13_f1", "ge6j_HT500_ge2b_ge2t13_f2", "ge6j_HT500_ge2b_ge2t13_f3", "ge6j_HT500_ge2b_ge2t13_f4",
+        "ge6j_HT500_ge2b_ge2t22_f1", "ge6j_HT500_ge2b_ge2t22_f2", "ge6j_HT500_ge2b_ge2t22_f3", "ge6j_HT500_ge2b_ge2t22_f4",
+        "ge6j_HT500_ge2b_ge2t23_f1", "ge6j_HT500_ge2b_ge2t23_f2", "ge6j_HT500_ge2b_ge2t23_f3", "ge6j_HT500_ge2b_ge2t23_f4",
+        "ge6j_HT500_ge2b_ge2t33_f1", "ge6j_HT500_ge2b_ge2t33_f2", "ge6j_HT500_ge2b_ge2t33_f3", "ge6j_HT500_ge2b_ge2t33_f4",
    };
 
-    //for(std::string mycut : mycuts_0l)
-    //{
-    //    plt.plot( "h_njets_0l_"+mycut, "N_{J}" , "Events", true);
-    //    plt.plot( "h_ntops_0l_"+mycut, "N_{T}" , "Events", true);
-    //    plt.plot( "h_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
-    //    plt.plot( "h_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
-    //}
-    //
-    //plt.plot("h_met"     , "MET"   , "Events", true);
-    //plt.plot("h_ht"      , "H_{T}" , "Events", true);
-    //plt.plot("h_bdt"     , "bdt"   , "Events", true);
-    //plt.plot("h_fisher"  , "fisher", "Events", true);
-    //plt.plot("h_njets"   , "N_{J}" , "Events", true);
-    //plt.plot("h_nb"      , "N_{B}" , "Events", true);
-    //plt.plot("h_ntops"   , "N_{T}" , "Events", true);
-    //plt.plot("h_ntops_j1", "N_{1T}", "Events", true);
-    //plt.plot("h_ntops_j2", "N_{2T}", "Events", true);
-    //plt.plot("h_ntops_j3", "N_{3T}", "Events", true);
+    for(std::string mycut : mycuts_0l)
+    {
+        plt.plot( "h_njets_0l_"+mycut, "N_{J}" , "Events", true);
+        plt.plot( "h_ntops_0l_"+mycut, "N_{T}" , "Events", true);
+        plt.plot( "h_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
+        plt.plot( "h_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
+    }
+    
+    plt.plot("h_met"     , "MET"   , "Events", true);
+    plt.plot("h_ht"      , "H_{T}" , "Events", true);
+    plt.plot("h_bdt"     , "bdt"   , "Events", true);
+    plt.plot("h_fisher"  , "fisher", "Events", true);
+    plt.plot("h_njets"   , "N_{J}" , "Events", true);
+    plt.plot("h_nb"      , "N_{B}" , "Events", true);
+    plt.plot("h_ntops"   , "N_{T}" , "Events", true);
+    plt.plot("h_ntops_j1", "N_{1T}", "Events", true);
+    plt.plot("h_ntops_j2", "N_{2T}", "Events", true);
+    plt.plot("h_ntops_j3", "N_{3T}", "Events", true);
 
     // --------------------
     // - Make fisher plots
     // --------------------
-   
-    
 
-    std::vector<std::string> fisherHist_1t
+    std::vector< FisherHolder > fisherHolder
     {
-        "h_njets_0l_g6j_HT500_g2b_1t_f1"  , "h_njets_0l_g6j_HT500_g2b_1t_f2"  , "h_njets_0l_g6j_HT500_g2b_1t_f3"  , "h_njets_0l_g6j_HT500_g2b_1t_f4"  ,
-    };
-    std::vector<std::string> fisherHist_1t1
-    {
-        "h_njets_0l_g6j_HT500_g2b_1t1_f1" , "h_njets_0l_g6j_HT500_g2b_1t1_f2" , "h_njets_0l_g6j_HT500_g2b_1t1_f3" , "h_njets_0l_g6j_HT500_g2b_1t1_f4" ,
-    };
-    std::vector<std::string> fisherHist_1t2
-    {
-        "h_njets_0l_g6j_HT500_g2b_1t2_f1" , "h_njets_0l_g6j_HT500_g2b_1t2_f2" , "h_njets_0l_g6j_HT500_g2b_1t2_f3" , "h_njets_0l_g6j_HT500_g2b_1t2_f4" ,
-    };
-    std::vector<std::string> fisherHist_1t3
-    {
-        "h_njets_0l_g6j_HT500_g2b_1t3_f1" , "h_njets_0l_g6j_HT500_g2b_1t3_f2" , "h_njets_0l_g6j_HT500_g2b_1t3_f3" , "h_njets_0l_g6j_HT500_g2b_1t3_f4" ,
-    };
-    std::vector<std::string> fisherHist_2t
-    {
-    "h_njets_0l_g6j_HT500_g2b_2t_f1"  , "h_njets_0l_g6j_HT500_g2b_2t_f2"  , "h_njets_0l_g6j_HT500_g2b_2t_f3"  , "h_njets_0l_g6j_HT500_g2b_2t_f4"  ,
-    };
-    std::vector<std::string> fisherHist_2t11
-    {
-    "h_njets_0l_g6j_HT500_g2b_2t11_f1", "h_njets_0l_g6j_HT500_g2b_2t11_f2", "h_njets_0l_g6j_HT500_g2b_2t11_f3", "h_njets_0l_g6j_HT500_g2b_2t11_f4",
-    };
-    std::vector<std::string> fisherHist_2t12
-    {
-    "h_njets_0l_g6j_HT500_g2b_2t12_f1", "h_njets_0l_g6j_HT500_g2b_2t12_f2", "h_njets_0l_g6j_HT500_g2b_2t12_f3", "h_njets_0l_g6j_HT500_g2b_2t12_f4",
-    };
-    std::vector<std::string> fisherHist_2t13
-    {
-    "h_njets_0l_g6j_HT500_g2b_2t13_f1", "h_njets_0l_g6j_HT500_g2b_2t13_f2", "h_njets_0l_g6j_HT500_g2b_2t13_f3", "h_njets_0l_g6j_HT500_g2b_2t13_f4",
-    };
-    std::vector<std::string> fisherHist_2t22
-    {
-    "h_njets_0l_g6j_HT500_g2b_2t22_f1", "h_njets_0l_g6j_HT500_g2b_2t22_f2", "h_njets_0l_g6j_HT500_g2b_2t22_f3", "h_njets_0l_g6j_HT500_g2b_2t22_f4",
-    };
-    std::vector<std::string> fisherHist_2t23
-    {
-    "h_njets_0l_g6j_HT500_g2b_2t23_f1", "h_njets_0l_g6j_HT500_g2b_2t23_f2", "h_njets_0l_g6j_HT500_g2b_2t23_f3", "h_njets_0l_g6j_HT500_g2b_2t23_f4",
-    };
-    std::vector<std::string> fisherHist_2t33
-    {
-    "h_njets_0l_g6j_HT500_g2b_2t33_f1", "h_njets_0l_g6j_HT500_g2b_2t33_f2", "h_njets_0l_g6j_HT500_g2b_2t33_f3", "h_njets_0l_g6j_HT500_g2b_2t33_f4",
+        { {"h_njets_0l_ge6j_HT500_ge2b_1t_f1"  , "h_njets_0l_ge6j_HT500_ge2b_1t_f2"  , "h_njets_0l_ge6j_HT500_ge2b_1t_f3"  , "h_njets_0l_ge6j_HT500_ge2b_1t_f4"  } , "njets_0l_ge6j_HT500_ge2b_1t"  },
+        { {"h_njets_0l_ge6j_HT500_ge2b_1t1_f1" , "h_njets_0l_ge6j_HT500_ge2b_1t1_f2" , "h_njets_0l_ge6j_HT500_ge2b_1t1_f3" , "h_njets_0l_ge6j_HT500_ge2b_1t1_f4" } , "njets_0l_ge6j_HT500_ge2b_1t1" },
+        { {"h_njets_0l_ge6j_HT500_ge2b_1t2_f1" , "h_njets_0l_ge6j_HT500_ge2b_1t2_f2" , "h_njets_0l_ge6j_HT500_ge2b_1t2_f3" , "h_njets_0l_ge6j_HT500_ge2b_1t2_f4" } , "njets_0l_ge6j_HT500_ge2b_1t2" },
+        { {"h_njets_0l_ge6j_HT500_ge2b_1t3_f1" , "h_njets_0l_ge6j_HT500_ge2b_1t3_f2" , "h_njets_0l_ge6j_HT500_ge2b_1t3_f3" , "h_njets_0l_ge6j_HT500_ge2b_1t3_f4" } , "njets_0l_ge6j_HT500_ge2b_1t3" },
+        { {"h_njets_0l_ge6j_HT500_ge2b_2t_f1"  , "h_njets_0l_ge6j_HT500_ge2b_2t_f2"  , "h_njets_0l_ge6j_HT500_ge2b_2t_f3"  , "h_njets_0l_ge6j_HT500_ge2b_2t_f4"  } , "njets_0l_ge6j_HT500_ge2b_2t"  },
+        { {"h_njets_0l_ge6j_HT500_ge2b_2t11_f1", "h_njets_0l_ge6j_HT500_ge2b_2t11_f2", "h_njets_0l_ge6j_HT500_ge2b_2t11_f3", "h_njets_0l_ge6j_HT500_ge2b_2t11_f4"} , "njets_0l_ge6j_HT500_ge2b_2t11"},
+        { {"h_njets_0l_ge6j_HT500_ge2b_2t12_f1", "h_njets_0l_ge6j_HT500_ge2b_2t12_f2", "h_njets_0l_ge6j_HT500_ge2b_2t12_f3", "h_njets_0l_ge6j_HT500_ge2b_2t12_f4"} , "njets_0l_ge6j_HT500_ge2b_2t12"},
+        { {"h_njets_0l_ge6j_HT500_ge2b_2t13_f1", "h_njets_0l_ge6j_HT500_ge2b_2t13_f2", "h_njets_0l_ge6j_HT500_ge2b_2t13_f3", "h_njets_0l_ge6j_HT500_ge2b_2t13_f4"} , "njets_0l_ge6j_HT500_ge2b_2t13"},
+        { {"h_njets_0l_ge6j_HT500_ge2b_2t22_f1", "h_njets_0l_ge6j_HT500_ge2b_2t22_f2", "h_njets_0l_ge6j_HT500_ge2b_2t22_f3", "h_njets_0l_ge6j_HT500_ge2b_2t22_f4"} , "njets_0l_ge6j_HT500_ge2b_2t22"},
+        { {"h_njets_0l_ge6j_HT500_ge2b_2t23_f1", "h_njets_0l_ge6j_HT500_ge2b_2t23_f2", "h_njets_0l_ge6j_HT500_ge2b_2t23_f3", "h_njets_0l_ge6j_HT500_ge2b_2t23_f4"} , "njets_0l_ge6j_HT500_ge2b_2t23"},
+        { {"h_njets_0l_ge6j_HT500_ge2b_2t33_f1", "h_njets_0l_ge6j_HT500_ge2b_2t33_f2", "h_njets_0l_ge6j_HT500_ge2b_2t33_f3", "h_njets_0l_ge6j_HT500_ge2b_2t33_f4"} , "njets_0l_ge6j_HT500_ge2b_2t33"},
+
+
+        { {"h_njets_0l_ge6j_HT500_ge2b_ge1t_f1"  , "h_njets_0l_ge6j_HT500_ge2b_ge1t_f2"  , "h_njets_0l_ge6j_HT500_ge2b_ge1t_f3"  , "h_njets_0l_ge6j_HT500_ge2b_ge1t_f4"  } , "njets_0l_ge6j_HT500_ge2b_ge1t"  },
+        { {"h_njets_0l_ge6j_HT500_ge2b_ge1t1_f1" , "h_njets_0l_ge6j_HT500_ge2b_ge1t1_f2" , "h_njets_0l_ge6j_HT500_ge2b_ge1t1_f3" , "h_njets_0l_ge6j_HT500_ge2b_ge1t1_f4" } , "njets_0l_ge6j_HT500_ge2b_ge1t1" },
+        { {"h_njets_0l_ge6j_HT500_ge2b_ge1t2_f1" , "h_njets_0l_ge6j_HT500_ge2b_ge1t2_f2" , "h_njets_0l_ge6j_HT500_ge2b_ge1t2_f3" , "h_njets_0l_ge6j_HT500_ge2b_ge1t2_f4" } , "njets_0l_ge6j_HT500_ge2b_ge1t2" },
+        { {"h_njets_0l_ge6j_HT500_ge2b_ge1t3_f1" , "h_njets_0l_ge6j_HT500_ge2b_ge1t3_f2" , "h_njets_0l_ge6j_HT500_ge2b_ge1t3_f3" , "h_njets_0l_ge6j_HT500_ge2b_ge1t3_f4" } , "njets_0l_ge6j_HT500_ge2b_ge1t3" },
+        { {"h_njets_0l_ge6j_HT500_ge2b_ge2t_f1"  , "h_njets_0l_ge6j_HT500_ge2b_ge2t_f2"  , "h_njets_0l_ge6j_HT500_ge2b_ge2t_f3"  , "h_njets_0l_ge6j_HT500_ge2b_ge2t_f4"  } , "njets_0l_ge6j_HT500_ge2b_ge2t"  },
+        { {"h_njets_0l_ge6j_HT500_ge2b_ge2t11_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t11_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t11_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t11_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t11"},
+        { {"h_njets_0l_ge6j_HT500_ge2b_ge2t12_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t12_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t12_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t12_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t12"},
+        { {"h_njets_0l_ge6j_HT500_ge2b_ge2t13_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t13_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t13_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t13_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t13"},
+        { {"h_njets_0l_ge6j_HT500_ge2b_ge2t22_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t22_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t22_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t22_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t22"},
+        { {"h_njets_0l_ge6j_HT500_ge2b_ge2t23_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t23_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t23_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t23_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t23"},
+        { {"h_njets_0l_ge6j_HT500_ge2b_ge2t33_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t33_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t33_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t33_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t33"},
+
     };
     
-    plt.plotFisher(fisherHist_1t,  "njets_0l_g6j_HT500_g2b_1t" , "N_{J}", "Events", true);
-    plt.plotFisher(fisherHist_1t1, "njets_0l_g6j_HT500_g2b_1t1", "N_{J}", "Events", true);
-    plt.plotFisher(fisherHist_1t2, "njets_0l_g6j_HT500_g2b_1t2", "N_{J}", "Events", true);
-    plt.plotFisher(fisherHist_1t3, "njets_0l_g6j_HT500_g2b_1t3", "N_{J}", "Events", true);
-
-    plt.plotFisher(fisherHist_2t,   "njets_0l_g6j_HT500_g2b_2t"  , "N_{J}", "Events", true);
-    plt.plotFisher(fisherHist_2t11, "njets_0l_g6j_HT500_g2b_2t11", "N_{J}", "Events", true);
-    plt.plotFisher(fisherHist_2t12, "njets_0l_g6j_HT500_g2b_2t12", "N_{J}", "Events", true);
-    plt.plotFisher(fisherHist_2t13, "njets_0l_g6j_HT500_g2b_2t13", "N_{J}", "Events", true);
-    plt.plotFisher(fisherHist_2t22, "njets_0l_g6j_HT500_g2b_2t22", "N_{J}", "Events", true);
-    plt.plotFisher(fisherHist_2t23, "njets_0l_g6j_HT500_g2b_2t23", "N_{J}", "Events", true);
-    plt.plotFisher(fisherHist_2t33, "njets_0l_g6j_HT500_g2b_2t33", "N_{J}", "Events", true);
-}
-
-int main()
-{
-    plot();
+    for (auto& f : fisherHolder)
+    {
+        plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true);
+    }
 }

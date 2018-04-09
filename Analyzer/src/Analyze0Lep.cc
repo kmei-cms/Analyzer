@@ -28,34 +28,51 @@ void Analyze0Lep::InitHistos()
     
     std::vector<std::string> mycuts_0l 
     {
-        ""                     ,
-        "g6j"                  ,
-        "HT500"                ,
-        "g2b"                  ,
-        "1t"                   ,
-        "2t"                   ,
-        "g6j_HT500"            ,
-        "g6j_HT500_g1b"        ,
-        "g6j_HT500_g2b"        ,
+        ""                      ,
+        "ge6j"                   ,
+        "HT500"                 ,
+        "ge2b"                   ,
+        "1t"                    ,
+        "2t"                    ,
+        "ge1t"                   ,
+        "ge2t"                   ,
+        "ge6j_HT500"             ,
+        "ge6j_HT500_ge1b"         ,
+        "ge6j_HT500_ge2b"         ,
 
-        "g6j_HT500_g2b_1t"     ,
-        "g6j_HT500_g2b_1t_f1"  , "g6j_HT500_g2b_1t_f2"  , "g6j_HT500_g2b_1t_f3"  , "g6j_HT500_g2b_1t_f4"  ,
+        "ge6j_HT500_ge2b_1t"      ,
+        "ge6j_HT500_ge2b_1t_f1"   , "ge6j_HT500_ge2b_1t_f2"   , "ge6j_HT500_ge2b_1t_f3"   , "ge6j_HT500_ge2b_1t_f4"   ,
+        "ge6j_HT500_ge2b_ge1t"     ,
+        "ge6j_HT500_ge2b_ge1t_f1"  , "ge6j_HT500_ge2b_ge1t_f2"  , "ge6j_HT500_ge2b_ge1t_f3"  , "ge6j_HT500_ge2b_ge1t_f4"  ,
 
-        "g6j_HT500_g2b_1t1"    , "g6j_HT500_g2b_1t2"    , "g6j_HT500_g2b_1t3"    ,
-        "g6j_HT500_g2b_1t1_f1" , "g6j_HT500_g2b_1t1_f2" , "g6j_HT500_g2b_1t1_f3" , "g6j_HT500_g2b_1t1_f4" ,
-        "g6j_HT500_g2b_1t2_f1" , "g6j_HT500_g2b_1t2_f2" , "g6j_HT500_g2b_1t2_f3" , "g6j_HT500_g2b_1t2_f4" ,
-        "g6j_HT500_g2b_1t3_f1" , "g6j_HT500_g2b_1t3_f2" , "g6j_HT500_g2b_1t3_f3" , "g6j_HT500_g2b_1t3_f4" ,
+        "ge6j_HT500_ge2b_1t1"     , "ge6j_HT500_ge2b_1t2"     , "ge6j_HT500_ge2b_1t3"     ,
+        "ge6j_HT500_ge2b_1t1_f1"  , "ge6j_HT500_ge2b_1t1_f2"  , "ge6j_HT500_ge2b_1t1_f3"  , "ge6j_HT500_ge2b_1t1_f4"  ,
+        "ge6j_HT500_ge2b_1t2_f1"  , "ge6j_HT500_ge2b_1t2_f2"  , "ge6j_HT500_ge2b_1t2_f3"  , "ge6j_HT500_ge2b_1t2_f4"  ,
+        "ge6j_HT500_ge2b_1t3_f1"  , "ge6j_HT500_ge2b_1t3_f2"  , "ge6j_HT500_ge2b_1t3_f3"  , "ge6j_HT500_ge2b_1t3_f4"  ,
+        "ge6j_HT500_ge2b_ge1t1"    , "ge6j_HT500_ge2b_ge1t2"    , "ge6j_HT500_ge2b_ge1t3"    ,
+        "ge6j_HT500_ge2b_ge1t1_f1" , "ge6j_HT500_ge2b_ge1t1_f2" , "ge6j_HT500_ge2b_ge1t1_f3" , "ge6j_HT500_ge2b_ge1t1_f4" ,
+        "ge6j_HT500_ge2b_ge1t2_f1" , "ge6j_HT500_ge2b_ge1t2_f2" , "ge6j_HT500_ge2b_ge1t2_f3" , "ge6j_HT500_ge2b_ge1t2_f4" ,
+        "ge6j_HT500_ge2b_ge1t3_f1" , "ge6j_HT500_ge2b_ge1t3_f2" , "ge6j_HT500_ge2b_ge1t3_f3" , "ge6j_HT500_ge2b_ge1t3_f4" ,
 
-        "g6j_HT500_g2b_2t"     ,
-        "g6j_HT500_g2b_2t_f1"  , "g6j_HT500_g2b_2t_f2"  , "g6j_HT500_g2b_2t_f3"  , "g6j_HT500_g2b_2t_f4"  ,
+        "ge6j_HT500_ge2b_2t"      ,
+        "ge6j_HT500_ge2b_2t_f1"   , "ge6j_HT500_ge2b_2t_f2"   , "ge6j_HT500_ge2b_2t_f3"   , "ge6j_HT500_ge2b_2t_f4"   ,
+        "ge6j_HT500_ge2b_ge2t"     ,
+        "ge6j_HT500_ge2b_ge2t_f1"  , "ge6j_HT500_ge2b_ge2t_f2"  , "ge6j_HT500_ge2b_ge2t_f3"  , "ge6j_HT500_ge2b_ge2t_f4"  ,
 
-        "g6j_HT500_g2b_2t11"   , "g6j_HT500_g2b_2t12"   , "g6j_HT500_g2b_2t13"   , "g6j_HT500_g2b_2t22"   , "g6j_HT500_g2b_2t23", "g6j_HT500_g2b_2t33",
-        "g6j_HT500_g2b_2t11_f1", "g6j_HT500_g2b_2t11_f2", "g6j_HT500_g2b_2t11_f3", "g6j_HT500_g2b_2t11_f4",
-        "g6j_HT500_g2b_2t12_f1", "g6j_HT500_g2b_2t12_f2", "g6j_HT500_g2b_2t12_f3", "g6j_HT500_g2b_2t12_f4",
-        "g6j_HT500_g2b_2t13_f1", "g6j_HT500_g2b_2t13_f2", "g6j_HT500_g2b_2t13_f3", "g6j_HT500_g2b_2t13_f4",
-        "g6j_HT500_g2b_2t22_f1", "g6j_HT500_g2b_2t22_f2", "g6j_HT500_g2b_2t22_f3", "g6j_HT500_g2b_2t22_f4",
-        "g6j_HT500_g2b_2t23_f1", "g6j_HT500_g2b_2t23_f2", "g6j_HT500_g2b_2t23_f3", "g6j_HT500_g2b_2t23_f4",
-        "g6j_HT500_g2b_2t33_f1", "g6j_HT500_g2b_2t33_f2", "g6j_HT500_g2b_2t33_f3", "g6j_HT500_g2b_2t33_f4",
+        "ge6j_HT500_ge2b_2t11"    , "ge6j_HT500_ge2b_2t12"    , "ge6j_HT500_ge2b_2t13"    , "ge6j_HT500_ge2b_2t22"    , "ge6j_HT500_ge2b_2t23" , "ge6j_HT500_ge2b_2t33" ,
+        "ge6j_HT500_ge2b_2t11_f1" , "ge6j_HT500_ge2b_2t11_f2" , "ge6j_HT500_ge2b_2t11_f3" , "ge6j_HT500_ge2b_2t11_f4" ,
+        "ge6j_HT500_ge2b_2t12_f1" , "ge6j_HT500_ge2b_2t12_f2" , "ge6j_HT500_ge2b_2t12_f3" , "ge6j_HT500_ge2b_2t12_f4" ,
+        "ge6j_HT500_ge2b_2t13_f1" , "ge6j_HT500_ge2b_2t13_f2" , "ge6j_HT500_ge2b_2t13_f3" , "ge6j_HT500_ge2b_2t13_f4" ,
+        "ge6j_HT500_ge2b_2t22_f1" , "ge6j_HT500_ge2b_2t22_f2" , "ge6j_HT500_ge2b_2t22_f3" , "ge6j_HT500_ge2b_2t22_f4" ,
+        "ge6j_HT500_ge2b_2t23_f1" , "ge6j_HT500_ge2b_2t23_f2" , "ge6j_HT500_ge2b_2t23_f3" , "ge6j_HT500_ge2b_2t23_f4" ,
+        "ge6j_HT500_ge2b_2t33_f1" , "ge6j_HT500_ge2b_2t33_f2" , "ge6j_HT500_ge2b_2t33_f3" , "ge6j_HT500_ge2b_2t33_f4" ,
+        "ge6j_HT500_ge2b_ge2t11"   , "ge6j_HT500_ge2b_ge2t12"   , "ge6j_HT500_ge2b_ge2t13"   , "ge6j_HT500_ge2b_ge2t22"   , "ge6j_HT500_ge2b_ge2t23", "ge6j_HT500_ge2b_ge2t33",
+        "ge6j_HT500_ge2b_ge2t11_f1", "ge6j_HT500_ge2b_ge2t11_f2", "ge6j_HT500_ge2b_ge2t11_f3", "ge6j_HT500_ge2b_ge2t11_f4",
+        "ge6j_HT500_ge2b_ge2t12_f1", "ge6j_HT500_ge2b_ge2t12_f2", "ge6j_HT500_ge2b_ge2t12_f3", "ge6j_HT500_ge2b_ge2t12_f4",
+        "ge6j_HT500_ge2b_ge2t13_f1", "ge6j_HT500_ge2b_ge2t13_f2", "ge6j_HT500_ge2b_ge2t13_f3", "ge6j_HT500_ge2b_ge2t13_f4",
+        "ge6j_HT500_ge2b_ge2t22_f1", "ge6j_HT500_ge2b_ge2t22_f2", "ge6j_HT500_ge2b_ge2t22_f3", "ge6j_HT500_ge2b_ge2t22_f4",
+        "ge6j_HT500_ge2b_ge2t23_f1", "ge6j_HT500_ge2b_ge2t23_f2", "ge6j_HT500_ge2b_ge2t23_f3", "ge6j_HT500_ge2b_ge2t23_f4",
+        "ge6j_HT500_ge2b_ge2t33_f1", "ge6j_HT500_ge2b_ge2t33_f2", "ge6j_HT500_ge2b_ge2t33_f3", "ge6j_HT500_ge2b_ge2t33_f4",
     };
 
     for(std::string mycut : mycuts_0l)
@@ -194,108 +211,201 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
         bool pass_njet_pt45_1btag = NBJets_pt45 >= 1;
         bool pass_njet_pt45_2btag = NBJets_pt45 >= 2;
 
-        // 1 Top selection
-        bool pass_1t    = ntops>=1;
-        bool pass_1t_f1 = pass_1t && fisher_bin1, pass_1t_f2 = pass_1t && fisher_bin2, pass_1t_f3 = pass_1t && fisher_bin3, pass_1t_f4 = pass_1t && fisher_bin4;
+        // ---------------------------
+        // --    1 Top selection
+        // ---------------------------
 
-        bool pass_1t1 = pass_1t && ntops_1jet>=1;
-        bool pass_1t2 = pass_1t && ntops_2jet>=1;
-        bool pass_1t3 = pass_1t && ntops_3jet>=1;
+        //exactly selections
+        bool pass_exactly_1t    = ntops==1;
+        bool pass_exactly_1t_f1 = pass_exactly_1t && fisher_bin1, pass_exactly_1t_f2 = pass_exactly_1t && fisher_bin2, pass_exactly_1t_f3 = pass_exactly_1t && fisher_bin3, pass_exactly_1t_f4 = pass_exactly_1t && fisher_bin4;
 
-        bool pass_1t1_f1 = pass_1t1 && fisher_bin1, pass_1t1_f2 = pass_1t1 && fisher_bin2, pass_1t1_f3 = pass_1t1 && fisher_bin3, pass_1t1_f4 = pass_1t1 && fisher_bin4;
-        bool pass_1t2_f1 = pass_1t2 && fisher_bin1, pass_1t2_f2 = pass_1t2 && fisher_bin2, pass_1t2_f3 = pass_1t2 && fisher_bin3, pass_1t2_f4 = pass_1t2 && fisher_bin4;
-        bool pass_1t3_f1 = pass_1t3 && fisher_bin1, pass_1t3_f2 = pass_1t3 && fisher_bin2, pass_1t3_f3 = pass_1t3 && fisher_bin3, pass_1t3_f4 = pass_1t3 && fisher_bin4;
+        bool pass_exactly_1t1 = pass_exactly_1t && ntops_1jet==1;
+        bool pass_exactly_1t2 = pass_exactly_1t && ntops_2jet==1;
+        bool pass_exactly_1t3 = pass_exactly_1t && ntops_3jet==1;
 
-        // 2 Top selection
-        bool pass_2t    = ntops>=2;
-        bool pass_2t_f1 = pass_2t && fisher_bin1, pass_2t_f2 = pass_2t && fisher_bin2, pass_2t_f3 = pass_2t && fisher_bin3, pass_2t_f4 = pass_2t && fisher_bin4;
+        bool pass_exactly_1t1_f1 = pass_exactly_1t1 && fisher_bin1, pass_exactly_1t1_f2 = pass_exactly_1t1 && fisher_bin2, pass_exactly_1t1_f3 = pass_exactly_1t1 && fisher_bin3, pass_exactly_1t1_f4 = pass_exactly_1t1 && fisher_bin4;
+        bool pass_exactly_1t2_f1 = pass_exactly_1t2 && fisher_bin1, pass_exactly_1t2_f2 = pass_exactly_1t2 && fisher_bin2, pass_exactly_1t2_f3 = pass_exactly_1t2 && fisher_bin3, pass_exactly_1t2_f4 = pass_exactly_1t2 && fisher_bin4;
+        bool pass_exactly_1t3_f1 = pass_exactly_1t3 && fisher_bin1, pass_exactly_1t3_f2 = pass_exactly_1t3 && fisher_bin2, pass_exactly_1t3_f3 = pass_exactly_1t3 && fisher_bin3, pass_exactly_1t3_f4 = pass_exactly_1t3 && fisher_bin4;
+        //at least selections
+        bool pass_atleast_1t    = ntops>=1;
+        bool pass_atleast_1t_f1 = pass_atleast_1t && fisher_bin1, pass_atleast_1t_f2 = pass_atleast_1t && fisher_bin2, pass_atleast_1t_f3 = pass_atleast_1t && fisher_bin3, pass_atleast_1t_f4 = pass_atleast_1t && fisher_bin4;
 
-        bool pass_2t11 = pass_2t && ntops_1jet>=2;
-        bool pass_2t12 = pass_2t && ntops_1jet>=1 && ntops_2jet>=1;
-        bool pass_2t13 = pass_2t && ntops_1jet>=1 && ntops_3jet>=1;
-        bool pass_2t22 = pass_2t && ntops_2jet>=2;
-        bool pass_2t23 = pass_2t && ntops_2jet>=1 && ntops_3jet>=1;
-        bool pass_2t33 = pass_2t && ntops_3jet>=2;
+        bool pass_atleast_1t1 = pass_atleast_1t && ntops_1jet>=1;
+        bool pass_atleast_1t2 = pass_atleast_1t && ntops_2jet>=1;
+        bool pass_atleast_1t3 = pass_atleast_1t && ntops_3jet>=1;
 
-        bool pass_2t11_f1 = pass_2t11 && fisher_bin1, pass_2t11_f2 = pass_2t11 && fisher_bin2, pass_2t11_f3 = pass_2t11 && fisher_bin3, pass_2t11_f4 = pass_2t11 && fisher_bin4;
-        bool pass_2t12_f1 = pass_2t12 && fisher_bin1, pass_2t12_f2 = pass_2t12 && fisher_bin2, pass_2t12_f3 = pass_2t12 && fisher_bin3, pass_2t12_f4 = pass_2t12 && fisher_bin4;
-        bool pass_2t13_f1 = pass_2t13 && fisher_bin1, pass_2t13_f2 = pass_2t13 && fisher_bin2, pass_2t13_f3 = pass_2t13 && fisher_bin3, pass_2t13_f4 = pass_2t13 && fisher_bin4;
-        bool pass_2t22_f1 = pass_2t22 && fisher_bin1, pass_2t22_f2 = pass_2t22 && fisher_bin2, pass_2t22_f3 = pass_2t22 && fisher_bin3, pass_2t22_f4 = pass_2t22 && fisher_bin4;
-        bool pass_2t23_f1 = pass_2t23 && fisher_bin1, pass_2t23_f2 = pass_2t23 && fisher_bin2, pass_2t23_f3 = pass_2t23 && fisher_bin3, pass_2t23_f4 = pass_2t23 && fisher_bin4;
-        bool pass_2t33_f1 = pass_2t33 && fisher_bin1, pass_2t33_f2 = pass_2t33 && fisher_bin2, pass_2t33_f3 = pass_2t33 && fisher_bin3, pass_2t33_f4 = pass_2t33 && fisher_bin4;
+        bool pass_atleast_1t1_f1 = pass_atleast_1t1 && fisher_bin1, pass_atleast_1t1_f2 = pass_atleast_1t1 && fisher_bin2, pass_atleast_1t1_f3 = pass_atleast_1t1 && fisher_bin3, pass_atleast_1t1_f4 = pass_atleast_1t1 && fisher_bin4;
+        bool pass_atleast_1t2_f1 = pass_atleast_1t2 && fisher_bin1, pass_atleast_1t2_f2 = pass_atleast_1t2 && fisher_bin2, pass_atleast_1t2_f3 = pass_atleast_1t2 && fisher_bin3, pass_atleast_1t2_f4 = pass_atleast_1t2 && fisher_bin4;
+        bool pass_atleast_1t3_f1 = pass_atleast_1t3 && fisher_bin1, pass_atleast_1t3_f2 = pass_atleast_1t3 && fisher_bin2, pass_atleast_1t3_f3 = pass_atleast_1t3 && fisher_bin3, pass_atleast_1t3_f4 = pass_atleast_1t3 && fisher_bin4;
+        // ---------------------------
+        // --    2 Top selection
+        // ---------------------------
+
+        // exactly selections
+        bool pass_exactly_2t    = ntops==2;
+        bool pass_exactly_2t_f1 = pass_exactly_2t && fisher_bin1, pass_exactly_2t_f2 = pass_exactly_2t && fisher_bin2, pass_exactly_2t_f3 = pass_exactly_2t && fisher_bin3, pass_exactly_2t_f4 = pass_exactly_2t && fisher_bin4;
+
+        bool pass_exactly_2t11 = pass_exactly_2t && ntops_1jet==2;
+        bool pass_exactly_2t12 = pass_exactly_2t && ntops_1jet==1 && ntops_2jet==1;
+        bool pass_exactly_2t13 = pass_exactly_2t && ntops_1jet==1 && ntops_3jet==1;
+        bool pass_exactly_2t22 = pass_exactly_2t && ntops_2jet==2;
+        bool pass_exactly_2t23 = pass_exactly_2t && ntops_2jet==1 && ntops_3jet==1;
+        bool pass_exactly_2t33 = pass_exactly_2t && ntops_3jet==2;
+
+        bool pass_exactly_2t11_f1 = pass_exactly_2t11 && fisher_bin1, pass_exactly_2t11_f2 = pass_exactly_2t11 && fisher_bin2, pass_exactly_2t11_f3 = pass_exactly_2t11 && fisher_bin3, pass_exactly_2t11_f4 = pass_exactly_2t11 && fisher_bin4;
+        bool pass_exactly_2t12_f1 = pass_exactly_2t12 && fisher_bin1, pass_exactly_2t12_f2 = pass_exactly_2t12 && fisher_bin2, pass_exactly_2t12_f3 = pass_exactly_2t12 && fisher_bin3, pass_exactly_2t12_f4 = pass_exactly_2t12 && fisher_bin4;
+        bool pass_exactly_2t13_f1 = pass_exactly_2t13 && fisher_bin1, pass_exactly_2t13_f2 = pass_exactly_2t13 && fisher_bin2, pass_exactly_2t13_f3 = pass_exactly_2t13 && fisher_bin3, pass_exactly_2t13_f4 = pass_exactly_2t13 && fisher_bin4;
+        bool pass_exactly_2t22_f1 = pass_exactly_2t22 && fisher_bin1, pass_exactly_2t22_f2 = pass_exactly_2t22 && fisher_bin2, pass_exactly_2t22_f3 = pass_exactly_2t22 && fisher_bin3, pass_exactly_2t22_f4 = pass_exactly_2t22 && fisher_bin4;
+        bool pass_exactly_2t23_f1 = pass_exactly_2t23 && fisher_bin1, pass_exactly_2t23_f2 = pass_exactly_2t23 && fisher_bin2, pass_exactly_2t23_f3 = pass_exactly_2t23 && fisher_bin3, pass_exactly_2t23_f4 = pass_exactly_2t23 && fisher_bin4;
+        bool pass_exactly_2t33_f1 = pass_exactly_2t33 && fisher_bin1, pass_exactly_2t33_f2 = pass_exactly_2t33 && fisher_bin2, pass_exactly_2t33_f3 = pass_exactly_2t33 && fisher_bin3, pass_exactly_2t33_f4 = pass_exactly_2t33 && fisher_bin4;
+
+        // at least selections
+        bool pass_atleast_2t    = ntops>=2;
+        bool pass_atleast_2t_f1 = pass_atleast_2t && fisher_bin1, pass_atleast_2t_f2 = pass_atleast_2t && fisher_bin2, pass_atleast_2t_f3 = pass_atleast_2t && fisher_bin3, pass_atleast_2t_f4 = pass_atleast_2t && fisher_bin4;
+
+        bool pass_atleast_2t11 = pass_atleast_2t && ntops_1jet>=2;
+        bool pass_atleast_2t12 = pass_atleast_2t && ntops_1jet>=1 && ntops_2jet>=1;
+        bool pass_atleast_2t13 = pass_atleast_2t && ntops_1jet>=1 && ntops_3jet>=1;
+        bool pass_atleast_2t22 = pass_atleast_2t && ntops_2jet>=2;
+        bool pass_atleast_2t23 = pass_atleast_2t && ntops_2jet>=1 && ntops_3jet>=1;
+        bool pass_atleast_2t33 = pass_atleast_2t && ntops_3jet>=2;
+
+        bool pass_atleast_2t11_f1 = pass_atleast_2t11 && fisher_bin1, pass_atleast_2t11_f2 = pass_atleast_2t11 && fisher_bin2, pass_atleast_2t11_f3 = pass_atleast_2t11 && fisher_bin3, pass_atleast_2t11_f4 = pass_atleast_2t11 && fisher_bin4;
+        bool pass_atleast_2t12_f1 = pass_atleast_2t12 && fisher_bin1, pass_atleast_2t12_f2 = pass_atleast_2t12 && fisher_bin2, pass_atleast_2t12_f3 = pass_atleast_2t12 && fisher_bin3, pass_atleast_2t12_f4 = pass_atleast_2t12 && fisher_bin4;
+        bool pass_atleast_2t13_f1 = pass_atleast_2t13 && fisher_bin1, pass_atleast_2t13_f2 = pass_atleast_2t13 && fisher_bin2, pass_atleast_2t13_f3 = pass_atleast_2t13 && fisher_bin3, pass_atleast_2t13_f4 = pass_atleast_2t13 && fisher_bin4;
+        bool pass_atleast_2t22_f1 = pass_atleast_2t22 && fisher_bin1, pass_atleast_2t22_f2 = pass_atleast_2t22 && fisher_bin2, pass_atleast_2t22_f3 = pass_atleast_2t22 && fisher_bin3, pass_atleast_2t22_f4 = pass_atleast_2t22 && fisher_bin4;
+        bool pass_atleast_2t23_f1 = pass_atleast_2t23 && fisher_bin1, pass_atleast_2t23_f2 = pass_atleast_2t23 && fisher_bin2, pass_atleast_2t23_f3 = pass_atleast_2t23 && fisher_bin3, pass_atleast_2t23_f4 = pass_atleast_2t23 && fisher_bin4;
+        bool pass_atleast_2t33_f1 = pass_atleast_2t33 && fisher_bin1, pass_atleast_2t33_f2 = pass_atleast_2t33 && fisher_bin2, pass_atleast_2t33_f3 = pass_atleast_2t33 && fisher_bin3, pass_atleast_2t33_f4 = pass_atleast_2t33 && fisher_bin4;
 
         // -------------------
         // --- Fill Histos ---
         // -------------------                        
         const std::map<std::string, bool> cut_map_0l {
-            {""                     , pass_0l                                                             },
-            {"g6j"                  , pass_0l && pass_njet_pt45                                           },
-            {"HT500"                , pass_0l && pass_HT_trigger                                          },
-            {"g2b"                  , pass_0l && pass_njet_pt45_2btag                                     },
-            {"1t"                   , pass_0l && pass_1t                                                  },
-            {"2t"                   , pass_0l && pass_2t                                                  },
-            {"g6j_HT500"            , pass_0l && pass_njet_pt45 && pass_HT_trigger                        },
-            {"g6j_HT500_g1b"        , pass_0l && pass_njet_pt45 && pass_HT_trigger && pass_njet_pt45_1btag},
-            {"g6j_HT500_g2b"        , passBaseline0l                                                      },                         
+            {""                      , pass_0l                                                             },
+            {"ge6j"                   , pass_0l && pass_njet_pt45                                           },
+            {"HT500"                 , pass_0l && pass_HT_trigger                                          },
+            {"ge2b"                   , pass_0l && pass_njet_pt45_2btag                                     },
+            {"1t"                    , pass_0l && pass_exactly_1t                                          },
+            {"2t"                    , pass_0l && pass_exactly_2t                                          },
+            {"ge1t"                   , pass_0l && pass_atleast_1t                                          },
+            {"ge2t"                   , pass_0l && pass_atleast_2t                                          },
+            {"ge6j_HT500"             , pass_0l && pass_njet_pt45 && pass_HT_trigger                        },
+            {"ge6j_HT500_ge1b"         , pass_0l && pass_njet_pt45 && pass_HT_trigger && pass_njet_pt45_1btag},
+            {"ge6j_HT500_ge2b"         , passBaseline0l                                                      },                         
 
-            {"g6j_HT500_g2b_1t"     , passBaseline0l && pass_1t                                           },
-            {"g6j_HT500_g2b_1t_f1"  , passBaseline0l && pass_1t_f1                                        },
-            {"g6j_HT500_g2b_1t_f2"  , passBaseline0l && pass_1t_f2                                        }, 
-            {"g6j_HT500_g2b_1t_f3"  , passBaseline0l && pass_1t_f3                                        }, 
-            {"g6j_HT500_g2b_1t_f4"  , passBaseline0l && pass_1t_f4                                        },
+            {"ge6j_HT500_ge2b_1t"      , passBaseline0l && pass_exactly_1t                                   },
+            {"ge6j_HT500_ge2b_1t_f1"   , passBaseline0l && pass_exactly_1t_f1                                },
+            {"ge6j_HT500_ge2b_1t_f2"   , passBaseline0l && pass_exactly_1t_f2                                }, 
+            {"ge6j_HT500_ge2b_1t_f3"   , passBaseline0l && pass_exactly_1t_f3                                }, 
+            {"ge6j_HT500_ge2b_1t_f4"   , passBaseline0l && pass_exactly_1t_f4                                },
+            {"ge6j_HT500_ge2b_ge1t"     , passBaseline0l && pass_atleast_1t                                   },
+            {"ge6j_HT500_ge2b_ge1t_f1"  , passBaseline0l && pass_atleast_1t_f1                                },
+            {"ge6j_HT500_ge2b_ge1t_f2"  , passBaseline0l && pass_atleast_1t_f2                                }, 
+            {"ge6j_HT500_ge2b_ge1t_f3"  , passBaseline0l && pass_atleast_1t_f3                                }, 
+            {"ge6j_HT500_ge2b_ge1t_f4"  , passBaseline0l && pass_atleast_1t_f4                                },
 
-            {"g6j_HT500_g2b_1t1"    , passBaseline0l && pass_1t1                                          },
-            {"g6j_HT500_g2b_1t2"    , passBaseline0l && pass_1t2                                          },
-            {"g6j_HT500_g2b_1t3"    , passBaseline0l && pass_1t3                                          },
-            {"g6j_HT500_g2b_1t1_f1" , passBaseline0l && pass_1t1_f1                                       },
-            {"g6j_HT500_g2b_1t1_f2" , passBaseline0l && pass_1t1_f2                                       },
-            {"g6j_HT500_g2b_1t1_f3" , passBaseline0l && pass_1t1_f3                                       },
-            {"g6j_HT500_g2b_1t1_f4" , passBaseline0l && pass_1t1_f4                                       },
-            {"g6j_HT500_g2b_1t2_f1" , passBaseline0l && pass_1t2_f1                                       },
-            {"g6j_HT500_g2b_1t2_f2" , passBaseline0l && pass_1t2_f2                                       },
-            {"g6j_HT500_g2b_1t2_f3" , passBaseline0l && pass_1t2_f3                                       },
-            {"g6j_HT500_g2b_1t2_f4" , passBaseline0l && pass_1t2_f4                                       },
-            {"g6j_HT500_g2b_1t3_f1" , passBaseline0l && pass_1t3_f1                                       },
-            {"g6j_HT500_g2b_1t3_f2" , passBaseline0l && pass_1t3_f2                                       },
-            {"g6j_HT500_g2b_1t3_f3" , passBaseline0l && pass_1t3_f3                                       },
-            {"g6j_HT500_g2b_1t3_f4" , passBaseline0l && pass_1t3_f4                                       },
+            {"ge6j_HT500_ge2b_1t1"     , passBaseline0l && pass_exactly_1t1                                  },
+            {"ge6j_HT500_ge2b_1t2"     , passBaseline0l && pass_exactly_1t2                                  },
+            {"ge6j_HT500_ge2b_1t3"     , passBaseline0l && pass_exactly_1t3                                  },
+            {"ge6j_HT500_ge2b_1t1_f1"  , passBaseline0l && pass_exactly_1t1_f1                               },
+            {"ge6j_HT500_ge2b_1t1_f2"  , passBaseline0l && pass_exactly_1t1_f2                               },
+            {"ge6j_HT500_ge2b_1t1_f3"  , passBaseline0l && pass_exactly_1t1_f3                               },
+            {"ge6j_HT500_ge2b_1t1_f4"  , passBaseline0l && pass_exactly_1t1_f4                               },
+            {"ge6j_HT500_ge2b_1t2_f1"  , passBaseline0l && pass_exactly_1t2_f1                               },
+            {"ge6j_HT500_ge2b_1t2_f2"  , passBaseline0l && pass_exactly_1t2_f2                               },
+            {"ge6j_HT500_ge2b_1t2_f3"  , passBaseline0l && pass_exactly_1t2_f3                               },
+            {"ge6j_HT500_ge2b_1t2_f4"  , passBaseline0l && pass_exactly_1t2_f4                               },
+            {"ge6j_HT500_ge2b_1t3_f1"  , passBaseline0l && pass_exactly_1t3_f1                               },
+            {"ge6j_HT500_ge2b_1t3_f2"  , passBaseline0l && pass_exactly_1t3_f2                               },
+            {"ge6j_HT500_ge2b_1t3_f3"  , passBaseline0l && pass_exactly_1t3_f3                               },
+            {"ge6j_HT500_ge2b_1t3_f4"  , passBaseline0l && pass_exactly_1t3_f4                               },
+            {"ge6j_HT500_ge2b_ge1t1"    , passBaseline0l && pass_atleast_1t1                                  },
+            {"ge6j_HT500_ge2b_ge1t2"    , passBaseline0l && pass_atleast_1t2                                  },
+            {"ge6j_HT500_ge2b_ge1t3"    , passBaseline0l && pass_atleast_1t3                                  },
+            {"ge6j_HT500_ge2b_ge1t1_f1" , passBaseline0l && pass_atleast_1t1_f1                               },
+            {"ge6j_HT500_ge2b_ge1t1_f2" , passBaseline0l && pass_atleast_1t1_f2                               },
+            {"ge6j_HT500_ge2b_ge1t1_f3" , passBaseline0l && pass_atleast_1t1_f3                               },
+            {"ge6j_HT500_ge2b_ge1t1_f4" , passBaseline0l && pass_atleast_1t1_f4                               },
+            {"ge6j_HT500_ge2b_ge1t2_f1" , passBaseline0l && pass_atleast_1t2_f1                               },
+            {"ge6j_HT500_ge2b_ge1t2_f2" , passBaseline0l && pass_atleast_1t2_f2                               },
+            {"ge6j_HT500_ge2b_ge1t2_f3" , passBaseline0l && pass_atleast_1t2_f3                               },
+            {"ge6j_HT500_ge2b_ge1t2_f4" , passBaseline0l && pass_atleast_1t2_f4                               },
+            {"ge6j_HT500_ge2b_ge1t3_f1" , passBaseline0l && pass_atleast_1t3_f1                               },
+            {"ge6j_HT500_ge2b_ge1t3_f2" , passBaseline0l && pass_atleast_1t3_f2                               },
+            {"ge6j_HT500_ge2b_ge1t3_f3" , passBaseline0l && pass_atleast_1t3_f3                               },
+            {"ge6j_HT500_ge2b_ge1t3_f4" , passBaseline0l && pass_atleast_1t3_f4                               },
 
-            {"g6j_HT500_g2b_2t"     , passBaseline0l && pass_2t                                           },
-            {"g6j_HT500_g2b_2t_f1"  , passBaseline0l && pass_2t_f1                                        },
-            {"g6j_HT500_g2b_2t_f2"  , passBaseline0l && pass_2t_f2                                        }, 
-            {"g6j_HT500_g2b_2t_f3"  , passBaseline0l && pass_2t_f3                                        }, 
-            {"g6j_HT500_g2b_2t_f4"  , passBaseline0l && pass_2t_f4                                        },
+            {"ge6j_HT500_ge2b_2t"      , passBaseline0l && pass_exactly_2t                                   },
+            {"ge6j_HT500_ge2b_2t_f1"   , passBaseline0l && pass_exactly_2t_f1                                },
+            {"ge6j_HT500_ge2b_2t_f2"   , passBaseline0l && pass_exactly_2t_f2                                }, 
+            {"ge6j_HT500_ge2b_2t_f3"   , passBaseline0l && pass_exactly_2t_f3                                }, 
+            {"ge6j_HT500_ge2b_2t_f4"   , passBaseline0l && pass_exactly_2t_f4                                },
+            {"ge6j_HT500_ge2b_ge2t"     , passBaseline0l && pass_atleast_2t                                   },
+            {"ge6j_HT500_ge2b_ge2t_f1"  , passBaseline0l && pass_atleast_2t_f1                                },
+            {"ge6j_HT500_ge2b_ge2t_f2"  , passBaseline0l && pass_atleast_2t_f2                                }, 
+            {"ge6j_HT500_ge2b_ge2t_f3"  , passBaseline0l && pass_atleast_2t_f3                                }, 
+            {"ge6j_HT500_ge2b_ge2t_f4"  , passBaseline0l && pass_atleast_2t_f4                                },
 
-            {"g6j_HT500_g2b_2t11"   , passBaseline0l && pass_2t11                                         },
-            {"g6j_HT500_g2b_2t12"   , passBaseline0l && pass_2t12                                         },
-            {"g6j_HT500_g2b_2t13"   , passBaseline0l && pass_2t13                                         },
-            {"g6j_HT500_g2b_2t22"   , passBaseline0l && pass_2t22                                         },
-            {"g6j_HT500_g2b_2t23"   , passBaseline0l && pass_2t23                                         },
-            {"g6j_HT500_g2b_2t33"   , passBaseline0l && pass_2t33                                         },
-            {"g6j_HT500_g2b_2t11_f1", passBaseline0l && pass_2t11_f1                                      },
-            {"g6j_HT500_g2b_2t11_f2", passBaseline0l && pass_2t11_f2                                      },
-            {"g6j_HT500_g2b_2t11_f3", passBaseline0l && pass_2t11_f3                                      },
-            {"g6j_HT500_g2b_2t11_f4", passBaseline0l && pass_2t11_f4                                      },
-            {"g6j_HT500_g2b_2t12_f1", passBaseline0l && pass_2t12_f1                                      },
-            {"g6j_HT500_g2b_2t12_f2", passBaseline0l && pass_2t12_f2                                      },
-            {"g6j_HT500_g2b_2t12_f3", passBaseline0l && pass_2t12_f3                                      },
-            {"g6j_HT500_g2b_2t12_f4", passBaseline0l && pass_2t12_f4                                      },
-            {"g6j_HT500_g2b_2t13_f1", passBaseline0l && pass_2t13_f1                                      },
-            {"g6j_HT500_g2b_2t13_f2", passBaseline0l && pass_2t13_f2                                      },
-            {"g6j_HT500_g2b_2t13_f3", passBaseline0l && pass_2t13_f3                                      },
-            {"g6j_HT500_g2b_2t13_f4", passBaseline0l && pass_2t13_f4                                      },
-            {"g6j_HT500_g2b_2t22_f1", passBaseline0l && pass_2t22_f1                                      },
-            {"g6j_HT500_g2b_2t22_f2", passBaseline0l && pass_2t22_f2                                      },
-            {"g6j_HT500_g2b_2t22_f3", passBaseline0l && pass_2t22_f3                                      },
-            {"g6j_HT500_g2b_2t22_f4", passBaseline0l && pass_2t22_f4                                      },
-            {"g6j_HT500_g2b_2t23_f1", passBaseline0l && pass_2t23_f1                                      },
-            {"g6j_HT500_g2b_2t23_f2", passBaseline0l && pass_2t23_f2                                      },
-            {"g6j_HT500_g2b_2t23_f3", passBaseline0l && pass_2t23_f3                                      },
-            {"g6j_HT500_g2b_2t23_f4", passBaseline0l && pass_2t23_f4                                      },
-            {"g6j_HT500_g2b_2t33_f1", passBaseline0l && pass_2t33_f1                                      },
-            {"g6j_HT500_g2b_2t33_f2", passBaseline0l && pass_2t33_f2                                      },
-            {"g6j_HT500_g2b_2t33_f3", passBaseline0l && pass_2t33_f3                                      },
-            {"g6j_HT500_g2b_2t33_f4", passBaseline0l && pass_2t33_f4                                      },
+            {"ge6j_HT500_ge2b_2t11"    , passBaseline0l && pass_exactly_2t11                                 },
+            {"ge6j_HT500_ge2b_2t12"    , passBaseline0l && pass_exactly_2t12                                 },
+            {"ge6j_HT500_ge2b_2t13"    , passBaseline0l && pass_exactly_2t13                                 },
+            {"ge6j_HT500_ge2b_2t22"    , passBaseline0l && pass_exactly_2t22                                 },
+            {"ge6j_HT500_ge2b_2t23"    , passBaseline0l && pass_exactly_2t23                                 },
+            {"ge6j_HT500_ge2b_2t33"    , passBaseline0l && pass_exactly_2t33                                 },
+            {"ge6j_HT500_ge2b_2t11_f1" , passBaseline0l && pass_exactly_2t11_f1                              },
+            {"ge6j_HT500_ge2b_2t11_f2" , passBaseline0l && pass_exactly_2t11_f2                              },
+            {"ge6j_HT500_ge2b_2t11_f3" , passBaseline0l && pass_exactly_2t11_f3                              },
+            {"ge6j_HT500_ge2b_2t11_f4" , passBaseline0l && pass_exactly_2t11_f4                              },
+            {"ge6j_HT500_ge2b_2t12_f1" , passBaseline0l && pass_exactly_2t12_f1                              },
+            {"ge6j_HT500_ge2b_2t12_f2" , passBaseline0l && pass_exactly_2t12_f2                              },
+            {"ge6j_HT500_ge2b_2t12_f3" , passBaseline0l && pass_exactly_2t12_f3                              },
+            {"ge6j_HT500_ge2b_2t12_f4" , passBaseline0l && pass_exactly_2t12_f4                              },
+            {"ge6j_HT500_ge2b_2t13_f1" , passBaseline0l && pass_exactly_2t13_f1                              },
+            {"ge6j_HT500_ge2b_2t13_f2" , passBaseline0l && pass_exactly_2t13_f2                              },
+            {"ge6j_HT500_ge2b_2t13_f3" , passBaseline0l && pass_exactly_2t13_f3                              },
+            {"ge6j_HT500_ge2b_2t13_f4" , passBaseline0l && pass_exactly_2t13_f4                              },
+            {"ge6j_HT500_ge2b_2t22_f1" , passBaseline0l && pass_exactly_2t22_f1                              },
+            {"ge6j_HT500_ge2b_2t22_f2" , passBaseline0l && pass_exactly_2t22_f2                              },
+            {"ge6j_HT500_ge2b_2t22_f3" , passBaseline0l && pass_exactly_2t22_f3                              },
+            {"ge6j_HT500_ge2b_2t22_f4" , passBaseline0l && pass_exactly_2t22_f4                              },
+            {"ge6j_HT500_ge2b_2t23_f1" , passBaseline0l && pass_exactly_2t23_f1                              },
+            {"ge6j_HT500_ge2b_2t23_f2" , passBaseline0l && pass_exactly_2t23_f2                              },
+            {"ge6j_HT500_ge2b_2t23_f3" , passBaseline0l && pass_exactly_2t23_f3                              },
+            {"ge6j_HT500_ge2b_2t23_f4" , passBaseline0l && pass_exactly_2t23_f4                              },
+            {"ge6j_HT500_ge2b_2t33_f1" , passBaseline0l && pass_exactly_2t33_f1                              },
+            {"ge6j_HT500_ge2b_2t33_f2" , passBaseline0l && pass_exactly_2t33_f2                              },
+            {"ge6j_HT500_ge2b_2t33_f3" , passBaseline0l && pass_exactly_2t33_f3                              },
+            {"ge6j_HT500_ge2b_2t33_f4" , passBaseline0l && pass_exactly_2t33_f4                              },
+            {"ge6j_HT500_ge2b_ge2t11"   , passBaseline0l && pass_atleast_2t11                                 },
+            {"ge6j_HT500_ge2b_ge2t12"   , passBaseline0l && pass_atleast_2t12                                 },
+            {"ge6j_HT500_ge2b_ge2t13"   , passBaseline0l && pass_atleast_2t13                                 },
+            {"ge6j_HT500_ge2b_ge2t22"   , passBaseline0l && pass_atleast_2t22                                 },
+            {"ge6j_HT500_ge2b_ge2t23"   , passBaseline0l && pass_atleast_2t23                                 },
+            {"ge6j_HT500_ge2b_ge2t33"   , passBaseline0l && pass_atleast_2t33                                 },
+            {"ge6j_HT500_ge2b_ge2t11_f1", passBaseline0l && pass_atleast_2t11_f1                              },
+            {"ge6j_HT500_ge2b_ge2t11_f2", passBaseline0l && pass_atleast_2t11_f2                              },
+            {"ge6j_HT500_ge2b_ge2t11_f3", passBaseline0l && pass_atleast_2t11_f3                              },
+            {"ge6j_HT500_ge2b_ge2t11_f4", passBaseline0l && pass_atleast_2t11_f4                              },
+            {"ge6j_HT500_ge2b_ge2t12_f1", passBaseline0l && pass_atleast_2t12_f1                              },
+            {"ge6j_HT500_ge2b_ge2t12_f2", passBaseline0l && pass_atleast_2t12_f2                              },
+            {"ge6j_HT500_ge2b_ge2t12_f3", passBaseline0l && pass_atleast_2t12_f3                              },
+            {"ge6j_HT500_ge2b_ge2t12_f4", passBaseline0l && pass_atleast_2t12_f4                              },
+            {"ge6j_HT500_ge2b_ge2t13_f1", passBaseline0l && pass_atleast_2t13_f1                              },
+            {"ge6j_HT500_ge2b_ge2t13_f2", passBaseline0l && pass_atleast_2t13_f2                              },
+            {"ge6j_HT500_ge2b_ge2t13_f3", passBaseline0l && pass_atleast_2t13_f3                              },
+            {"ge6j_HT500_ge2b_ge2t13_f4", passBaseline0l && pass_atleast_2t13_f4                              },
+            {"ge6j_HT500_ge2b_ge2t22_f1", passBaseline0l && pass_atleast_2t22_f1                              },
+            {"ge6j_HT500_ge2b_ge2t22_f2", passBaseline0l && pass_atleast_2t22_f2                              },
+            {"ge6j_HT500_ge2b_ge2t22_f3", passBaseline0l && pass_atleast_2t22_f3                              },
+            {"ge6j_HT500_ge2b_ge2t22_f4", passBaseline0l && pass_atleast_2t22_f4                              },
+            {"ge6j_HT500_ge2b_ge2t23_f1", passBaseline0l && pass_atleast_2t23_f1                              },
+            {"ge6j_HT500_ge2b_ge2t23_f2", passBaseline0l && pass_atleast_2t23_f2                              },
+            {"ge6j_HT500_ge2b_ge2t23_f3", passBaseline0l && pass_atleast_2t23_f3                              },
+            {"ge6j_HT500_ge2b_ge2t23_f4", passBaseline0l && pass_atleast_2t23_f4                              },
+            {"ge6j_HT500_ge2b_ge2t33_f1", passBaseline0l && pass_atleast_2t33_f1                              },
+            {"ge6j_HT500_ge2b_ge2t33_f2", passBaseline0l && pass_atleast_2t33_f2                              },
+            {"ge6j_HT500_ge2b_ge2t33_f3", passBaseline0l && pass_atleast_2t33_f3                              },
+            {"ge6j_HT500_ge2b_ge2t33_f4", passBaseline0l && pass_atleast_2t33_f4                              },
         };
         
         for(auto& kv : cut_map_0l)
