@@ -10,6 +10,7 @@
 #include "Framework/Framework/include/Muon.h"
 #include "Framework/Framework/include/Electron.h"
 #include "Framework/Framework/include/BJet.h"
+#include "Framework/Framework/include/Jet.h"
 #include "Framework/Framework/include/CommonVariables.h"
 
 #include "TH1D.h"
@@ -53,10 +54,12 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         Muon muon;
         Electron electron;
         BJet bjet;
+        Jet jet;
         CommonVariables commonVariables;
 
         // Register classes/functions that add variables on the fly
         if ( !isSkim ) tr.registerFunction( std::move(*rtt) );
+        tr.registerFunction( std::move(jet) );
         tr.registerFunction( std::move(runFisher) );
         tr.registerFunction( std::move(muon) );
         tr.registerFunction( std::move(electron) );

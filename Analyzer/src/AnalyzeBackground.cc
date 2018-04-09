@@ -23,61 +23,66 @@ void AnalyzeBackground::InitHistos()
 
     // Declare all your histograms here, that way we can fill them for multiple chains
     std::vector<std::string> jettypes {"pt30", "pt45"};
+    double min_x = 5.5;
+    int nbins_0l = 11;
+    double max_x_0l = 16.5;
+    int nbins_1l = 9;
+    double max_x_1l = 14.5;
     for(std::string jettype : jettypes)
     {
         std::string base = "h_njets_" + jettype;
-        my_histos.emplace(base,std::make_shared<TH1D>(base.c_str(),base.c_str(),15,0,15));
+        my_histos.emplace(base,std::make_shared<TH1D>(base.c_str(),base.c_str(),nbins_1l,min_x,max_x_1l));
         
-        my_histos.emplace(base + "_0l",std::make_shared<TH1D>( (base+"_0l").c_str(),(base+"_0l").c_str(),17,0,17));
-        my_histos.emplace(base + "_1l",std::make_shared<TH1D>((base+"_1l").c_str(),(base+"_1l").c_str(),15,0,15));
-        my_histos.emplace(base + "_2l",std::make_shared<TH1D>((base+"_2l").c_str(),(base+"_2l").c_str(),15,0,15));
+        my_histos.emplace(base + "_0l",std::make_shared<TH1D>( (base+"_0l").c_str(),(base+"_0l").c_str(),nbins_0l,min_x,max_x_0l));
+        my_histos.emplace(base + "_1l",std::make_shared<TH1D>((base+"_1l").c_str(),(base+"_1l").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_2l",std::make_shared<TH1D>((base+"_2l").c_str(),(base+"_2l").c_str(),nbins_1l,min_x,max_x_1l));
         
-        my_histos.emplace(base + "_0l_g1b",std::make_shared<TH1D>((base+"_0l_g1b").c_str(),(base+"_0l_g1b").c_str(),17,0,17));
-        my_histos.emplace(base + "_1l_g1b",std::make_shared<TH1D>((base+"_1l_g1b").c_str(),(base+"_1l_g1b").c_str(),15,0,15));
-        my_histos.emplace(base + "_2l_g1b",std::make_shared<TH1D>((base+"_2l_g1b").c_str(),(base+"_2l_g1b").c_str(),15,0,15));
+        my_histos.emplace(base + "_0l_g1b",std::make_shared<TH1D>((base+"_0l_g1b").c_str(),(base+"_0l_g1b").c_str(),nbins_0l,min_x,max_x_0l));
+        my_histos.emplace(base + "_1l_g1b",std::make_shared<TH1D>((base+"_1l_g1b").c_str(),(base+"_1l_g1b").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_2l_g1b",std::make_shared<TH1D>((base+"_2l_g1b").c_str(),(base+"_2l_g1b").c_str(),nbins_1l,min_x,max_x_1l));
         
-        my_histos.emplace(base + "_0l_g1b_ht500",std::make_shared<TH1D>((base+"_0l_g1b_ht500").c_str(),(base+"_0l_g1b_ht500").c_str(),17,0,17));
-        my_histos.emplace(base + "_1l_g1b_ht500",std::make_shared<TH1D>((base+"_1l_g1b_ht500").c_str(),(base+"_1l_g1b_ht500").c_str(),15,0,15));
-        my_histos.emplace(base + "_2l_g1b_ht500",std::make_shared<TH1D>((base+"_2l_g1b_ht500").c_str(),(base+"_2l_g1b_ht500").c_str(),15,0,15));
+        my_histos.emplace(base + "_0l_g1b_ht500",std::make_shared<TH1D>((base+"_0l_g1b_ht500").c_str(),(base+"_0l_g1b_ht500").c_str(),nbins_0l,min_x,max_x_0l));
+        my_histos.emplace(base + "_1l_g1b_ht500",std::make_shared<TH1D>((base+"_1l_g1b_ht500").c_str(),(base+"_1l_g1b_ht500").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_2l_g1b_ht500",std::make_shared<TH1D>((base+"_2l_g1b_ht500").c_str(),(base+"_2l_g1b_ht500").c_str(),nbins_1l,min_x,max_x_1l));
         
-        my_histos.emplace(base + "_0l_g1b_g1t",std::make_shared<TH1D>((base+"_0l_g1b_g1t").c_str(),(base+"_0l_g1b_g1t").c_str(),17,0,17));
-        my_histos.emplace(base + "_1l_g1b_g1t",std::make_shared<TH1D>((base+"_1l_g1b_g1t").c_str(),(base+"_1l_g1b_g1t").c_str(),15,0,15));
-        my_histos.emplace(base + "_2l_g1b_g1t",std::make_shared<TH1D>((base+"_2l_g1b_g1t").c_str(),(base+"_2l_g1b_g1t").c_str(),15,0,15));
+        my_histos.emplace(base + "_0l_g1b_g1t",std::make_shared<TH1D>((base+"_0l_g1b_g1t").c_str(),(base+"_0l_g1b_g1t").c_str(),nbins_0l,min_x,max_x_0l));
+        my_histos.emplace(base + "_1l_g1b_g1t",std::make_shared<TH1D>((base+"_1l_g1b_g1t").c_str(),(base+"_1l_g1b_g1t").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_2l_g1b_g1t",std::make_shared<TH1D>((base+"_2l_g1b_g1t").c_str(),(base+"_2l_g1b_g1t").c_str(),nbins_1l,min_x,max_x_1l));
         
-        my_histos.emplace(base + "_0l_g1b_g1t_ht500",std::make_shared<TH1D>((base+"_0l_g1b_g1t_ht500").c_str(),(base+"_0l_g1b_g1t_ht500").c_str(),17,0,17));
-        my_histos.emplace(base + "_1l_g1b_g1t_ht500",std::make_shared<TH1D>((base+"_1l_g1b_g1t_ht500").c_str(),(base+"_1l_g1b_g1t_ht500").c_str(),15,0,15));
-        my_histos.emplace(base + "_2l_g1b_g1t_ht500",std::make_shared<TH1D>((base+"_2l_g1b_g1t_ht500").c_str(),(base+"_2l_g1b_g1t_ht500").c_str(),15,0,15));
+        my_histos.emplace(base + "_0l_g1b_g1t_ht500",std::make_shared<TH1D>((base+"_0l_g1b_g1t_ht500").c_str(),(base+"_0l_g1b_g1t_ht500").c_str(),nbins_0l,min_x,max_x_0l));
+        my_histos.emplace(base + "_1l_g1b_g1t_ht500",std::make_shared<TH1D>((base+"_1l_g1b_g1t_ht500").c_str(),(base+"_1l_g1b_g1t_ht500").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_2l_g1b_g1t_ht500",std::make_shared<TH1D>((base+"_2l_g1b_g1t_ht500").c_str(),(base+"_2l_g1b_g1t_ht500").c_str(),nbins_1l,min_x,max_x_1l));
 
-        my_histos.emplace(base + "_0l_g1b_2t_ht500",std::make_shared<TH1D>((base+"_0l_g1b_2t_ht500").c_str(),(base+"_0l_g1b_2t_ht500").c_str(),17,0,17));
+        my_histos.emplace(base + "_0l_g1b_2t_ht500",std::make_shared<TH1D>((base+"_0l_g1b_2t_ht500").c_str(),(base+"_0l_g1b_2t_ht500").c_str(),nbins_0l,min_x,max_x_0l));
 
-        my_histos.emplace(base + "_1l_g1b_mbl",std::make_shared<TH1D>((base+"_1l_g1b_mbl").c_str(),(base+"_1l_g1b_mbl").c_str(),15,0,15));
-        my_histos.emplace(base + "_1l_g1b_mbl_bdt1",std::make_shared<TH1D>((base+"_1l_g1b_mbl_bdt1").c_str(),(base+"_1l_g1b_mbl_bdt1").c_str(),15,0,15));
-        my_histos.emplace(base + "_1l_g1b_mbl_bdt2",std::make_shared<TH1D>((base+"_1l_g1b_mbl_bdt2").c_str(),(base+"_1l_g1b_mbl_bdt2").c_str(),15,0,15));
-        my_histos.emplace(base + "_1l_g1b_mbl_bdt3",std::make_shared<TH1D>((base+"_1l_g1b_mbl_bdt3").c_str(),(base+"_1l_g1b_mbl_bdt3").c_str(),15,0,15));
-        my_histos.emplace(base + "_1l_g1b_mbl_bdt4",std::make_shared<TH1D>((base+"_1l_g1b_mbl_bdt4").c_str(),(base+"_1l_g1b_mbl_bdt4").c_str(),15,0,15));
-        my_histos.emplace(base + "_1l_g1b_mbl_fisher1",std::make_shared<TH1D>((base+"_1l_g1b_mbl_fisher1").c_str(),(base+"_1l_g1b_mbl_fisher1").c_str(),15,0,15));
-        my_histos.emplace(base + "_1l_g1b_mbl_fisher2",std::make_shared<TH1D>((base+"_1l_g1b_mbl_fisher2").c_str(),(base+"_1l_g1b_mbl_fisher2").c_str(),15,0,15));
-        my_histos.emplace(base + "_1l_g1b_mbl_fisher3",std::make_shared<TH1D>((base+"_1l_g1b_mbl_fisher3").c_str(),(base+"_1l_g1b_mbl_fisher3").c_str(),15,0,15));
-        my_histos.emplace(base + "_1l_g1b_mbl_fisher4",std::make_shared<TH1D>((base+"_1l_g1b_mbl_fisher4").c_str(),(base+"_1l_g1b_mbl_fisher4").c_str(),15,0,15));
-        my_histos.emplace(base + "_1l_g1b_mbl_g1t",std::make_shared<TH1D>((base+"_1l_g1b_mbl_g1t").c_str(),(base+"_1l_g1b_mbl_g1t").c_str(),15,0,15));
-        my_histos.emplace(base + "_1l_g1b_mbl_0t",std::make_shared<TH1D>((base+"_1l_g1b_mbl_0t").c_str(),(base+"_1l_g1b_mbl_0t").c_str(),15,0,15));
-        my_histos.emplace(base + "_1l_g1b_mbl_1t1",std::make_shared<TH1D>((base+"_1l_g1b_mbl_1t1").c_str(),(base+"_1l_g1b_mbl_1t1").c_str(),15,0,15));
-        my_histos.emplace(base + "_1l_g1b_mbl_1t2",std::make_shared<TH1D>((base+"_1l_g1b_mbl_1t2").c_str(),(base+"_1l_g1b_mbl_1t2").c_str(),15,0,15));
-        my_histos.emplace(base + "_1l_g1b_mbl_1t3",std::make_shared<TH1D>((base+"_1l_g1b_mbl_1t3").c_str(),(base+"_1l_g1b_mbl_1t3").c_str(),15,0,15));
+        my_histos.emplace(base + "_1l_g1b_mbl",std::make_shared<TH1D>((base+"_1l_g1b_mbl").c_str(),(base+"_1l_g1b_mbl").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_bdt1",std::make_shared<TH1D>((base+"_1l_g1b_mbl_bdt1").c_str(),(base+"_1l_g1b_mbl_bdt1").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_bdt2",std::make_shared<TH1D>((base+"_1l_g1b_mbl_bdt2").c_str(),(base+"_1l_g1b_mbl_bdt2").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_bdt3",std::make_shared<TH1D>((base+"_1l_g1b_mbl_bdt3").c_str(),(base+"_1l_g1b_mbl_bdt3").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_bdt4",std::make_shared<TH1D>((base+"_1l_g1b_mbl_bdt4").c_str(),(base+"_1l_g1b_mbl_bdt4").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_fisher1",std::make_shared<TH1D>((base+"_1l_g1b_mbl_fisher1").c_str(),(base+"_1l_g1b_mbl_fisher1").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_fisher2",std::make_shared<TH1D>((base+"_1l_g1b_mbl_fisher2").c_str(),(base+"_1l_g1b_mbl_fisher2").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_fisher3",std::make_shared<TH1D>((base+"_1l_g1b_mbl_fisher3").c_str(),(base+"_1l_g1b_mbl_fisher3").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_fisher4",std::make_shared<TH1D>((base+"_1l_g1b_mbl_fisher4").c_str(),(base+"_1l_g1b_mbl_fisher4").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_g1t",std::make_shared<TH1D>((base+"_1l_g1b_mbl_g1t").c_str(),(base+"_1l_g1b_mbl_g1t").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_0t",std::make_shared<TH1D>((base+"_1l_g1b_mbl_0t").c_str(),(base+"_1l_g1b_mbl_0t").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_1t1",std::make_shared<TH1D>((base+"_1l_g1b_mbl_1t1").c_str(),(base+"_1l_g1b_mbl_1t1").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_1t2",std::make_shared<TH1D>((base+"_1l_g1b_mbl_1t2").c_str(),(base+"_1l_g1b_mbl_1t2").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_1t3",std::make_shared<TH1D>((base+"_1l_g1b_mbl_1t3").c_str(),(base+"_1l_g1b_mbl_1t3").c_str(),nbins_1l,min_x,max_x_1l));
         
         // For Z->ll control region
-        my_histos.emplace(base + "_2l_onZ",std::make_shared<TH1D>((base+"_2l_onZ").c_str(),(base+"_2l_onZ").c_str(),15,0,15));
-        my_histos.emplace(base + "_2l_onZ_g1b",std::make_shared<TH1D>((base+"_2l_onZ_g1b").c_str(),(base+"_2l_onZ_g1b").c_str(),15,0,15));
-        my_histos.emplace(base + "_2l_onZ_g1b_nombl",std::make_shared<TH1D>((base+"_2l_onZ_g1b_nombl").c_str(),(base+"_2l_onZ_g1b_nombl").c_str(),15,0,15));
-        my_histos.emplace(base + "_2l_onZ_g1b_g1t",std::make_shared<TH1D>((base+"_2l_onZ_g1b_g1t").c_str(),(base+"_2l_onZ_g1b_g1t").c_str(),15,0,15));
-        my_histos.emplace(base + "_2l_onZ_g1b_nombl_bdt1",std::make_shared<TH1D>((base+"_2l_onZ_g1b_nombl_bdt1").c_str(),(base+"_2l_onZ_g1b_nombl_bdt1").c_str(),15,0,15));
-        my_histos.emplace(base + "_2l_onZ_g1b_nombl_bdt2",std::make_shared<TH1D>((base+"_2l_onZ_g1b_nombl_bdt2").c_str(),(base+"_2l_onZ_g1b_nombl_bdt2").c_str(),15,0,15));
-        my_histos.emplace(base + "_2l_onZ_g1b_nombl_bdt3",std::make_shared<TH1D>((base+"_2l_onZ_g1b_nombl_bdt3").c_str(),(base+"_2l_onZ_g1b_nombl_bdt3").c_str(),15,0,15));
-        my_histos.emplace(base + "_2l_onZ_g1b_nombl_bdt4",std::make_shared<TH1D>((base+"_2l_onZ_g1b_nombl_bdt4").c_str(),(base+"_2l_onZ_g1b_nombl_bdt4").c_str(),15,0,15));
-        my_histos.emplace(base + "_2l_onZ_g1b_fisher1",std::make_shared<TH1D>((base+"_2l_onZ_g1b_fisher1").c_str(),(base+"_2l_onZ_g1b_fisher1").c_str(),15,0,15));
-        my_histos.emplace(base + "_2l_onZ_g1b_fisher2",std::make_shared<TH1D>((base+"_2l_onZ_g1b_fisher2").c_str(),(base+"_2l_onZ_g1b_fisher2").c_str(),15,0,15));
-        my_histos.emplace(base + "_2l_onZ_g1b_fisher3",std::make_shared<TH1D>((base+"_2l_onZ_g1b_fisher3").c_str(),(base+"_2l_onZ_g1b_fisher3").c_str(),15,0,15));
-        my_histos.emplace(base + "_2l_onZ_g1b_fisher4",std::make_shared<TH1D>((base+"_2l_onZ_g1b_fisher4").c_str(),(base+"_2l_onZ_g1b_fisher4").c_str(),15,0,15));
+        my_histos.emplace(base + "_2l_onZ",std::make_shared<TH1D>((base+"_2l_onZ").c_str(),(base+"_2l_onZ").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_2l_onZ_g1b",std::make_shared<TH1D>((base+"_2l_onZ_g1b").c_str(),(base+"_2l_onZ_g1b").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_2l_onZ_g1b_nombl",std::make_shared<TH1D>((base+"_2l_onZ_g1b_nombl").c_str(),(base+"_2l_onZ_g1b_nombl").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_2l_onZ_g1b_g1t",std::make_shared<TH1D>((base+"_2l_onZ_g1b_g1t").c_str(),(base+"_2l_onZ_g1b_g1t").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_2l_onZ_g1b_nombl_bdt1",std::make_shared<TH1D>((base+"_2l_onZ_g1b_nombl_bdt1").c_str(),(base+"_2l_onZ_g1b_nombl_bdt1").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_2l_onZ_g1b_nombl_bdt2",std::make_shared<TH1D>((base+"_2l_onZ_g1b_nombl_bdt2").c_str(),(base+"_2l_onZ_g1b_nombl_bdt2").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_2l_onZ_g1b_nombl_bdt3",std::make_shared<TH1D>((base+"_2l_onZ_g1b_nombl_bdt3").c_str(),(base+"_2l_onZ_g1b_nombl_bdt3").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_2l_onZ_g1b_nombl_bdt4",std::make_shared<TH1D>((base+"_2l_onZ_g1b_nombl_bdt4").c_str(),(base+"_2l_onZ_g1b_nombl_bdt4").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_2l_onZ_g1b_fisher1",std::make_shared<TH1D>((base+"_2l_onZ_g1b_fisher1").c_str(),(base+"_2l_onZ_g1b_fisher1").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_2l_onZ_g1b_fisher2",std::make_shared<TH1D>((base+"_2l_onZ_g1b_fisher2").c_str(),(base+"_2l_onZ_g1b_fisher2").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_2l_onZ_g1b_fisher3",std::make_shared<TH1D>((base+"_2l_onZ_g1b_fisher3").c_str(),(base+"_2l_onZ_g1b_fisher3").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_2l_onZ_g1b_fisher4",std::make_shared<TH1D>((base+"_2l_onZ_g1b_fisher4").c_str(),(base+"_2l_onZ_g1b_fisher4").c_str(),nbins_1l,min_x,max_x_1l));
     }
 }
 
@@ -90,6 +95,7 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
         const auto& ntops_1jet              = tr.getVar<int>("ntops_1jet");
         const auto& runtype                 = tr.getVar<std::string>("runtype");
         const auto& Jets                    = tr.getVec<TLorentzVector>("Jets");
+        const auto& JetID                   = tr.getVar<bool>("JetID");
         const auto& Jets_bDiscriminatorCSV  = tr.getVec<double>("Jets_bDiscriminatorCSV");
         const auto& TriggerNames            = tr.getVec<std::string>("TriggerNames");
         const auto& TriggerPass             = tr.getVec<int>("TriggerPass");
@@ -135,6 +141,10 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
         {
             eventweight = tr.getVar<double>("Weight");
         }        
+
+        // Exclude events with bad jets
+        if(!JetID) continue;
+
         // ------------------------------
         // -- Trigger for data
         // ------------------------------
