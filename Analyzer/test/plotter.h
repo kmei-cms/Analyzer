@@ -12,6 +12,8 @@
 #include <vector>
 #include <string>
 #include <cstdio>
+#include <iostream>
+#include <map>
 
 //Class to hold TH1* with various helper functions 
 class histInfo
@@ -232,32 +234,7 @@ public:
 
         //create a dummy histogram to act as the axes
         histInfo dummy(new TH1D("dummy", "dummy", 1000, hbgSum->GetBinLowEdge(1), hbgSum->GetBinLowEdge(hbgSum->GetNbinsX()) + hbgSum->GetBinWidth(hbgSum->GetNbinsX())));
-        dummy.setupAxes();
-        dummy.h->GetYaxis()->SetTitle(yAxisLabel.c_str());
-        dummy.h->GetXaxis()->SetTitle(xAxisLabel.c_str());
-        dummy.h->SetTitle(histName.c_str());
-        //Set the y-range of the histogram
-        if(isLogY)
-        {
-            double locMin = std::min(0.2, std::max(0.2, 0.05 * min));
-            double legSpan = (log10(3*max) - log10(locMin)) * (leg->GetY1() - gPad->GetBottomMargin()) / ((1 - gPad->GetTopMargin()) - gPad->GetBottomMargin());
-            double legMin = legSpan + log10(locMin);
-            if(log10(lmax) > legMin)
-            {
-                double scale = (log10(lmax) - log10(locMin)) / (legMin - log10(locMin));
-                max = pow(max/locMin, scale)*locMin;
-            }
-            dummy.h->GetYaxis()->SetRangeUser(locMin, 10*max);
-        }
-        else
-        {
-            double locMin = 0.0;
-            double legMin = (1.2*max - locMin) * (leg->GetY1() - gPad->GetBottomMargin()) / ((1 - gPad->GetTopMargin()) - gPad->GetBottomMargin());
-            if(lmax > legMin) max *= (lmax - locMin)/(legMin - locMin);
-            dummy.h->GetYaxis()->SetRangeUser(0.0, max*1.2);
-        }
-        //set x-axis range
-        if(xmin < xmax) dummy.h->GetXaxis()->SetRangeUser(xmin, xmax);
+        setupDummy(dummy, leg, histName, xAxisLabel, yAxisLabel, isLogY, xmin, xmax, min, max, lmax);
 
         //draw dummy axes
         dummy.draw();
@@ -300,9 +277,139 @@ public:
         delete hbgSum;
     }
 
-    void plotFisher()
+    void plotFisher(const std::vector<std::string>& histNameVec, const std::string& histTitle, const std::string& xAxisLabel, 
+                    const std::string& yAxisLabel = "Events", const bool isLogY = false, const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 36100)
     {
+        //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
+        TH1::AddDirectory(false);
 
+        //create the canvas for the plot
+        TCanvas *c = new TCanvas("c1", "c1", 800, 800);
+        //switch to the canvas to ensure it is the active object
+        c->cd();
+
+        //Set Canvas margin (gPad is root magic to access the current pad, in this case canvas "c")
+        gPad->SetLeftMargin(0.12);
+        gPad->SetRightMargin(0.06);
+        gPad->SetTopMargin(0.08);
+        gPad->SetBottomMargin(0.12);
+
+        //Create TLegend
+        TLegend *leg = new TLegend(0.20, 0.76, 0.89, 0.88);
+        //TLegend *leg = new TLegend(0.50, 0.56, 0.89, 0.88);
+        leg->SetFillStyle(0);
+        leg->SetBorderSize(0);
+        leg->SetLineWidth(1);
+        leg->SetNColumns(3);
+        leg->SetTextFont(42);
+        
+        //Setup color and name for fisher plots
+        std::vector<int> color = {kRed,kBlue,kGreen+2,kMagenta};
+        std::vector<std::string> fisherNames = {"Fisher Bin 1","Fisher Bin 2","Fisher Bin 3","Fisher Bin 4"};
+
+        //get maximum from histos and fill TLegend
+        double min = 0.0;
+        double max = 0.0;
+        double lmax = 0.0;
+
+        // -----------------------
+        // -  Background
+        // -----------------------
+        
+        std::vector<TH1*> hbgSumVec;
+
+        int index = -1;
+        double scale = 1;
+        for(auto& histName : histNameVec)
+        {
+            index++;
+            TH1* hbgSum = nullptr;
+            for(auto& entry : bgEntries_)
+            {
+                //Get new histogram
+                entry.histName = histName;
+                entry.rebin = rebin;
+                entry.retrieveHistogram();
+
+                if(!hbgSum) hbgSum = static_cast<TH1*>(entry.h->Clone());
+                else        hbgSum->Add(entry.h.get());
+
+            }
+            std::cout<<index<<std::endl;
+            smartMax(hbgSum, leg, static_cast<TPad*>(gPad), min, max, lmax, false);
+            hbgSum->SetLineColor(color[index]);
+            hbgSum->SetMarkerColor(color[index]);
+            leg->AddEntry(hbgSum,(fisherNames[index]).c_str(), "l");
+            
+            //if()
+            hbgSumVec.push_back(hbgSum);
+        }
+        
+        //create a dummy histogram to act as the axes
+        histInfo dummy(new TH1D("dummy", "dummy", 1000, hbgSumVec[0]->GetBinLowEdge(1), hbgSumVec[0]->GetBinLowEdge(hbgSumVec[0]->GetNbinsX()) + hbgSumVec[0]->GetBinWidth(hbgSumVec[0]->GetNbinsX())));
+        setupDummy(dummy, leg, histTitle, xAxisLabel, yAxisLabel, isLogY, xmin, xmax, min, max, lmax);
+
+        //draw dummy axes
+        dummy.draw();
+
+        //Switch to logY if desired
+        gPad->SetLogy(isLogY);
+
+        //draw all fisher plots
+        for(auto& h : hbgSumVec)
+        {
+            h->Draw("same E");
+        }
+
+        //plot legend
+        leg->Draw("same");
+
+        //Draw dummy hist again to get axes on top of histograms
+        dummy.draw("AXIS");
+
+        //Draw CMS and lumi lables
+        //drawLables(lumi);
+
+        //save new plot to file
+        c->Print( (histTitle + "_fisher.pdf").c_str() );
+
+        //c->Print(("outputPlots/" + histName + ".pdf").c_str());
+        //c->Print(("outputPlots/" + histName + ".png").c_str());
+
+        //clean up dynamic memory
+        delete c;
+        delete leg;
+    }
+
+    void setupDummy(histInfo dummy, TLegend *leg, const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel, const bool isLogY, 
+                    const double xmin, const double xmax, double min, double max, double lmax)
+    {
+        dummy.setupAxes();
+        dummy.h->GetYaxis()->SetTitle(yAxisLabel.c_str());
+        dummy.h->GetXaxis()->SetTitle(xAxisLabel.c_str());
+        dummy.h->SetTitle(histName.c_str());
+        //Set the y-range of the histogram
+        if(isLogY)
+        {
+            double locMin = std::min(0.2, std::max(0.2, 0.05 * min));
+            double legSpan = (log10(3*max) - log10(locMin)) * (leg->GetY1() - gPad->GetBottomMargin()) / ((1 - gPad->GetTopMargin()) - gPad->GetBottomMargin());
+            double legMin = legSpan + log10(locMin);
+            if(log10(lmax) > legMin)
+            {
+                double scale = (log10(lmax) - log10(locMin)) / (legMin - log10(locMin));
+                max = pow(max/locMin, scale)*locMin;
+            }
+            dummy.h->GetYaxis()->SetRangeUser(locMin, 10*max);
+        }
+        else
+        {
+            double locMin = 0.0;
+            double legMin = (1.2*max - locMin) * (leg->GetY1() - gPad->GetBottomMargin()) / ((1 - gPad->GetTopMargin()) - gPad->GetBottomMargin());
+            if(lmax > legMin) max *= (lmax - locMin)/(legMin - locMin);
+            dummy.h->GetYaxis()->SetRangeUser(0.0, max*1.2);
+        }
+        //set x-axis range
+        if(xmin < xmax) dummy.h->GetXaxis()->SetRangeUser(xmin, xmax);
     }
 
     void drawLables(double lumi)

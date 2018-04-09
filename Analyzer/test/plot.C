@@ -1,6 +1,6 @@
 #include "Analyzer/Analyzer/test/plotter.h"
 
-int main()
+void plot()
 {
     //std::string path = "";
     //std::string path = "atleast2Tops";
@@ -65,24 +65,35 @@ int main()
         //"g6j_HT500_g2b_2t33_f1", "g6j_HT500_g2b_2t33_f2", "g6j_HT500_g2b_2t33_f3", "g6j_HT500_g2b_2t33_f4",
     };
 
-    for(std::string mycut : mycuts_0l)
-    {
-        plt.plot( "h_njets_0l_"+mycut, "N_{J}" , "Events", true);
-        plt.plot( "h_ntops_0l_"+mycut, "N_{T}" , "Events", true);
-        plt.plot( "h_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
-        plt.plot( "h_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
-    }
-
-    plt.plot("h_met"     , "MET"   , "Events", true);
-    plt.plot("h_ht"      , "H_{T}" , "Events", true);
-    plt.plot("h_bdt"     , "bdt"   , "Events", true);
-    plt.plot("h_fisher"  , "fisher", "Events", true);
-    plt.plot("h_njets"   , "N_{J}" , "Events", true);
-    plt.plot("h_nb"      , "N_{B}" , "Events", true);
-    plt.plot("h_ntops"   , "N_{T}" , "Events", true);
-    plt.plot("h_ntops_j1", "N_{1T}", "Events", true);
-    plt.plot("h_ntops_j2", "N_{2T}", "Events", true);
-    plt.plot("h_ntops_j3", "N_{3T}", "Events", true);
+    //for(std::string mycut : mycuts_0l)
+    //{
+    //    plt.plot( "h_njets_0l_"+mycut, "N_{J}" , "Events", true);
+    //    plt.plot( "h_ntops_0l_"+mycut, "N_{T}" , "Events", true);
+    //    plt.plot( "h_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
+    //    plt.plot( "h_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
+    //}
+    //
+    //plt.plot("h_met"     , "MET"   , "Events", true);
+    //plt.plot("h_ht"      , "H_{T}" , "Events", true);
+    //plt.plot("h_bdt"     , "bdt"   , "Events", true);
+    //plt.plot("h_fisher"  , "fisher", "Events", true);
+    //plt.plot("h_njets"   , "N_{J}" , "Events", true);
+    //plt.plot("h_nb"      , "N_{B}" , "Events", true);
+    //plt.plot("h_ntops"   , "N_{T}" , "Events", true);
+    //plt.plot("h_ntops_j1", "N_{1T}", "Events", true);
+    //plt.plot("h_ntops_j2", "N_{2T}", "Events", true);
+    //plt.plot("h_ntops_j3", "N_{3T}", "Events", true);
    
-    //plt.plot("HT", "H_{T} [GeV]", "Events", true, -1, -1, 5);
+    std::vector<std::string> fisherHist
+    {
+        "h_njets_0l_g6j_HT500_g2b_1t_f1"  , "h_njets_0l_g6j_HT500_g2b_1t_f2"  , "h_njets_0l_g6j_HT500_g2b_1t_f3"  , "h_njets_0l_g6j_HT500_g2b_1t_f4"  ,
+    };
+
+    plt.plotFisher(fisherHist, "njets_0l_g6j_HT500_g2b_1t", "N_{J}", "Events", true);
+
+}
+
+int main()
+{
+    plot();
 }
