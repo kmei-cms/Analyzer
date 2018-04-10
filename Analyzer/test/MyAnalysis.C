@@ -9,6 +9,7 @@
 #include "Framework/Framework/include/RunFisher.h"
 #include "Framework/Framework/include/Muon.h"
 #include "Framework/Framework/include/Electron.h"
+#include "Framework/Framework/include/Jet.h"
 #include "Framework/Framework/include/BJet.h"
 #include "Framework/Framework/include/CommonVariables.h"
 
@@ -22,9 +23,8 @@
 template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
                                     int startFile, int nFiles, int maxEvts, bool isSkim)
 {
-    Analyze t = Analyze();
     std::cout << "Initializing..." << std::endl;
-    t.InitHistos();
+    Analyze t = Analyze();
     for(const AnaSamples::FileSummary& file : vvf)
     {
         // Define what is needed per sample set
@@ -45,6 +45,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         std::cout << "Starting loop (in run)" << std::endl;
         printf( "runtype: %s weight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts ); fflush( stdout );
         tr.registerDerivedVar<std::string>("runtype",runtype);
+        tr.registerDerivedVar<double>("etaCut",2.4);
 
         // Define classes/functions that add variables on the fly
         std::shared_ptr<RunTopTagger> rtt;
@@ -52,6 +53,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         RunFisher runFisher;
         Muon muon;
         Electron electron;
+        Jet jet;
         BJet bjet;
         CommonVariables commonVariables;
 
@@ -60,6 +62,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerFunction( std::move(runFisher) );
         tr.registerFunction( std::move(muon) );
         tr.registerFunction( std::move(electron) );
+        tr.registerFunction( std::move(jet) );
         tr.registerFunction( std::move(bjet) );
         tr.registerFunction( std::move(commonVariables) );
 
