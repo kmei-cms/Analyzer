@@ -18,6 +18,11 @@
 #include "TopTagger/CfgParser/include/TTException.h"
 #include "Framework/Framework/include/SetUpTopTagger.h"
 
+AnalyzeEventSelection::AnalyzeEventSelection()
+{
+    InitHistos();
+}
+
 void AnalyzeEventSelection::InitHistos()
 {
     TH1::SetDefaultSumw2();

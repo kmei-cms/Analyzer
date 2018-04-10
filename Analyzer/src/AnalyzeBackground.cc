@@ -17,6 +17,11 @@
 #include "TopTagger/CfgParser/include/TTException.h"
 #include "Framework/Framework/include/SetUpTopTagger.h"
 
+AnalyzeBackground::AnalyzeBackground()
+{
+    InitHistos();
+}
+
 void AnalyzeBackground::InitHistos()
 {
     TH1::SetDefaultSumw2();

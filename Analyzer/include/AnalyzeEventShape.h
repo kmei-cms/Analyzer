@@ -18,7 +18,7 @@ public:
     std::map<std::string, std::shared_ptr<TH2D>>  my_2d_histos;
     std::map<std::string, std::shared_ptr<TEfficiency>>  my_efficiencies;
     
-    AnalyzeEventShape(){ printf("\n\n In AnalyzeEventShape constructor.\n\n") ; fflush( stdout ) ; };
+    AnalyzeEventShape();
     ~AnalyzeEventShape(){};
     
     void Loop(NTupleReader& tr, double weight, int maxevents = -1, std::string filetag = "", bool isQuiet = false);
