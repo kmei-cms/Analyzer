@@ -47,44 +47,44 @@ int main()
 
     std::vector<std::string> mycuts_0l 
     {
-        ""                      ,
-        "ge6j"                   ,
-        "HT500"                 ,
-        "ge2b"                   ,
-        "1t"                    ,
-        "2t"                    ,
-        "ge1t"                   ,
-        "ge2t"                   ,
-        "ge6j_HT500"             ,
-        "ge6j_HT500_ge1b"         ,
-        "ge6j_HT500_ge2b"         ,
+        ""                         ,
+        "ge6j"                     ,
+        "HT500"                    ,
+        "ge2b"                     ,
+        "1t"                       ,
+        "2t"                       ,
+        "ge1t"                     ,
+        "ge2t"                     ,
+        "ge6j_HT500"               ,
+        "ge6j_HT500_ge1b"          ,
+        "ge6j_HT500_ge2b"          ,
 
-        "ge6j_HT500_ge2b_1t"      ,
-        "ge6j_HT500_ge2b_1t_f1"   , "ge6j_HT500_ge2b_1t_f2"   , "ge6j_HT500_ge2b_1t_f3"   , "ge6j_HT500_ge2b_1t_f4"   ,
+        "ge6j_HT500_ge2b_1t"       ,
+        "ge6j_HT500_ge2b_1t_f1"    , "ge6j_HT500_ge2b_1t_f2"    , "ge6j_HT500_ge2b_1t_f3"    , "ge6j_HT500_ge2b_1t_f4"    ,
         "ge6j_HT500_ge2b_ge1t"     ,
         "ge6j_HT500_ge2b_ge1t_f1"  , "ge6j_HT500_ge2b_ge1t_f2"  , "ge6j_HT500_ge2b_ge1t_f3"  , "ge6j_HT500_ge2b_ge1t_f4"  ,
 
-        "ge6j_HT500_ge2b_1t1"     , "ge6j_HT500_ge2b_1t2"     , "ge6j_HT500_ge2b_1t3"     ,
-        "ge6j_HT500_ge2b_1t1_f1"  , "ge6j_HT500_ge2b_1t1_f2"  , "ge6j_HT500_ge2b_1t1_f3"  , "ge6j_HT500_ge2b_1t1_f4"  ,
-        "ge6j_HT500_ge2b_1t2_f1"  , "ge6j_HT500_ge2b_1t2_f2"  , "ge6j_HT500_ge2b_1t2_f3"  , "ge6j_HT500_ge2b_1t2_f4"  ,
-        "ge6j_HT500_ge2b_1t3_f1"  , "ge6j_HT500_ge2b_1t3_f2"  , "ge6j_HT500_ge2b_1t3_f3"  , "ge6j_HT500_ge2b_1t3_f4"  ,
+        "ge6j_HT500_ge2b_1t1"      , "ge6j_HT500_ge2b_1t2"      , "ge6j_HT500_ge2b_1t3"      ,
+        "ge6j_HT500_ge2b_1t1_f1"   , "ge6j_HT500_ge2b_1t1_f2"   , "ge6j_HT500_ge2b_1t1_f3"   , "ge6j_HT500_ge2b_1t1_f4"   ,
+        "ge6j_HT500_ge2b_1t2_f1"   , "ge6j_HT500_ge2b_1t2_f2"   , "ge6j_HT500_ge2b_1t2_f3"   , "ge6j_HT500_ge2b_1t2_f4"   ,
+        "ge6j_HT500_ge2b_1t3_f1"   , "ge6j_HT500_ge2b_1t3_f2"   , "ge6j_HT500_ge2b_1t3_f3"   , "ge6j_HT500_ge2b_1t3_f4"   ,
         "ge6j_HT500_ge2b_ge1t1"    , "ge6j_HT500_ge2b_ge1t2"    , "ge6j_HT500_ge2b_ge1t3"    ,
         "ge6j_HT500_ge2b_ge1t1_f1" , "ge6j_HT500_ge2b_ge1t1_f2" , "ge6j_HT500_ge2b_ge1t1_f3" , "ge6j_HT500_ge2b_ge1t1_f4" ,
         "ge6j_HT500_ge2b_ge1t2_f1" , "ge6j_HT500_ge2b_ge1t2_f2" , "ge6j_HT500_ge2b_ge1t2_f3" , "ge6j_HT500_ge2b_ge1t2_f4" ,
         "ge6j_HT500_ge2b_ge1t3_f1" , "ge6j_HT500_ge2b_ge1t3_f2" , "ge6j_HT500_ge2b_ge1t3_f3" , "ge6j_HT500_ge2b_ge1t3_f4" ,
 
-        "ge6j_HT500_ge2b_2t"      ,
-        "ge6j_HT500_ge2b_2t_f1"   , "ge6j_HT500_ge2b_2t_f2"   , "ge6j_HT500_ge2b_2t_f3"   , "ge6j_HT500_ge2b_2t_f4"   ,
+        "ge6j_HT500_ge2b_2t"       ,
+        "ge6j_HT500_ge2b_2t_f1"    , "ge6j_HT500_ge2b_2t_f2"    , "ge6j_HT500_ge2b_2t_f3"    , "ge6j_HT500_ge2b_2t_f4"    ,
         "ge6j_HT500_ge2b_ge2t"     ,
         "ge6j_HT500_ge2b_ge2t_f1"  , "ge6j_HT500_ge2b_ge2t_f2"  , "ge6j_HT500_ge2b_ge2t_f3"  , "ge6j_HT500_ge2b_ge2t_f4"  ,
 
-        "ge6j_HT500_ge2b_2t11"    , "ge6j_HT500_ge2b_2t12"    , "ge6j_HT500_ge2b_2t13"    , "ge6j_HT500_ge2b_2t22"    , "ge6j_HT500_ge2b_2t23" , "ge6j_HT500_ge2b_2t33" ,
-        "ge6j_HT500_ge2b_2t11_f1" , "ge6j_HT500_ge2b_2t11_f2" , "ge6j_HT500_ge2b_2t11_f3" , "ge6j_HT500_ge2b_2t11_f4" ,
-        "ge6j_HT500_ge2b_2t12_f1" , "ge6j_HT500_ge2b_2t12_f2" , "ge6j_HT500_ge2b_2t12_f3" , "ge6j_HT500_ge2b_2t12_f4" ,
-        "ge6j_HT500_ge2b_2t13_f1" , "ge6j_HT500_ge2b_2t13_f2" , "ge6j_HT500_ge2b_2t13_f3" , "ge6j_HT500_ge2b_2t13_f4" ,
-        "ge6j_HT500_ge2b_2t22_f1" , "ge6j_HT500_ge2b_2t22_f2" , "ge6j_HT500_ge2b_2t22_f3" , "ge6j_HT500_ge2b_2t22_f4" ,
-        "ge6j_HT500_ge2b_2t23_f1" , "ge6j_HT500_ge2b_2t23_f2" , "ge6j_HT500_ge2b_2t23_f3" , "ge6j_HT500_ge2b_2t23_f4" ,
-        "ge6j_HT500_ge2b_2t33_f1" , "ge6j_HT500_ge2b_2t33_f2" , "ge6j_HT500_ge2b_2t33_f3" , "ge6j_HT500_ge2b_2t33_f4" ,
+        "ge6j_HT500_ge2b_2t11"     , "ge6j_HT500_ge2b_2t12"     , "ge6j_HT500_ge2b_2t13"     , "ge6j_HT500_ge2b_2t22"     , "ge6j_HT500_ge2b_2t23"  , "ge6j_HT500_ge2b_2t33"  ,
+        "ge6j_HT500_ge2b_2t11_f1"  , "ge6j_HT500_ge2b_2t11_f2"  , "ge6j_HT500_ge2b_2t11_f3"  , "ge6j_HT500_ge2b_2t11_f4"  ,
+        "ge6j_HT500_ge2b_2t12_f1"  , "ge6j_HT500_ge2b_2t12_f2"  , "ge6j_HT500_ge2b_2t12_f3"  , "ge6j_HT500_ge2b_2t12_f4"  ,
+        "ge6j_HT500_ge2b_2t13_f1"  , "ge6j_HT500_ge2b_2t13_f2"  , "ge6j_HT500_ge2b_2t13_f3"  , "ge6j_HT500_ge2b_2t13_f4"  ,
+        "ge6j_HT500_ge2b_2t22_f1"  , "ge6j_HT500_ge2b_2t22_f2"  , "ge6j_HT500_ge2b_2t22_f3"  , "ge6j_HT500_ge2b_2t22_f4"  ,
+        "ge6j_HT500_ge2b_2t23_f1"  , "ge6j_HT500_ge2b_2t23_f2"  , "ge6j_HT500_ge2b_2t23_f3"  , "ge6j_HT500_ge2b_2t23_f4"  ,
+        "ge6j_HT500_ge2b_2t33_f1"  , "ge6j_HT500_ge2b_2t33_f2"  , "ge6j_HT500_ge2b_2t33_f3"  , "ge6j_HT500_ge2b_2t33_f4"  ,
         "ge6j_HT500_ge2b_ge2t11"   , "ge6j_HT500_ge2b_ge2t12"   , "ge6j_HT500_ge2b_ge2t13"   , "ge6j_HT500_ge2b_ge2t22"   , "ge6j_HT500_ge2b_ge2t23", "ge6j_HT500_ge2b_ge2t33",
         "ge6j_HT500_ge2b_ge2t11_f1", "ge6j_HT500_ge2b_ge2t11_f2", "ge6j_HT500_ge2b_ge2t11_f3", "ge6j_HT500_ge2b_ge2t11_f4",
         "ge6j_HT500_ge2b_ge2t12_f1", "ge6j_HT500_ge2b_ge2t12_f2", "ge6j_HT500_ge2b_ge2t12_f3", "ge6j_HT500_ge2b_ge2t12_f4",
@@ -100,6 +100,7 @@ int main()
         plt.plot( "h_ntops_0l_"+mycut, "N_{T}" , "Events", true);
         plt.plot( "h_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
         plt.plot( "h_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
+        plt.plot( "h_fisher_0l_"+mycut, "fisher value" , "Events", true);        
     }
     
     plt.plot("h_met"     , "MET"   , "Events", true);

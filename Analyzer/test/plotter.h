@@ -112,11 +112,12 @@ private:
     std::vector<histInfo> data_;
     //vector summarizing background histograms to include in the plot
     std::vector<histInfo> bgEntries_;
+    TH1* hbgSum_;
     //vector summarizing signal histograms to include in the plot
     std::vector<histInfo> sigEntries_;
-    
+
 public:
-    Plotter(std::vector<histInfo>&& data, std::vector<histInfo>&& bgEntries, std::vector<histInfo>&& sigEntries) : data_(data), bgEntries_(bgEntries), sigEntries_(sigEntries) {}
+    Plotter(std::vector<histInfo>&& data, std::vector<histInfo>&& bgEntries, std::vector<histInfo>&& sigEntries) : data_(data), bgEntries_(bgEntries), sigEntries_(sigEntries), hbgSum_(nullptr) {}
 
     //This is a helper function which will keep the plot from overlapping with the legend
     void smartMax(const TH1 * const h, const TLegend* const l, const TPad* const p, double& gmin, double& gmax, double& gpThreshMax, const bool error)
@@ -195,7 +196,7 @@ public:
         //Create the THStack for the background
         THStack *bgStack = new THStack();
         //Make seperate histogram from sum of BG histograms because I don't know how to make a THStack give me this 
-        TH1* hbgSum = nullptr;
+        hbgSum_ = nullptr;
         for(auto& entry : bgEntries_)
         {
             //Get new histogram
@@ -204,8 +205,8 @@ public:
             entry.retrieveHistogram();
 
             bgStack->Add(entry.h.get(), entry.drawOptions.c_str());
-            if(!hbgSum) hbgSum = static_cast<TH1*>(entry.h->Clone());
-            else        hbgSum->Add(entry.h.get());
+            if(!hbgSum_) hbgSum_ = static_cast<TH1*>(entry.h->Clone());
+            else        hbgSum_->Add(entry.h.get());
 
             //set fill color so BG will have solid fill
             entry.setFillColor();
@@ -213,7 +214,7 @@ public:
             //add histograms to TLegend
             leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), "F");
         }
-        smartMax(hbgSum, leg, static_cast<TPad*>(gPad), min, max, lmax, false);
+        smartMax(hbgSum_, leg, static_cast<TPad*>(gPad), min, max, lmax, false);
 
         // -------------------------
         // -   Signal
@@ -233,7 +234,7 @@ public:
         }
 
         //create a dummy histogram to act as the axes
-        histInfo dummy(new TH1D("dummy", "dummy", 1000, hbgSum->GetBinLowEdge(1), hbgSum->GetBinLowEdge(hbgSum->GetNbinsX()) + hbgSum->GetBinWidth(hbgSum->GetNbinsX())));
+        histInfo dummy(new TH1D("dummy", "dummy", 1000, hbgSum_->GetBinLowEdge(1), hbgSum_->GetBinLowEdge(hbgSum_->GetNbinsX()) + hbgSum_->GetBinWidth(hbgSum_->GetNbinsX())));
         setupDummy(dummy, leg, histName, xAxisLabel, yAxisLabel, isLogY, xmin, xmax, min, max, lmax);
 
         //draw dummy axes
@@ -266,6 +267,9 @@ public:
         //Draw CMS and lumi lables
         //drawLables(lumi);
 
+        //Compute and draw yields for njets min to max
+        computeYields(12,20);
+
         //save new plot to file
         c->Print(("outputPlots/" + histName + ".pdf").c_str());
         c->Print(("outputPlots/" + histName + ".png").c_str());
@@ -274,7 +278,7 @@ public:
         delete c;
         delete leg;
         delete bgStack;
-        delete hbgSum;
+        delete hbgSum_;
     }
 
     void plotFisher(const std::vector<std::string>& histNameVec, const std::string& histTitle, const std::string& xAxisLabel, 
@@ -379,8 +383,8 @@ public:
         //drawLables(lumi);
 
         //save new plot to file
-        c->Print( ("outputPlots/" + histTitle + "_fisher.pdf").c_str() );
-        c->Print( ("outputPlots/" + histTitle + "_fisher.png").c_str() );
+        c->Print( ("outputPlots/fisher_" + histTitle + ".pdf").c_str() );
+        c->Print( ("outputPlots/fisher_" + histTitle + ".png").c_str() );
 
         //clean up dynamic memory
         delete c;
@@ -442,6 +446,81 @@ public:
         mark.DrawLatex(1 - gPad->GetRightMargin(), 1 - (gPad->GetTopMargin() - 0.017), lumistamp);        
     }
 
+    void computeYields(int min, int max)
+    {
+        std::map<std::string,double> yieldMap;
+        std::vector<std::vector<histInfo>> dataSets  = {data_,bgEntries_,sigEntries_};
+        int index = -1;
+        double yield = 0;
+
+        for(const auto& set : dataSets)
+        {
+            for(const auto& entry : set)
+            {
+                if( entry.histName.find("njets") != std::string::npos )
+                {
+                    index++;
+                    if(index==0)
+                    {
+                        yield = 0;
+                        for(int i = min; i<=max; i++)
+                        {
+                            yield+=hbgSum_->GetBinContent(i);
+                            //std::cout<<hbgSum_->GetBinContent(i)<<std::endl;
+                        }
+                        yieldMap.insert ( std::pair<std::string,double>( "AllBG", yield ) );
+                    }
+                    yield = 0;
+                    for(int i = min; i<=max; i++)
+                    {
+                        yield+=entry.h.get()->GetBinContent(i);
+                    }
+                    yieldMap.insert ( std::pair<std::string,double>( entry.legEntry, yield ) );
+                }
+            }
+        }
+
+        //for(const auto& entry : yieldMap)
+        //{
+        //    std::cout<<entry.first<<"  "<<entry.second<<std::endl;
+        //}
+
+        if(bgEntries_[0].histName.find("njets") != std::string::npos)
+        {
+            auto allbg  = yieldMap.find("AllBG");
+            auto qcd    = yieldMap.find("QCD");
+            auto ttbar  = yieldMap.find("T#bar{T}");
+            auto rpv350 = yieldMap.find("RPV 350");
+            auto syy650 = yieldMap.find("SYY 650");
+
+            char stamp_allbg[128];
+            char stamp_qcd[128];
+            char stamp_ttbar[128];
+            char stamp_rpv350[128];
+            char stamp_syy650[128];
+            sprintf(stamp_allbg, "%-15s %i" , (allbg->first).c_str() , int(allbg->second ));
+            sprintf(stamp_qcd,   "%-15s %i" , (qcd->first  ).c_str() , int(qcd->second   ));
+            sprintf(stamp_ttbar, "%-15s %i" , (ttbar->first).c_str() , int(ttbar->second ));
+            sprintf(stamp_rpv350,"%-15s %i" , (rpv350->first).c_str(), int(rpv350->second));
+            sprintf(stamp_syy650,"%-15s %i" , (syy650->first).c_str(), int(syy650->second));
+
+            TLatex mark;
+            mark.SetNDC(true);
+
+            //Draw CMS mark
+            mark.SetTextAlign(11);
+            mark.SetTextSize(0.030);
+            mark.SetTextFont(61);
+            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18       ), "Njets>=12 Yield");
+            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.03), stamp_allbg      );
+            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.06), stamp_qcd        );
+            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.09), stamp_ttbar      );
+            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.12), stamp_rpv350     );
+            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.15), stamp_syy650     );
+        }
+
+    }
+    
 };
 
 #endif
