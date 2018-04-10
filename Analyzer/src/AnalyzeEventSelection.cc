@@ -144,8 +144,8 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         const auto* ttr          = tr.getVar<TopTaggerResults*>("ttr");
         const std::vector<TopObject*>& tops = ttr->getTops();
 
-        const auto& BJets               = tr.getVec<TLorentzVector>("BJets");
-        const auto& NBJets              = tr.getVar<int>("NBJets");
+        const auto& BJets_pt30               = tr.getVec<TLorentzVector>("BJets_pt30");
+        const auto& NBJets_pt30              = tr.getVar<int>("NBJets_pt30");
         const auto& BJets_pt45          = tr.getVec<TLorentzVector>("BJets_pt45");
         const auto& NBJets_pt45         = tr.getVar<int>("NBJets_pt45");
         const auto& GoodMuons           = tr.getVec<TLorentzVector>("GoodMuons");
@@ -234,7 +234,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
                 if( mll > 81 && mll < 101)
                     onZ = true; 
                 // check whether a bl pair passes the M(b,l) cut
-                for (TLorentzVector myb : BJets)
+                for (TLorentzVector myb : BJets_pt30)
                 {
                     double mass_bl_1 = (GoodMuons[0] + myb).M();
                     if(mass_bl_1 < 180 && mass_bl_1 > 30)
@@ -252,7 +252,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
                 if( mll > 81 && mll < 101)
                     onZ = true;  
                 // check whether a bl pair passes the M(b,l) cut
-                for (TLorentzVector myb : BJets)
+                for (TLorentzVector myb : BJets_pt30)
                 {
                     double mass_bl_1 = (GoodElectrons[0] + myb).M();
                     if(mass_bl_1 < 180 && mass_bl_1 > 30)
@@ -285,7 +285,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
                 passBaseline2l = passBaseline2l && passTriggerElectron && (filetag == "Data_SingleElectron");
             }
         }
-        bool pass_g1b = NBJets >= 1;
+        bool pass_g1b = NBJets_pt30 >= 1;
         bool pass_0t = ntops==0, pass_1t = ntops==1, pass_2t = ntops==2;
         bool pass_1t1 = ntops==1 && ntops_1jet==1, pass_1t2 = ntops==1 && ntops_2jet==1, pass_1t3 = ntops==1 && ntops_3jet==1;
         double mbl = -1;
@@ -298,7 +298,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
             TLorentzVector mylepton = GoodLeptons[0];
             bool passMtop = false;
             //std::cout << "found lepton and " << rec_njet_pt30_btag << " bjets" << std::endl;
-            for (TLorentzVector myb : BJets)
+            for (TLorentzVector myb : BJets_pt30)
             {
                 double mass_bl = (mylepton + myb).M();
                 double mass_blmet = (mylepton + myb + metlv).M();
@@ -383,7 +383,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
             {
                 my_histos["h_njets_0l_"+kv.first]->Fill(rec_njet_pt30, eventweight);
                 my_histos["h_ntops_0l_"+kv.first]->Fill(ntops, eventweight);
-                my_histos["h_nb_0l_"+kv.first]->Fill(NBJets, eventweight);
+                my_histos["h_nb_0l_"+kv.first]->Fill(NBJets_pt30, eventweight);
                 my_histos["h_HT_0l_"+kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_0l_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
                 my_2d_histos["h_njets_bdt_0l_"+kv.first]->Fill(rec_njet_pt30, eventshape_bdt_val, eventweight);
@@ -438,7 +438,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
             {
                 my_histos["h_njets_1l_"+kv.first]->Fill(rec_njet_pt30, eventweight);
                 my_histos["h_ntops_1l_"+kv.first]->Fill(ntops, eventweight);
-                my_histos["h_nb_1l_"+kv.first]->Fill(NBJets, eventweight);
+                my_histos["h_nb_1l_"+kv.first]->Fill(NBJets_pt30, eventweight);
                 my_histos["h_HT_1l_"+kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_1l_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
                 my_histos["h_mbl_1l_"+kv.first]->Fill(mbl, eventweight);
@@ -452,7 +452,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
                 my_histos["h_mupt_1mu_"+kv.first]->Fill(GoodMuons[0].Pt(), eventweight);
                 my_histos["h_njets_1mu_"+kv.first]->Fill(rec_njet_pt30, eventweight);
                 my_histos["h_ntops_1mu_"+kv.first]->Fill(ntops, eventweight);
-                my_histos["h_nb_1mu_"+kv.first]->Fill(NBJets, eventweight);
+                my_histos["h_nb_1mu_"+kv.first]->Fill(NBJets_pt30, eventweight);
                 my_histos["h_HT_1mu_"+kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_1mu_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
                 my_histos["h_mbl_1mu_"+kv.first]->Fill(mbl, eventweight);
@@ -466,7 +466,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
                 my_histos["h_elpt_1el_"+kv.first]->Fill(GoodElectrons[0].Pt(), eventweight);
                 my_histos["h_njets_1el_"+kv.first]->Fill(rec_njet_pt30, eventweight);
                 my_histos["h_ntops_1el_"+kv.first]->Fill(ntops, eventweight);
-                my_histos["h_nb_1el_"+kv.first]->Fill(NBJets, eventweight);
+                my_histos["h_nb_1el_"+kv.first]->Fill(NBJets_pt30, eventweight);
                 my_histos["h_HT_1el_"+kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_1el_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
                 my_histos["h_mbl_1el_"+kv.first]->Fill(mbl, eventweight);
@@ -484,7 +484,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
             {"onZ_g1b_nombl_bdt4", passBaseline2l && onZ && pass_g1b && !passMbl_2l && bdt_bin4},
             {"onZ_g1b_g1t",        passBaseline2l && onZ && pass_g1b && pass_1t}, 
             {"onZ_g1b_nombl_g1t",  passBaseline2l && onZ && pass_g1b && !passMbl_2l && pass_1t}, 
-            {"2b",                 passBaseline2l && NBJets == 2} 
+            {"2b",                 passBaseline2l && NBJets_pt30 == 2} 
         };
         
         for(auto& kv : cut_map_2l)
@@ -493,7 +493,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
             {
                 my_histos["h_njets_2l_"+kv.first]->Fill(rec_njet_pt30, eventweight);
                 my_histos["h_ntops_2l_"+kv.first]->Fill(ntops, eventweight);
-                my_histos["h_nb_2l_"+kv.first]->Fill(NBJets, eventweight);
+                my_histos["h_nb_2l_"+kv.first]->Fill(NBJets_pt30, eventweight);
                 my_histos["h_HT_2l_"+kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_2l_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
                 my_2d_histos["h_njets_bdt_2l_"+kv.first]->Fill(rec_njet_pt30, eventshape_bdt_val, eventweight);

@@ -90,14 +90,13 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
         const auto& ntops_1jet              = tr.getVar<int>("ntops_1jet");
         const auto& runtype                 = tr.getVar<std::string>("runtype");
         const auto& Jets                    = tr.getVec<TLorentzVector>("Jets");
-        const auto& Jets_bDiscriminatorCSV  = tr.getVec<double>("Jets_bDiscriminatorCSV");
         const auto& TriggerNames            = tr.getVec<std::string>("TriggerNames");
         const auto& TriggerPass             = tr.getVec<int>("TriggerPass");
         const auto* ttr                     = tr.getVar<TopTaggerResults*>("ttr");
         const std::vector<TopObject*>& tops = ttr->getTops(); 
 
-        const auto& BJets               = tr.getVec<TLorentzVector>("BJets");
-        const auto& NBJets              = tr.getVar<int>("NBJets");
+        const auto& BJets_pt30          = tr.getVec<TLorentzVector>("BJets_pt30");
+        const auto& NBJets_pt30         = tr.getVar<int>("NBJets_pt30");
         const auto& BJets_pt45          = tr.getVec<TLorentzVector>("BJets_pt45");
         const auto& NBJets_pt45         = tr.getVar<int>("NBJets_pt45");
         const auto& GoodMuons           = tr.getVec<TLorentzVector>("GoodMuons");
@@ -231,7 +230,7 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
         bool passBaseline2l = NGoodLeptons==2;
 
         bool passNtop = tops.size() >= 1;
-        bool passNb = NBJets >= 1;
+        bool passNb = NBJets_pt30 >= 1;
         bool onZ = false;
         bool passMbl_2l = false;
         if ( (GoodMuons.size() == 2) && (GoodMuonsCharge[0] != GoodMuonsCharge[1]) )
@@ -241,7 +240,7 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
                 onZ = true;          
 
             // check whether a bl pair passes the M(b,l) cut
-            for (TLorentzVector myb : BJets)
+            for (TLorentzVector myb : BJets_pt30)
             {
                 double mass_bl_1 = (GoodMuons[0] + myb).M();
                 if(mass_bl_1 < 180 && mass_bl_1 > 30)
@@ -257,7 +256,7 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
             if( mll > 81.2 && mll < 101.2)
                 onZ = true;  
             // check whether a bl pair passes the M(b,l) cut
-            for (TLorentzVector myb : BJets)
+            for (TLorentzVector myb : BJets_pt30)
             {
                 double mass_bl_1 = (GoodElectrons[0] + myb).M();
                 if(mass_bl_1 < 180 && mass_bl_1 > 30)
