@@ -33,7 +33,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         file.addFilesToChain(ch, startFile, nFiles);
         NTupleReader tr(ch);
         double weight = file.getWeight();
-        std::string runtype = "";
+        std::string runtype;
         if(file.tag.find("Data") != std::string::npos)
         {
             runtype = "Data";
