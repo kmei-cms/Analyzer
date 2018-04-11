@@ -59,10 +59,10 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
 
         // Register classes/functions that add variables on the fly
         if ( !isSkim ) tr.registerFunction( std::move(*rtt) );
+        tr.registerFunction( std::move(jet) );
         tr.registerFunction( std::move(runFisher) );
         tr.registerFunction( std::move(muon) );
         tr.registerFunction( std::move(electron) );
-        tr.registerFunction( std::move(jet) );
         tr.registerFunction( std::move(bjet) );
         tr.registerFunction( std::move(commonVariables) );
 
