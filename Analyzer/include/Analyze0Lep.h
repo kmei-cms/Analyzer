@@ -17,12 +17,13 @@ public:
     std::map<std::string, std::shared_ptr<TH1D>>  my_histos;
     std::map<std::string, std::shared_ptr<TH2D>>  my_2d_histos;
     std::map<std::string, std::shared_ptr<TEfficiency>>  my_efficiencies;
+    bool initHistos;
     
     Analyze0Lep();
     ~Analyze0Lep(){};
     
     void Loop(NTupleReader& tr, double weight, int maxevents = -1, std::string filetag = "", bool isQuiet = false);
-    void InitHistos();
+    void InitHistos(const std::map<std::string, bool>& cutMap);
     void WriteHistos();
     bool PassTriggerGeneral(std::vector<std::string> &mytriggers, const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass);
     bool PassTriggerAllHad(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass);
