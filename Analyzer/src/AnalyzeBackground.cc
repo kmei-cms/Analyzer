@@ -17,6 +17,11 @@
 #include "TopTagger/CfgParser/include/TTException.h"
 #include "Framework/Framework/include/SetUpTopTagger.h"
 
+AnalyzeBackground::AnalyzeBackground()
+{
+    InitHistos();
+}
+
 void AnalyzeBackground::InitHistos()
 {
     TH1::SetDefaultSumw2();
@@ -90,20 +95,19 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
 {
     while(tr.getNextEvent())
     {
+        const auto& ntops                   = tr.getVar<int>("ntops");
         const auto& ntops_3jet              = tr.getVar<int>("ntops_3jet");
         const auto& ntops_2jet              = tr.getVar<int>("ntops_2jet");
         const auto& ntops_1jet              = tr.getVar<int>("ntops_1jet");
         const auto& runtype                 = tr.getVar<std::string>("runtype");
-        const auto& Jets                    = tr.getVec<TLorentzVector>("Jets");
         const auto& JetID                   = tr.getVar<bool>("JetID");
-        const auto& Jets_bDiscriminatorCSV  = tr.getVec<double>("Jets_bDiscriminatorCSV");
         const auto& TriggerNames            = tr.getVec<std::string>("TriggerNames");
         const auto& TriggerPass             = tr.getVec<int>("TriggerPass");
-        const auto* ttr                     = tr.getVar<TopTaggerResults*>("ttr");
-        const std::vector<TopObject*>& tops = ttr->getTops(); 
 
-        const auto& BJets               = tr.getVec<TLorentzVector>("BJets");
-        const auto& NBJets              = tr.getVar<int>("NBJets");
+        const auto& NJets_pt30          = tr.getVar<int>("NJets_pt30");
+        const auto& NJets_pt45          = tr.getVar<int>("NJets_pt45");
+        const auto& BJets_pt30          = tr.getVec<TLorentzVector>("BJets_pt30");
+        const auto& NBJets_pt30         = tr.getVar<int>("NBJets_pt30");
         const auto& BJets_pt45          = tr.getVec<TLorentzVector>("BJets_pt45");
         const auto& NBJets_pt45         = tr.getVar<int>("NBJets_pt45");
         const auto& GoodMuons           = tr.getVec<TLorentzVector>("GoodMuons");
@@ -189,22 +193,7 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
 
         // Check whether event would pass the trigger requirement
         bool passTrigger = true;
-        int rec_njet_pt45(0) ;
-        int rec_njet_pt30(0) ;
-        for ( unsigned int rji=0; rji < Jets.size() ; rji++ ) 
-        {
-            TLorentzVector jlv( Jets.at(rji) ) ;
-            if (abs(jlv.Eta()) > 2.4) continue;
-            if ( jlv.Pt() > 30 ) 
-            {
-                rec_njet_pt30++;
-            }
-            if ( jlv.Pt() > 45 ) 
-            {
-                rec_njet_pt45++ ;
-            }
-        } 
-        if ( !( HT_trigger>500 && rec_njet_pt45>=6 ) ) 
+        if ( !( HT_trigger>500 && NJets_pt45>=6 ) ) 
         {
             passTrigger = false;
         }
@@ -236,12 +225,12 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
             passTrigger2l = true;
         }
 
-        bool passBaseline0l = NGoodLeptons==0 && rec_njet_pt45>=6 && HT_trigger > 500 && NBJets_pt45 >= 1;
-        bool passBaseline1l = NGoodLeptons==1 && rec_njet_pt30>=6 ;
+        bool passBaseline0l = NGoodLeptons==0 && NJets_pt45>=6 && HT_trigger > 500 && NBJets_pt45 >= 1;
+        bool passBaseline1l = NGoodLeptons==1 && NJets_pt30>=6 ;
         bool passBaseline2l = NGoodLeptons==2;
 
-        bool passNtop = tops.size() >= 1;
-        bool passNb = NBJets >= 1;
+        bool passNtop = ntops >= 1;
+        bool passNb = NBJets_pt30 >= 1;
         bool onZ = false;
         bool passMbl_2l = false;
         if ( (GoodMuons.size() == 2) && (GoodMuonsCharge[0] != GoodMuonsCharge[1]) )
@@ -251,7 +240,7 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
                 onZ = true;          
 
             // check whether a bl pair passes the M(b,l) cut
-            for (TLorentzVector myb : BJets)
+            for (TLorentzVector myb : BJets_pt30)
             {
                 double mass_bl_1 = (GoodMuons[0] + myb).M();
                 if(mass_bl_1 < 180 && mass_bl_1 > 30)
@@ -267,7 +256,7 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
             if( mll > 81.2 && mll < 101.2)
                 onZ = true;  
             // check whether a bl pair passes the M(b,l) cut
-            for (TLorentzVector myb : BJets)
+            for (TLorentzVector myb : BJets_pt30)
             {
                 double mass_bl_1 = (GoodElectrons[0] + myb).M();
                 if(mass_bl_1 < 180 && mass_bl_1 > 30)
@@ -287,9 +276,9 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
         for(std::string jettype : jettypes)
         {
             if(jettype == "pt30")
-                njets_rj = rec_njet_pt30;
+                njets_rj = NJets_pt30;
             else if(jettype == "pt45")
-                njets_rj = rec_njet_pt45;
+                njets_rj = NJets_pt45;
             std::string base = "h_njets_" + jettype;
 
             my_histos[base]->Fill(njets_rj, eventweight);
@@ -332,7 +321,7 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
                         if(NGoodLeptons == 0 && passTrigger0l)
                         {
                             my_histos[base+"_0l_g1b_g1t_ht500"]->Fill(njets_rj, eventweight);
-                            if(tops.size() == 2)
+                            if(ntops == 2)
                                 my_histos[base+"_0l_g1b_2t_ht500"]->Fill(njets_rj, eventweight);
                         }
                         else if(NGoodLeptons == 1 && passTrigger1l)
@@ -374,11 +363,11 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, std
                     {
                         my_histos[base+"_1l_g1b_mbl_g1t"]->Fill(njets_rj, eventweight);
 
-                        if(tops.size() == 1 && ntops_1jet == 1)
+                        if(ntops == 1 && ntops_1jet == 1)
                             my_histos[base+"_1l_g1b_mbl_1t1"]->Fill(njets_rj, eventweight);
-                        if(tops.size() == 1 && ntops_2jet == 1)
+                        if(ntops == 1 && ntops_2jet == 1)
                             my_histos[base+"_1l_g1b_mbl_1t2"]->Fill(njets_rj, eventweight);
-                        if(tops.size() == 1 && ntops_3jet == 1)
+                        if(ntops == 1 && ntops_3jet == 1)
                             my_histos[base+"_1l_g1b_mbl_1t3"]->Fill(njets_rj, eventweight);
                     }
                     else 
