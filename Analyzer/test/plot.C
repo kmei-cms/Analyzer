@@ -10,8 +10,6 @@ public:
 int main()
 {
     std::string path = "";
-    //std::string path = "atleast2Tops";
-    //std::string path = "exactly2Tops";
 
     //entry for data
     //this uses the initializer syntax to initialize the histInfo object
@@ -37,9 +35,11 @@ int main()
         {"SYY 650", "condor/output-files/" + path + "/AllSignal/MyAnalysis_stealth_stop_650_SYY_0.root", "hist", kGreen + 3  },
     };
 
-    //make plotter object with the required sources for histograms specified
-    Plotter plt(std::move(data), std::move(bgEntries), std::move(sigEntries));
+    //make histInfoCollection
+    HistInfoCollection histInfoCollection(std::move(data), std::move(bgEntries), std::move(sigEntries));
 
+    //make plotter object with the required sources for histograms specified
+    Plotter plt( std::move(histInfoCollection) );
 
     // --------------------
     // - Make stack plots

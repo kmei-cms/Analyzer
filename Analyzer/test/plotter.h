@@ -207,19 +207,17 @@ public:
 class Plotter
 {
 private:
-    //vector summarizing data histograms to include in the plot
-    std::vector<histInfo> data_;
-    //vector summarizing background histograms to include in the plot
-    std::vector<histInfo> bgEntries_;
-    TH1* hbgSum_;
-    //vector summarizing signal histograms to include in the plot
-    std::vector<histInfo> sigEntries_;
+    //Collection of histInfo
+    HistInfoCollection hc_;
+    std::shared_ptr<TH1> hbgSum_;
 
 public:
-    Plotter(std::vector<histInfo>&& data, std::vector<histInfo>&& bgEntries, std::vector<histInfo>&& sigEntries) : data_(data), bgEntries_(bgEntries), sigEntries_(sigEntries), hbgSum_(nullptr) {}
+    Plotter(HistInfoCollection&& hc) : hc_(hc), hbgSum_(nullptr)
+    {
+    }
 
     //This is a helper function which will keep the plot from overlapping with the legend
-    void smartMax(const TH1 * const h, const TLegend* const l, const TPad* const p, double& gmin, double& gmax, double& gpThreshMax, const bool error)
+    void smartMax(const TH1* const h, const TLegend* const l, const TPad* const p, double& gmin, double& gmax, double& gpThreshMax, const bool error)
     {
         const bool isLog = p->GetLogy();
         double min = 9e99;
@@ -267,74 +265,16 @@ public:
         leg->SetNColumns(3);
         leg->SetTextFont(42);
 
-        //get maximum from histos and fill TLegend
-        double min = 0.0;
-        double max = 0.0;
-        double lmax = 0.0;
-
         // ------------------------
-        // -  Data
+        // -  Setup plots
         // ------------------------
-
-        for(auto& entry : data_)
-        {
-            //get new histogram
-            entry.histName = histName;
-            entry.rebin = rebin;
-            entry.retrieveHistogram();
-
-            //add histograms to TLegend
-            leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), entry.drawOptions.c_str());
-            smartMax(entry.h.get(), leg, static_cast<TPad*>(gPad), min, max, lmax, true);
-        }
-
-        // -----------------------
-        // -  Background
-        // -----------------------
-
-        //Create the THStack for the background
         THStack *bgStack = new THStack();
-        //Make seperate histogram from sum of BG histograms because I don't know how to make a THStack give me this 
-        hbgSum_ = nullptr;
-        for(auto& entry : bgEntries_)
-        {
-            //Get new histogram
-            entry.histName = histName;
-            entry.rebin = rebin;
-            entry.retrieveHistogram();
-
-            bgStack->Add(entry.h.get(), entry.drawOptions.c_str());
-            if(!hbgSum_) hbgSum_ = static_cast<TH1*>(entry.h->Clone());
-            else        hbgSum_->Add(entry.h.get());
-
-            //set fill color so BG will have solid fill
-            entry.setFillColor();
-
-            //add histograms to TLegend
-            leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), "F");
-        }
-        smartMax(hbgSum_, leg, static_cast<TPad*>(gPad), min, max, lmax, false);
-
-        // -------------------------
-        // -   Signal
-        // -------------------------
-
-        for(auto& entry : sigEntries_)
-        {
-            //get new histogram
-            entry.histName = histName;
-            entry.rebin = rebin;
-            entry.retrieveHistogram();
-            entry.setLineStyle(2);
-
-            //add histograms to TLegend
-            leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), "L");
-            smartMax(entry.h.get(), leg, static_cast<TPad*>(gPad), min, max, lmax, false);
-        }
+        hc_.setUpBG(histName, rebin, bgStack, hbgSum_);
+        hc_.setUpSignal(histName, rebin);
+        hc_.setUpData(histName, rebin);
 
         //create a dummy histogram to act as the axes
         histInfo dummy(new TH1D("dummy", "dummy", 1000, hbgSum_->GetBinLowEdge(1), hbgSum_->GetBinLowEdge(hbgSum_->GetNbinsX()) + hbgSum_->GetBinWidth(hbgSum_->GetNbinsX())));
-        setupDummy(dummy, leg, histName, xAxisLabel, yAxisLabel, isLogY, xmin, xmax, min, max, lmax);
 
         //draw dummy axes
         dummy.draw();
@@ -342,18 +282,40 @@ public:
         //Switch to logY if desired
         gPad->SetLogy(isLogY);
 
-        //plot background stack
+        //get maximum from histos and fill TLegend
+        double min = 0.0;
+        double max = 0.0;
+        double lmax = 0.0;
+
+        // -----------------------
+        // -  Plot Background
+        // -----------------------
+        for(auto& entry : hc_.bgVec_)
+        {
+            leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), "F");
+        }
+        smartMax(hbgSum_.get(), leg, static_cast<TPad*>(gPad), min, max, lmax, false);
         bgStack->Draw("same");
 
-        //plot signal histograms
-        for(const auto& entry : sigEntries_)
+
+        // -------------------------
+        // -   Plot Signal
+        // -------------------------
+        for(const auto& entry : hc_.sigVec_)
         {
+            leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), "L");
+            smartMax(entry.h.get(), leg, static_cast<TPad*>(gPad), min, max, lmax, false);
             entry.draw();
         }
 
-        //plot data histogram
-        for(const auto& entry : data_)
+
+        // ------------------------
+        // -  Plot Data
+        // ------------------------
+        for(const auto& entry : hc_.dataVec_)
         {
+            leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), entry.drawOptions.c_str());
+            smartMax(entry.h.get(), leg, static_cast<TPad*>(gPad), min, max, lmax, true);
             entry.draw();
         }
 
@@ -361,13 +323,14 @@ public:
         leg->Draw("same");
 
         //Draw dummy hist again to get axes on top of histograms
+        setupDummy(dummy, leg, histName, xAxisLabel, yAxisLabel, isLogY, xmin, xmax, min, max, lmax);
         dummy.draw("AXIS");
 
         //Draw CMS and lumi lables
         //drawLables(lumi);
 
         //Compute and draw yields for njets min to max
-        computeYields(12,20);
+        drawYields("njets",12,20);
 
         //save new plot to file
         c->Print(("outputPlots/" + histName + ".pdf").c_str());
@@ -377,11 +340,11 @@ public:
         delete c;
         delete leg;
         delete bgStack;
-        delete hbgSum_;
     }
 
     void plotFisher(const std::vector<std::string>& histNameVec, const std::string& histTitle, const std::string& xAxisLabel, 
-                    const std::string& yAxisLabel = "Events", const bool isLogY = false, const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 36100)
+                    const std::string& yAxisLabel = "Events",    const bool isLogY = false,    const int fixedJetBin = -1,  
+                    const double xmin = 999.9, const double xmax = -999.9, int rebin = -1,  double lumi = 36100)
     {
         //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
         TH1::AddDirectory(false);
@@ -422,34 +385,44 @@ public:
         std::vector<TH1*> hbgSumVec;
         int index = -1;
         double scale = 1;
+        int fixedBin;
         for(auto& histName : histNameVec)
         {
             index++;
             TH1* hbgSum = nullptr;
-            for(auto& entry : bgEntries_)
+            for(auto& entry : hc_.bgVec_)
             {
                 //Get new histogram
                 entry.histName = histName;
                 entry.rebin = rebin;
                 entry.retrieveHistogram();
-
+            
                 if(!hbgSum) hbgSum = static_cast<TH1*>(entry.h->Clone());
                 else        hbgSum->Add(entry.h.get());
-
+            
             }
             //std::cout<<"Index = "<<index<<"  histName = "<<histName<<std::endl;
             hbgSum->SetLineColor(color[index]);
             hbgSum->SetMarkerColor(color[index]);
             leg->AddEntry(hbgSum,(fisherNames[index]).c_str(), "l");
 
-            double num6Jets = hbgSum->GetBinContent(7);
-            if(index==0)
+            if(fixedJetBin == -1 && index == 0) 
             {
-                scale = num6Jets;
+                fixedBin = hbgSum->GetMaximumBin();
+            }
+            else if (index == 0)
+            {
+                fixedBin = fixedJetBin + 1;
+            }
+
+            double numEvents = hbgSum->GetBinContent( fixedBin );
+            if(index == 0)
+            {
+                scale = numEvents;
             }
             else
             {
-                hbgSum->Scale(scale/num6Jets);
+                hbgSum->Scale(scale/numEvents);
             }            
 
             smartMax(hbgSum, leg, static_cast<TPad*>(gPad), min, max, lmax, false);
@@ -488,6 +461,10 @@ public:
         //clean up dynamic memory
         delete c;
         delete leg;
+        for (auto* obj :  hbgSumVec)
+        {
+            delete obj;
+        }
     }
 
     void setupDummy(histInfo dummy, TLegend *leg, const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel, const bool isLogY, 
@@ -543,55 +520,20 @@ public:
         mark.SetTextFont(42);
         mark.SetTextAlign(31);
         mark.DrawLatex(1 - gPad->GetRightMargin(), 1 - (gPad->GetTopMargin() - 0.017), lumistamp);        
-    }
+    }    
 
-    void computeYields(int min, int max)
+    void drawYields(std::string histName, int min, int max)
     {
-        std::map<std::string,double> yieldMap;
-        std::vector<std::vector<histInfo>> dataSets  = {data_,bgEntries_,sigEntries_};
-        int index = -1;
-        double yield = 0;
-
-        for(const auto& set : dataSets)
-        {
-            for(const auto& entry : set)
-            {
-                if( entry.histName.find("njets") != std::string::npos )
-                {
-                    index++;
-                    if(index==0)
-                    {
-                        yield = 0;
-                        for(int i = min; i<=max; i++)
-                        {
-                            yield+=hbgSum_->GetBinContent(i);
-                            //std::cout<<hbgSum_->GetBinContent(i)<<std::endl;
-                        }
-                        yieldMap.insert ( std::pair<std::string,double>( "AllBG", yield ) );
-                    }
-                    yield = 0;
-                    for(int i = min; i<=max; i++)
-                    {
-                        yield+=entry.h.get()->GetBinContent(i);
-                    }
-                    yieldMap.insert ( std::pair<std::string,double>( entry.legEntry, yield ) );
-                }
-            }
-        }
-
-        //for(const auto& entry : yieldMap)
-        //{
-        //    std::cout<<entry.first<<"  "<<entry.second<<std::endl;
-        //}
-
-        if(bgEntries_[0].histName.find("njets") != std::string::npos)
+        const auto& yieldMap = hc_.computeYields(histName, hbgSum_, min, max);
+        
+        if(hc_.bgVec_[0].histName.find(histName) != std::string::npos)
         {
             auto allbg  = yieldMap.find("AllBG");
             auto qcd    = yieldMap.find("QCD");
             auto ttbar  = yieldMap.find("T#bar{T}");
             auto rpv350 = yieldMap.find("RPV 350");
             auto syy650 = yieldMap.find("SYY 650");
-
+    
             char stamp_allbg[128];
             char stamp_qcd[128];
             char stamp_ttbar[128];
@@ -599,13 +541,13 @@ public:
             char stamp_syy650[128];
             sprintf(stamp_allbg, "%-15s %i" , (allbg->first).c_str() , int(allbg->second ));
             sprintf(stamp_qcd,   "%-15s %i" , (qcd->first  ).c_str() , int(qcd->second   ));
-            sprintf(stamp_ttbar, "%-15s %i" , (ttbar->first).c_str() , int(ttbar->second ));
+            sprintf(stamp_ttbar, "%-15s %i" , "TTbar"                , int(ttbar->second ));
             sprintf(stamp_rpv350,"%-15s %i" , (rpv350->first).c_str(), int(rpv350->second));
             sprintf(stamp_syy650,"%-15s %i" , (syy650->first).c_str(), int(syy650->second));
-
+    
             TLatex mark;
             mark.SetNDC(true);
-
+    
             //Draw CMS mark
             mark.SetTextAlign(11);
             mark.SetTextSize(0.030);
@@ -617,9 +559,9 @@ public:
             mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.12), stamp_rpv350     );
             mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.15), stamp_syy650     );
         }
-
-    }
     
+    }
+
 };
 
 #endif
