@@ -96,7 +96,7 @@ public:
     {
     }
 
-    histInfo(TH1* h) : legEntry(h->GetName()), histFile(""), histName(h->GetName()), drawOptions(""), color(0), rebin(0), h(h)
+    histInfo(TH1* h) : legEntry(h->GetName()), histFile(""), histName(h->GetName()), drawOptions(""), color(kWhite), rebin(0), h(h)
     {
     }
 
@@ -114,7 +114,7 @@ public:
     {
     }
 
-    void setUpBG(const std::string& histName, int rebin, THStack* bgStack, std::shared_ptr<TH1>& hbgSum)
+    void setUpBG(const std::string& histName, int rebin, THStack* bgStack, std::shared_ptr<TH1>& hbgSum, const bool& setFill = true)
     {
         bool firstPass = true;
         for(auto& entry : bgVec_)
@@ -133,8 +133,11 @@ public:
             {
                 hbgSum->Add(entry.h.get());
             }
-    
-            entry.setFillColor();
+            
+            if(setFill)
+            {
+                entry.setFillColor();
+            }
         }
     }
 
@@ -240,7 +243,7 @@ public:
         gmin = std::min(gmin, min);
     }
 
-    void plot(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 36100)
+    void plotStack(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 36100)
     {
         //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
         TH1::AddDirectory(false);
@@ -335,6 +338,102 @@ public:
         //save new plot to file
         c->Print(("outputPlots/" + histName + ".pdf").c_str());
         c->Print(("outputPlots/" + histName + ".png").c_str());
+
+        //clean up dynamic memory
+        delete c;
+        delete leg;
+        delete bgStack;
+    }
+
+    void plotNormFisher(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 36100)
+    {
+        //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
+        TH1::AddDirectory(false);
+
+        //create the canvas for the plot
+        TCanvas *c = new TCanvas("c1", "c1", 800, 800);
+        //switch to the canvas to ensure it is the active object
+        c->cd();
+
+        //Set Canvas margin (gPad is root magic to access the current pad, in this case canvas "c")
+        gPad->SetLeftMargin(0.12);
+        gPad->SetRightMargin(0.06);
+        gPad->SetTopMargin(0.08);
+        gPad->SetBottomMargin(0.12);
+
+        //Create TLegend
+        TLegend *leg = new TLegend(0.20, 0.76, 0.89, 0.88);
+        //TLegend *leg = new TLegend(0.50, 0.56, 0.89, 0.88);
+        leg->SetFillStyle(0);
+        leg->SetBorderSize(0);
+        leg->SetLineWidth(1);
+        leg->SetNColumns(3);
+        leg->SetTextFont(42);
+
+        // ------------------------
+        // -  Setup plots
+        // ------------------------
+        THStack *bgStack = new THStack();
+        hc_.setUpBG(histName, rebin, bgStack, hbgSum_, false);
+        hc_.setUpSignal(histName, rebin);
+        hc_.setUpData(histName, rebin);
+
+        //create a dummy histogram to act as the axes
+        histInfo dummy(new TH1D("dummy", "dummy", 1000, hbgSum_->GetBinLowEdge(1), hbgSum_->GetBinLowEdge(hbgSum_->GetNbinsX()) + hbgSum_->GetBinWidth(hbgSum_->GetNbinsX())));
+
+        //draw dummy axes
+        dummy.draw();
+
+        //Switch to logY if desired
+        gPad->SetLogy(isLogY);
+
+        //get maximum from histos and fill TLegend
+        double min = 0.0;
+        double max = 0.0;
+        double lmax = 0.0;
+
+        // -----------------------
+        // -  Plot Background
+        // -----------------------
+        for(auto& entry : hc_.bgVec_)
+        {
+            leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), "L");
+            entry.h->Scale( 1.0/entry.h->Integral( 0, entry.h->GetNbinsX() + 1 ) );
+            smartMax(entry.h.get(), leg, static_cast<TPad*>(gPad), min, max, lmax, false);            
+            entry.draw();
+        }
+        hbgSum_->SetLineColor(kBlack);
+        hbgSum_->SetMarkerColor(kBlack);
+        //std::cout<<hbgSum_->GetNbinsX() + 1<<std::endl;
+        leg->AddEntry(hbgSum_.get(), "AllBG", "L");
+        hbgSum_->Scale( 1.0/hbgSum_->Integral( 0, hbgSum_->GetNbinsX() + 1 ) );
+        smartMax(hbgSum_.get(), leg, static_cast<TPad*>(gPad), min, max, lmax, false);
+        hbgSum_->Draw("hist same");
+
+        // -------------------------
+        // -   Plot Signal
+        // -------------------------
+        for(const auto& entry : hc_.sigVec_)
+        {
+            leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), "L");
+            entry.h->Scale( 1.0/entry.h->Integral( 0, entry.h->GetNbinsX() + 1 ) );
+            smartMax(entry.h.get(), leg, static_cast<TPad*>(gPad), min, max, lmax, false);
+            entry.draw();
+        }
+
+        //plot legend
+        leg->Draw("same");
+
+        //Draw dummy hist again to get axes on top of histograms
+        setupDummy(dummy, leg, histName, xAxisLabel, yAxisLabel, isLogY, xmin, xmax, min, max, lmax);
+        dummy.draw("AXIS");
+
+        //Draw CMS and lumi lables
+        //drawLables(lumi);
+
+        //save new plot to file
+        c->Print(("outputPlots/fisherNorm_" + histName + ".pdf").c_str());
+        c->Print(("outputPlots/fisherNorm_" + histName + ".png").c_str());
 
         //clean up dynamic memory
         delete c;

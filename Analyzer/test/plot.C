@@ -28,6 +28,10 @@ int main()
         {"QCD",             "condor/output-files/" + path + "/QCD/QCD.root",                         "hist", kGreen + 1  },
         {"T#bar{T}",        "condor/output-files/" + path + "/TT/TT.root",                           "hist", kBlue - 7   },
     };
+    std::vector<histInfo> bgSkim = {
+        {"QCD",             "condor/output-files/" + path + "/QCD/QCD.root",                         "hist", kGreen + 1  },
+        {"T#bar{T}",        "condor/output-files/" + path + "/TT/TT.root",                           "hist", kBlue - 7   },
+    };
 
     //vector summarizing signal histograms to include in the plot
     std::vector<histInfo> sigEntries = {
@@ -37,9 +41,11 @@ int main()
 
     //make histInfoCollection
     HistInfoCollection histInfoCollection(std::move(data), std::move(bgEntries), std::move(sigEntries));
+    HistInfoCollection histInfoCollectionSkim(std::move(data), std::move(bgSkim), std::move(sigEntries));
 
     //make plotter object with the required sources for histograms specified
     Plotter plt( std::move(histInfoCollection) );
+    Plotter pltSkim( std::move(histInfoCollectionSkim) );
 
     // --------------------
     // - Make stack plots
@@ -109,23 +115,25 @@ int main()
 
     for(std::string mycut : mycuts_0l)
     {
-        plt.plot( "h_njets_0l_"+mycut, "N_{J}" , "Events", true);
-        plt.plot( "h_ntops_0l_"+mycut, "N_{T}" , "Events", true);
-        plt.plot( "h_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
-        plt.plot( "h_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
-        plt.plot( "h_fisher_0l_"+mycut, "fisher value" , "Events", true);        
+        plt.plotStack( "h_njets_0l_"+mycut, "N_{J}" , "Events", true);
+        plt.plotStack( "h_ntops_0l_"+mycut, "N_{T}" , "Events", true);
+        plt.plotStack( "h_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
+        plt.plotStack( "h_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
+        plt.plotStack( "h_fisher_0l_"+mycut, "fisher value" , "Events", true);        
+
+        pltSkim.plotNormFisher("h_fisher_0l_"+mycut, "fisher value" , "Events", false);
     }
     
-    plt.plot("h_met"     , "MET"   , "Events", true);
-    plt.plot("h_ht"      , "H_{T}" , "Events", true);
-    plt.plot("h_bdt"     , "bdt"   , "Events", true);
-    plt.plot("h_fisher"  , "fisher", "Events", true);
-    plt.plot("h_njets"   , "N_{J}" , "Events", true);
-    plt.plot("h_nb"      , "N_{B}" , "Events", true);
-    plt.plot("h_ntops"   , "N_{T}" , "Events", true);
-    plt.plot("h_ntops_j1", "N_{1T}", "Events", true);
-    plt.plot("h_ntops_j2", "N_{2T}", "Events", true);
-    plt.plot("h_ntops_j3", "N_{3T}", "Events", true);
+    plt.plotStack("h_met"     , "MET"   , "Events", true);
+    plt.plotStack("h_ht"      , "H_{T}" , "Events", true);
+    plt.plotStack("h_bdt"     , "bdt"   , "Events", true);
+    plt.plotStack("h_fisher"  , "fisher", "Events", true);
+    plt.plotStack("h_njets"   , "N_{J}" , "Events", true);
+    plt.plotStack("h_nb"      , "N_{B}" , "Events", true);
+    plt.plotStack("h_ntops"   , "N_{T}" , "Events", true);
+    plt.plotStack("h_ntops_j1", "N_{1T}", "Events", true);
+    plt.plotStack("h_ntops_j2", "N_{2T}", "Events", true);
+    plt.plotStack("h_ntops_j3", "N_{3T}", "Events", true);
 
     // --------------------
     // - Make fisher plots
@@ -172,4 +180,5 @@ int main()
     {
         plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true, 9);
     }
+    
 }
