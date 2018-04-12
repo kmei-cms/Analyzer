@@ -105,6 +105,105 @@ public:
     }
 };
 
+class HistInfoCollection
+{
+public:
+    std::vector<histInfo> dataVec_, bgVec_, sigVec_;
+
+    HistInfoCollection(std::vector<histInfo>&& dataVec, std::vector<histInfo>&& bgVec, std::vector<histInfo>&& sigVec) : dataVec_(dataVec), bgVec_(bgVec), sigVec_(sigVec)
+    {
+    }
+
+    void setUpBG(const std::string& histName, int rebin, THStack* bgStack, std::shared_ptr<TH1>& hbgSum)
+    {
+        bool firstPass = true;
+        for(auto& entry : bgVec_)
+        {
+            entry.histName = histName;
+            entry.rebin = rebin;
+            entry.retrieveHistogram();
+    
+            bgStack->Add(entry.h.get(), entry.drawOptions.c_str());
+            if(firstPass) 
+            {
+                hbgSum.reset( static_cast<TH1*>(entry.h->Clone()) );
+                firstPass = false;
+            }
+            else 
+            {
+                hbgSum->Add(entry.h.get());
+            }
+    
+            entry.setFillColor();
+        }
+    }
+
+    void setUpSignal(const std::string& histName, int rebin)
+    {
+        for(auto& entry : sigVec_)
+        {
+            entry.histName = histName;
+            entry.rebin = rebin;
+            entry.retrieveHistogram();
+            entry.setLineStyle(2);
+    
+        }
+    }
+
+    void setUpData(const std::string& histName, int rebin)
+    {
+        for(auto& entry : dataVec_)
+        {
+            entry.histName = histName;
+            entry.rebin = rebin;
+            entry.retrieveHistogram();
+        }
+    }
+
+    std::map<std::string,double> computeYields(const std::string& histName, const std::shared_ptr<TH1>& hbgSum, const int min, const int max)
+    {
+        std::map<std::string,double> yieldMap;
+        std::vector<std::vector<histInfo>> dataSets  = {dataVec_,bgVec_,sigVec_};
+        int index = -1;
+        double yield = 0;
+
+        for(const auto& set : dataSets)
+        {
+            for(const auto& entry : set)
+            {
+                if( entry.histName.find(histName) != std::string::npos )
+                {
+                    index++;
+                    if(index==0)
+                    {
+                        yield = 0;
+                        for(int i = min; i<=max; i++)
+                        {
+                            yield+=hbgSum->GetBinContent(i);
+                            //std::cout<<hbgSum->GetBinContent(i)<<std::endl;
+                        }
+                        yieldMap.insert ( std::pair<std::string,double>( "AllBG", yield ) );
+                    }
+                    yield = 0;
+                    for(int i = min; i<=max; i++)
+                    {
+                        yield+=entry.h.get()->GetBinContent(i);
+                    }
+                    yieldMap.insert ( std::pair<std::string,double>( entry.legEntry, yield ) );
+                }
+            }
+        }
+
+        //for(const auto& entry : yieldMap)
+        //{
+        //    std::cout<<entry.first<<"  "<<entry.second<<std::endl;
+        //}
+        
+        return yieldMap;
+    }
+
+};
+
 class Plotter
 {
 private:
