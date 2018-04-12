@@ -8,16 +8,7 @@
 #include "TopTaggerTools/Tools/include/HistoContainer.h"
 #include "TopTagger/CfgParser/include/TTException.h"
 
-//#include "derivedTupleVariables.h"
-//#include "baselineDef.h"
-//#include "BTagCorrector.h"
-//#include "TTbarCorrector.h"
-//#include "ISRCorrector.h"
-//#include "PileupWeights.h"
-//#include "customize.h"
-
 #include "TopTagger/TopTagger/include/TopTaggerResults.h"
-//#include "Constituent.h"
 
 #include <iostream>
 #include <string>
@@ -198,9 +189,8 @@ int main(int argc, char* argv[])
                 }
 
                 const double isData = false;//!tr.checkBranch("genDecayLVec");
-
                 double eWeight = fileWgt;
-
+                
                 //Stealth Event Selection - 0 Lepton
                 if( !isData  //lets not accidently unblind the stealth SR
                     //&& passNoiseEventFilter 
