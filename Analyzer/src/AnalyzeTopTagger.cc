@@ -290,7 +290,7 @@ void AnalyzeTopTagger::InitHistos()
 
 }
 
-void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, std::string filetag, bool isQuiet)
+void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
 {
     TRandom3 rand = TRandom3(123);
     
@@ -313,6 +313,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, std:
         const auto& singlinos              = tr.getVec<TLorentzVector>("singlinos");
         const auto& singlets               = tr.getVec<TLorentzVector>("singlets");
         const auto& hadtops_idx            = tr.getVec<int>("hadtops_idx");
+        const auto& filetag                = tr.getVar<std::string>("filetag");
         
         if(maxevents != -1 && tr.getEvtNum() >= maxevents) break;
         if ( tr.getEvtNum() % 1000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;

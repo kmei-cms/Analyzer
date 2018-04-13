@@ -58,25 +58,26 @@ void Analyze0Lep::InitHistos(const std::map<std::string, bool>& cutMap)
 
 }
 
-void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::string filetag, bool isQuiet)
+void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
 {
     while( tr.getNextEvent() )
     {
         const auto& MET                = tr.getVar<double>("MET");
-        const auto& HT                 = tr.getVar<double>("HT");
+        //const auto& HT                 = tr.getVar<double>("HT");
+        const auto& HT_trigger         = tr.getVar<double>("HT_trigger");
         const auto& ntops              = tr.getVar<int>("ntops");
         const auto& ntops_3jet         = tr.getVar<int>("ntops_3jet");
         const auto& ntops_2jet         = tr.getVar<int>("ntops_2jet");
         const auto& ntops_1jet         = tr.getVar<int>("ntops_1jet");
         const auto& runtype            = tr.getVar<std::string>("runtype");     
-        const auto& TriggerNames       = tr.getVec<std::string>("TriggerNames");
-        const auto& TriggerPass        = tr.getVec<int>("TriggerPass");
+        const auto& filetag            = tr.getVar<std::string>("filetag");
+        //const auto& TriggerNames       = tr.getVec<std::string>("TriggerNames");
+        //const auto& TriggerPass        = tr.getVec<int>("TriggerPass");
         const auto& NJets_pt30         = tr.getVar<int>("NJets_pt30");
         const auto& NJets_pt45         = tr.getVar<int>("NJets_pt45");
         const auto& NBJets             = tr.getVar<int>("NBJets");
         const auto& NBJets_pt45        = tr.getVar<int>("NBJets_pt45");
         const auto& NGoodLeptons       = tr.getVar<int>("NGoodLeptons");
-        const auto& HT_trigger         = tr.getVar<double>("HT_trigger");
         const auto& fisher_bin1        = tr.getVar<bool>("fisher_bin1");
         const auto& fisher_bin2        = tr.getVar<bool>("fisher_bin2");
         const auto& fisher_bin3        = tr.getVar<bool>("fisher_bin3");
@@ -87,6 +88,7 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
         //const auto& bdt_bin4           = tr.getVar<bool>("bdt_bin4");
         const auto& eventshape_bdt_val = tr.getVar<double>("eventshape_bdt_val");
         const auto& fisher_val         = tr.getVar<double>("fisher_val");
+        const auto& passBaseline0l     = tr.getVar<bool>("passBaseline0l");
 
         // ------------------------
         // -- Print event number
@@ -108,41 +110,46 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
         // -----------------------
 
         if(runtype == "MC"){
-            const auto& madHT   = tr.getVar<double>("madHT");
+            //const auto& madHT   = tr.getVar<double>("madHT");
             const auto& Weight  = tr.getVar<double>("Weight");
             double lumi = 35900; // Lumi for 2016
 
-            // Exclude events with MadGraph HT > 100 from the DY inclusive sample
-            if(filetag == "DYJetsToLL_M-50_Incl" && madHT > 100) continue;
+            ///// Exclude events with MadGraph HT > 100 from the DY inclusive sample
+            //if(filetag == "DYJetsToLL_M-50_Incl" && madHT > 100) continue;
 
             // Weight from NTuples            
             eventweight = lumi*Weight;
         }
         
-        // ------------------------------
-        // -- Trigger for data
-        // ------------------------------
-        
-        bool passTriggerAllHad   = PassTriggerAllHad(TriggerNames, TriggerPass);
-        bool passTriggerMuon     = PassTriggerMuon(TriggerNames, TriggerPass);
-        bool passTriggerElectron = PassTriggerElectron(TriggerNames, TriggerPass);
-        if (runtype == "Data")
-        {
-            if (filetag == "Data_JetHT" && !passTriggerAllHad) continue;
-            if (filetag == "Data_SingleMuon" && !passTriggerMuon) continue;
-            if (filetag == "Data_SingleElectron" && !passTriggerElectron) continue;
-        }
-        
+        //// ------------------------------
+        //// -- Trigger for data
+        //// ------------------------------
+        //
+        //bool passTriggerAllHad   = PassTriggerAllHad(TriggerNames, TriggerPass);
+        //bool passTriggerMuon     = PassTriggerMuon(TriggerNames, TriggerPass);
+        //bool passTriggerElectron = PassTriggerElectron(TriggerNames, TriggerPass);
+        //if (runtype == "Data")
+        //{
+        //    if (filetag == "Data_JetHT" && !passTriggerAllHad) continue;
+        //    if (filetag == "Data_SingleMuon" && !passTriggerMuon) continue;
+        //    if (filetag == "Data_SingleElectron" && !passTriggerElectron) continue;
+        //}
+        //
+        //// -------------------------------
+        //// -- Define cuts
+        //// -------------------------------
+        //
+        //// Define selections
+        //bool passBaseline0l = NGoodLeptons==0 && NJets_pt45>=6 && HT_trigger > 500 && NBJets_pt45 >= 2;
+        //if(runtype == "Data" && filetag == "Data_JetHT")
+        //{
+        //    passBaseline0l = passBaseline0l && passTriggerAllHad;
+        //}
+
+
         // -------------------------------
         // -- Define cuts
         // -------------------------------
-        
-        // Define selections
-        bool passBaseline0l = NGoodLeptons==0 && NJets_pt45>=6 && HT_trigger > 500 && NBJets_pt45 >= 2;
-        if(runtype == "Data" && filetag == "Data_JetHT")
-        {
-            passBaseline0l = passBaseline0l && passTriggerAllHad;
-        }
         
         bool pass_0l              = NGoodLeptons==0;
         bool pass_njet_pt45       = NJets_pt45>=6;
@@ -433,7 +440,7 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
         
         // Not cuts applied here
         my_histos["h_met"     ]->Fill(MET, eventweight);
-        my_histos["h_ht"      ]->Fill(HT, eventweight);
+        my_histos["h_ht"      ]->Fill(HT_trigger, eventweight);
         my_histos["h_bdt"     ]->Fill(eventshape_bdt_val, eventweight);
         my_histos["h_fisher"  ]->Fill(fisher_val, eventweight);
         my_histos["h_njets"   ]->Fill(NJets_pt30, eventweight);
@@ -447,49 +454,49 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, std::stri
 
 }
 
-bool Analyze0Lep::PassTriggerGeneral(std::vector<std::string> &mytriggers, const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
-{
-    bool passTrigger = false;
-    for(unsigned int i=0; i<TriggerNames.size(); ++i)
-    {
-        if(TriggerPass.at(i) != 1)
-            continue;
-        std::string trigname = TriggerNames.at(i);
-        if( std::any_of(mytriggers.begin(), mytriggers.end(), [&] (std::string s) { return trigname.find(s)!=std::string::npos; }) )
-        {
-            passTrigger = true;
-            break;
-        }
-    }
-    return passTrigger;
-
-}
-
-
-bool Analyze0Lep::PassTriggerAllHad(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
-{
-    std::vector<std::string> mytriggers {
-        //"HLT_PFHT1050", // 2017 trigger
-        //"HLT_PFHT900"
-        //"HLT_PFHT380_SixPFJet32_DoublePFBTagCSV", // 2017 trigger
-        //"HLT_PFHT430_SixPFJet40_PFBTagCSV", // 2017 trigger
-        "HLT_PFHT450_SixJet40_BTagCSV",
-            "HLT_PFHT400_SixJet30_DoubleBTagCSV",            
-            };
-    return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
-}
-
-bool Analyze0Lep::PassTriggerMuon(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
-{
-    std::vector<std::string> mytriggers {"HLT_IsoMu24","HLT_IsoTkMu24_v"};
-    return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
-}
-
-bool Analyze0Lep::PassTriggerElectron(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
-{
-    std::vector<std::string> mytriggers {"HLT_Ele27_WPTight_Gsf"};
-    return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
-}
+//bool Analyze0Lep::PassTriggerGeneral(std::vector<std::string> &mytriggers, const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
+//{
+//    bool passTrigger = false;
+//    for(unsigned int i=0; i<TriggerNames.size(); ++i)
+//    {
+//        if(TriggerPass.at(i) != 1)
+//            continue;
+//        std::string trigname = TriggerNames.at(i);
+//        if( std::any_of(mytriggers.begin(), mytriggers.end(), [&] (std::string s) { return trigname.find(s)!=std::string::npos; }) )
+//        {
+//            passTrigger = true;
+//            break;
+//        }
+//    }
+//    return passTrigger;
+//
+//}
+//
+//
+//bool Analyze0Lep::PassTriggerAllHad(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
+//{
+//    std::vector<std::string> mytriggers {
+//        //"HLT_PFHT1050", // 2017 trigger
+//        //"HLT_PFHT900"
+//        //"HLT_PFHT380_SixPFJet32_DoublePFBTagCSV", // 2017 trigger
+//        //"HLT_PFHT430_SixPFJet40_PFBTagCSV", // 2017 trigger
+//        "HLT_PFHT450_SixJet40_BTagCSV",
+//            "HLT_PFHT400_SixJet30_DoubleBTagCSV",            
+//            };
+//    return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
+//}
+//
+//bool Analyze0Lep::PassTriggerMuon(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
+//{
+//    std::vector<std::string> mytriggers {"HLT_IsoMu24","HLT_IsoTkMu24_v"};
+//    return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
+//}
+//
+//bool Analyze0Lep::PassTriggerElectron(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
+//{
+//    std::vector<std::string> mytriggers {"HLT_Ele27_WPTight_Gsf"};
+//    return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
+//}
 
 void Analyze0Lep::WriteHistos(TFile* outfile)
 {

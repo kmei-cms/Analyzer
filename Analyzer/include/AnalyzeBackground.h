@@ -21,7 +21,7 @@ public:
     AnalyzeBackground();
     ~AnalyzeBackground(){};
     
-    void Loop(NTupleReader& tr, double weight, int maxevents = -1, std::string filetag = "", bool isQuiet = false);
+    void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false);
     void InitHistos();
     void WriteHistos(TFile* outfile);
     bool PassTriggerGeneral(std::vector<std::string> &mytriggers, const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass);
