@@ -126,7 +126,7 @@ bool AnalyzeEventShape::PassTriggerElectron(const std::vector<std::string>& Trig
     return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
 }
 
-void AnalyzeEventShape::WriteHistos()
+void AnalyzeEventShape::WriteHistos(TFile* outfile)
 {
     for (const auto &p : my_histos) {
         p.second->Write();

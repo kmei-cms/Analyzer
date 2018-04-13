@@ -578,7 +578,7 @@ bool AnalyzeEventSelection::PassTriggerElectron(const std::vector<std::string>& 
     return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
 }
 
-void AnalyzeEventSelection::WriteHistos()
+void AnalyzeEventSelection::WriteHistos(TFile* outfile)
 {
     for (const auto &p : my_histos) {
         p.second->Write();

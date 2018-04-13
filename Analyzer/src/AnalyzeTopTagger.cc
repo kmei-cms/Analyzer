@@ -1185,7 +1185,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, std:
     } // end of event loop
 }
 
-void AnalyzeTopTagger::WriteHistos()
+void AnalyzeTopTagger::WriteHistos(TFile* outfile)
 {
     for (const auto &p : my_histos) {
         p.second->Write();
