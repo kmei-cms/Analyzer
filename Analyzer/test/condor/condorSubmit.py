@@ -18,7 +18,7 @@ parser.add_option ('-d',  dest='datasets', type='string', default = '', help="Li
 parser.add_option ('-l',  dest='dataCollections', action='store_true', default = False, help="List all datacollections")
 parser.add_option ('-L',  dest='dataCollectionslong', action='store_true', default = False, help="List all datacollections and sub collections")
 parser.add_option ('-c',  dest='noSubmit', action='store_true', default = False, help="Do not submit jobs.  Only create condor_submit.txt.")
-parser.add_option ('--analyze',  dest='analyze', default = 'b', help="AnalyzeTopTagger (t), AnalyzeBackground (b), AnalyzeEventSelection (s), Analyze0Lep (z)")
+parser.add_option ('--analyze',  dest='analyze', default = 'b', help="AnalyzeTopTagger (t), AnalyzeBackground (b), AnalyzeEventSelection (s), Analyze0Lep (z), AnalyzeStealthTopTagger (x)")
 
 options, args = parser.parse_args()
 
