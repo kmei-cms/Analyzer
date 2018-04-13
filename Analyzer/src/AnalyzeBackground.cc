@@ -462,7 +462,7 @@ bool AnalyzeBackground::PassTriggerElectron(const std::vector<std::string>& Trig
     return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
 }
 
-void AnalyzeBackground::WriteHistos()
+void AnalyzeBackground::WriteHistos(TFile* outfile)
 {
     for (const auto &p : my_histos) {
         p.second->Write();

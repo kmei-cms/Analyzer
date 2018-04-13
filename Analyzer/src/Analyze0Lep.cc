@@ -491,7 +491,7 @@ bool Analyze0Lep::PassTriggerElectron(const std::vector<std::string>& TriggerNam
     return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
 }
 
-void Analyze0Lep::WriteHistos()
+void Analyze0Lep::WriteHistos(TFile* outfile)
 {
     for (const auto &p : my_histos) {
         p.second->Write();

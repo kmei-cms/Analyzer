@@ -32,13 +32,19 @@ class AnalyzeStealthTopTagger
 private:
 
 public:
-    void Loop(NTupleReader& tr, double weight, int maxevents, std::string filetag, bool savefile = true)
+    std::unique_ptr<HistoContainer<NTupleReader>> hists0Lep;
+
+    AnalyzeStealthTopTagger() 
+        : hists0Lep( new HistoContainer<NTupleReader>("0Lep") )
     {
-        
+    }
+
+    ~AnalyzeStealthTopTagger(){}
+
+    void Loop(NTupleReader& tr, double weight, int maxevents, std::string filetag, bool isQuiet = true)
+    {        
         int events = 0, peventsLep0 = 0, peventsLep1 = 0;
-        HistoContainer<NTupleReader> hists0Lep("Lep0");
         TRandom* trand = new TRandom3();        
-        std::string filename = "example.root";
 
         while(tr.getNextEvent())
         {
@@ -91,33 +97,24 @@ public:
                 )
             {
                 peventsLep0++;
-                hists0Lep.fill(tr, eventweight, trand);
+                hists0Lep->fill(tr, eventweight, trand);
             }
         }
 
         std::cout << "Processed " << events << " events. " << peventsLep0 << " passed Lep0 selection. " << peventsLep1 << " passed Lep1 selection"<<std::endl;
 
-        if(savefile)
-        {
-            std::cout << "Saving root file..." << std::endl;
-        
-            TFile *f = new TFile(filename.c_str(),"RECREATE");
-            if(f->IsZombie())
-            {
-                std::cout << "Cannot create " << filename << std::endl;
-                throw "File is zombie";
-            }
-
-            hists0Lep.save(f);
-        
-            f->Write();
-            f->Close();
-        }
     }
 
-    void WriteHistos()
+    void WriteHistos(TFile* outfile)
     {            
-        std::cout<<"Fix Me Please"<<std::endl;
+        if(outfile->IsZombie())
+        {
+            std::cout << "Cannot create outfile" <<  std::endl;
+            throw "File is zombie";
+        }
+
+        hists0Lep->save(outfile);        
+        //outfile->Write();
     }
 
 };

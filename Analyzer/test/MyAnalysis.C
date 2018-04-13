@@ -22,10 +22,11 @@
 #include <getopt.h>
 
 template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
-                                    int startFile, int nFiles, int maxEvts, bool isSkim)
+                                    int startFile, int nFiles, int maxEvts, 
+                                    bool isSkim, TFile* outfile)
 {
     std::cout << "Initializing..." << std::endl;
-    Analyze a = Analyze();
+    Analyze a;
     for(const AnaSamples::FileSummary& file : vvf)
     {
         // Define what is needed per sample set
@@ -75,7 +76,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
             
     }
     std::cout << "Writing histograms..." << std::endl;
-    a.WriteHistos();
+    a.WriteHistos(outfile);
 }
 
 std::set<AnaSamples::FileSummary> setFS(std::string sampleloc, std::string dataSets)
@@ -162,42 +163,42 @@ int main(int argc, char *argv[])
     }
 
     std::set<AnaSamples::FileSummary> vvf = setFS(sampleloc, dataSets); 
-    TFile* myfile = TFile::Open(histFile.c_str(), "RECREATE");
+    TFile* outfile = TFile::Open(histFile.c_str(), "RECREATE");
     
     try
     {
         if(doBackground)
         {
             printf("\n\n running AnalyzeBackground\n\n" ) ;
-            run<AnalyzeBackground>(vvf,startFile,nFiles,maxEvts,isSkim);
+            run<AnalyzeBackground>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
         }
         else if(doTopTagger)
         {
             printf("\n\n running AnalyzeTopTagger\n\n" ) ;
-            run<AnalyzeTopTagger>(vvf,startFile,nFiles,maxEvts,isSkim);
+            run<AnalyzeTopTagger>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
         }
         else if(doEventSelection)
         {
             printf("\n\n running AnalyzeEventSelection\n\n") ;
-            run<AnalyzeEventSelection>(vvf,startFile,nFiles,maxEvts,isSkim);
+            run<AnalyzeEventSelection>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
         }
         else if(doEventShape)
         {
             printf("\n\n running AnalyzeEventShape\n\n") ;
-            run<AnalyzeEventShape>(vvf,startFile,nFiles,maxEvts,isSkim);
+            run<AnalyzeEventShape>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
         }
         else if(do0Lep)
         {
             printf("\n\n running Analyze0Lep\n\n") ;
-            run<Analyze0Lep>(vvf,startFile,nFiles,maxEvts,isSkim);
+            run<Analyze0Lep>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
         }
         else if(doStealthTT)
         {
             printf("\n\n running AnalyzeStealthTopTagger\n\n") ;
-            run<AnalyzeStealthTopTagger>(vvf,startFile,nFiles,maxEvts,isSkim);
+            run<AnalyzeStealthTopTagger>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
         }
     
-        myfile->Close();
+        outfile->Close();
     }
     catch(const std::string e)
     {
