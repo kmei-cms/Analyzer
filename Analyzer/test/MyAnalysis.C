@@ -13,6 +13,7 @@
 #include "Framework/Framework/include/Jet.h"
 #include "Framework/Framework/include/BJet.h"
 #include "Framework/Framework/include/CommonVariables.h"
+#include "Framework/Framework/include/Baseline.h"
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -47,7 +48,9 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         std::cout << "Starting loop (in run)" << std::endl;
         printf( "runtype: %s weight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts ); fflush( stdout );
         tr.registerDerivedVar<std::string>("runtype",runtype);
+        tr.registerDerivedVar<std::string>("filetag",file.tag);
         tr.registerDerivedVar<double>("etaCut",2.4);
+        tr.registerDerivedVar<bool>("blind",true);
 
         // Define classes/functions that add variables on the fly
         std::shared_ptr<RunTopTagger> rtt;
@@ -58,6 +61,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         Jet jet;
         BJet bjet;
         CommonVariables commonVariables;
+        Baseline baseline;
 
         // Register classes/functions that add variables on the fly
         if ( !isSkim ) tr.registerFunction( std::move(*rtt) );
@@ -67,9 +71,10 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerFunction( std::move(electron) );
         tr.registerFunction( std::move(bjet) );
         tr.registerFunction( std::move(commonVariables) );
+        tr.registerFunction( std::move(baseline) );
 
         // Loop over all of the events and fill histos
-        a.Loop(tr, weight, maxEvts, file.tag);
+        a.Loop(tr, weight, maxEvts);
 
         // Cleaning up dynamic memory
         delete ch;
