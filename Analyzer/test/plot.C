@@ -9,6 +9,8 @@ public:
 
 int main()
 {
+    TH1::AddDirectory(false);
+
     //std::string path = "lep0Ana-Apr-13-2018";
     std::string path = "";
 
@@ -42,8 +44,8 @@ int main()
     };
 
     //make histInfoCollection
-    HistInfoCollection histInfoCollection(std::move(data), std::move(bgEntries), std::move(sigEntries));
-    HistInfoCollection histInfoCollectionSkim(std::move(data), std::move(bgSkim), std::move(sigEntries));
+    HistInfoCollection histInfoCollection(data, bgEntries, sigEntries);
+    HistInfoCollection histInfoCollectionSkim(data, bgSkim, sigEntries);
 
     //make plotter object with the required sources for histograms specified
     Plotter plt( std::move(histInfoCollection) );
@@ -122,7 +124,7 @@ int main()
         plt.plotStack( "h_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
         plt.plotStack( "h_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
         plt.plotStack( "h_fisher_0l_"+mycut, "fisher value" , "Events", true);        
-
+    
         pltSkim.plotNormFisher("h_fisher_0l_"+mycut, "fisher value" , "Events", false);
     }
     
@@ -183,4 +185,11 @@ int main()
         plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true, 9);
     }
     
+    // --------------------
+    // - Compute Yields
+    // --------------------
+       
+    const auto& yieldMap = histInfoCollection.computeYields("h_njets_0l_ge6j_HT500_ge2b_ge2t","njets",0,20);
+    auto allbg  = yieldMap.find("AllBG");
+    std::cout<<allbg->first<<"  "<<allbg->second<<std::endl;
 }

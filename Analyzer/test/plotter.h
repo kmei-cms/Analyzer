@@ -120,9 +120,8 @@ class HistInfoCollection
 public:
     std::vector<histInfo> dataVec_, bgVec_, sigVec_;
 
-    HistInfoCollection(std::vector<histInfo>&& dataVec, std::vector<histInfo>&& bgVec, std::vector<histInfo>&& sigVec) : dataVec_(dataVec), bgVec_(bgVec), sigVec_(sigVec)
-    {
-    }
+    HistInfoCollection(std::vector<histInfo>&& dataVec, std::vector<histInfo>&& bgVec, std::vector<histInfo>&& sigVec) : dataVec_(dataVec), bgVec_(bgVec), sigVec_(sigVec) {}
+    HistInfoCollection(std::vector<histInfo>& dataVec, std::vector<histInfo>& bgVec, std::vector<histInfo>& sigVec) : dataVec_(dataVec), bgVec_(bgVec), sigVec_(sigVec) {}
 
     void setUpBG(const std::string& histName, int rebin, THStack* bgStack, std::shared_ptr<TH1>& hbgSum, const bool& setFill = true)
     {
@@ -173,37 +172,24 @@ public:
         }
     }
 
-    std::map<std::string,double> computeYields(const std::string& histName, const std::shared_ptr<TH1>& hbgSum, const int min, const int max, const int rebin = -1)
+    std::map<std::string,double> computeYields(const std::string& histName, const std::string& histType, const int min, const int max, const int rebin = -1)
     {
         std::map<std::string,double> yieldMap;
-        //std::shared_ptr<TH1> hbgSum;
-        std::vector<std::vector<histInfo>> dataSets  = {dataVec_,bgVec_,sigVec_};
+        std::vector<std::vector<histInfo>*> dataSets  = { &dataVec_, &bgVec_, &sigVec_ };
+        std::shared_ptr<TH1> hbgSum(nullptr);
+        THStack* bgStack = new THStack();
 
-        //bool firstPass = true;
-        //for(auto& entry : bgVec_)
-        //{
-        //    entry.histName = histName;
-        //    entry.rebin = rebin;
-        //    entry.retrieveHistogram();
-        //
-        //    if(firstPass) 
-        //    {
-        //        hbgSum.reset( static_cast<TH1*>(entry.h->Clone()) );
-        //        firstPass = false;
-        //    }
-        //    else 
-        //    {
-        //        hbgSum->Add(entry.h.get());
-        //    }
-        //}
-
+        setUpBG(histName, rebin, bgStack, hbgSum, false);
+        setUpSignal(histName, rebin);
+        setUpData(histName, rebin);
+        
         int index = -1;
         double yield = 0;
-        for(const auto& set : dataSets)
+        for(const auto* set : dataSets)
         {
-            for(const auto& entry : set)
+            for(const auto& entry : *set)
             {
-                if( entry.histName.find(histName) != std::string::npos )
+                if( entry.histName.find(histType) != std::string::npos )
                 {
                     index++;
                     if(index==0)
@@ -219,7 +205,7 @@ public:
                     yield = 0;
                     for(int i = min; i<=max; i++)
                     {
-                        yield+=entry.h.get()->GetBinContent(i);
+                        yield+=entry.h->GetBinContent(i);
                     }
                     yieldMap.insert ( std::pair<std::string,double>( entry.legEntry, yield ) );
                 }
@@ -230,7 +216,9 @@ public:
         //{
         //    std::cout<<entry.first<<"  "<<entry.second<<std::endl;
         //}
-        
+
+        delete bgStack;
+
         return yieldMap;
     }
 
@@ -244,9 +232,7 @@ private:
     std::shared_ptr<TH1> hbgSum_;
 
 public:
-    Plotter(HistInfoCollection&& hc) : hc_(hc), hbgSum_(nullptr)
-    {
-    }
+    Plotter(HistInfoCollection&& hc) : hc_(hc), hbgSum_(nullptr) {}
 
     //This is a helper function which will keep the plot from overlapping with the legend
     void smartMax(const TH1* const h, const TLegend* const l, const TPad* const p, double& gmin, double& gmax, double& gpThreshMax, const bool error)
@@ -362,8 +348,7 @@ public:
         //drawLables(lumi);
 
         //Compute and draw yields for njets min to max
-        drawYields(histName,"njets",12,20);
-        //drawYields("njets",12,20);
+        //drawYields(histName,"njets",12,20);
 
         // lower plot will be in pad2
         c->cd();          // Go back to the main canvas before defining pad2
@@ -697,8 +682,7 @@ public:
 
     void drawYields(std::string histName, std::string histType, int min, int max)
     {
-        const auto& yieldMap = hc_.computeYields(histType, hbgSum_, min, max);
-        //const auto& yieldMap = hc_.computeYields(histName, hbgSum_, min, max);
+        const auto& yieldMap = hc_.computeYields(histName, histType, min, max);
         
         if(hc_.bgVec_[0].histName.find( histType ) != std::string::npos)
         {
