@@ -117,6 +117,44 @@ public:
 
 class HistInfoCollection
 {
+private:
+    void makeYieldMap(std::map<std::string, double>& yieldMap, const std::vector<std::vector<histInfo>*>& dataSets, const std::shared_ptr<TH1>& hbgSum, const std::string& histType, const int min, const int max)
+    {
+        int index = -1;
+        double yield = 0;
+        for(const auto* set : dataSets)
+        {
+            for(const auto& entry : *set)
+            {
+                if( entry.histName.find(histType) != std::string::npos )
+                {
+                    index++;
+                    if(index==0)
+                    {
+                        yield = 0;
+                        for(int i = min; i<=max; i++)
+                        {
+                            yield+=hbgSum->GetBinContent(i);
+                            //std::cout<<hbgSum->GetBinContent(i)<<std::endl;
+                        }
+                        yieldMap.insert ( std::pair<std::string,double>( "AllBG", yield ) );
+                    }
+                    yield = 0;
+                    for(int i = min; i<=max; i++)
+                    {
+                        yield+=entry.h->GetBinContent(i);
+                    }
+                    yieldMap.insert ( std::pair<std::string,double>( entry.legEntry, yield ) );
+                }
+            }
+        }
+
+        //for(const auto& entry : yieldMap)
+        //{
+        //    std::cout<<entry.first<<"  "<<entry.second<<std::endl;
+        //}
+    }
+
 public:
     std::vector<histInfo> dataVec_, bgVec_, sigVec_;
 
@@ -183,41 +221,19 @@ public:
         setUpSignal(histName, rebin);
         setUpData(histName, rebin);
         
-        int index = -1;
-        double yield = 0;
-        for(const auto* set : dataSets)
-        {
-            for(const auto& entry : *set)
-            {
-                if( entry.histName.find(histType) != std::string::npos )
-                {
-                    index++;
-                    if(index==0)
-                    {
-                        yield = 0;
-                        for(int i = min; i<=max; i++)
-                        {
-                            yield+=hbgSum->GetBinContent(i);
-                            //std::cout<<hbgSum->GetBinContent(i)<<std::endl;
-                        }
-                        yieldMap.insert ( std::pair<std::string,double>( "AllBG", yield ) );
-                    }
-                    yield = 0;
-                    for(int i = min; i<=max; i++)
-                    {
-                        yield+=entry.h->GetBinContent(i);
-                    }
-                    yieldMap.insert ( std::pair<std::string,double>( entry.legEntry, yield ) );
-                }
-            }
-        }
-
-        //for(const auto& entry : yieldMap)
-        //{
-        //    std::cout<<entry.first<<"  "<<entry.second<<std::endl;
-        //}
+        makeYieldMap(yieldMap, dataSets, hbgSum, histType, min, max);
 
         delete bgStack;
+
+        return yieldMap;
+    }
+
+    std::map<std::string,double> computeYields(const std::string& histName, const std::string& histType, const std::shared_ptr<TH1>& hbgSum, const int min, const int max)
+    {
+        std::map<std::string,double> yieldMap;
+        std::vector<std::vector<histInfo>*> dataSets  = { &dataVec_, &bgVec_, &sigVec_ };
+        
+        makeYieldMap(yieldMap, dataSets, hbgSum, histType, min, max);
 
         return yieldMap;
     }
@@ -348,7 +364,7 @@ public:
         //drawLables(lumi);
 
         //Compute and draw yields for njets min to max
-        //drawYields(histName,"njets",12,20);
+        drawYields(histName,"njets",12,20);
 
         // lower plot will be in pad2
         c->cd();          // Go back to the main canvas before defining pad2
@@ -682,7 +698,7 @@ public:
 
     void drawYields(std::string histName, std::string histType, int min, int max)
     {
-        const auto& yieldMap = hc_.computeYields(histName, histType, min, max);
+        const auto& yieldMap = hc_.computeYields(histName, histType, hbgSum_,  min, max);
         
         if(hc_.bgVec_[0].histName.find( histType ) != std::string::npos)
         {
