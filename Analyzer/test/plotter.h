@@ -702,22 +702,25 @@ public:
         
         if(hc_.bgVec_[0].histName.find( histType ) != std::string::npos)
         {
+            auto data   = yieldMap.find("Data_JetHT");
             auto allbg  = yieldMap.find("AllBG");
             auto qcd    = yieldMap.find("QCD");
             auto ttbar  = yieldMap.find("T#bar{T}");
             auto rpv350 = yieldMap.find("RPV 350");
             auto syy650 = yieldMap.find("SYY 650");
     
+            char stamp_data[128];
             char stamp_allbg[128];
             char stamp_qcd[128];
             char stamp_ttbar[128];
             char stamp_rpv350[128];
             char stamp_syy650[128];
-            sprintf(stamp_allbg, "%-15s %i" , (allbg->first).c_str() , int(allbg->second ));
-            sprintf(stamp_qcd,   "%-15s %i" , (qcd->first  ).c_str() , int(qcd->second   ));
-            sprintf(stamp_ttbar, "%-15s %i" , "TTbar"                , int(ttbar->second ));
-            sprintf(stamp_rpv350,"%-15s %i" , (rpv350->first).c_str(), int(rpv350->second));
-            sprintf(stamp_syy650,"%-15s %i" , (syy650->first).c_str(), int(syy650->second));
+            sprintf(stamp_data,  "%-15.15s %8.0lf" , (data->first).c_str()  , data->second  );
+            sprintf(stamp_allbg, "%-15.15s %8.0lf" , (allbg->first).c_str() , allbg->second );
+            sprintf(stamp_qcd,   "%-15.15s %8.0lf" , (qcd->first  ).c_str() , qcd->second   );
+            sprintf(stamp_ttbar, "%-15.15s %8.0lf" , "TTbar"                , ttbar->second );
+            sprintf(stamp_rpv350,"%-15.15s %8.0lf" , (rpv350->first).c_str(), rpv350->second);
+            sprintf(stamp_syy650,"%-15.15s %8.0lf" , (syy650->first).c_str(), syy650->second);
     
             TLatex mark;
             mark.SetNDC(true);
@@ -727,11 +730,12 @@ public:
             mark.SetTextSize(0.030);
             mark.SetTextFont(61);
             mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18       ), "Njets>=12 Yield");
-            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.03), stamp_allbg      );
-            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.06), stamp_qcd        );
-            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.09), stamp_ttbar      );
-            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.12), stamp_rpv350     );
-            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.15), stamp_syy650     );
+            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.03), stamp_data       );
+            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.06), stamp_allbg      );
+            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.09), stamp_qcd        );
+            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.12), stamp_ttbar      );
+            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.15), stamp_rpv350     );
+            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.18), stamp_syy650     );
         }
     
     }
