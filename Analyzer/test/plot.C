@@ -9,13 +9,17 @@ public:
 
 int main()
 {
+    TH1::AddDirectory(false);
+
+    //std::string path = "lep0Ana-Apr-13-2018";
     std::string path = "";
 
     //entry for data
     //this uses the initializer syntax to initialize the histInfo object
     //               leg entry root file                 draw options  draw color
     std::vector<histInfo> data = {
-        //{"All BG", "allBG.root"            , "PEX0",       kBlack}
+        //{"QCD",             "condor/output-files/" + path + "/QCD/QCD.root",                         "PEX0", kBlack  },
+        {"Data_JetHT", "condor/output-files/" + path + "/Data_JetHT/Data_JetHT.root", "PEX0", kBlack},
     };
 
     //vector summarizing background histograms to include in the plot
@@ -40,8 +44,8 @@ int main()
     };
 
     //make histInfoCollection
-    HistInfoCollection histInfoCollection(std::move(data), std::move(bgEntries), std::move(sigEntries));
-    HistInfoCollection histInfoCollectionSkim(std::move(data), std::move(bgSkim), std::move(sigEntries));
+    HistInfoCollection histInfoCollection(data, bgEntries, sigEntries);
+    HistInfoCollection histInfoCollectionSkim(data, bgSkim, sigEntries);
 
     //make plotter object with the required sources for histograms specified
     Plotter plt( std::move(histInfoCollection) );
@@ -70,10 +74,10 @@ int main()
         "ge6j_HT500_ge2b_1t"       ,
         "ge6j_HT500_ge2b_1t_f1"    , "ge6j_HT500_ge2b_1t_f2"    , "ge6j_HT500_ge2b_1t_f3"    , "ge6j_HT500_ge2b_1t_f4"    ,
 
-        "ge6j_HT500_ge2b_1t1"      , "ge6j_HT500_ge2b_1t2"      , "ge6j_HT500_ge2b_1t3"      , "ge6j_HT500_ge2b_1t2or3"   ,
+        "ge6j_HT500_ge2b_1t1"      , /*"ge6j_HT500_ge2b_1t2"      , "ge6j_HT500_ge2b_1t3"      ,*/ "ge6j_HT500_ge2b_1t2or3"   ,
         "ge6j_HT500_ge2b_1t1_f1"   , "ge6j_HT500_ge2b_1t1_f2"   , "ge6j_HT500_ge2b_1t1_f3"   , "ge6j_HT500_ge2b_1t1_f4"   ,
-        "ge6j_HT500_ge2b_1t2_f1"   , "ge6j_HT500_ge2b_1t2_f2"   , "ge6j_HT500_ge2b_1t2_f3"   , "ge6j_HT500_ge2b_1t2_f4"   ,
-        "ge6j_HT500_ge2b_1t3_f1"   , "ge6j_HT500_ge2b_1t3_f2"   , "ge6j_HT500_ge2b_1t3_f3"   , "ge6j_HT500_ge2b_1t3_f4"   ,
+        //"ge6j_HT500_ge2b_1t2_f1"   , "ge6j_HT500_ge2b_1t2_f2"   , "ge6j_HT500_ge2b_1t2_f3"   , "ge6j_HT500_ge2b_1t2_f4"   ,
+        //"ge6j_HT500_ge2b_1t3_f1"   , "ge6j_HT500_ge2b_1t3_f2"   , "ge6j_HT500_ge2b_1t3_f3"   , "ge6j_HT500_ge2b_1t3_f4"   ,
         "ge6j_HT500_ge2b_1t2or3_f1", "ge6j_HT500_ge2b_1t2or3_f2", "ge6j_HT500_ge2b_1t2or3_f3", "ge6j_HT500_ge2b_1t2or3_f4",
 
 
@@ -81,13 +85,13 @@ int main()
         "ge6j_HT500_ge2b_ge2t"     ,
         "ge6j_HT500_ge2b_ge2t_f1"  , "ge6j_HT500_ge2b_ge2t_f2"  , "ge6j_HT500_ge2b_ge2t_f3"  , "ge6j_HT500_ge2b_ge2t_f4"  ,
         
-        "ge6j_HT500_ge2b_ge2t11"   , "ge6j_HT500_ge2b_ge2t12"   , "ge6j_HT500_ge2b_ge2t13"   , "ge6j_HT500_ge2b_ge2t22"   , "ge6j_HT500_ge2b_ge2t23", "ge6j_HT500_ge2b_ge2t33",
-        "ge6j_HT500_ge2b_ge2t11_f1", "ge6j_HT500_ge2b_ge2t11_f2", "ge6j_HT500_ge2b_ge2t11_f3", "ge6j_HT500_ge2b_ge2t11_f4",
-        "ge6j_HT500_ge2b_ge2t12_f1", "ge6j_HT500_ge2b_ge2t12_f2", "ge6j_HT500_ge2b_ge2t12_f3", "ge6j_HT500_ge2b_ge2t12_f4",
-        "ge6j_HT500_ge2b_ge2t13_f1", "ge6j_HT500_ge2b_ge2t13_f2", "ge6j_HT500_ge2b_ge2t13_f3", "ge6j_HT500_ge2b_ge2t13_f4",
-        "ge6j_HT500_ge2b_ge2t22_f1", "ge6j_HT500_ge2b_ge2t22_f2", "ge6j_HT500_ge2b_ge2t22_f3", "ge6j_HT500_ge2b_ge2t22_f4",
-        "ge6j_HT500_ge2b_ge2t23_f1", "ge6j_HT500_ge2b_ge2t23_f2", "ge6j_HT500_ge2b_ge2t23_f3", "ge6j_HT500_ge2b_ge2t23_f4",
-        "ge6j_HT500_ge2b_ge2t33_f1", "ge6j_HT500_ge2b_ge2t33_f2", "ge6j_HT500_ge2b_ge2t33_f3", "ge6j_HT500_ge2b_ge2t33_f4",
+        //"ge6j_HT500_ge2b_ge2t11"   , "ge6j_HT500_ge2b_ge2t12"   , "ge6j_HT500_ge2b_ge2t13"   , "ge6j_HT500_ge2b_ge2t22"   , "ge6j_HT500_ge2b_ge2t23", "ge6j_HT500_ge2b_ge2t33",
+        //"ge6j_HT500_ge2b_ge2t11_f1", "ge6j_HT500_ge2b_ge2t11_f2", "ge6j_HT500_ge2b_ge2t11_f3", "ge6j_HT500_ge2b_ge2t11_f4",
+        //"ge6j_HT500_ge2b_ge2t12_f1", "ge6j_HT500_ge2b_ge2t12_f2", "ge6j_HT500_ge2b_ge2t12_f3", "ge6j_HT500_ge2b_ge2t12_f4",
+        //"ge6j_HT500_ge2b_ge2t13_f1", "ge6j_HT500_ge2b_ge2t13_f2", "ge6j_HT500_ge2b_ge2t13_f3", "ge6j_HT500_ge2b_ge2t13_f4",
+        //"ge6j_HT500_ge2b_ge2t22_f1", "ge6j_HT500_ge2b_ge2t22_f2", "ge6j_HT500_ge2b_ge2t22_f3", "ge6j_HT500_ge2b_ge2t22_f4",
+        //"ge6j_HT500_ge2b_ge2t23_f1", "ge6j_HT500_ge2b_ge2t23_f2", "ge6j_HT500_ge2b_ge2t23_f3", "ge6j_HT500_ge2b_ge2t23_f4",
+        //"ge6j_HT500_ge2b_ge2t33_f1", "ge6j_HT500_ge2b_ge2t33_f2", "ge6j_HT500_ge2b_ge2t33_f3", "ge6j_HT500_ge2b_ge2t33_f4",
 
         "ge6j_HT500_ge2b_ge2t11or12or13"    , "ge6j_HT500_ge2b_ge2t22or23or33"    ,
         "ge6j_HT500_ge2b_ge2t11or12or13_f1" , "ge6j_HT500_ge2b_ge2t11or12or13_f2" ,"ge6j_HT500_ge2b_ge2t11or12or13_f3" , "ge6j_HT500_ge2b_ge2t11or12or13_f4" ,
@@ -120,7 +124,7 @@ int main()
         plt.plotStack( "h_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
         plt.plotStack( "h_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
         plt.plotStack( "h_fisher_0l_"+mycut, "fisher value" , "Events", true);        
-
+    
         pltSkim.plotNormFisher("h_fisher_0l_"+mycut, "fisher value" , "Events", false);
     }
     
@@ -144,19 +148,19 @@ int main()
         // 1 top selection
         { {"h_njets_0l_ge6j_HT500_ge2b_1t_f1"  , "h_njets_0l_ge6j_HT500_ge2b_1t_f2"  , "h_njets_0l_ge6j_HT500_ge2b_1t_f3"  , "h_njets_0l_ge6j_HT500_ge2b_1t_f4"  } , "njets_0l_ge6j_HT500_ge2b_1t"  },
         { {"h_njets_0l_ge6j_HT500_ge2b_1t1_f1" , "h_njets_0l_ge6j_HT500_ge2b_1t1_f2" , "h_njets_0l_ge6j_HT500_ge2b_1t1_f3" , "h_njets_0l_ge6j_HT500_ge2b_1t1_f4" } , "njets_0l_ge6j_HT500_ge2b_1t1" },
-        { {"h_njets_0l_ge6j_HT500_ge2b_1t2_f1" , "h_njets_0l_ge6j_HT500_ge2b_1t2_f2" , "h_njets_0l_ge6j_HT500_ge2b_1t2_f3" , "h_njets_0l_ge6j_HT500_ge2b_1t2_f4" } , "njets_0l_ge6j_HT500_ge2b_1t2" },
-        { {"h_njets_0l_ge6j_HT500_ge2b_1t3_f1" , "h_njets_0l_ge6j_HT500_ge2b_1t3_f2" , "h_njets_0l_ge6j_HT500_ge2b_1t3_f3" , "h_njets_0l_ge6j_HT500_ge2b_1t3_f4" } , "njets_0l_ge6j_HT500_ge2b_1t3" },
+        //{ {"h_njets_0l_ge6j_HT500_ge2b_1t2_f1" , "h_njets_0l_ge6j_HT500_ge2b_1t2_f2" , "h_njets_0l_ge6j_HT500_ge2b_1t2_f3" , "h_njets_0l_ge6j_HT500_ge2b_1t2_f4" } , "njets_0l_ge6j_HT500_ge2b_1t2" },
+        //{ {"h_njets_0l_ge6j_HT500_ge2b_1t3_f1" , "h_njets_0l_ge6j_HT500_ge2b_1t3_f2" , "h_njets_0l_ge6j_HT500_ge2b_1t3_f3" , "h_njets_0l_ge6j_HT500_ge2b_1t3_f4" } , "njets_0l_ge6j_HT500_ge2b_1t3" },
 
         { {"h_njets_0l_ge6j_HT500_ge2b_1t2or3_f1" , "h_njets_0l_ge6j_HT500_ge2b_1t2or3_f2" , "h_njets_0l_ge6j_HT500_ge2b_1t2or3_f3" , "h_njets_0l_ge6j_HT500_ge2b_1t2or3_f4" } , "njets_0l_ge6j_HT500_ge2b_1t2or3" },
 
         // 2 tops selection
         { {"h_njets_0l_ge6j_HT500_ge2b_ge2t_f1"  , "h_njets_0l_ge6j_HT500_ge2b_ge2t_f2"  , "h_njets_0l_ge6j_HT500_ge2b_ge2t_f3"  , "h_njets_0l_ge6j_HT500_ge2b_ge2t_f4"  } , "njets_0l_ge6j_HT500_ge2b_ge2t"  },
-        { {"h_njets_0l_ge6j_HT500_ge2b_ge2t11_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t11_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t11_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t11_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t11"},
-        { {"h_njets_0l_ge6j_HT500_ge2b_ge2t12_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t12_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t12_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t12_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t12"},
-        { {"h_njets_0l_ge6j_HT500_ge2b_ge2t13_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t13_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t13_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t13_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t13"},
-        { {"h_njets_0l_ge6j_HT500_ge2b_ge2t22_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t22_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t22_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t22_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t22"},
-        { {"h_njets_0l_ge6j_HT500_ge2b_ge2t23_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t23_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t23_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t23_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t23"},
-        { {"h_njets_0l_ge6j_HT500_ge2b_ge2t33_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t33_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t33_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t33_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t33"},
+        //{ {"h_njets_0l_ge6j_HT500_ge2b_ge2t11_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t11_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t11_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t11_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t11"},
+        //{ {"h_njets_0l_ge6j_HT500_ge2b_ge2t12_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t12_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t12_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t12_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t12"},
+        //{ {"h_njets_0l_ge6j_HT500_ge2b_ge2t13_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t13_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t13_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t13_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t13"},
+        //{ {"h_njets_0l_ge6j_HT500_ge2b_ge2t22_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t22_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t22_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t22_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t22"},
+        //{ {"h_njets_0l_ge6j_HT500_ge2b_ge2t23_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t23_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t23_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t23_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t23"},
+        //{ {"h_njets_0l_ge6j_HT500_ge2b_ge2t33_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t33_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t33_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t33_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t33"},
 
         { {"h_njets_0l_ge6j_HT500_ge2b_ge2t11or12or13_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t11or12or13_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t11or12or13_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t11or12or13_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t11or12or13"},
         { {"h_njets_0l_ge6j_HT500_ge2b_ge2t22or23or33_f1", "h_njets_0l_ge6j_HT500_ge2b_ge2t22or23or33_f2", "h_njets_0l_ge6j_HT500_ge2b_ge2t22or23or33_f3", "h_njets_0l_ge6j_HT500_ge2b_ge2t22or23or33_f4"} , "njets_0l_ge6j_HT500_ge2b_ge2t22or23or33"},
@@ -181,4 +185,14 @@ int main()
         plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true, 9);
     }
     
+    // --------------------
+    // - Compute Yields
+    // --------------------
+
+    for(std::string mycut : mycuts_0l)
+    {
+        const auto& yieldMap = histInfoCollection.computeYields("h_njets_0l_"+mycut,"njets",7,7);
+        auto allbg  = yieldMap.find("AllBG"); auto data_JetHT = yieldMap.find("Data_JetHT"); auto ttbar = yieldMap.find("T#bar{T}"); auto QCD = yieldMap.find("QCD");
+        printf("%45.45s:  %s: %12.0lf   %s: %12.0lf   %s: %12.0lf   %s: %12.0lf\n",("h_njets_0l_"+mycut).c_str(), (data_JetHT->first).c_str(), data_JetHT->second, (allbg->first).c_str(), allbg->second, "ttbar", ttbar->second, (QCD->first).c_str(), QCD->second );
+    }       
 }
