@@ -31,7 +31,6 @@ void AnalyzeEventSelection::InitHistos()
     my_histos.emplace("h_met", std::make_shared<TH1D>("h_met","h_met", 20, 0, 200));
     my_histos.emplace("h_ht", std::make_shared<TH1D>("h_ht","h_ht", 60, 0, 3000));
     my_histos.emplace("h_ntops", std::make_shared<TH1D>("h_ntops","h_ntops", 5, 0, 5));
-    my_histos.emplace("h_mbl_2l_test", std::make_shared<TH1D>("h_mbl_2l_test","h_mbl_2l_test", 50, 0, 200));
     
     // 0 lepton plots
     // "6j" is the control region only. Only look at data for that region
@@ -46,22 +45,24 @@ void AnalyzeEventSelection::InitHistos()
         my_histos.emplace("h_nb_0l_"+mycut, std::make_shared<TH1D>(("h_nb_0l_"+mycut).c_str(),("h_nb_0l_"+mycut).c_str(), 10, 0, 10));
         my_histos.emplace("h_HT_0l_"+mycut, std::make_shared<TH1D>(("h_HT_0l_"+mycut).c_str(),("h_HT_0l_"+mycut).c_str(), 60, 0, 3000));
         my_histos.emplace("h_bdt_0l_"+mycut, std::make_shared<TH1D>(("h_bdt_0l_"+mycut).c_str(),("h_bdt_0l_"+mycut).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("h_fisher_0l_"+mycut, std::make_shared<TH1D>(("h_fisher_0l_"+mycut).c_str(),("h_fisher_0l_"+mycut).c_str(), 50, -0.25, 0.25));
 
         my_2d_histos.emplace("h_njets_bdt_0l_"+mycut, std::make_shared<TH2D>(("h_njets_bdt_0l_"+mycut).c_str(),("h_njets_bdt_0l_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("h_njets_fisher_0l_"+mycut, std::make_shared<TH2D>(("h_njets_fisher_0l_"+mycut).c_str(),("h_njets_fisher_0l_"+mycut).c_str(), 15, 0, 15, 50, -0.25, 0.25));
     }
 
     // 1 lepton plots
     // attempt to have "6j" be the control region, also include 6j in case that works better
     // TODO: add BDT cuts
-    std::vector<std::string> mycuts_1l {"g6j","g6j_g1b", "g6j_g1b_mbl", "g6j_g1b_mbl_0t", "g6j_g1b_mbl_1t1", "g6j_g1b_mbl_1t2", "g6j_g1b_mbl_1t3",
-            "6j","6j_g1b", "6j_g1b_mbl", "6j_g1b_mbl_0t", "6j_g1b_mbl_1t1", "6j_g1b_mbl_1t2", "6j_g1b_mbl_1t3",
-            "g7j","g7j_g1b", "g7j_g1b_mbl", "g7j_g1b_mbl_0t", "g7j_g1b_mbl_1t1", "g7j_g1b_mbl_1t2", "g7j_g1b_mbl_1t3",
+    std::vector<std::string> mycuts_1l {"g6j_g1b", "g6j_g1b_mbl", "g6j_g1b_mbl_0t", "g6j_g1b_mbl_1t1", "g6j_g1b_mbl_1t2", "g6j_g1b_mbl_1t3",
+            "6j_g1b", "6j_g1b_mbl", "6j_g1b_mbl_0t", "6j_g1b_mbl_1t1", "6j_g1b_mbl_1t2", "6j_g1b_mbl_1t3",
+            "g7j_g1b", "g7j_g1b_mbl", "g7j_g1b_mbl_0t", "g7j_g1b_mbl_1t1", "g7j_g1b_mbl_1t2", "g7j_g1b_mbl_1t3",
             };
     std::vector<std::string> mycuts_1mu {
-        "6j","6j_g1b", "6j_g1b_mbl", "6j_g1b_mbl_0t", "6j_g1b_mbl_1t1", "6j_g1b_mbl_1t2", "6j_g1b_mbl_1t3",
+        "6j_g1b", "6j_g1b_mbl", "6j_g1b_mbl_0t", "6j_g1b_mbl_1t1", "6j_g1b_mbl_1t2", "6j_g1b_mbl_1t3",
             };
     std::vector<std::string> mycuts_1el {
-        "6j","6j_g1b", "6j_g1b_mbl", "6j_g1b_mbl_0t", "6j_g1b_mbl_1t1", "6j_g1b_mbl_1t2", "6j_g1b_mbl_1t3",
+        "6j_g1b", "6j_g1b_mbl", "6j_g1b_mbl_0t", "6j_g1b_mbl_1t1", "6j_g1b_mbl_1t2", "6j_g1b_mbl_1t3",
             };
     for(std::string mycut : mycuts_1l)
     {
@@ -71,8 +72,10 @@ void AnalyzeEventSelection::InitHistos()
         my_histos.emplace("h_HT_1l_"+mycut, std::make_shared<TH1D>(("h_HT_1l_"+mycut).c_str(),("h_HT_1l_"+mycut).c_str(), 60, 0, 3000));
         my_histos.emplace("h_mbl_1l_"+mycut, std::make_shared<TH1D>(("h_mbl_1l_"+mycut).c_str(),("h_mbl_1l_"+mycut).c_str(), 30, 0, 300));
         my_histos.emplace("h_bdt_1l_"+mycut, std::make_shared<TH1D>(("h_bdt_1l_"+mycut).c_str(),("h_bdt_1l_"+mycut).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("h_fisher_1l_"+mycut, std::make_shared<TH1D>(("h_fisher_1l_"+mycut).c_str(),("h_fisher_1l_"+mycut).c_str(), 50, -0.25, 0.25));
 
         my_2d_histos.emplace("h_njets_bdt_1l_"+mycut, std::make_shared<TH2D>(("h_njets_bdt_1l_"+mycut).c_str(),("h_njets_bdt_1l_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("h_njets_fisher_1l_"+mycut, std::make_shared<TH2D>(("h_njets_fisher_1l_"+mycut).c_str(),("h_njets_fisher_1l_"+mycut).c_str(), 15, 0, 15, 50, -0.25, 0.25));
     }
     for(std::string mycut : mycuts_1mu)
     {
@@ -83,8 +86,10 @@ void AnalyzeEventSelection::InitHistos()
         my_histos.emplace("h_HT_1mu_"+mycut, std::make_shared<TH1D>(("h_HT_1mu_"+mycut).c_str(),("h_HT_1mu_"+mycut).c_str(), 60, 0, 3000));
         my_histos.emplace("h_mbl_1mu_"+mycut, std::make_shared<TH1D>(("h_mbl_1mu_"+mycut).c_str(),("h_mbl_1mu_"+mycut).c_str(), 30, 0, 300));
         my_histos.emplace("h_bdt_1mu_"+mycut, std::make_shared<TH1D>(("h_bdt_1mu_"+mycut).c_str(),("h_bdt_1mu_"+mycut).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("h_fisher_1mu_"+mycut, std::make_shared<TH1D>(("h_fisher_1mu_"+mycut).c_str(),("h_fisher_1mu_"+mycut).c_str(), 50, -0.25, 0.25));
 
         my_2d_histos.emplace("h_njets_bdt_1mu_"+mycut, std::make_shared<TH2D>(("h_njets_bdt_1mu_"+mycut).c_str(),("h_njets_bdt_1mu_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("h_njets_fisher_1mu_"+mycut, std::make_shared<TH2D>(("h_njets_fisher_1mu_"+mycut).c_str(),("h_njets_fisher_1mu_"+mycut).c_str(), 15, 0, 15, 50, -0.25, 0.25));
     }
     for(std::string mycut : mycuts_1el)
     {
@@ -95,15 +100,17 @@ void AnalyzeEventSelection::InitHistos()
         my_histos.emplace("h_HT_1el_"+mycut, std::make_shared<TH1D>(("h_HT_1el_"+mycut).c_str(),("h_HT_1el_"+mycut).c_str(), 60, 0, 3000));
         my_histos.emplace("h_mbl_1el_"+mycut, std::make_shared<TH1D>(("h_mbl_1el_"+mycut).c_str(),("h_mbl_1el_"+mycut).c_str(), 30, 0, 300));
         my_histos.emplace("h_bdt_1el_"+mycut, std::make_shared<TH1D>(("h_bdt_1el_"+mycut).c_str(),("h_bdt_1el_"+mycut).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("h_fisher_1el_"+mycut, std::make_shared<TH1D>(("h_fisher_1el_"+mycut).c_str(),("h_fisher_1el_"+mycut).c_str(), 50, -0.25, 0.25));
 
         my_2d_histos.emplace("h_njets_bdt_1el_"+mycut, std::make_shared<TH2D>(("h_njets_bdt_1el_"+mycut).c_str(),("h_njets_bdt_1el_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("h_njets_fisher_1el_"+mycut, std::make_shared<TH2D>(("h_njets_fisher_1el_"+mycut).c_str(),("h_njets_fisher_1el_"+mycut).c_str(), 15, 0, 15, 50, -0.25, 0.25));
     }
 
     
     // 2 lepton plots
     // onZ control region only for now, also check for 1top to see if a fake top changes any behavior
-    std::vector<std::string> mycuts_2l {"onZ", "onZ_g1b", "onZ_g1b_nombl", "onZ_g1b_g1t", "onZ_g1b_nombl_g1t", "2b",
-            "onZ_g1b_nombl_bdt1","onZ_g1b_nombl_bdt2","onZ_g1b_nombl_bdt3","onZ_g1b_nombl_bdt4"};
+    std::vector<std::string> mycuts_2l {"onZ_g1b", "onZ_g1b_g1t", "2b",
+            "onZ_g1b_bdt1","onZ_g1b_bdt2","onZ_g1b_bdt3","onZ_g1b_bdt4"};
     for(std::string mycut : mycuts_2l)
     {
         my_histos.emplace("h_njets_2l_"+mycut, std::make_shared<TH1D>(("h_njets_2l_"+mycut).c_str(),("h_njets_2l_"+mycut).c_str(), 15, 0, 15));
@@ -111,8 +118,10 @@ void AnalyzeEventSelection::InitHistos()
         my_histos.emplace("h_nb_2l_"+mycut, std::make_shared<TH1D>(("h_nb_2l_"+mycut).c_str(),("h_nb_2l_"+mycut).c_str(), 10, 0, 10));
         my_histos.emplace("h_HT_2l_"+mycut, std::make_shared<TH1D>(("h_HT_2l_"+mycut).c_str(),("h_HT_2l_"+mycut).c_str(), 60, 0, 3000));
         my_histos.emplace("h_bdt_2l_"+mycut, std::make_shared<TH1D>(("h_bdt_2l_"+mycut).c_str(),("h_bdt_2l_"+mycut).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("h_fisher_2l_"+mycut, std::make_shared<TH1D>(("h_fisher_2l_"+mycut).c_str(),("h_fisher_2l_"+mycut).c_str(), 50, -0.25, 0.25));
 
         my_2d_histos.emplace("h_njets_bdt_2l_"+mycut, std::make_shared<TH2D>(("h_njets_bdt_2l_"+mycut).c_str(),("h_njets_bdt_2l_"+mycut).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("h_njets_fisher_2l_"+mycut, std::make_shared<TH2D>(("h_njets_fisher_2l_"+mycut).c_str(),("h_njets_fisher_2l_"+mycut).c_str(), 15, 0, 15, 50, -0.25, 0.25));
 
     }
 
@@ -165,6 +174,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         const auto& NGoodLeptons        = tr.getVar<int>("NGoodLeptons");
         const auto& HT_trigger          = tr.getVar<double>("HT_trigger");
         const auto& Mbl                 = tr.getVar<double>("Mbl");
+        const auto& used_bjet_for_mbl   = tr.getVar<TLorentzVector>("used_bjet_for_mbl");
         
         const auto& fisher_bin1 = tr.getVar<bool>("fisher_bin1");
         const auto& fisher_bin2 = tr.getVar<bool>("fisher_bin2");
@@ -175,6 +185,15 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         const auto& bdt_bin3    = tr.getVar<bool>("bdt_bin3");
         const auto& bdt_bin4    = tr.getVar<bool>("bdt_bin4");
         const auto& eventshape_bdt_val = tr.getVar<double>("eventshape_bdt_val");
+        const auto& fisher_val         = tr.getVar<double>("fisher_val");
+
+
+        const auto& passBaseline0l        = tr.getVar<bool>("passBaseline0l");
+        const auto& passBaseline1l        = tr.getVar<bool>("passBaseline1l");
+        const auto& passBaseline1mu       = tr.getVar<bool>("passBaseline1mu");
+        const auto& passBaseline1el       = tr.getVar<bool>("passBaseline1el");
+        const auto& passBaseline2l        = tr.getVar<bool>("passBaseline2l");
+        const auto& passBaseline2lonZ     = tr.getVar<bool>("passBaseline2lonZ");
        
         if(maxevents != -1 && tr.getEvtNum() >= maxevents) break;        
         if ( tr.getEvtNum() % 1000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;
@@ -191,19 +210,6 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         if(runtype != "Data")
             eventweight = tr.getVar<double>("Weight");
         
-        // ------------------------------
-        // -- Trigger for data
-        // ------------------------------
-        
-        bool passTriggerAllHad   = PassTriggerAllHad(TriggerNames, TriggerPass);
-        bool passTriggerMuon     = PassTriggerMuon(TriggerNames, TriggerPass);
-        bool passTriggerElectron = PassTriggerElectron(TriggerNames, TriggerPass);
-        if (runtype == "Data")
-        {
-            if (filetag == "Data_JetHT" && !passTriggerAllHad) continue;
-            if (filetag == "Data_SingleMuon" && !passTriggerMuon) continue;
-            if (filetag == "Data_SingleElectron" && !passTriggerElectron) continue;
-        }
         
         // ------------------
         // --- TOP TAGGER ---
@@ -213,101 +219,11 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         // -------------------------------
         // -- Basic event selection stuff
         // -------------------------------
-        
-        bool onZ = false;
-        bool passMbl_2l = false;
-        if ( NGoodLeptons == 2 )
-        {
-            if ( (NGoodMuons == 2) && (GoodMuonsCharge[0] != GoodMuonsCharge[1]) )
-            {
-                double mll = (GoodMuons[0] + GoodMuons[1]).M();
-                if( mll > 81 && mll < 101)
-                    onZ = true; 
-                // check whether a bl pair passes the M(b,l) cut
-                for (TLorentzVector myb : BJets_pt30)
-                {
-                    double mass_bl_1 = (GoodMuons[0] + myb).M();
-                    if(mass_bl_1 < 180 && mass_bl_1 > 30)
-                        passMbl_2l = true;
-                    double mass_bl_2 = (GoodMuons[1] + myb).M();
-                    if(mass_bl_2 < 180 && mass_bl_2 > 30)
-                        passMbl_2l = true;
-                    my_histos["h_mbl_2l_test"]->Fill(mass_bl_1,eventweight);
-                    my_histos["h_mbl_2l_test"]->Fill(mass_bl_2,eventweight);
-                }
-            } 
-            else if ( (NGoodElectrons == 2) && (GoodElectronsCharge[0] != GoodElectronsCharge[1]) )
-            {
-                double mll = (GoodElectrons[0] + GoodElectrons[1]).M();
-                if( mll > 81 && mll < 101)
-                    onZ = true;  
-                // check whether a bl pair passes the M(b,l) cut
-                for (TLorentzVector myb : BJets_pt30)
-                {
-                    double mass_bl_1 = (GoodElectrons[0] + myb).M();
-                    if(mass_bl_1 < 180 && mass_bl_1 > 30)
-                        passMbl_2l = true;
-                    double mass_bl_2 = (GoodElectrons[1] + myb).M();
-                    if(mass_bl_2 < 180 && mass_bl_2 > 30)
-                        passMbl_2l = true;
-                    my_histos["h_mbl_2l_test"]->Fill(mass_bl_1,eventweight);
-                    my_histos["h_mbl_2l_test"]->Fill(mass_bl_2,eventweight);
-                }
-            }
-        }        
-        
-        bool passBaseline0l = NGoodLeptons==0 && NJets_pt45>=6 && HT_trigger > 500 && NBJets_pt45 >= 1;
-        bool passBaseline1l = NGoodLeptons==1 && NJets_pt30>=6 ;
-        bool passBaseline1mu = NGoodMuons==1 && NJets_pt30>=6 ;
-        bool passBaseline1el = NGoodElectrons==1 && NJets_pt30>=6 ;
-        bool passBaseline2l = NGoodLeptons==2;
-        if(runtype == "Data")
-        {
-            passBaseline0l = passBaseline0l && passTriggerAllHad && (filetag == "Data_JetHT");
-            if (NGoodMuons > 0)
-            {
-                passBaseline1l = passBaseline1l && passTriggerMuon && (filetag == "Data_SingleMuon");
-                passBaseline2l = passBaseline2l && passTriggerMuon && (filetag == "Data_SingleMuon");
-            } 
-            else if (NGoodElectrons > 0)
-            {
-                passBaseline1l = passBaseline1l && passTriggerElectron && (filetag == "Data_SingleElectron");
-                passBaseline2l = passBaseline2l && passTriggerElectron && (filetag == "Data_SingleElectron");
-            }
-        }
-        bool pass_g1b = NBJets_pt30 >= 1;
+                
         bool pass_0t = ntops==0, pass_1t = ntops==1, pass_2t = ntops==2;
         bool pass_1t1 = ntops==1 && ntops_1jet==1, pass_1t2 = ntops==1 && ntops_2jet==1, pass_1t3 = ntops==1 && ntops_3jet==1;
-        double mbl = -1;
-        TLorentzVector used_bjet;
-        double mblmet = -1;
-        TLorentzVector metlv;
-        metlv.SetPtEtaPhiM(MET, 0, METPhi, 0);
-        if(NGoodLeptons == 1 && pass_g1b)
-        {
-            TLorentzVector mylepton = GoodLeptons[0];
-            bool passMtop = false;
-            //std::cout << "found lepton and " << NJets_pt30_btag << " bjets" << std::endl;
-            for (TLorentzVector myb : BJets_pt30)
-            {
-                double mass_bl = (mylepton + myb).M();
-                double mass_blmet = (mylepton + myb + metlv).M();
-                //std::cout << "mbl and mblmet are " << mass_bl << " and " << mass_blmet << std::endl;
-                if (mbl == -1)
-                {
-                    mbl = mass_bl;
-                    mblmet = mass_blmet;
-                    used_bjet = myb;
-                }
-                else if( abs(mass_bl-172.5) < abs(mbl-172.5))
-                {
-                    mbl = mass_bl;
-                    mblmet = mass_blmet;
-                    used_bjet = myb;
-                }
-            }
-        }
-        bool pass_mbl = mbl > 30 && mbl < 180;
+
+        bool pass_mbl = Mbl > 30 && Mbl < 180;
         // Now check that used_bjet isn't also used for the top tagger
         if (pass_mbl)
         {
@@ -320,7 +236,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
                 bool usedup = false;
                 for(const Constituent* c: mytop_constituents)
                 {
-                    if(c->p() == used_bjet)
+                    if(c->p() == used_bjet_for_mbl)
                     {
                         usedup = true;
                         //std::cout << "Already used this b for the leptonic top" << std::endl;
@@ -376,50 +292,47 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
                 my_histos["h_nb_0l_"+kv.first]->Fill(NBJets_pt30, eventweight);
                 my_histos["h_HT_0l_"+kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_0l_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
+                my_histos["h_fisher_0l_"+kv.first]->Fill(fisher_val, eventweight);
                 my_2d_histos["h_njets_bdt_0l_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
+                my_2d_histos["h_njets_fisher_0l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
             }
         }
         
         const std::map<std::string, bool> cut_map_1l {
-            {"g6j",             passBaseline1l},
-            {"g6j_g1b",         passBaseline1l && pass_g1b},
-            {"g6j_g1b_mbl",     passBaseline1l && pass_g1b && pass_mbl},
-            {"g6j_g1b_mbl_0t",  passBaseline1l && pass_g1b && pass_mbl && pass_0t},
-            {"g6j_g1b_mbl_1t1", passBaseline1l && pass_g1b && pass_mbl && pass_1t1},
-            {"g6j_g1b_mbl_1t2", passBaseline1l && pass_g1b && pass_mbl && pass_1t2},
-            {"g6j_g1b_mbl_1t3", passBaseline1l && pass_g1b && pass_mbl && pass_1t3},
-            {"6j",              passBaseline1l && NJets_pt30==6},
-            {"6j_g1b",          passBaseline1l && NJets_pt30==6 && pass_g1b},
-            {"6j_g1b_mbl",      passBaseline1l && NJets_pt30==6 && pass_g1b && pass_mbl},
-            {"6j_g1b_mbl_0t",   passBaseline1l && NJets_pt30==6 && pass_g1b && pass_mbl && pass_0t},
-            {"6j_g1b_mbl_1t1",  passBaseline1l && NJets_pt30==6 && pass_g1b && pass_mbl && pass_1t1},
-            {"6j_g1b_mbl_1t2",  passBaseline1l && NJets_pt30==6 && pass_g1b && pass_mbl && pass_1t2},
-            {"6j_g1b_mbl_1t3",  passBaseline1l && NJets_pt30==6 && pass_g1b && pass_mbl && pass_1t3},
-            {"g7j",             passBaseline1l && NJets_pt30>=7},
-            {"g7j_g1b",         passBaseline1l && NJets_pt30>=7 && pass_g1b},
-            {"g7j_g1b_mbl",     passBaseline1l && NJets_pt30>=7 && pass_g1b && pass_mbl},
-            {"g7j_g1b_mbl_0t",  passBaseline1l && NJets_pt30>=7 && pass_g1b && pass_mbl && pass_0t},
-            {"g7j_g1b_mbl_1t1", passBaseline1l && NJets_pt30>=7 && pass_g1b && pass_mbl && pass_1t1},
-            {"g7j_g1b_mbl_1t2", passBaseline1l && NJets_pt30>=7 && pass_g1b && pass_mbl && pass_1t2},
-            {"g7j_g1b_mbl_1t3", passBaseline1l && NJets_pt30>=7 && pass_g1b && pass_mbl && pass_1t3},
+            {"g6j_g1b",         passBaseline1l},
+            {"g6j_g1b_mbl",     passBaseline1l && pass_mbl},
+            {"g6j_g1b_mbl_0t",  passBaseline1l && pass_mbl && pass_0t},
+            {"g6j_g1b_mbl_1t1", passBaseline1l && pass_mbl && pass_1t1},
+            {"g6j_g1b_mbl_1t2", passBaseline1l && pass_mbl && pass_1t2},
+            {"g6j_g1b_mbl_1t3", passBaseline1l && pass_mbl && pass_1t3},
+            {"6j_g1b",          passBaseline1l && NJets_pt30==6},
+            {"6j_g1b_mbl",      passBaseline1l && NJets_pt30==6 && pass_mbl},
+            {"6j_g1b_mbl_0t",   passBaseline1l && NJets_pt30==6 && pass_mbl && pass_0t},
+            {"6j_g1b_mbl_1t1",  passBaseline1l && NJets_pt30==6 && pass_mbl && pass_1t1},
+            {"6j_g1b_mbl_1t2",  passBaseline1l && NJets_pt30==6 && pass_mbl && pass_1t2},
+            {"6j_g1b_mbl_1t3",  passBaseline1l && NJets_pt30==6 && pass_mbl && pass_1t3},
+            {"g7j_g1b",         passBaseline1l && NJets_pt30>=7},
+            {"g7j_g1b_mbl",     passBaseline1l && NJets_pt30>=7 && pass_mbl},
+            {"g7j_g1b_mbl_0t",  passBaseline1l && NJets_pt30>=7 && pass_mbl && pass_0t},
+            {"g7j_g1b_mbl_1t1", passBaseline1l && NJets_pt30>=7 && pass_mbl && pass_1t1},
+            {"g7j_g1b_mbl_1t2", passBaseline1l && NJets_pt30>=7 && pass_mbl && pass_1t2},
+            {"g7j_g1b_mbl_1t3", passBaseline1l && NJets_pt30>=7 && pass_mbl && pass_1t3},
                 };
         const std::map<std::string, bool> cut_map_1mu {
-            {"6j",             passBaseline1mu && NJets_pt30==6},
-            {"6j_g1b",         passBaseline1mu && NJets_pt30==6 && pass_g1b},
-            {"6j_g1b_mbl",     passBaseline1mu && NJets_pt30==6 && pass_g1b && pass_mbl},
-            {"6j_g1b_mbl_0t",  passBaseline1mu && NJets_pt30==6 && pass_g1b && pass_mbl && pass_0t},
-            {"6j_g1b_mbl_1t1", passBaseline1mu && NJets_pt30==6 && pass_g1b && pass_mbl && pass_1t1},
-            {"6j_g1b_mbl_1t2", passBaseline1mu && NJets_pt30==6 && pass_g1b && pass_mbl && pass_1t2},
-            {"6j_g1b_mbl_1t3", passBaseline1mu && NJets_pt30==6 && pass_g1b && pass_mbl && pass_1t3},
+            {"6j_g1b",         passBaseline1mu && NJets_pt30==6 },
+            {"6j_g1b_mbl",     passBaseline1mu && NJets_pt30==6 && pass_mbl},
+            {"6j_g1b_mbl_0t",  passBaseline1mu && NJets_pt30==6 && pass_mbl && pass_0t},
+            {"6j_g1b_mbl_1t1", passBaseline1mu && NJets_pt30==6 && pass_mbl && pass_1t1},
+            {"6j_g1b_mbl_1t2", passBaseline1mu && NJets_pt30==6 && pass_mbl && pass_1t2},
+            {"6j_g1b_mbl_1t3", passBaseline1mu && NJets_pt30==6 && pass_mbl && pass_1t3},
                 };
         const std::map<std::string, bool> cut_map_1el {
-            {"6j",             passBaseline1el && NJets_pt30==6},
-            {"6j_g1b",         passBaseline1el && NJets_pt30==6 && pass_g1b},
-            {"6j_g1b_mbl",     passBaseline1el && NJets_pt30==6 && pass_g1b && pass_mbl},
-            {"6j_g1b_mbl_0t",  passBaseline1el && NJets_pt30==6 && pass_g1b && pass_mbl && pass_0t},
-            {"6j_g1b_mbl_1t1", passBaseline1el && NJets_pt30==6 && pass_g1b && pass_mbl && pass_1t1},
-            {"6j_g1b_mbl_1t2", passBaseline1el && NJets_pt30==6 && pass_g1b && pass_mbl && pass_1t2},
-            {"6j_g1b_mbl_1t3", passBaseline1el && NJets_pt30==6 && pass_g1b && pass_mbl && pass_1t3},
+            {"6j_g1b",         passBaseline1el && NJets_pt30==6},
+            {"6j_g1b_mbl",     passBaseline1el && NJets_pt30==6 && pass_mbl},
+            {"6j_g1b_mbl_0t",  passBaseline1el && NJets_pt30==6 && pass_mbl && pass_0t},
+            {"6j_g1b_mbl_1t1", passBaseline1el && NJets_pt30==6 && pass_mbl && pass_1t1},
+            {"6j_g1b_mbl_1t2", passBaseline1el && NJets_pt30==6 && pass_mbl && pass_1t2},
+            {"6j_g1b_mbl_1t3", passBaseline1el && NJets_pt30==6 && pass_mbl && pass_1t3},
                 };
                 
         for(auto& kv : cut_map_1l)
@@ -431,8 +344,10 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
                 my_histos["h_nb_1l_"+kv.first]->Fill(NBJets_pt30, eventweight);
                 my_histos["h_HT_1l_"+kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_1l_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
-                my_histos["h_mbl_1l_"+kv.first]->Fill(mbl, eventweight);
+                my_histos["h_fisher_1l_"+kv.first]->Fill(fisher_val, eventweight);
+                my_histos["h_mbl_1l_"+kv.first]->Fill(Mbl, eventweight);
                 my_2d_histos["h_njets_bdt_1l_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
+                my_2d_histos["h_njets_fisher_1l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
             }
         }
         for(auto& kv : cut_map_1mu)
@@ -445,8 +360,10 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
                 my_histos["h_nb_1mu_"+kv.first]->Fill(NBJets_pt30, eventweight);
                 my_histos["h_HT_1mu_"+kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_1mu_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
-                my_histos["h_mbl_1mu_"+kv.first]->Fill(mbl, eventweight);
+                my_histos["h_fisher_1mu_"+kv.first]->Fill(fisher_val, eventweight);
+                my_histos["h_mbl_1mu_"+kv.first]->Fill(Mbl, eventweight);
                 my_2d_histos["h_njets_bdt_1mu_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
+                my_2d_histos["h_njets_fisher_1mu_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
             }
         }
         for(auto& kv : cut_map_1el)
@@ -459,21 +376,20 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
                 my_histos["h_nb_1el_"+kv.first]->Fill(NBJets_pt30, eventweight);
                 my_histos["h_HT_1el_"+kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_1el_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
-                my_histos["h_mbl_1el_"+kv.first]->Fill(mbl, eventweight);
+                my_histos["h_fisher_1el_"+kv.first]->Fill(fisher_val, eventweight);
+                my_histos["h_mbl_1el_"+kv.first]->Fill(Mbl, eventweight);
                 my_2d_histos["h_njets_bdt_1el_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
+                my_2d_histos["h_njets_fisher_1el_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
             }
         }
         
         const std::map<std::string, bool> cut_map_2l {
-            {"onZ",                passBaseline2l && onZ},
-            {"onZ_g1b",            passBaseline2l && onZ && pass_g1b},
-            {"onZ_g1b_nombl",      passBaseline2l && onZ && pass_g1b && !passMbl_2l},
-            {"onZ_g1b_nombl_bdt1", passBaseline2l && onZ && pass_g1b && !passMbl_2l && bdt_bin1},
-            {"onZ_g1b_nombl_bdt2", passBaseline2l && onZ && pass_g1b && !passMbl_2l && bdt_bin2},
-            {"onZ_g1b_nombl_bdt3", passBaseline2l && onZ && pass_g1b && !passMbl_2l && bdt_bin3},
-            {"onZ_g1b_nombl_bdt4", passBaseline2l && onZ && pass_g1b && !passMbl_2l && bdt_bin4},
-            {"onZ_g1b_g1t",        passBaseline2l && onZ && pass_g1b && pass_1t}, 
-            {"onZ_g1b_nombl_g1t",  passBaseline2l && onZ && pass_g1b && !passMbl_2l && pass_1t}, 
+            {"onZ_g1b",            passBaseline2lonZ},
+            {"onZ_g1b_bdt1",       passBaseline2lonZ && bdt_bin1},
+            {"onZ_g1b_bdt2",       passBaseline2lonZ && bdt_bin2},
+            {"onZ_g1b_bdt3",       passBaseline2lonZ && bdt_bin3},
+            {"onZ_g1b_bdt4",       passBaseline2lonZ && bdt_bin4},
+            {"onZ_g1b_g1t",        passBaseline2lonZ && pass_1t}, 
             {"2b",                 passBaseline2l && NBJets_pt30 == 2} 
         };
         
@@ -486,7 +402,9 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
                 my_histos["h_nb_2l_"+kv.first]->Fill(NBJets_pt30, eventweight);
                 my_histos["h_HT_2l_"+kv.first]->Fill(HT_trigger, eventweight);
                 my_histos["h_bdt_2l_"+kv.first]->Fill(eventshape_bdt_val, eventweight);
+                my_histos["h_fisher_2l_"+kv.first]->Fill(fisher_val, eventweight);
                 my_2d_histos["h_njets_bdt_2l_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
+                my_2d_histos["h_njets_fisher_2l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
             }
         }
         
@@ -535,49 +453,6 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
 
 }
 
-bool AnalyzeEventSelection::PassTriggerGeneral(std::vector<std::string> &mytriggers, const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
-{
-    bool passTrigger = false;
-    for(unsigned int i=0; i<TriggerNames.size(); ++i)
-    {
-        if(TriggerPass.at(i) != 1)
-            continue;
-        std::string trigname = TriggerNames.at(i);
-        if( std::any_of(mytriggers.begin(), mytriggers.end(), [&] (std::string s) { return trigname.find(s)!=std::string::npos; }) )
-        {
-            passTrigger = true;
-            break;
-        }
-    }
-    return passTrigger;
-
-}
-
-
-bool AnalyzeEventSelection::PassTriggerAllHad(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
-{
-    std::vector<std::string> mytriggers {
-        //"HLT_PFHT1050", // 2017 trigger
-        //"HLT_PFHT900"
-        //"HLT_PFHT380_SixPFJet32_DoublePFBTagCSV", // 2017 trigger
-        //"HLT_PFHT430_SixPFJet40_PFBTagCSV", // 2017 trigger
-        "HLT_PFHT450_SixJet40_BTagCSV",
-            "HLT_PFHT400_SixJet30_DoubleBTagCSV",            
-            };
-    return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
-}
-
-bool AnalyzeEventSelection::PassTriggerMuon(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
-{
-    std::vector<std::string> mytriggers {"HLT_IsoMu24","HLT_IsoTkMu24_v"};
-    return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
-}
-
-bool AnalyzeEventSelection::PassTriggerElectron(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
-{
-    std::vector<std::string> mytriggers {"HLT_Ele27_WPTight_Gsf"};
-    return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
-}
 
 void AnalyzeEventSelection::WriteHistos(TFile* outfile)
 {

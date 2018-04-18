@@ -24,10 +24,6 @@ public:
     void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false);
     void InitHistos();
     void WriteHistos(TFile* outfile);
-    bool PassTriggerGeneral(std::vector<std::string> &mytriggers, const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass);
-    bool PassTriggerAllHad(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass);
-    bool PassTriggerMuon(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass);
-    bool PassTriggerElectron(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass);
     
 };
 

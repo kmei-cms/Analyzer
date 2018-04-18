@@ -70,6 +70,10 @@ void AnalyzeBackground::InitHistos()
         my_histos.emplace(base + "_1l_g1b_mbl_fisher3",std::make_shared<TH1D>((base+"_1l_g1b_mbl_fisher3").c_str(),(base+"_1l_g1b_mbl_fisher3").c_str(),nbins_1l,min_x,max_x_1l));
         my_histos.emplace(base + "_1l_g1b_mbl_fisher4",std::make_shared<TH1D>((base+"_1l_g1b_mbl_fisher4").c_str(),(base+"_1l_g1b_mbl_fisher4").c_str(),nbins_1l,min_x,max_x_1l));
         my_histos.emplace(base + "_1l_g1b_mbl_g1t",std::make_shared<TH1D>((base+"_1l_g1b_mbl_g1t").c_str(),(base+"_1l_g1b_mbl_g1t").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_g1t_fisher1",std::make_shared<TH1D>((base+"_1l_g1b_mbl_g1t_fisher1").c_str(),(base+"_1l_g1b_mbl_g1t_fisher1").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_g1t_fisher2",std::make_shared<TH1D>((base+"_1l_g1b_mbl_g1t_fisher2").c_str(),(base+"_1l_g1b_mbl_g1t_fisher2").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_g1t_fisher3",std::make_shared<TH1D>((base+"_1l_g1b_mbl_g1t_fisher3").c_str(),(base+"_1l_g1b_mbl_g1t_fisher3").c_str(),nbins_1l,min_x,max_x_1l));
+        my_histos.emplace(base + "_1l_g1b_mbl_g1t_fisher4",std::make_shared<TH1D>((base+"_1l_g1b_mbl_g1t_fisher4").c_str(),(base+"_1l_g1b_mbl_g1t_fisher4").c_str(),nbins_1l,min_x,max_x_1l));
         my_histos.emplace(base + "_1l_g1b_mbl_0t",std::make_shared<TH1D>((base+"_1l_g1b_mbl_0t").c_str(),(base+"_1l_g1b_mbl_0t").c_str(),nbins_1l,min_x,max_x_1l));
         my_histos.emplace(base + "_1l_g1b_mbl_1t1",std::make_shared<TH1D>((base+"_1l_g1b_mbl_1t1").c_str(),(base+"_1l_g1b_mbl_1t1").c_str(),nbins_1l,min_x,max_x_1l));
         my_histos.emplace(base + "_1l_g1b_mbl_1t2",std::make_shared<TH1D>((base+"_1l_g1b_mbl_1t2").c_str(),(base+"_1l_g1b_mbl_1t2").c_str(),nbins_1l,min_x,max_x_1l));
@@ -78,12 +82,7 @@ void AnalyzeBackground::InitHistos()
         // For Z->ll control region
         my_histos.emplace(base + "_2l_onZ",std::make_shared<TH1D>((base+"_2l_onZ").c_str(),(base+"_2l_onZ").c_str(),nbins_1l,min_x,max_x_1l));
         my_histos.emplace(base + "_2l_onZ_g1b",std::make_shared<TH1D>((base+"_2l_onZ_g1b").c_str(),(base+"_2l_onZ_g1b").c_str(),nbins_1l,min_x,max_x_1l));
-        my_histos.emplace(base + "_2l_onZ_g1b_nombl",std::make_shared<TH1D>((base+"_2l_onZ_g1b_nombl").c_str(),(base+"_2l_onZ_g1b_nombl").c_str(),nbins_1l,min_x,max_x_1l));
         my_histos.emplace(base + "_2l_onZ_g1b_g1t",std::make_shared<TH1D>((base+"_2l_onZ_g1b_g1t").c_str(),(base+"_2l_onZ_g1b_g1t").c_str(),nbins_1l,min_x,max_x_1l));
-        my_histos.emplace(base + "_2l_onZ_g1b_nombl_bdt1",std::make_shared<TH1D>((base+"_2l_onZ_g1b_nombl_bdt1").c_str(),(base+"_2l_onZ_g1b_nombl_bdt1").c_str(),nbins_1l,min_x,max_x_1l));
-        my_histos.emplace(base + "_2l_onZ_g1b_nombl_bdt2",std::make_shared<TH1D>((base+"_2l_onZ_g1b_nombl_bdt2").c_str(),(base+"_2l_onZ_g1b_nombl_bdt2").c_str(),nbins_1l,min_x,max_x_1l));
-        my_histos.emplace(base + "_2l_onZ_g1b_nombl_bdt3",std::make_shared<TH1D>((base+"_2l_onZ_g1b_nombl_bdt3").c_str(),(base+"_2l_onZ_g1b_nombl_bdt3").c_str(),nbins_1l,min_x,max_x_1l));
-        my_histos.emplace(base + "_2l_onZ_g1b_nombl_bdt4",std::make_shared<TH1D>((base+"_2l_onZ_g1b_nombl_bdt4").c_str(),(base+"_2l_onZ_g1b_nombl_bdt4").c_str(),nbins_1l,min_x,max_x_1l));
         my_histos.emplace(base + "_2l_onZ_g1b_fisher1",std::make_shared<TH1D>((base+"_2l_onZ_g1b_fisher1").c_str(),(base+"_2l_onZ_g1b_fisher1").c_str(),nbins_1l,min_x,max_x_1l));
         my_histos.emplace(base + "_2l_onZ_g1b_fisher2",std::make_shared<TH1D>((base+"_2l_onZ_g1b_fisher2").c_str(),(base+"_2l_onZ_g1b_fisher2").c_str(),nbins_1l,min_x,max_x_1l));
         my_histos.emplace(base + "_2l_onZ_g1b_fisher3",std::make_shared<TH1D>((base+"_2l_onZ_g1b_fisher3").c_str(),(base+"_2l_onZ_g1b_fisher3").c_str(),nbins_1l,min_x,max_x_1l));
@@ -102,8 +101,7 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, boo
         const auto& runtype                 = tr.getVar<std::string>("runtype");
         const auto& filetag                 = tr.getVar<std::string>("filetag");
         const auto& JetID                   = tr.getVar<bool>("JetID");
-        const auto& TriggerNames            = tr.getVec<std::string>("TriggerNames");
-        const auto& TriggerPass             = tr.getVec<int>("TriggerPass");
+        const auto& passTrigger             = tr.getVec<int>("passTrigger");
 
         const auto& NJets_pt30          = tr.getVar<int>("NJets_pt30");
         const auto& NJets_pt45          = tr.getVar<int>("NJets_pt45");
@@ -111,14 +109,11 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, boo
         const auto& NBJets_pt30         = tr.getVar<int>("NBJets_pt30");
         const auto& BJets_pt45          = tr.getVec<TLorentzVector>("BJets_pt45");
         const auto& NBJets_pt45         = tr.getVar<int>("NBJets_pt45");
-        const auto& GoodMuons           = tr.getVec<TLorentzVector>("GoodMuons");
-        const auto& GoodMuonsCharge     = tr.getVec<int>("GoodMuonsCharge");
-        const auto& GoodElectrons       = tr.getVec<TLorentzVector>("GoodElectrons");
-        const auto& GoodElectronsCharge = tr.getVec<int>("GoodElectronsCharge");
         const auto& GoodLeptons         = tr.getVec<TLorentzVector>("GoodLeptons");
         const auto& NGoodLeptons        = tr.getVar<int>("NGoodLeptons");
         const auto& HT_trigger          = tr.getVar<double>("HT_trigger");
         const auto& Mbl                 = tr.getVar<double>("Mbl");
+        const auto& onZ                 = tr.getVar<bool>("onZ");
 
         const auto& fisher_bin1 = tr.getVar<bool>("fisher_bin1");
         const auto& fisher_bin2 = tr.getVar<bool>("fisher_bin2");
@@ -128,6 +123,10 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, boo
         const auto& bdt_bin2    = tr.getVar<bool>("bdt_bin2");
         const auto& bdt_bin3    = tr.getVar<bool>("bdt_bin3");
         const auto& bdt_bin4    = tr.getVar<bool>("bdt_bin4");
+
+        const auto& passBaseline0l    = tr.getVar<bool>("passBaseline0l");
+        const auto& passBaseline1l    = tr.getVar<bool>("passBaseline1l");
+        const auto& passBaseline2lonZ = tr.getVar<bool>("passBaseline2lonZ");
 
         if (maxevents > 0 && tr.getEvtNum() >= maxevents) break;        
 
@@ -150,127 +149,21 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, boo
         // Exclude events with bad jets
         if(!JetID) continue;
 
-        // ------------------------------
-        // -- Trigger for data
-        // ------------------------------
-      
-        bool passTriggerAllHad = PassTriggerAllHad(TriggerNames, TriggerPass);
-        bool passTriggerMuon = PassTriggerMuon(TriggerNames, TriggerPass);
-        bool passTriggerElectron = PassTriggerElectron(TriggerNames, TriggerPass);
-        if (runtype == "Data")
-        {
-            if (filetag == "Data_JetHT")
-            {
-                if(!passTriggerAllHad) continue;
-                else
-                {
-                    passTriggerMuon = false;
-                    passTriggerElectron = false;
-                }
-            }
-            if (filetag == "Data_SingleMuon")
-            { 
-                if(!passTriggerMuon) continue;
-                else
-                {
-                    passTriggerAllHad = false;
-                    passTriggerElectron = false;
-                }
-            }
-            if (filetag == "Data_SingleElectron")
-            {
-                if(!passTriggerElectron) continue;
-                else
-                {
-                    passTriggerAllHad = false;
-                    passTriggerMuon = false;
-                }
-            }
-        }
 
         // -------------------------------
         // -- Basic event selection stuff
         // -------------------------------
 
-        // Check whether event would pass the trigger requirement
-        bool passTrigger = true;
-        if ( !( HT_trigger>500 && NJets_pt45>=6 ) ) 
-        {
-            passTrigger = false;
-        }
-
-        bool passTrigger0l = false;
-        bool passTrigger1l = false;
-        bool passTrigger2l = false;
-        if(runtype == "Data")
-        {
-            if (GoodMuons.size() > 0)
-            {
-                passTrigger1l = passTriggerMuon && (filetag == "Data_SingleMuon");
-                passTrigger2l = passTriggerMuon && (filetag == "Data_SingleMuon");
-            } 
-            else if (GoodElectrons.size() > 0)
-            {
-                passTrigger1l = passTriggerElectron && (filetag == "Data_SingleElectron");
-                passTrigger2l = passTriggerElectron && (filetag == "Data_SingleElectron");
-            }
-            else
-            {
-                passTrigger0l = passTriggerAllHad && (filetag == "Data_JetHT");
-            }
-        } 
-        else 
-        {
-            passTrigger0l = true;
-            passTrigger1l = true;
-            passTrigger2l = true;
-        }
-
-        bool passBaseline0l = NGoodLeptons==0 && NJets_pt45>=6 && HT_trigger > 500 && NBJets_pt45 >= 1;
-        bool passBaseline1l = NGoodLeptons==1 && NJets_pt30>=6 ;
-        bool passBaseline2l = NGoodLeptons==2;
-
         bool passNtop = ntops >= 1;
         bool passNb = NBJets_pt30 >= 1;
-        bool onZ = false;
-        bool passMbl_2l = false;
-        if ( (GoodMuons.size() == 2) && (GoodMuonsCharge[0] != GoodMuonsCharge[1]) )
-        {
-            double mll = (GoodMuons[0] + GoodMuons[1]).M();
-            if( mll > 81.2 && mll < 101.2)
-                onZ = true;          
-
-            // check whether a bl pair passes the M(b,l) cut
-            for (TLorentzVector myb : BJets_pt30)
-            {
-                double mass_bl_1 = (GoodMuons[0] + myb).M();
-                if(mass_bl_1 < 180 && mass_bl_1 > 30)
-                    passMbl_2l = true;
-                double mass_bl_2 = (GoodMuons[1] + myb).M();
-                if(mass_bl_2 < 180 && mass_bl_2 > 30)
-                    passMbl_2l = true;
-            }
-        } 
-        else if ( (GoodElectrons.size() == 2) && (GoodElectronsCharge[0] != GoodElectronsCharge[1]) )
-        {
-            double mll = (GoodElectrons[0] + GoodElectrons[1]).M();
-            if( mll > 81.2 && mll < 101.2)
-                onZ = true;  
-            // check whether a bl pair passes the M(b,l) cut
-            for (TLorentzVector myb : BJets_pt30)
-            {
-                double mass_bl_1 = (GoodElectrons[0] + myb).M();
-                if(mass_bl_1 < 180 && mass_bl_1 > 30)
-                    passMbl_2l = true;
-                double mass_bl_2 = (GoodElectrons[1] + myb).M();
-                if(mass_bl_2 < 180 && mass_bl_2 > 30)
-                    passMbl_2l = true;
-            }
-        }
         
         // -------------------------
         // -- Check r(j) behavior --
         // -------------------------
+        // temp
+        bool passTrigger0l = true;
+        bool passTrigger1l = true;
+        bool passTrigger2l = true;
 
         int njets_rj = 0;
         std::vector<std::string> jettypes {"pt30", "pt45"};
@@ -334,7 +227,7 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, boo
             }
 
             // Dedicated 1l region
-            if(NGoodLeptons == 1 && passNb && passTrigger1l)
+            if(passBaseline1l)
             {
                 bool passMtop = Mbl < 180 && Mbl > 30;
                 
@@ -370,6 +263,16 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, boo
                             my_histos[base+"_1l_g1b_mbl_1t2"]->Fill(njets_rj, eventweight);
                         if(ntops == 1 && ntops_3jet == 1)
                             my_histos[base+"_1l_g1b_mbl_1t3"]->Fill(njets_rj, eventweight);
+
+                        if(fisher_bin1)
+                            my_histos[base+"_1l_g1b_mbl_g1t_fisher1"]->Fill(njets_rj, eventweight);
+                        if(fisher_bin2)
+                            my_histos[base+"_1l_g1b_mbl_g1t_fisher2"]->Fill(njets_rj, eventweight);
+                        if(fisher_bin3)
+                            my_histos[base+"_1l_g1b_mbl_g1t_fisher3"]->Fill(njets_rj, eventweight);
+                        if(fisher_bin4)
+                            my_histos[base+"_1l_g1b_mbl_g1t_fisher4"]->Fill(njets_rj, eventweight);
+
                     }
                     else 
                     {
@@ -379,8 +282,7 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, boo
             }
           
             // Now for the Z->ll region
-            // h_njets_2l_onZ_g1b_g1t
-            if (onZ && passTrigger2l)
+            if (passBaseline2lonZ)
             {
                 my_histos[base+"_2l_onZ"]->Fill(njets_rj, eventweight);
                 if(passNb)
@@ -395,20 +297,7 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, boo
                         my_histos[base+"_2l_onZ_g1b_fisher3"]->Fill(njets_rj, eventweight);
                     if(fisher_bin4)
                         my_histos[base+"_2l_onZ_g1b_fisher4"]->Fill(njets_rj, eventweight);
-                  
-                    if(!passMbl_2l)
-                    {
-                        my_histos[base+"_2l_onZ_g1b_nombl"]->Fill(njets_rj, eventweight);
-                        if(bdt_bin1)
-                            my_histos[base+"_2l_onZ_g1b_nombl_bdt1"]->Fill(njets_rj, eventweight);
-                        if(bdt_bin2)
-                            my_histos[base+"_2l_onZ_g1b_nombl_bdt2"]->Fill(njets_rj, eventweight);
-                        if(bdt_bin3)
-                            my_histos[base+"_2l_onZ_g1b_nombl_bdt3"]->Fill(njets_rj, eventweight);
-                        if(bdt_bin4)
-                            my_histos[base+"_2l_onZ_g1b_nombl_bdt4"]->Fill(njets_rj, eventweight);
-                    }
-                  
+                                    
                     if(passNtop)
                     {
                         my_histos[base+"_2l_onZ_g1b_g1t"]->Fill(njets_rj, eventweight);
@@ -420,48 +309,6 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, boo
 }
 
 
-bool AnalyzeBackground::PassTriggerGeneral(std::vector<std::string> &mytriggers, const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
-{
-    bool passTrigger = false;
-    for(unsigned int i=0; i<TriggerNames.size(); ++i)
-    {
-        if(TriggerPass.at(i) != 1)
-            continue;
-        std::string trigname = TriggerNames.at(i);
-        if( std::any_of(mytriggers.begin(), mytriggers.end(), [&] (std::string s) { return trigname.find(s)!=std::string::npos; }) )
-        {
-            passTrigger = true;
-            break;
-        }
-    }
-    return passTrigger;
-
-}
-
-bool AnalyzeBackground::PassTriggerAllHad(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
-{
-    std::vector<std::string> mytriggers {
-        //"HLT_PFHT1050", // 2017 trigger
-        //"HLT_PFHT900"
-        //"HLT_PFHT380_SixPFJet32_DoublePFBTagCSV", // 2017 trigger
-        //"HLT_PFHT430_SixPFJet40_PFBTagCSV", // 2017 trigger
-        "HLT_PFHT450_SixJet40_BTagCSV",
-            "HLT_PFHT400_SixJet30_DoubleBTagCSV",            
-            };
-    return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
-}
-
-bool AnalyzeBackground::PassTriggerMuon(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
-{
-    std::vector<std::string> mytriggers {"HLT_IsoMu24","HLT_IsoTkMu24_v"};
-    return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
-}
-
-bool AnalyzeBackground::PassTriggerElectron(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
-{
-    std::vector<std::string> mytriggers {"HLT_Ele27_WPTight_Gsf"};
-    return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
-}
 
 void AnalyzeBackground::WriteHistos(TFile* outfile)
 {
