@@ -191,7 +191,8 @@ int main()
 
     for(std::string mycut : mycuts_0l)
     {
-        const auto& yieldMap = histInfoCollection.computeYields("h_njets_0l_"+mycut,"njets",7,7);
+        const auto& yieldMap = histInfoCollection.computeYields("h_njets_0l_"+mycut,"njets",12,20);
+        //const auto& yieldMap = histInfoCollection.computeYields("h_njets_0l_"+mycut,"njets",7,7);
         auto allbg  = yieldMap.find("AllBG"); auto data_JetHT = yieldMap.find("Data_JetHT"); auto ttbar = yieldMap.find("T#bar{T}"); auto QCD = yieldMap.find("QCD");
         printf("%45.45s:  %s: %12.0lf   %s: %12.0lf   %s: %12.0lf   %s: %12.0lf\n",("h_njets_0l_"+mycut).c_str(), (data_JetHT->first).c_str(), data_JetHT->second, (allbg->first).c_str(), allbg->second, "ttbar", ttbar->second, (QCD->first).c_str(), QCD->second );
     }       
