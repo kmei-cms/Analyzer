@@ -101,7 +101,7 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, boo
         const auto& runtype                 = tr.getVar<std::string>("runtype");
         const auto& filetag                 = tr.getVar<std::string>("filetag");
         const auto& JetID                   = tr.getVar<bool>("JetID");
-        const auto& passTrigger             = tr.getVec<int>("passTrigger");
+        const auto& passTrigger             = tr.getVar<bool>("passTrigger");
 
         const auto& NJets_pt30          = tr.getVar<int>("NJets_pt30");
         const auto& NJets_pt45          = tr.getVar<int>("NJets_pt45");

@@ -153,8 +153,7 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         const auto& ntops_1jet   = tr.getVar<int>("ntops_1jet");
         const auto& runtype      = tr.getVar<std::string>("runtype");
         const auto& filetag      = tr.getVar<std::string>("filetag");
-        const auto& TriggerNames = tr.getVec<std::string>("TriggerNames");
-        const auto& TriggerPass  = tr.getVec<int>("TriggerPass");
+        const auto& passTrigger  = tr.getVar<bool>("passTrigger");
         const auto* ttr          = tr.getVar<TopTaggerResults*>("ttr");
         const std::vector<TopObject*>& tops = ttr->getTops();
 
