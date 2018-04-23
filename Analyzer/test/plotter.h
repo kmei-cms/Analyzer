@@ -134,7 +134,7 @@ private:
                         yield = 0;
                         for(int i = min; i<=max; i++)
                         {
-                            yield+=hbgSum->GetBinContent(i);
+                            yield+=hbgSum->GetBinContent(i + 1);
                             //std::cout<<hbgSum->GetBinContent(i)<<std::endl;
                         }
                         yieldMap.insert ( std::pair<std::string,double>( "AllBG", yield ) );
@@ -142,7 +142,7 @@ private:
                     yield = 0;
                     for(int i = min; i<=max; i++)
                     {
-                        yield+=entry.h->GetBinContent(i);
+                        yield+=entry.h->GetBinContent(i + 1);
                     }
                     yieldMap.insert ( std::pair<std::string,double>( entry.legEntry, yield ) );
                 }

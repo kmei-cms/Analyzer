@@ -22,7 +22,7 @@ void Analyze0Lep::InitHistos(const std::map<std::string, bool>& cutMap)
     my_histos.emplace("h_met",      std::make_shared<TH1D>("h_met",     "h_met",      20,  0,    200  ) );
     my_histos.emplace("h_ht",       std::make_shared<TH1D>("h_ht",      "h_ht",       60,  0,   3000  ) );
     my_histos.emplace("h_bdt",      std::make_shared<TH1D>("h_bdt",     "h_bdt",      40, -0.5,    0.5) );
-    my_histos.emplace("h_fisher",   std::make_shared<TH1D>("h_fisher",  "h_fisher",   40, -0.5,    0.5) );
+    my_histos.emplace("h_fisher",   std::make_shared<TH1D>("h_fisher",  "h_fisher",   50, -0.5,    0.5) );
     my_histos.emplace("h_njets",    std::make_shared<TH1D>("h_njets",   "h_njets",    20,  0,     20  ) );
     my_histos.emplace("h_nb",       std::make_shared<TH1D>("h_nb",      "h_nb",       10,  0,     10  ) );
     my_histos.emplace("h_ntops",    std::make_shared<TH1D>("h_ntops",   "h_ntops",    10,  0,     10  ) );
@@ -37,10 +37,10 @@ void Analyze0Lep::InitHistos(const std::map<std::string, bool>& cutMap)
         my_histos.emplace("h_nb_0l_"+mycut.first,    std::make_shared<TH1D>(("h_nb_0l_"+mycut.first).c_str(),("h_nb_0l_"+mycut.first).c_str(), 10, 0, 10));
         my_histos.emplace("h_HT_0l_"+mycut.first,    std::make_shared<TH1D>(("h_HT_0l_"+mycut.first).c_str(),("h_HT_0l_"+mycut.first).c_str(), 60, 0, 3000));
         my_histos.emplace("h_bdt_0l_"+mycut.first,   std::make_shared<TH1D>(("h_bdt_0l_"+mycut.first).c_str(),("h_bdt_0l_"+mycut.first).c_str(), 40, -0.5, 0.5));
-        my_histos.emplace("h_fisher_0l_"+mycut.first,std::make_shared<TH1D>(("h_fisher_0l_"+mycut.first).c_str(),("h_fisher_0l_"+mycut.first).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("h_fisher_0l_"+mycut.first,std::make_shared<TH1D>(("h_fisher_0l_"+mycut.first).c_str(),("h_fisher_0l_"+mycut.first).c_str(), 50, -0.5, 0.5));
     
         my_2d_histos.emplace("h_njets_bdt_0l_"+mycut.first, std::make_shared<TH2D>(("h_njets_bdt_0l_"+mycut.first).c_str(),("h_njets_bdt_0l_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
-        my_2d_histos.emplace("h_njets_fisher_0l_"+mycut.first, std::make_shared<TH2D>(("h_njets_fisher_0l_"+mycut.first).c_str(),("h_njets_fisher_0l_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("h_njets_fisher_0l_"+mycut.first, std::make_shared<TH2D>(("h_njets_fisher_0l_"+mycut.first).c_str(),("h_njets_fisher_0l_"+mycut.first).c_str(), 15, 0, 15, 50, -0.5, 0.5));
     }
 
     // Cut flows
@@ -82,7 +82,7 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& eventshape_bdt_val = tr.getVar<double>("eventshape_bdt_val");
         const auto& fisher_val         = tr.getVar<double>("fisher_val");
         const auto& passBaseline0l     = tr.getVar<bool>("passBaseline0l");
-        const auto& passBlind          = tr.getVar<bool>("passBlind");
+        const auto& passBlindHad       = tr.getVar<bool>("passBlindHad");
         const auto& passTrigger        = tr.getVar<bool>("passTrigger");
         const auto& passMadHT          = tr.getVar<bool>("passMadHT");
 
@@ -113,7 +113,7 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // -------------------------------
 
         // Global cuts
-        if ( !(passBlind && passTrigger && passMadHT) ) continue;
+        if ( !(passBlindHad && passTrigger && passMadHT) ) continue;
         
         bool pass_0l              = NGoodLeptons==0;
         bool pass_njet_pt45       = NJets_pt45>=6;
@@ -124,7 +124,6 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // ---------------------------
         // --    1 Top selection
         // ---------------------------
-
         //exactly selections
         bool pass_1t    = ntops==1;
         bool pass_1t_f1 = pass_1t && fisher_bin1, pass_1t_f2 = pass_1t && fisher_bin2, pass_1t_f3 = pass_1t && fisher_bin3, pass_1t_f4 = pass_1t && fisher_bin4;
@@ -182,8 +181,11 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         bool pass_ge2t22 = pass_ge2t && ntops_2jet>=2;
         bool pass_ge2t23 = pass_ge2t && ntops_2jet>=1 && ntops_3jet>=1;
         bool pass_ge2t33 = pass_ge2t && ntops_3jet>=2;
-        bool pass_ge2t11or12or13 = pass_ge2t11 or pass_ge2t12 or pass_ge2t13;
-        bool pass_ge2t22or23or33 = pass_ge2t22 or pass_ge2t23 or pass_ge2t33;
+
+        //Merge or no Merge selections
+        bool pass_Merge = ntops_1jet >= 1, pass_noMerge = ntops_1jet == 0;
+        bool pass_ge2t11or12or13 = pass_Merge   && (pass_ge2t11 or pass_ge2t12 or pass_ge2t13);
+        bool pass_ge2t22or23or33 = pass_noMerge && (pass_ge2t22 or pass_ge2t23 or pass_ge2t33);
 
         bool pass_ge2t11_f1 = pass_ge2t11 && fisher_bin1, pass_ge2t11_f2 = pass_ge2t11 && fisher_bin2, pass_ge2t11_f3 = pass_ge2t11 && fisher_bin3, pass_ge2t11_f4 = pass_ge2t11 && fisher_bin4;
         bool pass_ge2t12_f1 = pass_ge2t12 && fisher_bin1, pass_ge2t12_f2 = pass_ge2t12 && fisher_bin2, pass_ge2t12_f3 = pass_ge2t12 && fisher_bin3, pass_ge2t12_f4 = pass_ge2t12 && fisher_bin4;

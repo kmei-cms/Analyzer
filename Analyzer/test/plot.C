@@ -41,6 +41,7 @@ int main()
     std::vector<histInfo> sigEntries = {
         {"RPV 350", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_350_0.root",         "hist", kMagenta + 2},
         {"SYY 650", "condor/output-files/" + path + "/AllSignal/MyAnalysis_stealth_stop_650_SYY_0.root", "hist", kGreen + 3  },
+        {"RPV 850", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", kRed + 1    },
     };
 
     //make histInfoCollection
@@ -191,7 +192,8 @@ int main()
 
     for(std::string mycut : mycuts_0l)
     {
-        const auto& yieldMap = histInfoCollection.computeYields("h_njets_0l_"+mycut,"njets",7,7);
+        const auto& yieldMap = histInfoCollection.computeYields("h_njets_0l_"+mycut,"njets",12,20);
+        //const auto& yieldMap = histInfoCollection.computeYields("h_njets_0l_"+mycut,"njets",6,6);
         auto allbg  = yieldMap.find("AllBG"); auto data_JetHT = yieldMap.find("Data_JetHT"); auto ttbar = yieldMap.find("T#bar{T}"); auto QCD = yieldMap.find("QCD");
         printf("%45.45s:  %s: %12.0lf   %s: %12.0lf   %s: %12.0lf   %s: %12.0lf\n",("h_njets_0l_"+mycut).c_str(), (data_JetHT->first).c_str(), data_JetHT->second, (allbg->first).c_str(), allbg->second, "ttbar", ttbar->second, (QCD->first).c_str(), QCD->second );
     }       
