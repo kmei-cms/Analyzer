@@ -1,14 +1,5 @@
 #include "SusyAnaTools/Tools/NTupleReader.h"
-#include "SusyAnaTools/Tools/SATException.h"
-
-//Hack--Joes update to samples.cc/h should fix this
-#include "Framework/Framework/include/samples.h"
-//#include "SusyAnaTools/Tools/samples.h"
-
 #include "TopTaggerTools/Tools/include/HistoContainer.h"
-#include "TopTagger/CfgParser/include/TTException.h"
-
-#include "TopTagger/TopTagger/include/TopTaggerResults.h"
 
 #include <iostream>
 #include <string>
