@@ -33,7 +33,9 @@ with file(environ["CMSSW_BASE"] + "/src/%s/test/TopTagger.cfg" % repo) as meowtt
 filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MyAnalysis" % repo, 
                    environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,mvaFileName),
                    environ["CMSSW_BASE"] + "/src/%s/test/TopTagger.cfg" % repo,
-                   environ["CMSSW_BASE"] + "/src/TopTagger/TopTagger/test/libTopTagger.so"
+                   environ["CMSSW_BASE"] + "/src/TopTagger/TopTagger/test/libTopTagger.so",
+                   environ["CMSSW_BASE"] + "/src/%s/test/sampleSets.cfg" % repo,
+                   environ["CMSSW_BASE"] + "/src/%s/test/sampleCollections.cfg" % repo,
                    ]
 
 def makeExeAndFriendsTarball(filestoTransfer, fname):
@@ -59,7 +61,7 @@ WhenToTransferOutput = ON_EXIT
 
 """
 
-sc = SampleCollection()
+sc = SampleCollection("../sampleSets.cfg", "../sampleCollections.cfg")
 if options.dataCollections or options.dataCollectionslong:
     scl = sc.sampleCollectionList()
     for sampleCollection in scl:
