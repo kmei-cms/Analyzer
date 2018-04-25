@@ -54,7 +54,7 @@ if not options.dataCollections and not options.dataCollectionslong:
     system("tar --exclude-caches-all --exclude-vcs -zcf ${CMSSW_VERSION}.tar.gz -C ${CMSSW_BASE}/.. ${CMSSW_VERSION} --exclude=src --exclude=tmp")
 
 submitFile = """Universe   = vanilla
-Executable = run_Exploration_condor.tcsh
+Executable = run_Analyzer_condor.tcsh
 Transfer_Input_Files = CMSSW_9_3_3.tar.gz, exestuff.tar.gz
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
