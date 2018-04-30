@@ -27,12 +27,12 @@ if (! -f sampleSets.cfg) then
     getSamplesCfg.sh
 endif
 
-## Check repos for updates
-#echo ""
-#echo "|--------------------------------------|"
-#echo "|      Checking repos for updates      |"
-#echo "|--------------------------------------|"
-#status.sh
+# Check repos for updates
+echo ""
+echo "|--------------------------------------|"
+echo "|      Checking repos for updates      |"
+echo "|--------------------------------------|"
+status.sh
 
 ## Copy over filelists if they are not present or have changed
 #echo""
