@@ -3,12 +3,13 @@
 
 import sys, os
 from os import system, environ
+sys.path = [environ["CMSSW_BASE"] + "/src/SusyAnaTools/Tools/condor/",] + sys.path
+
 from samples import SampleCollection
 import optparse 
 import subprocess
 
 repo = "Analyzer/Analyzer"
-sys.path = [environ["CMSSW_BASE"] + "/src/%s/test/condor/" % repo,] + sys.path
 
 # Parse command line arguments
 parser = optparse.OptionParser("usage: %prog [options]\n")
