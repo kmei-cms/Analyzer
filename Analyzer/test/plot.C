@@ -115,7 +115,6 @@ int main()
         //"ge6j_HT500_ge2b_2t22_f1"  , "ge6j_HT500_ge2b_2t22_f2"  , "ge6j_HT500_ge2b_2t22_f3"  , "ge6j_HT500_ge2b_2t22_f4"  ,
         //"ge6j_HT500_ge2b_2t23_f1"  , "ge6j_HT500_ge2b_2t23_f2"  , "ge6j_HT500_ge2b_2t23_f3"  , "ge6j_HT500_ge2b_2t23_f4"  ,
         //"ge6j_HT500_ge2b_2t33_f1"  , "ge6j_HT500_ge2b_2t33_f2"  , "ge6j_HT500_ge2b_2t33_f3"  , "ge6j_HT500_ge2b_2t33_f4"  ,
-
    };
 
     for(std::string mycut : mycuts_0l)
