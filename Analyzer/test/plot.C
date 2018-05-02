@@ -61,10 +61,13 @@ int main()
     HistInfoCollection histInfoCollectionSkim(data, bgSkim, sigEntries);
     HistInfoCollection histInfoCollectionRoc(dataNull, bgRoc, sigRoc);
 
+    // vector of histInfoCollection for Roc Curves
+    std::vector<HistInfoCollection> rocCollections = {histInfoCollectionRoc};
+
     //make plotter object with the required sources for histograms specified
     Plotter plt( std::move(histInfoCollection) );
     Plotter pltSkim( std::move(histInfoCollectionSkim) );
-    Plotter pltRoc( std::move(histInfoCollectionRoc) );
+    Plotter pltRoc( std::move(rocCollections) );
 
     // --------------------
     // - Make stack plots
@@ -156,7 +159,7 @@ int main()
     // -----------------------
     // - Make fisher Roc Curve
     // -----------------------
-    pltRoc.plotRocFisher("h_fisher_0l_ge6j_HT500_ge2b","Background","Signal",true);
+    pltRoc.plotRocFisher("h_fisher_0l_ge6j_HT500_ge2b","Background","Signal", false);
 
     // --------------------
     // - Make fisher plots

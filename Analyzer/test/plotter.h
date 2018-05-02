@@ -171,7 +171,9 @@ public:
 
     HistInfoCollection(std::vector<histInfo>&& dataVec, std::vector<histInfo>&& bgVec, std::vector<histInfo>&& sigVec) : dataVec_(dataVec), bgVec_(bgVec), sigVec_(sigVec) {}
     HistInfoCollection(std::vector<histInfo>& dataVec, std::vector<histInfo>& bgVec, std::vector<histInfo>& sigVec) : dataVec_(dataVec), bgVec_(bgVec), sigVec_(sigVec) {}
-    HistInfoCollection(){};
+    HistInfoCollection() {};
+
+    ~HistInfoCollection() {}
 
     void setUpBG(const std::string& histName, int rebin, THStack* bgStack, std::shared_ptr<TH1>& hbgSum, const bool& setFill = true)
     {
@@ -263,7 +265,7 @@ private:
 
 public:
     Plotter(HistInfoCollection&& hc) : hc_(hc) {}
-    Plotter(std::vector<HistInfoCollection> chc) : chc_(chc) {}
+    Plotter(std::vector<HistInfoCollection>&& chc) : chc_(chc) {}
 
     void plotStack(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 36100)
     {
@@ -513,7 +515,6 @@ public:
 
         //create the canvas for the plot
         TCanvas *c = new TCanvas("c1", "c1", 800, 800);
-        //switch to the canvas to ensure it is the active object
         c->cd();
 
         //Set Canvas margin (gPad is root magic to access the current pad, in this case canvas "c")
@@ -532,20 +533,8 @@ public:
         leg->SetNColumns(3);
         leg->SetTextFont(42);
 
-        // ------------------------
-        // -  Setup plots
-        // ------------------------
-        THStack *bgStack = new THStack();
-        hc_.setUpBG(histName, rebin, bgStack, hbgSum_, false);
-        hc_.setUpSignal(histName, rebin);
-        hbgSum_->SetLineColor(kBlack);
-        hbgSum_->SetMarkerColor(kBlack);
-        rocInfo bgSumRocInfo = { makeFisherVec(hbgSum_), "AllBG", kBlack };
-
         //create a dummy histogram to act as the axes
         histInfo dummy(new TH1D("dummy", "dummy", 1000, 0, 1));
-
-        //draw dummy axes
         dummy.draw();
 
         //get maximum from histos and fill TLegend
@@ -556,38 +545,23 @@ public:
         // --------------------------
         // -  Make Roc Info and Plot
         // --------------------------
-        std::vector<rocInfo> rocBgVec  = makeRocVec(hc_.bgVec_);
-        std::vector<rocInfo> rocSigVec = makeRocVec(hc_.sigVec_);
-        if(firstOnly) rocBgVec.emplace(rocBgVec.begin(), bgSumRocInfo);
-
+        std::vector<rocInfo> bgSumRocInfoVec;
         std::vector<TGraph*> graphVec;
-        drawRocCurve(graphVec, rocBgVec, rocSigVec, firstOnly, leg);
-        //for(const auto& mBg : rocBgVec)
-        //{
-        //    for(const auto& mSig : rocSigVec)
-        //    {
-        //        int n = mBg.rocVec.size();
-        //        double x[n], y[n];
-        //        for(int i = 0; i < n; i++)
-        //        {
-        //            x[i] = mBg.rocVec[i];
-        //            y[i] = mSig.rocVec[i];
-        //            //std::cout<<mBg.legEntry<<" "<<x[i]<<" "<<mSig.legEntry<<" "<<y[i]<<std::endl;
-        //        }
-        //        TGraph* g = new TGraph (n, x, y);
-        //        g->SetLineWidth(2);
-        //        g->SetLineStyle(2);
-        //        g->SetLineColor( mBg.color );
-        //        g->SetMarkerSize(0.7);
-        //        g->SetMarkerStyle(21);
-        //        g->SetMarkerColor( mSig.color );
-        //        g->Draw("same LP");                
-        //        leg->AddEntry(g, (mBg.legEntry + " vs " + mSig.legEntry).c_str(), "LP");
-        //        graphVec.push_back(g);
-        //        if(firstOnly) break;
-        //    }
-        //    if(firstOnly) break;
-        //}
+        for(auto& hc : chc_)
+        {
+            THStack *bgStack = new THStack();
+            std::shared_ptr<TH1> hbgSum;
+            hc.setUpBG(histName, rebin, bgStack, hbgSum, false);
+            delete bgStack;
+            hc.setUpSignal(histName, rebin);
+            rocInfo bgSumRocInfo = { makeFisherVec(hbgSum), "AllBG", kBlack };
+            //bgSumRocInfoVec.push_back(bgSumRocInfo);
+            std::vector<rocInfo> rocBgVec  = makeRocVec(hc.bgVec_);
+            std::vector<rocInfo> rocSigVec = makeRocVec(hc.sigVec_);
+            //if(firstOnly) rocBgVec.emplace(rocBgVec.begin(), bgSumRocInfoVec[0]);
+            if(firstOnly) rocBgVec.emplace(rocBgVec.begin(), bgSumRocInfo);
+            drawRocCurve(graphVec, rocBgVec, rocSigVec, firstOnly, leg);
+        }
 
         TF1* line1 = new TF1( "line1","1",0,1);
         line1->SetLineColor(kBlack);
@@ -613,7 +587,6 @@ public:
         //clean up dynamic memory
         delete c;
         delete leg;
-        delete bgStack;
         for(auto* g : graphVec) delete g;
     }
 
@@ -792,15 +765,10 @@ public:
 
     void drawRocCurve(std::vector<TGraph*>& graphVec, const std::vector<rocInfo>& rocBgVec, const std::vector<rocInfo>& rocSigVec, const bool firstOnly, TLegend* leg)
     {
-        int index1 = -1;
         for(const auto& mBg : rocBgVec)
         {
-            index1++;
-            int index2 = -1;
             for(const auto& mSig : rocSigVec)
             {
-                index2++;
-                if(firstOnly && index1 != index2) continue; 
                 int n = mBg.rocVec.size();
                 double x[n], y[n];
                 for(int i = 0; i < n; i++)
@@ -819,7 +787,9 @@ public:
                 g->Draw("same LP");                
                 leg->AddEntry(g, (mBg.legEntry + " vs " + mSig.legEntry).c_str(), "LP");
                 graphVec.push_back(g);
+                if(firstOnly) break; 
             }
+            if(firstOnly) break; 
         }
     }
     
