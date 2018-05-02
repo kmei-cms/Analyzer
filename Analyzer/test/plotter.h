@@ -8,6 +8,7 @@
 #include "TLegend.h"
 #include "TLatex.h"
 #include "TGraph.h"
+#include "TF1.h"
 
 #include <memory>
 #include <vector>
@@ -22,6 +23,7 @@ public:
     std::vector<double> rocVec;
     std::string legEntry;
     int color;
+    bool firstOnly;
 };
 
 //Class to hold TH1* with various helper functions 
@@ -169,6 +171,7 @@ public:
 
     HistInfoCollection(std::vector<histInfo>&& dataVec, std::vector<histInfo>&& bgVec, std::vector<histInfo>&& sigVec) : dataVec_(dataVec), bgVec_(bgVec), sigVec_(sigVec) {}
     HistInfoCollection(std::vector<histInfo>& dataVec, std::vector<histInfo>& bgVec, std::vector<histInfo>& sigVec) : dataVec_(dataVec), bgVec_(bgVec), sigVec_(sigVec) {}
+    HistInfoCollection(){};
 
     void setUpBG(const std::string& histName, int rebin, THStack* bgStack, std::shared_ptr<TH1>& hbgSum, const bool& setFill = true)
     {
@@ -255,9 +258,12 @@ private:
     //Collection of histInfo
     HistInfoCollection hc_;
     std::shared_ptr<TH1> hbgSum_;
+    std::vector<HistInfoCollection> chc_;
+    std::vector<std::shared_ptr<TH1>> hbgSumVec_;
 
 public:
-    Plotter(HistInfoCollection&& hc) : hc_(hc), hbgSum_(nullptr) {}
+    Plotter(HistInfoCollection&& hc) : hc_(hc) {}
+    Plotter(std::vector<HistInfoCollection> chc) : chc_(chc) {}
 
     void plotStack(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 36100)
     {
@@ -500,7 +506,7 @@ public:
         delete bgStack;
     }
 
-    void plotRocFisher(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 36100)
+    void plotRocFisher(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool firstOnly = false, const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 36100)
     {
         //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
         TH1::AddDirectory(false);
@@ -534,7 +540,7 @@ public:
         hc_.setUpSignal(histName, rebin);
         hbgSum_->SetLineColor(kBlack);
         hbgSum_->SetMarkerColor(kBlack);
-        hbgSum_->Scale( 1.0 / hbgSum_->Integral() );
+        rocInfo bgSumRocInfo = { makeFisherVec(hbgSum_), "AllBG", kBlack };
 
         //create a dummy histogram to act as the axes
         histInfo dummy(new TH1D("dummy", "dummy", 1000, 0, 1));
@@ -545,44 +551,56 @@ public:
         //get maximum from histos and fill TLegend
         double min = 0.0;
         double max = 1.0;
-        double lmax = 0.0;
+        double lmax = 1.0;
 
         // --------------------------
         // -  Make Roc Info and Plot
         // --------------------------
         std::vector<rocInfo> rocBgVec  = makeRocVec(hc_.bgVec_);
         std::vector<rocInfo> rocSigVec = makeRocVec(hc_.sigVec_);
+        if(firstOnly) rocBgVec.emplace(rocBgVec.begin(), bgSumRocInfo);
 
         std::vector<TGraph*> graphVec;
-        for(const auto& mBg : rocBgVec)
-        {
-            for(const auto& mSig : rocSigVec)
-            {
-                int n = mBg.rocVec.size();
-                double x[n], y[n];
-                for(int i = 0; i < n; i++)
-                {
-                    x[i] = mBg.rocVec[i];
-                    y[i] = mSig.rocVec[i];
-                    std::cout<<mBg.legEntry<<" "<<x[i]<<" "<<mSig.legEntry<<" "<<y[i]<<std::endl;
-                }
-                TGraph* g = new TGraph (n, x, y);
-                g->SetLineWidth(3);
-                g->SetMarkerStyle(21);
-                g->SetLineColor( mBg.color );
-                g->SetMarkerColor( mBg.color );
-                g->Draw("same P");                
-                graphVec.push_back(g);
-                break;
-            }
-            break;
-        }
+        drawRocCurve(graphVec, rocBgVec, rocSigVec, firstOnly, leg);
+        //for(const auto& mBg : rocBgVec)
+        //{
+        //    for(const auto& mSig : rocSigVec)
+        //    {
+        //        int n = mBg.rocVec.size();
+        //        double x[n], y[n];
+        //        for(int i = 0; i < n; i++)
+        //        {
+        //            x[i] = mBg.rocVec[i];
+        //            y[i] = mSig.rocVec[i];
+        //            //std::cout<<mBg.legEntry<<" "<<x[i]<<" "<<mSig.legEntry<<" "<<y[i]<<std::endl;
+        //        }
+        //        TGraph* g = new TGraph (n, x, y);
+        //        g->SetLineWidth(2);
+        //        g->SetLineStyle(2);
+        //        g->SetLineColor( mBg.color );
+        //        g->SetMarkerSize(0.7);
+        //        g->SetMarkerStyle(21);
+        //        g->SetMarkerColor( mSig.color );
+        //        g->Draw("same LP");                
+        //        leg->AddEntry(g, (mBg.legEntry + " vs " + mSig.legEntry).c_str(), "LP");
+        //        graphVec.push_back(g);
+        //        if(firstOnly) break;
+        //    }
+        //    if(firstOnly) break;
+        //}
+
+        TF1* line1 = new TF1( "line1","1",0,1);
+        line1->SetLineColor(kBlack);
+        line1->Draw("same");
+        TF1* line2 = new TF1( "line2","x",0,1);
+        line2->SetLineColor(kBlack);
+        line2->Draw("same");
         
         //plot legend
         leg->Draw("same");
 
         //Draw dummy hist again to get axes on top of histograms
-        setupDummy(dummy, leg, histName, xAxisLabel, yAxisLabel, isLogY, xmin, xmax, min, max, lmax);
+        setupDummy(dummy, leg, histName, xAxisLabel, yAxisLabel, false, xmin, xmax, min, max, lmax);
         dummy.draw("AXIS");
 
         //Draw CMS and lumi lables
@@ -749,23 +767,62 @@ public:
         gmin = std::min(gmin, min);
     }
 
+    std::vector<double> makeFisherVec(std::shared_ptr<TH1> h)
+    {
+        h->Scale( 1.0 / h->Integral() );
+        std::vector<double> v;
+        for(int ii = 0; ii <= h->GetNbinsX(); ii++)
+        {
+            double val = h->Integral( ii, h->GetNbinsX());
+            v.push_back( val );
+        }
+        return v;
+    }
+
     std::vector<rocInfo> makeRocVec(const std::vector<histInfo>& vec)
     {
         std::vector<rocInfo> rocVec;
         for(const auto& entry : vec)
         {
-            entry.h->Scale( 1.0 / entry.h->Integral() );
-            std::vector<double> v;
-            for(int ii = 0; ii <= entry.h->GetNbinsX(); ii++)
-            {
-                double val = entry.h->Integral( ii, entry.h->GetNbinsX());
-                v.push_back( val );
-            }
+            std::vector<double> v = makeFisherVec(entry.h);
             rocVec.push_back( {v, entry.legEntry, entry.color} );
         }
-        return rocVec;
-    }
+        return rocVec;    
+}
 
+    void drawRocCurve(std::vector<TGraph*>& graphVec, const std::vector<rocInfo>& rocBgVec, const std::vector<rocInfo>& rocSigVec, const bool firstOnly, TLegend* leg)
+    {
+        int index1 = -1;
+        for(const auto& mBg : rocBgVec)
+        {
+            index1++;
+            int index2 = -1;
+            for(const auto& mSig : rocSigVec)
+            {
+                index2++;
+                if(firstOnly && index1 != index2) continue; 
+                int n = mBg.rocVec.size();
+                double x[n], y[n];
+                for(int i = 0; i < n; i++)
+                {
+                    x[i] = mBg.rocVec[i];
+                    y[i] = mSig.rocVec[i];
+                    //std::cout<<mBg.legEntry<<" "<<x[i]<<" "<<mSig.legEntry<<" "<<y[i]<<std::endl;
+                }
+                TGraph* g = new TGraph (n, x, y);
+                g->SetLineWidth(2);
+                g->SetLineStyle(2);
+                g->SetLineColor( mBg.color );
+                g->SetMarkerSize(0.7);
+                g->SetMarkerStyle(21);
+                g->SetMarkerColor( mSig.color );
+                g->Draw("same LP");                
+                leg->AddEntry(g, (mBg.legEntry + " vs " + mSig.legEntry).c_str(), "LP");
+                graphVec.push_back(g);
+            }
+        }
+    }
+    
     void setupDummy(histInfo dummy, TLegend *leg, const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel, const bool isLogY, 
                     const double xmin, const double xmax, double min, double max, double lmax)
     {

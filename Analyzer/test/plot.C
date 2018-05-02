@@ -44,14 +44,22 @@ int main()
         {"SYY 650", "condor/output-files/" + path + "/AllSignal/MyAnalysis_stealth_stop_650_SYY_0.root", "hist", kGreen + 3  },
         {"RPV 850", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", kRed + 1    },
     };
-    std::vector<histInfo> sigSkim = {
-        {"RPV 850", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", kRed + 1    },
+
+
+    // Roc Curve histInfo
+    std::vector<histInfo> bgRoc = {
+        {"QCD",             "condor/output-files/" + path + "/QCD/QCD.root", "hist", kBlack  },
+        {"T#bar{T}",        "condor/output-files/" + path + "/TT/TT.root",   "hist", kRed    },
+    };
+    std::vector<histInfo> sigRoc = {
+        {"RPV 850", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root", "hist", kGreen + 3  },
+        {"RPV 350", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_350_0.root", "hist", kBlue + 2   },
     };
 
     //make histInfoCollection
     HistInfoCollection histInfoCollection(data, bgEntries, sigEntries);
     HistInfoCollection histInfoCollectionSkim(data, bgSkim, sigEntries);
-    HistInfoCollection histInfoCollectionRoc(dataNull, bgSkim, sigSkim);
+    HistInfoCollection histInfoCollectionRoc(dataNull, bgRoc, sigRoc);
 
     //make plotter object with the required sources for histograms specified
     Plotter plt( std::move(histInfoCollection) );
@@ -148,7 +156,7 @@ int main()
     // -----------------------
     // - Make fisher Roc Curve
     // -----------------------
-    pltRoc.plotRocFisher("h_fisher_0l_ge6j_HT500_ge2b","Background","Signal",false);
+    pltRoc.plotRocFisher("h_fisher_0l_ge6j_HT500_ge2b","Background","Signal",true);
 
     // --------------------
     // - Make fisher plots
