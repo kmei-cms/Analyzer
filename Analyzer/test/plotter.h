@@ -16,6 +16,14 @@
 #include <iostream>
 #include <map>
 
+class rocInfo
+{
+public:
+    std::vector<double> rocVec;
+    std::string legEntry;
+    int color;
+};
+
 //Class to hold TH1* with various helper functions 
 class histInfo
 {
@@ -524,6 +532,9 @@ public:
         THStack *bgStack = new THStack();
         hc_.setUpBG(histName, rebin, bgStack, hbgSum_, false);
         hc_.setUpSignal(histName, rebin);
+        hbgSum_->SetLineColor(kBlack);
+        hbgSum_->SetMarkerColor(kBlack);
+        hbgSum_->Scale( 1.0 / hbgSum_->Integral() );
 
         //create a dummy histogram to act as the axes
         histInfo dummy(new TH1D("dummy", "dummy", 1000, 0, 1));
@@ -536,56 +547,37 @@ public:
         double max = 1.0;
         double lmax = 0.0;
 
-        // -----------------------
-        // -  Plot Background
-        // -----------------------
-        std::vector<std::vector<double>> rocBgVec;
-        for(auto& entry : hc_.bgVec_)
+        // --------------------------
+        // -  Make Roc Info and Plot
+        // --------------------------
+        std::vector<rocInfo> rocBgVec  = makeRocVec(hc_.bgVec_);
+        std::vector<rocInfo> rocSigVec = makeRocVec(hc_.sigVec_);
+
+        std::vector<TGraph*> graphVec;
+        for(const auto& mBg : rocBgVec)
         {
-            entry.h->Scale( 1.0 / entry.h->Integral() );
-            std::vector<double> rocInfo;
-            for(int ii = 0; ii <= entry.h->GetNbinsX(); ii++)
+            for(const auto& mSig : rocSigVec)
             {
-                double val = entry.h->Integral( ii, entry.h->GetNbinsX());
-                rocInfo.push_back( val );
+                int n = mBg.rocVec.size();
+                double x[n], y[n];
+                for(int i = 0; i < n; i++)
+                {
+                    x[i] = mBg.rocVec[i];
+                    y[i] = mSig.rocVec[i];
+                    std::cout<<mBg.legEntry<<" "<<x[i]<<" "<<mSig.legEntry<<" "<<y[i]<<std::endl;
+                }
+                TGraph* g = new TGraph (n, x, y);
+                g->SetLineWidth(3);
+                g->SetMarkerStyle(21);
+                g->SetLineColor( mBg.color );
+                g->SetMarkerColor( mBg.color );
+                g->Draw("same P");                
+                graphVec.push_back(g);
+                break;
             }
-            rocBgVec.push_back(rocInfo);
+            break;
         }
-        hbgSum_->SetLineColor(kBlack);
-        hbgSum_->SetMarkerColor(kBlack);
-        hbgSum_->Scale( 1.0 / hbgSum_->Integral() );
-
-        // -------------------------
-        // -   Plot Signal
-        // -------------------------
-        std::vector<std::vector<double>> rocSigVec;
-        for(const auto& entry : hc_.sigVec_)
-        {
-            entry.h->Scale( 1.0 / entry.h->Integral() );
-            std::vector<double> rocInfo;
-            for(int ii = 0; ii <= entry.h->GetNbinsX(); ii++)
-            {
-                double val = entry.h->Integral( ii, entry.h->GetNbinsX());
-                rocInfo.push_back( val );
-            }
-            rocSigVec.push_back(rocInfo);
-        }
-
-        int n = rocBgVec[0].size();
-        double x[n], y[n];
-        for(int i = 0; i < n; i++)
-        {
-            x[i] = rocBgVec[0][i];
-            y[i] = rocSigVec[0][i];
-            std::cout<<x[i]<<" "<<y[i]<<std::endl;
-        }
-
-        TGraph* roc = new TGraph (n, x, y);
-        roc->SetLineWidth(3);
-        roc->SetMarkerStyle(21);
-        //roc->SetLineColor(2);
-        roc->Draw("same P");
-
+        
         //plot legend
         leg->Draw("same");
 
@@ -604,7 +596,7 @@ public:
         delete c;
         delete leg;
         delete bgStack;
-        delete roc;
+        for(auto* g : graphVec) delete g;
     }
 
     void plotFisher(const std::vector<std::string>& histNameVec, const std::string& histTitle, const std::string& xAxisLabel, 
@@ -755,6 +747,23 @@ public:
         gpThreshMax = std::max(gpThreshMax, pThreshMax);
         gmax = std::max(gmax, max);
         gmin = std::min(gmin, min);
+    }
+
+    std::vector<rocInfo> makeRocVec(const std::vector<histInfo>& vec)
+    {
+        std::vector<rocInfo> rocVec;
+        for(const auto& entry : vec)
+        {
+            entry.h->Scale( 1.0 / entry.h->Integral() );
+            std::vector<double> v;
+            for(int ii = 0; ii <= entry.h->GetNbinsX(); ii++)
+            {
+                double val = entry.h->Integral( ii, entry.h->GetNbinsX());
+                v.push_back( val );
+            }
+            rocVec.push_back( {v, entry.legEntry, entry.color} );
+        }
+        return rocVec;
     }
 
     void setupDummy(histInfo dummy, TLegend *leg, const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel, const bool isLogY, 

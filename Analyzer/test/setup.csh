@@ -32,6 +32,8 @@ echo ""
 echo "|--------------------------------------|"
 echo "|      Checking repos for updates      |"
 echo "|--------------------------------------|"
+echo "If it asks for you password too many times you can do something like the following:"
+echo "         ssh-add ~/.ssh/id_rsa"
 status.sh
 
 ## Copy over filelists if they are not present or have changed
