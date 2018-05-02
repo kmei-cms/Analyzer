@@ -11,15 +11,16 @@ int main()
 {
     TH1::AddDirectory(false);
 
-    //std::string path = "lep0Ana-Apr-13-2018";
-    std::string path = "";
+    std::string path = "lep0Ana_TestFisher-May-1-2018";
+    //std::string path = "";
 
     //entry for data
     //this uses the initializer syntax to initialize the histInfo object
     //               leg entry root file                 draw options  draw color
     std::vector<histInfo> data = {
-        //{"QCD",             "condor/output-files/" + path + "/QCD/QCD.root",                         "PEX0", kBlack  },
         {"Data_JetHT", "condor/output-files/" + path + "/Data_JetHT/Data_JetHT.root", "PEX0", kBlack},
+    };
+    std::vector<histInfo> dataNull = {
     };
 
     //vector summarizing background histograms to include in the plot
@@ -43,14 +44,19 @@ int main()
         {"SYY 650", "condor/output-files/" + path + "/AllSignal/MyAnalysis_stealth_stop_650_SYY_0.root", "hist", kGreen + 3  },
         {"RPV 850", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", kRed + 1    },
     };
+    std::vector<histInfo> sigSkim = {
+        {"RPV 850", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", kRed + 1    },
+    };
 
     //make histInfoCollection
     HistInfoCollection histInfoCollection(data, bgEntries, sigEntries);
     HistInfoCollection histInfoCollectionSkim(data, bgSkim, sigEntries);
+    HistInfoCollection histInfoCollectionRoc(dataNull, bgSkim, sigSkim);
 
     //make plotter object with the required sources for histograms specified
     Plotter plt( std::move(histInfoCollection) );
     Plotter pltSkim( std::move(histInfoCollectionSkim) );
+    Plotter pltRoc( std::move(histInfoCollectionRoc) );
 
     // --------------------
     // - Make stack plots
@@ -117,27 +123,32 @@ int main()
         //"ge6j_HT500_ge2b_2t33_f1"  , "ge6j_HT500_ge2b_2t33_f2"  , "ge6j_HT500_ge2b_2t33_f3"  , "ge6j_HT500_ge2b_2t33_f4"  ,
    };
 
-    for(std::string mycut : mycuts_0l)
-    {
-        plt.plotStack( "h_njets_0l_"+mycut, "N_{J}" , "Events", true);
-        plt.plotStack( "h_ntops_0l_"+mycut, "N_{T}" , "Events", true);
-        plt.plotStack( "h_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
-        plt.plotStack( "h_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
-        plt.plotStack( "h_fisher_0l_"+mycut, "fisher value" , "Events", true);        
+    //for(std::string mycut : mycuts_0l)
+    //{
+    //    plt.plotStack( "h_njets_0l_"+mycut, "N_{J}" , "Events", true);
+    //    plt.plotStack( "h_ntops_0l_"+mycut, "N_{T}" , "Events", true);
+    //    plt.plotStack( "h_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
+    //    plt.plotStack( "h_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
+    //    plt.plotStack( "h_fisher_0l_"+mycut, "fisher value" , "Events", true);        
+    //
+    //    pltSkim.plotNormFisher("h_fisher_0l_"+mycut, "fisher value" , "Events", false);
+    //}
     
-        pltSkim.plotNormFisher("h_fisher_0l_"+mycut, "fisher value" , "Events", false);
-    }
-    
-    plt.plotStack("h_met"     , "MET"   , "Events", true);
-    plt.plotStack("h_ht"      , "H_{T}" , "Events", true);
-    plt.plotStack("h_bdt"     , "bdt"   , "Events", true);
-    plt.plotStack("h_fisher"  , "fisher", "Events", true);
-    plt.plotStack("h_njets"   , "N_{J}" , "Events", true);
-    plt.plotStack("h_nb"      , "N_{B}" , "Events", true);
-    plt.plotStack("h_ntops"   , "N_{T}" , "Events", true);
-    plt.plotStack("h_ntops_j1", "N_{1T}", "Events", true);
-    plt.plotStack("h_ntops_j2", "N_{2T}", "Events", true);
-    plt.plotStack("h_ntops_j3", "N_{3T}", "Events", true);
+    //plt.plotStack("h_met"     , "MET"   , "Events", true);
+    //plt.plotStack("h_ht"      , "H_{T}" , "Events", true);
+    //plt.plotStack("h_bdt"     , "bdt"   , "Events", true);
+    //plt.plotStack("h_fisher"  , "fisher", "Events", true);
+    //plt.plotStack("h_njets"   , "N_{J}" , "Events", true);
+    //plt.plotStack("h_nb"      , "N_{B}" , "Events", true);
+    //plt.plotStack("h_ntops"   , "N_{T}" , "Events", true);
+    //plt.plotStack("h_ntops_j1", "N_{1T}", "Events", true);
+    //plt.plotStack("h_ntops_j2", "N_{2T}", "Events", true);
+    //plt.plotStack("h_ntops_j3", "N_{3T}", "Events", true);
+
+    // -----------------------
+    // - Make fisher Roc Curve
+    // -----------------------
+    pltRoc.plotRocFisher("h_fisher_0l_ge6j_HT500_ge2b","Background","Signal",false);
 
     // --------------------
     // - Make fisher plots
@@ -180,20 +191,20 @@ int main()
         //{ {"h_njets_0l_ge6j_HT500_ge2b_2t33_f1", "h_njets_0l_ge6j_HT500_ge2b_2t33_f2", "h_njets_0l_ge6j_HT500_ge2b_2t33_f3", "h_njets_0l_ge6j_HT500_ge2b_2t33_f4"} , "njets_0l_ge6j_HT500_ge2b_2t33"},
     };
     
-    for (auto& f : fisherHolder)
-    {
-        plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true, 9);
-    }
+    //for (auto& f : fisherHolder)
+    //{
+    //    plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true, 9);
+    //}
     
     // --------------------
     // - Compute Yields
     // --------------------
 
-    for(std::string mycut : mycuts_0l)
-    {
-        const auto& yieldMap = histInfoCollection.computeYields("h_njets_0l_"+mycut,"njets",12,20);
-        //const auto& yieldMap = histInfoCollection.computeYields("h_njets_0l_"+mycut,"njets",6,6);
-        auto allbg  = yieldMap.find("AllBG"); auto data_JetHT = yieldMap.find("Data_JetHT"); auto ttbar = yieldMap.find("T#bar{T}"); auto QCD = yieldMap.find("QCD");
-        printf("%45.45s:  %s: %12.0lf   %s: %12.0lf   %s: %12.0lf   %s: %12.0lf\n",("h_njets_0l_"+mycut).c_str(), (data_JetHT->first).c_str(), data_JetHT->second, (allbg->first).c_str(), allbg->second, "ttbar", ttbar->second, (QCD->first).c_str(), QCD->second );
-    }       
+    //for(std::string mycut : mycuts_0l)
+    //{
+    //    const auto& yieldMap = histInfoCollection.computeYields("h_njets_0l_"+mycut,"njets",12,20);
+    //    //const auto& yieldMap = histInfoCollection.computeYields("h_njets_0l_"+mycut,"njets",6,6);
+    //    auto allbg  = yieldMap.find("AllBG"); auto data_JetHT = yieldMap.find("Data_JetHT"); auto ttbar = yieldMap.find("T#bar{T}"); auto QCD = yieldMap.find("QCD");
+    //    printf("%45.45s:  %s: %12.0lf   %s: %12.0lf   %s: %12.0lf   %s: %12.0lf\n",("h_njets_0l_"+mycut).c_str(), (data_JetHT->first).c_str(), data_JetHT->second, (allbg->first).c_str(), allbg->second, "ttbar", ttbar->second, (QCD->first).c_str(), QCD->second );
+    //}       
 }
