@@ -30,6 +30,17 @@ void Analyze0Lep::InitHistos(const std::map<std::string, bool>& cutMap)
     my_histos.emplace("h_ntops_j2", std::make_shared<TH1D>("h_ntops_j2","h_ntops_j2", 10,  0,     10  ) );
     my_histos.emplace("h_ntops_j3", std::make_shared<TH1D>("h_ntops_j3","h_ntops_j3", 10,  0,     10  ) );
 
+    my_histos.emplace("blind_met",      std::make_shared<TH1D>("blind_met",     "blind_met",      20,  0,    200  ) );
+    my_histos.emplace("blind_ht",       std::make_shared<TH1D>("blind_ht",      "blind_ht",       60,  0,   3000  ) );
+    my_histos.emplace("blind_bdt",      std::make_shared<TH1D>("blind_bdt",     "blind_bdt",      40, -0.5,    0.5) );
+    my_histos.emplace("blind_fisher",   std::make_shared<TH1D>("blind_fisher",  "blind_fisher",   50, -0.5,    0.5) );
+    my_histos.emplace("blind_njets",    std::make_shared<TH1D>("blind_njets",   "blind_njets",    20,  0,     20  ) );
+    my_histos.emplace("blind_nb",       std::make_shared<TH1D>("blind_nb",      "blind_nb",       10,  0,     10  ) );
+    my_histos.emplace("blind_ntops",    std::make_shared<TH1D>("blind_ntops",   "blind_ntops",    10,  0,     10  ) );
+    my_histos.emplace("blind_ntops_j1", std::make_shared<TH1D>("blind_ntops_j1","blind_ntops_j1", 10,  0,     10  ) );
+    my_histos.emplace("blind_ntops_j2", std::make_shared<TH1D>("blind_ntops_j2","blind_ntops_j2", 10,  0,     10  ) );
+    my_histos.emplace("blind_ntops_j3", std::make_shared<TH1D>("blind_ntops_j3","blind_ntops_j3", 10,  0,     10  ) );
+
     for(auto& mycut : cutMap)
     {
         my_histos.emplace("h_njets_0l_"+mycut.first, std::make_shared<TH1D>(("h_njets_0l_"+mycut.first).c_str(),("h_njets_0l_"+mycut.first).c_str(), 20, 0, 20));
@@ -41,6 +52,16 @@ void Analyze0Lep::InitHistos(const std::map<std::string, bool>& cutMap)
     
         my_2d_histos.emplace("h_njets_bdt_0l_"+mycut.first, std::make_shared<TH2D>(("h_njets_bdt_0l_"+mycut.first).c_str(),("h_njets_bdt_0l_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
         my_2d_histos.emplace("h_njets_fisher_0l_"+mycut.first, std::make_shared<TH2D>(("h_njets_fisher_0l_"+mycut.first).c_str(),("h_njets_fisher_0l_"+mycut.first).c_str(), 15, 0, 15, 50, -0.5, 0.5));
+
+        my_histos.emplace("blind_njets_0l_"+mycut.first, std::make_shared<TH1D>(("blind_njets_0l_"+mycut.first).c_str(),("blind_njets_0l_"+mycut.first).c_str(), 20, 0, 20));
+        my_histos.emplace("blind_ntops_0l_"+mycut.first, std::make_shared<TH1D>(("blind_ntops_0l_"+mycut.first).c_str(),("blind_ntops_0l_"+mycut.first).c_str(), 10, 0, 10));
+        my_histos.emplace("blind_nb_0l_"+mycut.first,    std::make_shared<TH1D>(("blind_nb_0l_"+mycut.first).c_str(),("blind_nb_0l_"+mycut.first).c_str(), 10, 0, 10));
+        my_histos.emplace("blind_HT_0l_"+mycut.first,    std::make_shared<TH1D>(("blind_HT_0l_"+mycut.first).c_str(),("blind_HT_0l_"+mycut.first).c_str(), 60, 0, 3000));
+        my_histos.emplace("blind_bdt_0l_"+mycut.first,   std::make_shared<TH1D>(("blind_bdt_0l_"+mycut.first).c_str(),("blind_bdt_0l_"+mycut.first).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("blind_fisher_0l_"+mycut.first,std::make_shared<TH1D>(("blind_fisher_0l_"+mycut.first).c_str(),("blind_fisher_0l_"+mycut.first).c_str(), 50, -0.5, 0.5));
+    
+        my_2d_histos.emplace("blind_njets_bdt_0l_"+mycut.first, std::make_shared<TH2D>(("blind_njets_bdt_0l_"+mycut.first).c_str(),("blind_njets_bdt_0l_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("blind_njets_fisher_0l_"+mycut.first, std::make_shared<TH2D>(("blind_njets_fisher_0l_"+mycut.first).c_str(),("blind_njets_fisher_0l_"+mycut.first).c_str(), 15, 0, 15, 50, -0.5, 0.5));
     }
 
     // Cut flows
@@ -364,6 +385,19 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
 
                 my_2d_histos["h_njets_bdt_0l_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
                 my_2d_histos["h_njets_fisher_0l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
+
+                if ( NJets_pt30 < 9 )
+                {
+                    my_histos["blind_njets_0l_"   +kv.first]->Fill(NJets_pt30, eventweight);
+                    my_histos["blind_ntops_0l_"   +kv.first]->Fill(ntops, eventweight);
+                    my_histos["blind_nb_0l_"      +kv.first]->Fill(NBJets, eventweight);
+                    my_histos["blind_HT_0l_"      +kv.first]->Fill(HT_trigger, eventweight);
+                    my_histos["blind_bdt_0l_"     +kv.first]->Fill(eventshape_bdt_val, eventweight);
+                    my_histos["blind_fisher_0l_"  +kv.first]->Fill(fisher_val, eventweight);
+                
+                    my_2d_histos["blind_njets_bdt_0l_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
+                    my_2d_histos["blind_njets_fisher_0l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
+                }
             }
         }
 
@@ -404,7 +438,7 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             }
         }
         
-        // Not local cuts applied here
+        // No local cuts applied here
         my_histos["h_met"     ]->Fill(MET, eventweight);
         my_histos["h_ht"      ]->Fill(HT_trigger, eventweight);
         my_histos["h_bdt"     ]->Fill(eventshape_bdt_val, eventweight);
@@ -415,6 +449,21 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         my_histos["h_ntops_j1"]->Fill(ntops_1jet, eventweight);
         my_histos["h_ntops_j2"]->Fill(ntops_2jet, eventweight);
         my_histos["h_ntops_j3"]->Fill(ntops_3jet, eventweight);        
+
+        // Do the blind cuts, for now, for data MC plots
+        if ( NJets_pt30 < 9 )
+        {
+            my_histos["blind_met"     ]->Fill(MET, eventweight);
+            my_histos["blind_ht"      ]->Fill(HT_trigger, eventweight);
+            my_histos["blind_bdt"     ]->Fill(eventshape_bdt_val, eventweight);
+            my_histos["blind_fisher"  ]->Fill(fisher_val, eventweight);
+            my_histos["blind_njets"   ]->Fill(NJets_pt30, eventweight);
+            my_histos["blind_nb"      ]->Fill(NBJets, eventweight);
+            my_histos["blind_ntops"   ]->Fill(ntops, eventweight);        
+            my_histos["blind_ntops_j1"]->Fill(ntops_1jet, eventweight);
+            my_histos["blind_ntops_j2"]->Fill(ntops_2jet, eventweight);
+            my_histos["blind_ntops_j3"]->Fill(ntops_3jet, eventweight);        
+        }
 
     } // end of event loop
 

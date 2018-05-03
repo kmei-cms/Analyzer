@@ -7,6 +7,8 @@
 #include "TCanvas.h"
 #include "TLegend.h"
 #include "TLatex.h"
+#include "TGraph.h"
+#include "TF1.h"
 
 #include <memory>
 #include <vector>
@@ -14,6 +16,15 @@
 #include <cstdio>
 #include <iostream>
 #include <map>
+
+class rocInfo
+{
+public:
+    std::vector<double> rocVec;
+    std::string legEntry;
+    int color;
+    bool firstOnly;
+};
 
 //Class to hold TH1* with various helper functions 
 class histInfo
@@ -160,6 +171,9 @@ public:
 
     HistInfoCollection(std::vector<histInfo>&& dataVec, std::vector<histInfo>&& bgVec, std::vector<histInfo>&& sigVec) : dataVec_(dataVec), bgVec_(bgVec), sigVec_(sigVec) {}
     HistInfoCollection(std::vector<histInfo>& dataVec, std::vector<histInfo>& bgVec, std::vector<histInfo>& sigVec) : dataVec_(dataVec), bgVec_(bgVec), sigVec_(sigVec) {}
+    HistInfoCollection() {};
+
+    ~HistInfoCollection() {}
 
     void setUpBG(const std::string& histName, int rebin, THStack* bgStack, std::shared_ptr<TH1>& hbgSum, const bool& setFill = true)
     {
@@ -246,33 +260,14 @@ private:
     //Collection of histInfo
     HistInfoCollection hc_;
     std::shared_ptr<TH1> hbgSum_;
+    //std::vector<HistInfoCollection> chc_;
+    std::map< std::string, HistInfoCollection > mhc_;
+    std::vector<std::shared_ptr<TH1>> hbgSumVec_;
 
 public:
-    Plotter(HistInfoCollection&& hc) : hc_(hc), hbgSum_(nullptr) {}
-
-    //This is a helper function which will keep the plot from overlapping with the legend
-    void smartMax(const TH1* const h, const TLegend* const l, const TPad* const p, double& gmin, double& gmax, double& gpThreshMax, const bool error)
-    {
-        const bool isLog = p->GetLogy();
-        double min = 9e99;
-        double max = -9e99;
-        double pThreshMax = -9e99;
-        int threshold = static_cast<int>(h->GetNbinsX()*(l->GetX1() - p->GetLeftMargin())/((1 - p->GetRightMargin()) - p->GetLeftMargin()));
-
-        for(int i = 1; i <= h->GetNbinsX(); ++i)
-        {
-            double bin = 0.0;
-            if(error) bin = h->GetBinContent(i) + h->GetBinError(i);
-            else      bin = h->GetBinContent(i);
-            if(bin > max) max = bin;
-            else if(bin > 1e-10 && bin < min) min = bin;
-            if(i >= threshold && bin > pThreshMax) pThreshMax = bin;
-        }
-        
-        gpThreshMax = std::max(gpThreshMax, pThreshMax);
-        gmax = std::max(gmax, max);
-        gmin = std::min(gmin, min);
-    }
+    Plotter(HistInfoCollection&& hc) : hc_(hc) {}
+    //Plotter(std::vector<HistInfoCollection>&& chc) : chc_(chc) {}
+    Plotter(std::map< std::string, HistInfoCollection >&& mhc) : mhc_(mhc) {}
 
     void plotStack(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 36100)
     {
@@ -472,7 +467,7 @@ public:
         for(auto& entry : hc_.bgVec_)
         {
             leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), "L");
-            entry.h->Scale( 1.0/entry.h->Integral( 0, entry.h->GetNbinsX() + 1 ) );
+            entry.h->Scale( 1.0/entry.h->Integral() );
             smartMax(entry.h.get(), leg, static_cast<TPad*>(gPad), min, max, lmax, false);            
             entry.draw();
         }
@@ -480,7 +475,7 @@ public:
         hbgSum_->SetMarkerColor(kBlack);
         //std::cout<<hbgSum_->GetNbinsX() + 1<<std::endl;
         leg->AddEntry(hbgSum_.get(), "AllBG", "L");
-        hbgSum_->Scale( 1.0/hbgSum_->Integral( 0, hbgSum_->GetNbinsX() + 1 ) );
+        hbgSum_->Scale( 1.0/hbgSum_->Integral() );
         smartMax(hbgSum_.get(), leg, static_cast<TPad*>(gPad), min, max, lmax, false);
         hbgSum_->Draw("hist same");
 
@@ -490,7 +485,7 @@ public:
         for(const auto& entry : hc_.sigVec_)
         {
             leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), "L");
-            entry.h->Scale( 1.0/entry.h->Integral( 0, entry.h->GetNbinsX() + 1 ) );
+            entry.h->Scale( 1.0/entry.h->Integral() );
             smartMax(entry.h.get(), leg, static_cast<TPad*>(gPad), min, max, lmax, false);
             entry.draw();
         }
@@ -513,6 +508,98 @@ public:
         delete c;
         delete leg;
         delete bgStack;
+    }
+
+    void plotRocFisher(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool firstOnly = false, const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 36100)
+    {
+        //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
+        TH1::AddDirectory(false);
+
+        //create the canvas for the plot
+        TCanvas *c = new TCanvas("c1", "c1", 800, 800);
+        c->cd();
+
+        //Set Canvas margin (gPad is root magic to access the current pad, in this case canvas "c")
+        gPad->SetLeftMargin(0.12);
+        gPad->SetRightMargin(0.06);
+        gPad->SetTopMargin(0.08);
+        gPad->SetBottomMargin(0.12);
+        gPad->SetTicks(1,1);
+
+        //Create TLegend
+        TLegend *leg = new TLegend(0.13, 0.75, 0.88, 0.9);
+        //TLegend *leg = new TLegend(0.50, 0.56, 0.89, 0.88);
+        leg->SetFillStyle(0);
+        leg->SetBorderSize(0);
+        leg->SetLineWidth(1);
+        leg->SetNColumns(3);
+        leg->SetTextFont(42);
+        leg->SetTextSize(0.02);
+
+        //create a dummy histogram to act as the axes
+        histInfo dummy(new TH1D("dummy", "dummy", 1000, 0, 1));
+        dummy.draw();
+
+        //get maximum from histos and fill TLegend
+        double min = 0.0;
+        double max = 1.0;
+        double lmax = 1.0;
+
+        // --------------------------
+        // -  Make Roc Info and Plot
+        // --------------------------
+        std::vector<rocInfo> bgSumRocInfoVec;
+        std::vector<TGraph*> graphVec;
+        for(auto& mhc : mhc_)
+        {
+            std::cout<<mhc.first<<std::endl;
+            THStack *bgStack = new THStack();
+            std::shared_ptr<TH1> hbgSum;
+            mhc.second.setUpBG(histName, rebin, bgStack, hbgSum, false);
+            delete bgStack;
+            mhc.second.setUpSignal(histName, rebin);
+            rocInfo bgSumRocInfo = { makeFisherVec(hbgSum), mhc.first + " AllBG", mhc.second.bgVec_[0].color };
+            std::vector<rocInfo> rocBgVec  = makeRocVec(mhc.second.bgVec_);
+            std::vector<rocInfo> rocSigVec = makeRocVec(mhc.second.sigVec_);
+            if(firstOnly) rocBgVec.emplace(rocBgVec.begin(), bgSumRocInfo);
+            int lineStyle = (mhc.first == "Test") ?  kSolid : kDashed;
+            int markStyle = (mhc.first == "Test") ?  kFullCircle : kFullSquare;
+            drawRocCurve(graphVec, rocBgVec, rocSigVec, firstOnly, leg, lineStyle, markStyle);
+        }
+
+        TF1* line1 = new TF1( "line1","1",0,1);
+        line1->SetLineColor(kBlack);
+        line1->Draw("same");
+        TF1* line2 = new TF1( "line2","x",0,1);
+        line2->SetLineColor(kBlack);
+        line2->SetLineStyle(kDotted);
+        line2->Draw("same");
+        
+        //plot legend
+        leg->Draw("same");
+
+        //Draw dummy hist again to get axes on top of histograms
+        setupDummy(dummy, leg, histName, xAxisLabel, yAxisLabel, false, xmin, xmax, min, max, lmax);
+        dummy.draw("AXIS");
+
+        //Draw CMS and lumi lables
+        //drawLables(lumi);
+
+        //save new plot to file
+        if(firstOnly) 
+        {
+            c->Print(("outputPlots/fisherRocCompare_" + histName + ".pdf").c_str());
+        }
+        else
+        {
+            c->Print(("outputPlots/fisherRoc_" + histName + ".pdf").c_str());
+        }
+        //c->Print("test.pdf");
+
+        //clean up dynamic memory
+        delete c;
+        delete leg;
+        for(auto* g : graphVec) delete g;
     }
 
     void plotFisher(const std::vector<std::string>& histNameVec, const std::string& histTitle, const std::string& xAxisLabel, 
@@ -641,6 +728,83 @@ public:
         }
     }
 
+    //This is a helper function which will keep the plot from overlapping with the legend
+    void smartMax(const TH1* const h, const TLegend* const l, const TPad* const p, double& gmin, double& gmax, double& gpThreshMax, const bool error)
+    {
+        const bool isLog = p->GetLogy();
+        double min = 9e99;
+        double max = -9e99;
+        double pThreshMax = -9e99;
+        int threshold = static_cast<int>(h->GetNbinsX()*(l->GetX1() - p->GetLeftMargin())/((1 - p->GetRightMargin()) - p->GetLeftMargin()));
+
+        for(int i = 1; i <= h->GetNbinsX(); ++i)
+        {
+            double bin = 0.0;
+            if(error) bin = h->GetBinContent(i) + h->GetBinError(i);
+            else      bin = h->GetBinContent(i);
+            if(bin > max) max = bin;
+            else if(bin > 1e-10 && bin < min) min = bin;
+            if(i >= threshold && bin > pThreshMax) pThreshMax = bin;
+        }
+        
+        gpThreshMax = std::max(gpThreshMax, pThreshMax);
+        gmax = std::max(gmax, max);
+        gmin = std::min(gmin, min);
+    }
+
+    std::vector<double> makeFisherVec(std::shared_ptr<TH1> h)
+    {
+        h->Scale( 1.0 / h->Integral() );
+        std::vector<double> v;
+        for(int ii = 0; ii <= h->GetNbinsX(); ii++)
+        {
+            double val = h->Integral( ii, h->GetNbinsX());
+            v.push_back( val );
+        }
+        return v;
+    }
+
+    std::vector<rocInfo> makeRocVec(const std::vector<histInfo>& vec)
+    {
+        std::vector<rocInfo> rocVec;
+        for(const auto& entry : vec)
+        {
+            std::vector<double> v = makeFisherVec(entry.h);
+            rocVec.push_back( {v, entry.legEntry, entry.color} );
+        }
+        return rocVec;    
+}
+
+    void drawRocCurve(std::vector<TGraph*>& graphVec, const std::vector<rocInfo>& rocBgVec, const std::vector<rocInfo>& rocSigVec, const bool firstOnly, TLegend* leg, int lineStyle, int markStyle)
+    {
+        for(const auto& mBg : rocBgVec)
+        {
+            for(const auto& mSig : rocSigVec)
+            {
+                int n = mBg.rocVec.size();
+                double x[n], y[n];
+                for(int i = 0; i < n; i++)
+                {
+                    x[i] = mBg.rocVec[i];
+                    y[i] = mSig.rocVec[i];
+                    //std::cout<<mBg.legEntry<<" "<<x[i]<<" "<<mSig.legEntry<<" "<<y[i]<<std::endl;
+                }
+                TGraph* g = new TGraph (n, x, y);
+                g->SetLineWidth(2);
+                g->SetLineStyle(lineStyle);
+                g->SetLineColor( mBg.color );
+                g->SetMarkerSize(0.7);
+                g->SetMarkerStyle(markStyle);
+                g->SetMarkerColor( mSig.color );
+                g->Draw("same LP");                
+                leg->AddEntry(g, (mBg.legEntry + " vs " + mSig.legEntry).c_str(), "LP");
+                graphVec.push_back(g);
+                //if(firstOnly) break; 
+            }
+            if(firstOnly) break; 
+        }
+    }
+    
     void setupDummy(histInfo dummy, TLegend *leg, const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel, const bool isLogY, 
                     const double xmin, const double xmax, double min, double max, double lmax)
     {
