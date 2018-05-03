@@ -552,19 +552,19 @@ public:
         std::vector<TGraph*> graphVec;
         for(auto& mhc : mhc_)
         {
-            std::cout<<mhc.first<<std::endl;
+            //std::cout<<mhc.first<<std::endl;
             THStack *bgStack = new THStack();
             std::shared_ptr<TH1> hbgSum;
             mhc.second.setUpBG(histName, rebin, bgStack, hbgSum, false);
             delete bgStack;
             mhc.second.setUpSignal(histName, rebin);
-            rocInfo bgSumRocInfo = { makeFisherVec(hbgSum), mhc.first + " AllBG", mhc.second.bgVec_[0].color };
+            rocInfo bgSumRocInfo = { makeFisherVec(hbgSum), "AllBG", mhc.second.bgVec_[0].color };
             std::vector<rocInfo> rocBgVec  = makeRocVec(mhc.second.bgVec_);
             std::vector<rocInfo> rocSigVec = makeRocVec(mhc.second.sigVec_);
             if(firstOnly) rocBgVec.emplace(rocBgVec.begin(), bgSumRocInfo);
             int lineStyle = (mhc.first == "Test") ?  kSolid : kDashed;
             int markStyle = (mhc.first == "Test") ?  kFullCircle : kFullSquare;
-            drawRocCurve(graphVec, rocBgVec, rocSigVec, firstOnly, leg, lineStyle, markStyle);
+            drawRocCurve(mhc.first, graphVec, rocBgVec, rocSigVec, firstOnly, leg, lineStyle, markStyle);
         }
 
         TF1* line1 = new TF1( "line1","1",0,1);
@@ -589,10 +589,12 @@ public:
         if(firstOnly) 
         {
             c->Print(("outputPlots/fisherRocCompare_" + histName + ".pdf").c_str());
+            c->Print(("outputPlots/fisherRocCompare_" + histName + ".png").c_str());
         }
         else
         {
             c->Print(("outputPlots/fisherRoc_" + histName + ".pdf").c_str());
+            c->Print(("outputPlots/fisherRoc_" + histName + ".png").c_str());
         }
         //c->Print("test.pdf");
 
@@ -775,10 +777,13 @@ public:
         return rocVec;    
 }
 
-    void drawRocCurve(std::vector<TGraph*>& graphVec, const std::vector<rocInfo>& rocBgVec, const std::vector<rocInfo>& rocSigVec, const bool firstOnly, TLegend* leg, int lineStyle, int markStyle)
+    void drawRocCurve(const std::string& fType, std::vector<TGraph*>& graphVec, const std::vector<rocInfo>& rocBgVec, const std::vector<rocInfo>& rocSigVec, const bool firstOnly, TLegend* leg, int lineStyle, int markStyle)
     {
+        int index = 0;
         for(const auto& mBg : rocBgVec)
         {
+            index++;
+            if(index > 2) break;
             for(const auto& mSig : rocSigVec)
             {
                 int n = mBg.rocVec.size();
@@ -797,7 +802,7 @@ public:
                 g->SetMarkerStyle(markStyle);
                 g->SetMarkerColor( mSig.color );
                 g->Draw("same LP");                
-                leg->AddEntry(g, (mBg.legEntry + " vs " + mSig.legEntry).c_str(), "LP");
+                leg->AddEntry(g, (fType + " " + mBg.legEntry + " vs " + mSig.legEntry).c_str(), "LP");
                 graphVec.push_back(g);
                 //if(firstOnly) break; 
             }
