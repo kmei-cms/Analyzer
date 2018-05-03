@@ -1,4 +1,5 @@
 #include "Analyzer/Analyzer/test/plotter.h"
+#include <iostream>
 
 class FisherHolder
 {
@@ -11,63 +12,89 @@ int main()
 {
     TH1::AddDirectory(false);
 
-    std::string path = "lep0Ana_TestFisher-May-1-2018";
-    //std::string path = "";
+    std::string path = "lep0Ana-May-2-25-2018";
+    std::string pathtest = "lep0Ana_TestFisher-May-1-2018";
+    std::string pathold = "lep0Ana-May-2-25-2018";
 
     //entry for data
     //this uses the initializer syntax to initialize the histInfo object
     //               leg entry root file                 draw options  draw color
     std::vector<histInfo> data = {
-        {"Data_JetHT", "condor/output-files/" + path + "/Data_JetHT/Data_JetHT.root", "PEX0", kBlack},
+        {"Data_JetHT", "condor/output-files/" + pathold + "/Data_JetHT/Data_JetHT.root", "PEX0", kBlack},
     };
     std::vector<histInfo> dataNull = {
     };
 
     //vector summarizing background histograms to include in the plot
     std::vector<histInfo> bgEntries = {
-        {"DYJetsToLL_M-50", "condor/output-files/" + path + "/DYJetsToLL_M-50/DYJetsToLL_M-50.root", "hist", kOrange + 2 },        
-        {"Rare",            "condor/output-files/" + path + "/Rare/Rare.root",                       "hist", kCyan + 1   },
-        {"Diboson",         "condor/output-files/" + path + "/Diboson/Diboson.root",                 "hist", kMagenta + 1},
-        {"WJetsToLNu",      "condor/output-files/" + path + "/WJetsToLNu/WJetsToLNu.root",           "hist", kYellow + 1 },
-        {"ST",              "condor/output-files/" + path + "/ST/ST.root",                           "hist", kRed + 1    },
-        {"QCD",             "condor/output-files/" + path + "/QCD/QCD.root",                         "hist", kGreen + 1  },
-        {"T#bar{T}",        "condor/output-files/" + path + "/TT/TT.root",                           "hist", kBlue - 7   },
+        {"DYJetsToLL_M-50", "condor/output-files/" + pathold + "/DYJetsToLL_M-50/DYJetsToLL_M-50.root", "hist", kOrange + 2 },        
+        {"Rare",            "condor/output-files/" + pathold + "/Rare/Rare.root",                       "hist", kCyan + 1   },
+        {"Diboson",         "condor/output-files/" + pathold + "/Diboson/Diboson.root",                 "hist", kMagenta + 1},
+        {"WJetsToLNu",      "condor/output-files/" + pathold + "/WJetsToLNu/WJetsToLNu.root",           "hist", kYellow + 1 },
+        {"ST",              "condor/output-files/" + pathold + "/ST/ST.root",                           "hist", kRed + 1    },
+        {"QCD",             "condor/output-files/" + pathold + "/QCD/QCD.root",                         "hist", kGreen + 1  },
+        {"T#bar{T}",        "condor/output-files/" + pathold + "/TT/TT.root",                           "hist", kBlue - 7   },
     };
     std::vector<histInfo> bgSkim = {
-        {"QCD",             "condor/output-files/" + path + "/QCD/QCD.root",                         "hist", kGreen + 1  },
-        {"T#bar{T}",        "condor/output-files/" + path + "/TT/TT.root",                           "hist", kBlue - 7   },
+        {"QCD",             "condor/output-files/" + pathold + "/QCD/QCD.root",                         "hist", kGreen + 1  },
+        {"T#bar{T}",        "condor/output-files/" + pathold + "/TT/TT.root",                           "hist", kBlue - 7   },
     };
 
     //vector summarizing signal histograms to include in the plot
     std::vector<histInfo> sigEntries = {
-        {"RPV 350", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_350_0.root",         "hist", kMagenta + 2},
-        {"SYY 650", "condor/output-files/" + path + "/AllSignal/MyAnalysis_stealth_stop_650_SYY_0.root", "hist", kGreen + 3  },
-        {"RPV 850", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", kRed + 1    },
+        {"RPV 350", "condor/output-files/" + pathold + "/AllSignal/MyAnalysis_rpv_stop_350_0.root",         "hist", kMagenta + 2},
+        {"SYY 650", "condor/output-files/" + pathold + "/AllSignal/MyAnalysis_stealth_stop_650_SYY_0.root", "hist", kGreen + 3  },
+        {"RPV 850", "condor/output-files/" + pathold + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", kRed + 1    },
     };
 
 
     // Roc Curve histInfo
-    std::vector<histInfo> bgRoc = {
-        {"QCD",             "condor/output-files/" + path + "/QCD/QCD.root", "hist", kBlack  },
-        {"T#bar{T}",        "condor/output-files/" + path + "/TT/TT.root",   "hist", kRed    },
+    std::vector<histInfo> bgRocTest = {
+        {"QCD",             "condor/output-files/" + pathtest + "/QCD/QCD.root",                         "hist", kBlack      },
+        {"T#bar{T}",        "condor/output-files/" + pathtest + "/TT/TT.root",                           "hist", kGreen      },
+        {"DYJetsToLL_M-50", "condor/output-files/" + pathtest + "/DYJetsToLL_M-50/DYJetsToLL_M-50.root", "hist", kOrange + 2 },        
+        {"Rare",            "condor/output-files/" + pathtest + "/Rare/Rare.root",                       "hist", kCyan + 1   },
+        {"Diboson",         "condor/output-files/" + pathtest + "/Diboson/Diboson.root",                 "hist", kMagenta + 1},
+        {"WJetsToLNu",      "condor/output-files/" + pathtest + "/WJetsToLNu/WJetsToLNu.root",           "hist", kYellow + 1 },
+        {"ST",              "condor/output-files/" + pathtest + "/ST/ST.root",                           "hist", kRed + 1    },
     };
-    std::vector<histInfo> sigRoc = {
-        {"RPV 850", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root", "hist", kGreen + 3  },
-        {"RPV 350", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_350_0.root", "hist", kBlue + 2   },
+    std::vector<histInfo> sigRocTest = {
+        {"RPV 850", "condor/output-files/" + pathtest + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", kRed        },
+        {"SYY 650", "condor/output-files/" + pathtest + "/AllSignal/MyAnalysis_stealth_stop_650_SYY_0.root", "hist", kGreen      },
+        {"RPV 350", "condor/output-files/" + pathtest + "/AllSignal/MyAnalysis_rpv_stop_350_0.root",         "hist", kBlue       },
+    };
+
+    std::vector<histInfo> bgRocOld = {
+        {"QCD",             "condor/output-files/" + pathold + "/QCD/QCD.root",                         "hist", kRed        },
+        {"T#bar{T}",        "condor/output-files/" + pathold + "/TT/TT.root",                           "hist", kGreen      },
+        {"DYJetsToLL_M-50", "condor/output-files/" + pathold + "/DYJetsToLL_M-50/DYJetsToLL_M-50.root", "hist", kOrange + 2 },        
+        {"Rare",            "condor/output-files/" + pathold + "/Rare/Rare.root",                       "hist", kCyan + 1   },
+        {"Diboson",         "condor/output-files/" + pathold + "/Diboson/Diboson.root",                 "hist", kMagenta + 1},
+        {"WJetsToLNu",      "condor/output-files/" + pathold + "/WJetsToLNu/WJetsToLNu.root",           "hist", kYellow + 1 },
+        {"ST",              "condor/output-files/" + pathold + "/ST/ST.root",                           "hist", kRed + 1    },
+    };
+    std::vector<histInfo> sigRocOld = {
+        {"RPV 850", "condor/output-files/" + pathold + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", kRed        },
+        {"SYY 650", "condor/output-files/" + pathold + "/AllSignal/MyAnalysis_stealth_stop_650_SYY_0.root", "hist", kGreen      },
+        {"RPV 350", "condor/output-files/" + pathold + "/AllSignal/MyAnalysis_rpv_stop_350_0.root",         "hist", kBlue       },
     };
 
     //make histInfoCollection
     HistInfoCollection histInfoCollection(data, bgEntries, sigEntries);
     HistInfoCollection histInfoCollectionSkim(data, bgSkim, sigEntries);
-    HistInfoCollection histInfoCollectionRoc(dataNull, bgRoc, sigRoc);
+
+    HistInfoCollection histInfoCollectionRocTest(dataNull, bgRocTest, sigRocTest);
+    HistInfoCollection histInfoCollectionRocOld(dataNull, bgRocOld, sigRocOld);
 
     // vector of histInfoCollection for Roc Curves
-    std::vector<HistInfoCollection> rocCollections = {histInfoCollectionRoc};
+    std::map< std::string, HistInfoCollection > rocMap = { {"Test", histInfoCollectionRocTest},
+                                                           {"V3", histInfoCollectionRocOld},
+    };
 
     //make plotter object with the required sources for histograms specified
     Plotter plt( std::move(histInfoCollection) );
     Plotter pltSkim( std::move(histInfoCollectionSkim) );
-    Plotter pltRoc( std::move(rocCollections) );
+    Plotter pltRoc( std::move(rocMap) );
 
     // --------------------
     // - Make stack plots
@@ -159,7 +186,7 @@ int main()
     // -----------------------
     // - Make fisher Roc Curve
     // -----------------------
-    pltRoc.plotRocFisher("h_fisher_0l_ge6j_HT500_ge2b","Background","Signal", false);
+    pltRoc.plotRocFisher("h_fisher_0l_ge6j_HT500_ge2b","Background","Signal", true);
 
     // --------------------
     // - Make fisher plots

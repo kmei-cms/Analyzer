@@ -260,12 +260,14 @@ private:
     //Collection of histInfo
     HistInfoCollection hc_;
     std::shared_ptr<TH1> hbgSum_;
-    std::vector<HistInfoCollection> chc_;
+    //std::vector<HistInfoCollection> chc_;
+    std::map< std::string, HistInfoCollection > mhc_;
     std::vector<std::shared_ptr<TH1>> hbgSumVec_;
 
 public:
     Plotter(HistInfoCollection&& hc) : hc_(hc) {}
-    Plotter(std::vector<HistInfoCollection>&& chc) : chc_(chc) {}
+    //Plotter(std::vector<HistInfoCollection>&& chc) : chc_(chc) {}
+    Plotter(std::map< std::string, HistInfoCollection >&& mhc) : mhc_(mhc) {}
 
     void plotStack(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 36100)
     {
@@ -525,13 +527,14 @@ public:
         gPad->SetTicks(1,1);
 
         //Create TLegend
-        TLegend *leg = new TLegend(0.20, 0.76, 0.89, 0.88);
+        TLegend *leg = new TLegend(0.13, 0.75, 0.88, 0.9);
         //TLegend *leg = new TLegend(0.50, 0.56, 0.89, 0.88);
         leg->SetFillStyle(0);
         leg->SetBorderSize(0);
         leg->SetLineWidth(1);
         leg->SetNColumns(3);
         leg->SetTextFont(42);
+        leg->SetTextSize(0.02);
 
         //create a dummy histogram to act as the axes
         histInfo dummy(new TH1D("dummy", "dummy", 1000, 0, 1));
@@ -547,20 +550,21 @@ public:
         // --------------------------
         std::vector<rocInfo> bgSumRocInfoVec;
         std::vector<TGraph*> graphVec;
-        for(auto& hc : chc_)
+        for(auto& mhc : mhc_)
         {
+            std::cout<<mhc.first<<std::endl;
             THStack *bgStack = new THStack();
             std::shared_ptr<TH1> hbgSum;
-            hc.setUpBG(histName, rebin, bgStack, hbgSum, false);
+            mhc.second.setUpBG(histName, rebin, bgStack, hbgSum, false);
             delete bgStack;
-            hc.setUpSignal(histName, rebin);
-            rocInfo bgSumRocInfo = { makeFisherVec(hbgSum), "AllBG", kBlack };
-            //bgSumRocInfoVec.push_back(bgSumRocInfo);
-            std::vector<rocInfo> rocBgVec  = makeRocVec(hc.bgVec_);
-            std::vector<rocInfo> rocSigVec = makeRocVec(hc.sigVec_);
-            //if(firstOnly) rocBgVec.emplace(rocBgVec.begin(), bgSumRocInfoVec[0]);
+            mhc.second.setUpSignal(histName, rebin);
+            rocInfo bgSumRocInfo = { makeFisherVec(hbgSum), mhc.first + " AllBG", mhc.second.bgVec_[0].color };
+            std::vector<rocInfo> rocBgVec  = makeRocVec(mhc.second.bgVec_);
+            std::vector<rocInfo> rocSigVec = makeRocVec(mhc.second.sigVec_);
             if(firstOnly) rocBgVec.emplace(rocBgVec.begin(), bgSumRocInfo);
-            drawRocCurve(graphVec, rocBgVec, rocSigVec, firstOnly, leg);
+            int lineStyle = (mhc.first == "Test") ?  kSolid : kDashed;
+            int markStyle = (mhc.first == "Test") ?  kFullCircle : kFullSquare;
+            drawRocCurve(graphVec, rocBgVec, rocSigVec, firstOnly, leg, lineStyle, markStyle);
         }
 
         TF1* line1 = new TF1( "line1","1",0,1);
@@ -568,6 +572,7 @@ public:
         line1->Draw("same");
         TF1* line2 = new TF1( "line2","x",0,1);
         line2->SetLineColor(kBlack);
+        line2->SetLineStyle(kDotted);
         line2->Draw("same");
         
         //plot legend
@@ -581,8 +586,15 @@ public:
         //drawLables(lumi);
 
         //save new plot to file
-        //c->Print(("outputPlots/fisherNorm_" + histName + ".pdf").c_str());
-        c->Print("test.png");
+        if(firstOnly) 
+        {
+            c->Print(("outputPlots/fisherRocCompare_" + histName + ".pdf").c_str());
+        }
+        else
+        {
+            c->Print(("outputPlots/fisherRoc_" + histName + ".pdf").c_str());
+        }
+        //c->Print("test.pdf");
 
         //clean up dynamic memory
         delete c;
@@ -763,7 +775,7 @@ public:
         return rocVec;    
 }
 
-    void drawRocCurve(std::vector<TGraph*>& graphVec, const std::vector<rocInfo>& rocBgVec, const std::vector<rocInfo>& rocSigVec, const bool firstOnly, TLegend* leg)
+    void drawRocCurve(std::vector<TGraph*>& graphVec, const std::vector<rocInfo>& rocBgVec, const std::vector<rocInfo>& rocSigVec, const bool firstOnly, TLegend* leg, int lineStyle, int markStyle)
     {
         for(const auto& mBg : rocBgVec)
         {
@@ -779,15 +791,15 @@ public:
                 }
                 TGraph* g = new TGraph (n, x, y);
                 g->SetLineWidth(2);
-                g->SetLineStyle(2);
+                g->SetLineStyle(lineStyle);
                 g->SetLineColor( mBg.color );
                 g->SetMarkerSize(0.7);
-                g->SetMarkerStyle(21);
+                g->SetMarkerStyle(markStyle);
                 g->SetMarkerColor( mSig.color );
                 g->Draw("same LP");                
                 leg->AddEntry(g, (mBg.legEntry + " vs " + mSig.legEntry).c_str(), "LP");
                 graphVec.push_back(g);
-                if(firstOnly) break; 
+                //if(firstOnly) break; 
             }
             if(firstOnly) break; 
         }
