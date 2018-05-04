@@ -12,9 +12,9 @@ int main()
 {
     TH1::AddDirectory(false);
 
-    std::string pathtest = "lep0Ana_TestFisher-May-1-2018";
-    std::string pathold = "lep0Ana-May-2-25-2018";
-    std::string path = pathtest;//""; "lep0Ana-May-2-25-2018";
+    std::string pathtest = "lep0Ana_TestFisher-May-3-2018";
+    std::string pathold = "lep0Ana-May-3-25-2018";
+    std::string path = pathtest;
 
     //entry for data
     //this uses the initializer syntax to initialize the histInfo object
@@ -170,10 +170,10 @@ int main()
         plt.plotStack( "h_ntops_0l_"+mycut, "N_{T}" , "Events", true);
         plt.plotStack( "h_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
         plt.plotStack( "h_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
-        plt.plotStack( "h_fisher_0l_"+mycut, "fisher value" , "Events", true);        
+        plt.plotStack( "h_fisher_0l_"+mycut, "fisher value" , "Events", true, 4);        
 
         // Make Normalized fisher
-        pltSkim.plotNormFisher("h_fisher_0l_"+mycut, "fisher value" , "Events", false);
+        pltSkim.plotNormFisher("h_fisher_0l_"+mycut, "fisher value" , "Events", false, 4);
         
         // - Make fisher Roc Curve
         pltRoc.plotRocFisher("h_fisher_0l_"+mycut,"Background","Signal", false);
@@ -184,13 +184,13 @@ int main()
         plt.plotStack( "blind_ntops_0l_"+mycut, "N_{T}" , "Events", true);
         plt.plotStack( "blind_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
         plt.plotStack( "blind_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
-        plt.plotStack( "blind_fisher_0l_"+mycut, "fisher value" , "Events", true);        
+        plt.plotStack( "blind_fisher_0l_"+mycut, "fisher value" , "Events", true, 4);        
     }
     
     plt.plotStack("h_met"     , "MET"   , "Events", true);
     plt.plotStack("h_ht"      , "H_{T}" , "Events", true);
     plt.plotStack("h_bdt"     , "bdt"   , "Events", true);
-    plt.plotStack("h_fisher"  , "fisher", "Events", true);
+    plt.plotStack("h_fisher"  , "fisher", "Events", true, 4);
     plt.plotStack("h_njets"   , "N_{J}" , "Events", true);
     plt.plotStack("h_nb"      , "N_{B}" , "Events", true);
     plt.plotStack("h_ntops"   , "N_{T}" , "Events", true);

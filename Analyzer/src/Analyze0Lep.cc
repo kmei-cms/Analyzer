@@ -18,11 +18,13 @@ void Analyze0Lep::InitHistos(const std::map<std::string, bool>& cutMap)
 {
     TH1::SetDefaultSumw2();
 
+    int fB = 200;
+
     // Declare all your histograms here, that way we can fill them for multiple chains
     my_histos.emplace("h_met",      std::make_shared<TH1D>("h_met",     "h_met",      20,  0,    200  ) );
     my_histos.emplace("h_ht",       std::make_shared<TH1D>("h_ht",      "h_ht",       60,  0,   3000  ) );
     my_histos.emplace("h_bdt",      std::make_shared<TH1D>("h_bdt",     "h_bdt",      40, -0.5,    0.5) );
-    my_histos.emplace("h_fisher",   std::make_shared<TH1D>("h_fisher",  "h_fisher",   50, -0.5,    0.5) );
+    my_histos.emplace("h_fisher",   std::make_shared<TH1D>("h_fisher",  "h_fisher",   fB, -0.5,    0.5) );
     my_histos.emplace("h_njets",    std::make_shared<TH1D>("h_njets",   "h_njets",    20,  0,     20  ) );
     my_histos.emplace("h_nb",       std::make_shared<TH1D>("h_nb",      "h_nb",       10,  0,     10  ) );
     my_histos.emplace("h_ntops",    std::make_shared<TH1D>("h_ntops",   "h_ntops",    10,  0,     10  ) );
@@ -33,7 +35,7 @@ void Analyze0Lep::InitHistos(const std::map<std::string, bool>& cutMap)
     my_histos.emplace("blind_met",      std::make_shared<TH1D>("blind_met",     "blind_met",      20,  0,    200  ) );
     my_histos.emplace("blind_ht",       std::make_shared<TH1D>("blind_ht",      "blind_ht",       60,  0,   3000  ) );
     my_histos.emplace("blind_bdt",      std::make_shared<TH1D>("blind_bdt",     "blind_bdt",      40, -0.5,    0.5) );
-    my_histos.emplace("blind_fisher",   std::make_shared<TH1D>("blind_fisher",  "blind_fisher",   50, -0.5,    0.5) );
+    my_histos.emplace("blind_fisher",   std::make_shared<TH1D>("blind_fisher",  "blind_fisher",   fB, -0.5,    0.5) );
     my_histos.emplace("blind_njets",    std::make_shared<TH1D>("blind_njets",   "blind_njets",    20,  0,     20  ) );
     my_histos.emplace("blind_nb",       std::make_shared<TH1D>("blind_nb",      "blind_nb",       10,  0,     10  ) );
     my_histos.emplace("blind_ntops",    std::make_shared<TH1D>("blind_ntops",   "blind_ntops",    10,  0,     10  ) );
@@ -48,20 +50,20 @@ void Analyze0Lep::InitHistos(const std::map<std::string, bool>& cutMap)
         my_histos.emplace("h_nb_0l_"+mycut.first,    std::make_shared<TH1D>(("h_nb_0l_"+mycut.first).c_str(),("h_nb_0l_"+mycut.first).c_str(), 10, 0, 10));
         my_histos.emplace("h_HT_0l_"+mycut.first,    std::make_shared<TH1D>(("h_HT_0l_"+mycut.first).c_str(),("h_HT_0l_"+mycut.first).c_str(), 60, 0, 3000));
         my_histos.emplace("h_bdt_0l_"+mycut.first,   std::make_shared<TH1D>(("h_bdt_0l_"+mycut.first).c_str(),("h_bdt_0l_"+mycut.first).c_str(), 40, -0.5, 0.5));
-        my_histos.emplace("h_fisher_0l_"+mycut.first,std::make_shared<TH1D>(("h_fisher_0l_"+mycut.first).c_str(),("h_fisher_0l_"+mycut.first).c_str(), 50, -0.5, 0.5));
+        my_histos.emplace("h_fisher_0l_"+mycut.first,std::make_shared<TH1D>(("h_fisher_0l_"+mycut.first).c_str(),("h_fisher_0l_"+mycut.first).c_str(), fB, -0.5, 0.5));
     
         my_2d_histos.emplace("h_njets_bdt_0l_"+mycut.first, std::make_shared<TH2D>(("h_njets_bdt_0l_"+mycut.first).c_str(),("h_njets_bdt_0l_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
-        my_2d_histos.emplace("h_njets_fisher_0l_"+mycut.first, std::make_shared<TH2D>(("h_njets_fisher_0l_"+mycut.first).c_str(),("h_njets_fisher_0l_"+mycut.first).c_str(), 15, 0, 15, 50, -0.5, 0.5));
+        my_2d_histos.emplace("h_njets_fisher_0l_"+mycut.first, std::make_shared<TH2D>(("h_njets_fisher_0l_"+mycut.first).c_str(),("h_njets_fisher_0l_"+mycut.first).c_str(), 15, 0, 15, fB, -0.5, 0.5));
 
         my_histos.emplace("blind_njets_0l_"+mycut.first, std::make_shared<TH1D>(("blind_njets_0l_"+mycut.first).c_str(),("blind_njets_0l_"+mycut.first).c_str(), 20, 0, 20));
         my_histos.emplace("blind_ntops_0l_"+mycut.first, std::make_shared<TH1D>(("blind_ntops_0l_"+mycut.first).c_str(),("blind_ntops_0l_"+mycut.first).c_str(), 10, 0, 10));
         my_histos.emplace("blind_nb_0l_"+mycut.first,    std::make_shared<TH1D>(("blind_nb_0l_"+mycut.first).c_str(),("blind_nb_0l_"+mycut.first).c_str(), 10, 0, 10));
         my_histos.emplace("blind_HT_0l_"+mycut.first,    std::make_shared<TH1D>(("blind_HT_0l_"+mycut.first).c_str(),("blind_HT_0l_"+mycut.first).c_str(), 60, 0, 3000));
         my_histos.emplace("blind_bdt_0l_"+mycut.first,   std::make_shared<TH1D>(("blind_bdt_0l_"+mycut.first).c_str(),("blind_bdt_0l_"+mycut.first).c_str(), 40, -0.5, 0.5));
-        my_histos.emplace("blind_fisher_0l_"+mycut.first,std::make_shared<TH1D>(("blind_fisher_0l_"+mycut.first).c_str(),("blind_fisher_0l_"+mycut.first).c_str(), 50, -0.5, 0.5));
+        my_histos.emplace("blind_fisher_0l_"+mycut.first,std::make_shared<TH1D>(("blind_fisher_0l_"+mycut.first).c_str(),("blind_fisher_0l_"+mycut.first).c_str(), fB, -0.5, 0.5));
     
         my_2d_histos.emplace("blind_njets_bdt_0l_"+mycut.first, std::make_shared<TH2D>(("blind_njets_bdt_0l_"+mycut.first).c_str(),("blind_njets_bdt_0l_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
-        my_2d_histos.emplace("blind_njets_fisher_0l_"+mycut.first, std::make_shared<TH2D>(("blind_njets_fisher_0l_"+mycut.first).c_str(),("blind_njets_fisher_0l_"+mycut.first).c_str(), 15, 0, 15, 50, -0.5, 0.5));
+        my_2d_histos.emplace("blind_njets_fisher_0l_"+mycut.first, std::make_shared<TH2D>(("blind_njets_fisher_0l_"+mycut.first).c_str(),("blind_njets_fisher_0l_"+mycut.first).c_str(), 15, 0, 15, fB, -0.5, 0.5));
     }
 
     // Cut flows
