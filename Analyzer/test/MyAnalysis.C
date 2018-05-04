@@ -52,6 +52,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         std::shared_ptr<RunTopTagger> rtt;
         if ( !isSkim ) rtt = std::make_shared<RunTopTagger>();
         RunFisher runFisher;
+        //RunFisher runFisher("test");
         Muon muon;
         Electron electron;
         Jet jet;

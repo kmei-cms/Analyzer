@@ -1,0 +1,51 @@
+\documentclass[10pt,xcolor=svgnames,fleqn,aspectratio=169]{beamer}
+
+\mode<presentation>
+\usetheme{Copenhagen}
+\usecolortheme[named=Green]{structure}
+%\usecolortheme[named=DodgerBlue]{structure}
+%\useoutertheme{infolines}
+\useoutertheme[footline=authortitle]{miniframes}
+\setbeamertemplate{navigation symbols}{}
+%\setbeamertemplate{headline}[infolines theme]
+\setbeamertemplate{headline}[default]
+\setbeamertemplate{footline}[miniframes theme]
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[page number]
+
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{xcolor,colortbl}
+
+\def\blue{\color{DodgerBlue}}
+\def\green{\color{Green}}
+\def\red{\color{red}}
+\def\Orchid{\color{Orchid}}
+\definecolor{DodgerBlueDark}{HTML}{1873cc}
+
+\title{Stack plots for 0 Lepton and 2 top tags }
+
+\author{\textcolor{Green}{\bf C.~Madrid\inst{1}}}
+%\author{\textcolor{DodgerBlueDark}{\bf C.~Madrid\inst{1}}}
+\institute{\inst{1} Baylor}
+\date{\today}
+
+\renewcommand{\arraystretch}{1.2}
+\begin{document}
+
+\begin{frame}[plain]
+\maketitle
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{stack_snippet.tex}
+
+
+
+
+\end{document}
+
+
