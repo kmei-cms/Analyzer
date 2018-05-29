@@ -18,17 +18,30 @@ void Analyze0Lep::InitHistos(const std::map<std::string, bool>& cutMap)
 {
     TH1::SetDefaultSumw2();
 
+    int fB = 200;
+
     // Declare all your histograms here, that way we can fill them for multiple chains
     my_histos.emplace("h_met",      std::make_shared<TH1D>("h_met",     "h_met",      20,  0,    200  ) );
     my_histos.emplace("h_ht",       std::make_shared<TH1D>("h_ht",      "h_ht",       60,  0,   3000  ) );
     my_histos.emplace("h_bdt",      std::make_shared<TH1D>("h_bdt",     "h_bdt",      40, -0.5,    0.5) );
-    my_histos.emplace("h_fisher",   std::make_shared<TH1D>("h_fisher",  "h_fisher",   40, -0.5,    0.5) );
+    my_histos.emplace("h_fisher",   std::make_shared<TH1D>("h_fisher",  "h_fisher",   fB, -0.5,    0.5) );
     my_histos.emplace("h_njets",    std::make_shared<TH1D>("h_njets",   "h_njets",    20,  0,     20  ) );
     my_histos.emplace("h_nb",       std::make_shared<TH1D>("h_nb",      "h_nb",       10,  0,     10  ) );
     my_histos.emplace("h_ntops",    std::make_shared<TH1D>("h_ntops",   "h_ntops",    10,  0,     10  ) );
     my_histos.emplace("h_ntops_j1", std::make_shared<TH1D>("h_ntops_j1","h_ntops_j1", 10,  0,     10  ) );
     my_histos.emplace("h_ntops_j2", std::make_shared<TH1D>("h_ntops_j2","h_ntops_j2", 10,  0,     10  ) );
     my_histos.emplace("h_ntops_j3", std::make_shared<TH1D>("h_ntops_j3","h_ntops_j3", 10,  0,     10  ) );
+
+    my_histos.emplace("blind_met",      std::make_shared<TH1D>("blind_met",     "blind_met",      20,  0,    200  ) );
+    my_histos.emplace("blind_ht",       std::make_shared<TH1D>("blind_ht",      "blind_ht",       60,  0,   3000  ) );
+    my_histos.emplace("blind_bdt",      std::make_shared<TH1D>("blind_bdt",     "blind_bdt",      40, -0.5,    0.5) );
+    my_histos.emplace("blind_fisher",   std::make_shared<TH1D>("blind_fisher",  "blind_fisher",   fB, -0.5,    0.5) );
+    my_histos.emplace("blind_njets",    std::make_shared<TH1D>("blind_njets",   "blind_njets",    20,  0,     20  ) );
+    my_histos.emplace("blind_nb",       std::make_shared<TH1D>("blind_nb",      "blind_nb",       10,  0,     10  ) );
+    my_histos.emplace("blind_ntops",    std::make_shared<TH1D>("blind_ntops",   "blind_ntops",    10,  0,     10  ) );
+    my_histos.emplace("blind_ntops_j1", std::make_shared<TH1D>("blind_ntops_j1","blind_ntops_j1", 10,  0,     10  ) );
+    my_histos.emplace("blind_ntops_j2", std::make_shared<TH1D>("blind_ntops_j2","blind_ntops_j2", 10,  0,     10  ) );
+    my_histos.emplace("blind_ntops_j3", std::make_shared<TH1D>("blind_ntops_j3","blind_ntops_j3", 10,  0,     10  ) );
 
     for(auto& mycut : cutMap)
     {
@@ -37,10 +50,20 @@ void Analyze0Lep::InitHistos(const std::map<std::string, bool>& cutMap)
         my_histos.emplace("h_nb_0l_"+mycut.first,    std::make_shared<TH1D>(("h_nb_0l_"+mycut.first).c_str(),("h_nb_0l_"+mycut.first).c_str(), 10, 0, 10));
         my_histos.emplace("h_HT_0l_"+mycut.first,    std::make_shared<TH1D>(("h_HT_0l_"+mycut.first).c_str(),("h_HT_0l_"+mycut.first).c_str(), 60, 0, 3000));
         my_histos.emplace("h_bdt_0l_"+mycut.first,   std::make_shared<TH1D>(("h_bdt_0l_"+mycut.first).c_str(),("h_bdt_0l_"+mycut.first).c_str(), 40, -0.5, 0.5));
-        my_histos.emplace("h_fisher_0l_"+mycut.first,std::make_shared<TH1D>(("h_fisher_0l_"+mycut.first).c_str(),("h_fisher_0l_"+mycut.first).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("h_fisher_0l_"+mycut.first,std::make_shared<TH1D>(("h_fisher_0l_"+mycut.first).c_str(),("h_fisher_0l_"+mycut.first).c_str(), fB, -0.5, 0.5));
     
         my_2d_histos.emplace("h_njets_bdt_0l_"+mycut.first, std::make_shared<TH2D>(("h_njets_bdt_0l_"+mycut.first).c_str(),("h_njets_bdt_0l_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
-        my_2d_histos.emplace("h_njets_fisher_0l_"+mycut.first, std::make_shared<TH2D>(("h_njets_fisher_0l_"+mycut.first).c_str(),("h_njets_fisher_0l_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("h_njets_fisher_0l_"+mycut.first, std::make_shared<TH2D>(("h_njets_fisher_0l_"+mycut.first).c_str(),("h_njets_fisher_0l_"+mycut.first).c_str(), 15, 0, 15, fB, -0.5, 0.5));
+
+        my_histos.emplace("blind_njets_0l_"+mycut.first, std::make_shared<TH1D>(("blind_njets_0l_"+mycut.first).c_str(),("blind_njets_0l_"+mycut.first).c_str(), 20, 0, 20));
+        my_histos.emplace("blind_ntops_0l_"+mycut.first, std::make_shared<TH1D>(("blind_ntops_0l_"+mycut.first).c_str(),("blind_ntops_0l_"+mycut.first).c_str(), 10, 0, 10));
+        my_histos.emplace("blind_nb_0l_"+mycut.first,    std::make_shared<TH1D>(("blind_nb_0l_"+mycut.first).c_str(),("blind_nb_0l_"+mycut.first).c_str(), 10, 0, 10));
+        my_histos.emplace("blind_HT_0l_"+mycut.first,    std::make_shared<TH1D>(("blind_HT_0l_"+mycut.first).c_str(),("blind_HT_0l_"+mycut.first).c_str(), 60, 0, 3000));
+        my_histos.emplace("blind_bdt_0l_"+mycut.first,   std::make_shared<TH1D>(("blind_bdt_0l_"+mycut.first).c_str(),("blind_bdt_0l_"+mycut.first).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("blind_fisher_0l_"+mycut.first,std::make_shared<TH1D>(("blind_fisher_0l_"+mycut.first).c_str(),("blind_fisher_0l_"+mycut.first).c_str(), fB, -0.5, 0.5));
+    
+        my_2d_histos.emplace("blind_njets_bdt_0l_"+mycut.first, std::make_shared<TH2D>(("blind_njets_bdt_0l_"+mycut.first).c_str(),("blind_njets_bdt_0l_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("blind_njets_fisher_0l_"+mycut.first, std::make_shared<TH2D>(("blind_njets_fisher_0l_"+mycut.first).c_str(),("blind_njets_fisher_0l_"+mycut.first).c_str(), 15, 0, 15, fB, -0.5, 0.5));
     }
 
     // Cut flows
@@ -63,7 +86,6 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
     while( tr.getNextEvent() )
     {
         const auto& MET                = tr.getVar<double>("MET");
-        //const auto& HT                 = tr.getVar<double>("HT");
         const auto& HT_trigger         = tr.getVar<double>("HT_trigger");
         const auto& ntops              = tr.getVar<int>("ntops");
         const auto& ntops_3jet         = tr.getVar<int>("ntops_3jet");
@@ -71,8 +93,6 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& ntops_1jet         = tr.getVar<int>("ntops_1jet");
         const auto& runtype            = tr.getVar<std::string>("runtype");     
         const auto& filetag            = tr.getVar<std::string>("filetag");
-        //const auto& TriggerNames       = tr.getVec<std::string>("TriggerNames");
-        //const auto& TriggerPass        = tr.getVec<int>("TriggerPass");
         const auto& NJets_pt30         = tr.getVar<int>("NJets_pt30");
         const auto& NJets_pt45         = tr.getVar<int>("NJets_pt45");
         const auto& NBJets             = tr.getVar<int>("NBJets");
@@ -82,13 +102,12 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& fisher_bin2        = tr.getVar<bool>("fisher_bin2");
         const auto& fisher_bin3        = tr.getVar<bool>("fisher_bin3");
         const auto& fisher_bin4        = tr.getVar<bool>("fisher_bin4");
-        //const auto& bdt_bin1           = tr.getVar<bool>("bdt_bin1");
-        //const auto& bdt_bin2           = tr.getVar<bool>("bdt_bin2");
-        //const auto& bdt_bin3           = tr.getVar<bool>("bdt_bin3");
-        //const auto& bdt_bin4           = tr.getVar<bool>("bdt_bin4");
         const auto& eventshape_bdt_val = tr.getVar<double>("eventshape_bdt_val");
         const auto& fisher_val         = tr.getVar<double>("fisher_val");
         const auto& passBaseline0l     = tr.getVar<bool>("passBaseline0l");
+        const auto& passBlindHad       = tr.getVar<bool>("passBlindHad");
+        const auto& passTrigger        = tr.getVar<bool>("passTrigger");
+        const auto& passMadHT          = tr.getVar<bool>("passMadHT");
 
         // ------------------------
         // -- Print event number
@@ -105,51 +124,19 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // Weight from samples.cc
         //eventweight = weight;
 
-        // ------------------------
-        // -- MC dependent stuff
-        // -----------------------
-
         if(runtype == "MC"){
-            //const auto& madHT   = tr.getVar<double>("madHT");
             const auto& Weight  = tr.getVar<double>("Weight");
             double lumi = 35900; // Lumi for 2016
-
-            ///// Exclude events with MadGraph HT > 100 from the DY inclusive sample
-            //if(filetag == "DYJetsToLL_M-50_Incl" && madHT > 100) continue;
-
             // Weight from NTuples            
             eventweight = lumi*Weight;
         }
-        
-        //// ------------------------------
-        //// -- Trigger for data
-        //// ------------------------------
-        //
-        //bool passTriggerAllHad   = PassTriggerAllHad(TriggerNames, TriggerPass);
-        //bool passTriggerMuon     = PassTriggerMuon(TriggerNames, TriggerPass);
-        //bool passTriggerElectron = PassTriggerElectron(TriggerNames, TriggerPass);
-        //if (runtype == "Data")
-        //{
-        //    if (filetag == "Data_JetHT" && !passTriggerAllHad) continue;
-        //    if (filetag == "Data_SingleMuon" && !passTriggerMuon) continue;
-        //    if (filetag == "Data_SingleElectron" && !passTriggerElectron) continue;
-        //}
-        //
-        //// -------------------------------
-        //// -- Define cuts
-        //// -------------------------------
-        //
-        //// Define selections
-        //bool passBaseline0l = NGoodLeptons==0 && NJets_pt45>=6 && HT_trigger > 500 && NBJets_pt45 >= 2;
-        //if(runtype == "Data" && filetag == "Data_JetHT")
-        //{
-        //    passBaseline0l = passBaseline0l && passTriggerAllHad;
-        //}
-
 
         // -------------------------------
         // -- Define cuts
         // -------------------------------
+
+        // Global cuts
+        if ( !(passBlindHad && passTrigger && passMadHT) ) continue;
         
         bool pass_0l              = NGoodLeptons==0;
         bool pass_njet_pt45       = NJets_pt45>=6;
@@ -160,7 +147,6 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // ---------------------------
         // --    1 Top selection
         // ---------------------------
-
         //exactly selections
         bool pass_1t    = ntops==1;
         bool pass_1t_f1 = pass_1t && fisher_bin1, pass_1t_f2 = pass_1t && fisher_bin2, pass_1t_f3 = pass_1t && fisher_bin3, pass_1t_f4 = pass_1t && fisher_bin4;
@@ -218,8 +204,11 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         bool pass_ge2t22 = pass_ge2t && ntops_2jet>=2;
         bool pass_ge2t23 = pass_ge2t && ntops_2jet>=1 && ntops_3jet>=1;
         bool pass_ge2t33 = pass_ge2t && ntops_3jet>=2;
-        bool pass_ge2t11or12or13 = pass_ge2t11 or pass_ge2t12 or pass_ge2t13;
-        bool pass_ge2t22or23or33 = pass_ge2t22 or pass_ge2t23 or pass_ge2t33;
+
+        //Merge or no Merge selections
+        bool pass_Merge = ntops_1jet >= 1, pass_noMerge = ntops_1jet == 0;
+        bool pass_ge2t11or12or13 = pass_Merge   && (pass_ge2t11 or pass_ge2t12 or pass_ge2t13);
+        bool pass_ge2t22or23or33 = pass_noMerge && (pass_ge2t22 or pass_ge2t23 or pass_ge2t33);
 
         bool pass_ge2t11_f1 = pass_ge2t11 && fisher_bin1, pass_ge2t11_f2 = pass_ge2t11 && fisher_bin2, pass_ge2t11_f3 = pass_ge2t11 && fisher_bin3, pass_ge2t11_f4 = pass_ge2t11 && fisher_bin4;
         bool pass_ge2t12_f1 = pass_ge2t12 && fisher_bin1, pass_ge2t12_f2 = pass_ge2t12 && fisher_bin2, pass_ge2t12_f3 = pass_ge2t12 && fisher_bin3, pass_ge2t12_f4 = pass_ge2t12 && fisher_bin4;
@@ -398,6 +387,19 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
 
                 my_2d_histos["h_njets_bdt_0l_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
                 my_2d_histos["h_njets_fisher_0l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
+
+                if ( NJets_pt30 < 9 )
+                {
+                    my_histos["blind_njets_0l_"   +kv.first]->Fill(NJets_pt30, eventweight);
+                    my_histos["blind_ntops_0l_"   +kv.first]->Fill(ntops, eventweight);
+                    my_histos["blind_nb_0l_"      +kv.first]->Fill(NBJets, eventweight);
+                    my_histos["blind_HT_0l_"      +kv.first]->Fill(HT_trigger, eventweight);
+                    my_histos["blind_bdt_0l_"     +kv.first]->Fill(eventshape_bdt_val, eventweight);
+                    my_histos["blind_fisher_0l_"  +kv.first]->Fill(fisher_val, eventweight);
+                
+                    my_2d_histos["blind_njets_bdt_0l_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
+                    my_2d_histos["blind_njets_fisher_0l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
+                }
             }
         }
 
@@ -438,7 +440,7 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             }
         }
         
-        // Not cuts applied here
+        // No local cuts applied here
         my_histos["h_met"     ]->Fill(MET, eventweight);
         my_histos["h_ht"      ]->Fill(HT_trigger, eventweight);
         my_histos["h_bdt"     ]->Fill(eventshape_bdt_val, eventweight);
@@ -450,53 +452,24 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         my_histos["h_ntops_j2"]->Fill(ntops_2jet, eventweight);
         my_histos["h_ntops_j3"]->Fill(ntops_3jet, eventweight);        
 
+        // Do the blind cuts, for now, for data MC plots
+        if ( NJets_pt30 < 9 )
+        {
+            my_histos["blind_met"     ]->Fill(MET, eventweight);
+            my_histos["blind_ht"      ]->Fill(HT_trigger, eventweight);
+            my_histos["blind_bdt"     ]->Fill(eventshape_bdt_val, eventweight);
+            my_histos["blind_fisher"  ]->Fill(fisher_val, eventweight);
+            my_histos["blind_njets"   ]->Fill(NJets_pt30, eventweight);
+            my_histos["blind_nb"      ]->Fill(NBJets, eventweight);
+            my_histos["blind_ntops"   ]->Fill(ntops, eventweight);        
+            my_histos["blind_ntops_j1"]->Fill(ntops_1jet, eventweight);
+            my_histos["blind_ntops_j2"]->Fill(ntops_2jet, eventweight);
+            my_histos["blind_ntops_j3"]->Fill(ntops_3jet, eventweight);        
+        }
+
     } // end of event loop
 
 }
-
-//bool Analyze0Lep::PassTriggerGeneral(std::vector<std::string> &mytriggers, const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
-//{
-//    bool passTrigger = false;
-//    for(unsigned int i=0; i<TriggerNames.size(); ++i)
-//    {
-//        if(TriggerPass.at(i) != 1)
-//            continue;
-//        std::string trigname = TriggerNames.at(i);
-//        if( std::any_of(mytriggers.begin(), mytriggers.end(), [&] (std::string s) { return trigname.find(s)!=std::string::npos; }) )
-//        {
-//            passTrigger = true;
-//            break;
-//        }
-//    }
-//    return passTrigger;
-//
-//}
-//
-//
-//bool Analyze0Lep::PassTriggerAllHad(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
-//{
-//    std::vector<std::string> mytriggers {
-//        //"HLT_PFHT1050", // 2017 trigger
-//        //"HLT_PFHT900"
-//        //"HLT_PFHT380_SixPFJet32_DoublePFBTagCSV", // 2017 trigger
-//        //"HLT_PFHT430_SixPFJet40_PFBTagCSV", // 2017 trigger
-//        "HLT_PFHT450_SixJet40_BTagCSV",
-//            "HLT_PFHT400_SixJet30_DoubleBTagCSV",            
-//            };
-//    return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
-//}
-//
-//bool Analyze0Lep::PassTriggerMuon(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
-//{
-//    std::vector<std::string> mytriggers {"HLT_IsoMu24","HLT_IsoTkMu24_v"};
-//    return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
-//}
-//
-//bool Analyze0Lep::PassTriggerElectron(const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass)
-//{
-//    std::vector<std::string> mytriggers {"HLT_Ele27_WPTight_Gsf"};
-//    return PassTriggerGeneral(mytriggers,TriggerNames,TriggerPass);
-//}
 
 void Analyze0Lep::WriteHistos(TFile* outfile)
 {

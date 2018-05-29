@@ -1,11 +1,14 @@
+#include "SusyAnaTools/Tools/samples.h"
+#include "SusyAnaTools/Tools/NTupleReader.h"
+#include "TopTagger/CfgParser/include/TTException.h"
+
 #include "Analyzer/Analyzer/include/AnalyzeBackground.h"
 #include "Analyzer/Analyzer/include/AnalyzeTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeEventSelection.h"
 #include "Analyzer/Analyzer/include/AnalyzeEventShape.h"
 #include "Analyzer/Analyzer/include/Analyze0Lep.h"
 #include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
-#include "Framework/Framework/include/samples.h"
-#include "SusyAnaTools/Tools/NTupleReader.h"
+
 #include "Framework/Framework/include/RunTopTagger.h"
 #include "Framework/Framework/include/RunFisher.h"
 #include "Framework/Framework/include/Muon.h"
@@ -21,6 +24,7 @@
 
 #include <iostream>
 #include <getopt.h>
+#include <string>
 
 template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
                                     int startFile, int nFiles, int maxEvts, 
@@ -35,18 +39,10 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         TChain* ch = new TChain( (file.treePath).c_str() );
         file.addFilesToChain(ch, startFile, nFiles);
         NTupleReader tr(ch);
-        double weight = file.getWeight();
-        std::string runtype;
-        if(file.tag.find("Data") != std::string::npos)
-        {
-            runtype = "Data";
-        }
-        else
-        {
-            runtype = "MC";
-        }
+        double weight = file.getWeight(); // not used currently
+        std::string runtype = (file.tag.find("Data") != std::string::npos) ? "Data" : "MC";
         std::cout << "Starting loop (in run)" << std::endl;
-        printf( "runtype: %s weight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts ); fflush( stdout );
+        printf( "runtype: %s fileWeight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts ); fflush( stdout );
         tr.registerDerivedVar<std::string>("runtype",runtype);
         tr.registerDerivedVar<std::string>("filetag",file.tag);
         tr.registerDerivedVar<double>("etaCut",2.4);
@@ -56,6 +52,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         std::shared_ptr<RunTopTagger> rtt;
         if ( !isSkim ) rtt = std::make_shared<RunTopTagger>();
         RunFisher runFisher;
+        //RunFisher runFisher("test");
         Muon muon;
         Electron electron;
         Jet jet;
@@ -84,10 +81,10 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
     a.WriteHistos(outfile);
 }
 
-std::set<AnaSamples::FileSummary> setFS(std::string sampleloc, std::string dataSets)
+std::set<AnaSamples::FileSummary> setFS(const std::string& dataSets, const bool& isCondor)
 {
-    AnaSamples::SampleSet        ss(sampleloc);
-    AnaSamples::SampleCollection sc(ss);
+    AnaSamples::SampleSet        ss("sampleSets.cfg", isCondor);
+    AnaSamples::SampleCollection sc("sampleCollections.cfg", ss);
 
     std::map<std::string, std::vector<AnaSamples::FileSummary>> fileMap;
     if(ss[dataSets] != ss.null())
@@ -120,7 +117,7 @@ int main(int argc, char *argv[])
          doEventShape = false, do0Lep = false, doStealthTT = false;
     bool runOnCondor = false;
     bool isSkim = false;
-    std::string histFile = "", dataSets = "", sampleloc = AnaSamples::fileDir;
+    std::string histFile = "", dataSets = "";
     int nFiles = -1, startFile = 0, maxEvts = -1;
 
     static struct option long_options[] = {
@@ -164,10 +161,9 @@ int main(int argc, char *argv[])
         char thistFile[128];
         sprintf(thistFile, "MyAnalysis_%s_%d.root", dataSets.c_str(), startFile);
         histFile = thistFile;
-        sampleloc = "condor";
     }
 
-    std::set<AnaSamples::FileSummary> vvf = setFS(sampleloc, dataSets); 
+    std::set<AnaSamples::FileSummary> vvf = setFS(dataSets, runOnCondor); 
     TFile* outfile = TFile::Open(histFile.c_str(), "RECREATE");
     
     try
