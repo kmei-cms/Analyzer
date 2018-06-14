@@ -24,7 +24,8 @@ int main()
     //std::string pathtest = "lep0Ana_TestFisherV10-May-18-2018";
     //std::string pathtest = "lep0Ana_TestFisherV11-May-22-2018";
     //std::string pathtest = "lep0Ana_TestFisherV12-May-22-2018";
-    std::string pathtest = "lep0Ana_TestFisherV13-May-23-2018";
+    //std::string pathtest = "lep0Ana_TestFisherV13-May-23-2018";
+    std::string pathtest = "lep0Ana_TestFisherV8_Corr-June-3-2018";
     std::string pathold = "lep0Ana-May-3-25-2018";
     std::string path = pathtest;
 
@@ -176,51 +177,50 @@ int main()
         //"ge6j_HT500_ge2b_2t33_f1"  , "ge6j_HT500_ge2b_2t33_f2"  , "ge6j_HT500_ge2b_2t33_f3"  , "ge6j_HT500_ge2b_2t33_f4"  ,
    };
 
-    //for(std::string mycut : mycuts_0l)
-    //{
-    //    //plt.plotStack( "h_njets_0l_"+mycut, "N_{J}" , "Events", true);
-    //    //plt.plotStack( "h_ntops_0l_"+mycut, "N_{T}" , "Events", true);
-    //    //plt.plotStack( "h_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
-    //    //plt.plotStack( "h_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
-    //    //plt.plotStack( "h_fisher_0l_"+mycut, "fisher value" , "Events", true, 4);        
-    //    //
-    //    //// Make Normalized fisher
-    //    pltSkim.plotNormFisher("h_fisher_0l_"+mycut, "fisher value" , "Events", false, 4);
-    //    
-    //    // - Make fisher Roc Curve
-    //    pltRoc.plotRocFisher("h_fisher_0l_"+mycut,"Background","Signal", false);
-    //    pltRocCompare.plotRocFisher("h_fisher_0l_"+mycut,"Background","Signal", true);
-    //    
-    //    //
-    //    ////Need these until we un blind
-    //    //plt.plotStack( "blind_njets_0l_"+mycut, "N_{J}" , "Events", true);
-    //    //plt.plotStack( "blind_ntops_0l_"+mycut, "N_{T}" , "Events", true);
-    //    //plt.plotStack( "blind_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
-    //    //plt.plotStack( "blind_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
-    //    //plt.plotStack( "blind_fisher_0l_"+mycut, "fisher value" , "Events", true, 4);        
-    //}
-    //
-    //plt.plotStack("h_met"     , "MET"   , "Events", true);
-    //plt.plotStack("h_ht"      , "H_{T}" , "Events", true);
-    //plt.plotStack("h_bdt"     , "bdt"   , "Events", true);
-    //plt.plotStack("h_fisher"  , "fisher", "Events", true, 4);
-    //plt.plotStack("h_njets"   , "N_{J}" , "Events", true);
-    //plt.plotStack("h_nb"      , "N_{B}" , "Events", true);
-    //plt.plotStack("h_ntops"   , "N_{T}" , "Events", true);
-    //plt.plotStack("h_ntops_j1", "N_{1T}", "Events", true);
-    //plt.plotStack("h_ntops_j2", "N_{2T}", "Events", true);
-    //plt.plotStack("h_ntops_j3", "N_{3T}", "Events", true);
-    //
-    //plt.plotStack("blind_met"     , "MET"   , "Events", true);
-    //plt.plotStack("blind_ht"      , "H_{T}" , "Events", true);
-    //plt.plotStack("blind_bdt"     , "bdt"   , "Events", true);
-    //plt.plotStack("blind_fisher"  , "fisher", "Events", true);
-    //plt.plotStack("blind_njets"   , "N_{J}" , "Events", true);
-    //plt.plotStack("blind_nb"      , "N_{B}" , "Events", true);
-    //plt.plotStack("blind_ntops"   , "N_{T}" , "Events", true);
-    //plt.plotStack("blind_ntops_j1", "N_{1T}", "Events", true);
-    //plt.plotStack("blind_ntops_j2", "N_{2T}", "Events", true);
-    //plt.plotStack("blind_ntops_j3", "N_{3T}", "Events", true);
+    for(std::string mycut : mycuts_0l)
+    {
+        plt.plotStack( "h_njets_0l_"+mycut, "N_{J}" , "Events", true);
+        plt.plotStack( "h_ntops_0l_"+mycut, "N_{T}" , "Events", true);
+        plt.plotStack( "h_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
+        plt.plotStack( "h_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
+        plt.plotStack( "h_fisher_0l_"+mycut, "fisher value" , "Events", true, 4);        
+        
+        // Make Normalized fisher
+        pltSkim.plotNormFisher("h_fisher_0l_"+mycut, "fisher value" , "Events", false, 4);
+        
+        // - Make fisher Roc Curve
+        pltRoc.plotRocFisher("h_fisher_0l_"+mycut,"Background","Signal", false);
+        pltRocCompare.plotRocFisher("h_fisher_0l_"+mycut,"Background","Signal", true);
+                
+        //Need these until we un blind
+        plt.plotStack( "blind_njets_0l_"+mycut, "N_{J}" , "Events", true);
+        plt.plotStack( "blind_ntops_0l_"+mycut, "N_{T}" , "Events", true);
+        plt.plotStack( "blind_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
+        plt.plotStack( "blind_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
+        plt.plotStack( "blind_fisher_0l_"+mycut, "fisher value" , "Events", true, 4);        
+    }
+    
+    plt.plotStack("h_met"     , "MET"   , "Events", true);
+    plt.plotStack("h_ht"      , "H_{T}" , "Events", true);
+    plt.plotStack("h_bdt"     , "bdt"   , "Events", true);
+    plt.plotStack("h_fisher"  , "fisher", "Events", true, 4);
+    plt.plotStack("h_njets"   , "N_{J}" , "Events", true);
+    plt.plotStack("h_nb"      , "N_{B}" , "Events", true);
+    plt.plotStack("h_ntops"   , "N_{T}" , "Events", true);
+    plt.plotStack("h_ntops_j1", "N_{1T}", "Events", true);
+    plt.plotStack("h_ntops_j2", "N_{2T}", "Events", true);
+    plt.plotStack("h_ntops_j3", "N_{3T}", "Events", true);
+    
+    plt.plotStack("blind_met"     , "MET"   , "Events", true);
+    plt.plotStack("blind_ht"      , "H_{T}" , "Events", true);
+    plt.plotStack("blind_bdt"     , "bdt"   , "Events", true);
+    plt.plotStack("blind_fisher"  , "fisher", "Events", true);
+    plt.plotStack("blind_njets"   , "N_{J}" , "Events", true);
+    plt.plotStack("blind_nb"      , "N_{B}" , "Events", true);
+    plt.plotStack("blind_ntops"   , "N_{T}" , "Events", true);
+    plt.plotStack("blind_ntops_j1", "N_{1T}", "Events", true);
+    plt.plotStack("blind_ntops_j2", "N_{2T}", "Events", true);
+    plt.plotStack("blind_ntops_j3", "N_{3T}", "Events", true);
 
     // --------------------
     // - Make fisher plots
@@ -265,7 +265,7 @@ int main()
     
     for (auto& f : fisherHolder)
     {
-        //plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true, 9);
+        plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true, 9);
         plt.plotRatioFisher(f.cutNames_,  f.plotName_, "N_{J}", "N_{J+1} / N_{J}", false);
     }
     
