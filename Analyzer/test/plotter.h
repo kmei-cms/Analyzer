@@ -9,6 +9,7 @@
 #include "TLatex.h"
 #include "TGraph.h"
 #include "TF1.h"
+#include "HistInfoCollection.h"
 
 #include <memory>
 #include <vector>
@@ -24,234 +25,6 @@ public:
     std::string legEntry;
     int color;
     bool firstOnly;
-};
-
-//Class to hold TH1* with various helper functions 
-class histInfo
-{
-public:
-    std::string legEntry, histFile, histName, drawOptions;
-    int color, rebin;
-    std::shared_ptr<TH1> h;
-
-    //helper function to get histogram from file and configure its optional settings
-    void retrieveHistogram()
-    {
-        //Open the file for this histogram
-        TFile *f = TFile::Open(histFile.c_str());
-
-        //check that the file was opened successfully
-        if(!f)
-        {
-            printf("File \"%s\" could not be opened!!!\n", histFile.c_str());
-            h = nullptr;
-            return;
-        }
-
-        //get the histogram from the file
-        h.reset(static_cast<TH1*>(f->Get(histName.c_str())));
-
-        //with the histogram retrieved, close the file
-        f->Close();
-        delete f;
-
-        //check that the histogram was retireved from the file successfully
-        if(!h)
-        {
-            printf("Histogram \"%s\" could not be found in file \"%s\"!!!\n", histName.c_str(), histFile.c_str());
-            return;
-        }
-
-        //set the histogram color
-        h->SetLineColor(color);
-        h->SetLineWidth(3);
-        h->SetMarkerColor(color);
-        h->SetMarkerStyle(20);
-
-        // rebin the histogram if desired
-        if(rebin >0) h->Rebin(rebin);
-    }
-
-    //helper function for axes
-    void setupAxes(double xOffset, double yOffset, double xTitle, double yTitle, double xLabel, double yLabel)
-    {
-        h->SetStats(0);
-        h->SetTitle(0);
-        h->GetXaxis()->SetTitleOffset(xOffset);
-        h->GetYaxis()->SetTitleOffset(yOffset);
-        h->GetXaxis()->SetTitleSize(xTitle);
-        h->GetYaxis()->SetTitleSize(yTitle);
-        h->GetXaxis()->SetLabelSize(xLabel);
-        h->GetYaxis()->SetLabelSize(yLabel);
-        if(h->GetXaxis()->GetNdivisions() % 100 > 5) h->GetXaxis()->SetNdivisions(6, 5, 0);
-    }
-
-    //helper function for pads
-    void setupPad(double left, double right, double top, double bottom)
-    {
-        gPad->SetLeftMargin(left);
-        gPad->SetRightMargin(right);
-        gPad->SetTopMargin(top);
-        gPad->SetBottomMargin(bottom);
-        gPad->SetTicks(1,1);
-    }
-
-    //wrapper to draw histogram
-    void draw(const std::string& additionalOptions = "", bool noSame = false) const
-    {
-        h->Draw(((noSame?"":"same " + drawOptions + " " + additionalOptions)).c_str());
-    }
-
-    void setFillColor(int newColor = -1)
-    {
-        if(newColor >= 0) h->SetFillColor(newColor);
-        else              h->SetFillColor(color);
-    }
-
-    void setLineStyle(int style = 1)
-    {
-        h->SetLineStyle(style);
-    }
-
-    histInfo(const std::string& legEntry, const std::string& histFile, const std::string& drawOptions, const int color) : legEntry(legEntry), histFile(histFile), histName(""), drawOptions(drawOptions), color(color), rebin(-1), h(nullptr)
-    {
-    }
-
-    histInfo(TH1* h) : legEntry(h->GetName()), histFile(""), histName(h->GetName()), drawOptions(""), color(kWhite), rebin(0), h(h)
-    {
-    }
-
-    ~histInfo()
-    {
-    }
-};
-
-class HistInfoCollection
-{
-private:
-    void makeYieldMap(std::map<std::string, double>& yieldMap, const std::vector<std::vector<histInfo>*>& dataSets, const std::shared_ptr<TH1>& hbgSum, const std::string& histType, const int min, const int max)
-    {
-        int index = -1;
-        double yield = 0;
-        for(const auto* set : dataSets)
-        {
-            for(const auto& entry : *set)
-            {
-                if( entry.histName.find(histType) != std::string::npos )
-                {
-                    index++;
-                    if(index==0)
-                    {
-                        yield = 0;
-                        for(int i = min; i<=max; i++)
-                        {
-                            yield+=hbgSum->GetBinContent(i + 1);
-                            //std::cout<<hbgSum->GetBinContent(i)<<std::endl;
-                        }
-                        yieldMap.insert ( std::pair<std::string,double>( "AllBG", yield ) );
-                    }
-                    yield = 0;
-                    for(int i = min; i<=max; i++)
-                    {
-                        yield+=entry.h->GetBinContent(i + 1);
-                    }
-                    yieldMap.insert ( std::pair<std::string,double>( entry.legEntry, yield ) );
-                }
-            }
-        }
-
-        //for(const auto& entry : yieldMap)
-        //{
-        //    std::cout<<entry.first<<"  "<<entry.second<<std::endl;
-        //}
-    }
-
-public:
-    std::vector<histInfo> dataVec_, bgVec_, sigVec_;
-
-    HistInfoCollection(std::vector<histInfo>&& dataVec, std::vector<histInfo>&& bgVec, std::vector<histInfo>&& sigVec) : dataVec_(dataVec), bgVec_(bgVec), sigVec_(sigVec) {}
-    HistInfoCollection(std::vector<histInfo>& dataVec, std::vector<histInfo>& bgVec, std::vector<histInfo>& sigVec) : dataVec_(dataVec), bgVec_(bgVec), sigVec_(sigVec) {}
-    HistInfoCollection() {};
-
-    ~HistInfoCollection() {}
-
-    void setUpBG(const std::string& histName, int rebin, THStack* bgStack, std::shared_ptr<TH1>& hbgSum, const bool& setFill = true)
-    {
-        bool firstPass = true;
-        for(auto& entry : bgVec_)
-        {
-            entry.histName = histName;
-            entry.rebin = rebin;
-            entry.retrieveHistogram();
-    
-            bgStack->Add(entry.h.get(), entry.drawOptions.c_str());
-            if(firstPass) 
-            {
-                hbgSum.reset( static_cast<TH1*>(entry.h->Clone()) );
-                firstPass = false;
-            }
-            else 
-            {
-                hbgSum->Add(entry.h.get());
-            }
-            
-            if(setFill)
-            {
-                entry.setFillColor();
-            }
-        }
-    }
-
-    void setUpSignal(const std::string& histName, int rebin)
-    {
-        for(auto& entry : sigVec_)
-        {
-            entry.histName = histName;
-            entry.rebin = rebin;
-            entry.retrieveHistogram();
-            entry.setLineStyle(2);
-    
-        }
-    }
-
-    void setUpData(const std::string& histName, int rebin)
-    {
-        for(auto& entry : dataVec_)
-        {
-            entry.histName = histName;
-            entry.rebin = rebin;
-            entry.retrieveHistogram();
-        }
-    }
-
-    std::map<std::string,double> computeYields(const std::string& histName, const std::string& histType, const int min, const int max, const int rebin = -1)
-    {
-        std::map<std::string,double> yieldMap;
-        std::vector<std::vector<histInfo>*> dataSets  = { &dataVec_, &bgVec_, &sigVec_ };
-        std::shared_ptr<TH1> hbgSum(nullptr);
-        THStack* bgStack = new THStack();
-
-        setUpBG(histName, rebin, bgStack, hbgSum, false);
-        setUpSignal(histName, rebin);
-        setUpData(histName, rebin);
-        
-        makeYieldMap(yieldMap, dataSets, hbgSum, histType, min, max);
-
-        delete bgStack;
-
-        return yieldMap;
-    }
-
-    std::map<std::string,double> computeYields(const std::string& histName, const std::string& histType, const std::shared_ptr<TH1>& hbgSum, const int min, const int max)
-    {
-        std::map<std::string,double> yieldMap;
-        std::vector<std::vector<histInfo>*> dataSets  = { &dataVec_, &bgVec_, &sigVec_ };
-        
-        makeYieldMap(yieldMap, dataSets, hbgSum, histType, min, max);
-
-        return yieldMap;
-    }
-
 };
 
 class Plotter
@@ -725,6 +498,131 @@ public:
         delete c;
         delete leg;
         for (auto* obj :  hbgSumVec)
+        {
+            delete obj;
+        }
+    }
+
+    void plotRatioFisher(const std::vector<std::string>& histNameVec, const std::string& histTitle, const std::string& xAxisLabel, 
+                    const std::string& yAxisLabel = "Events",    const bool isLogY = false,  
+                    int rebin = -1, const double xmin = 999.9, const double xmax = -999.9, double lumi = 36100)
+    {
+        //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
+        TH1::AddDirectory(false);
+
+        //create the canvas for the plot
+        TCanvas *c = new TCanvas("c1", "c1", 800, 800);
+        //switch to the canvas to ensure it is the active object
+        c->cd();
+
+        //Set Canvas margin (gPad is root magic to access the current pad, in this case canvas "c")
+        gPad->SetLeftMargin(0.12);
+        gPad->SetRightMargin(0.06);
+        gPad->SetTopMargin(0.08);
+        gPad->SetBottomMargin(0.12);
+        gPad->SetTicks(1,1);
+
+        //Create TLegend
+        TLegend *leg = new TLegend(0.20, 0.76, 0.89, 0.88);
+        //TLegend *leg = new TLegend(0.50, 0.56, 0.89, 0.88);
+        leg->SetFillStyle(0);
+        leg->SetBorderSize(0);
+        leg->SetLineWidth(1);
+        leg->SetNColumns(3);
+        leg->SetTextFont(42);
+        
+        //Setup color and name for fisher plots
+        std::vector<int> color = {kRed,kBlue,kGreen+2,kMagenta};
+        std::vector<std::string> fisherNames = {"Fisher Bin 1","Fisher Bin 2","Fisher Bin 3","Fisher Bin 4"};
+
+        //get maximum from histos and fill TLegend
+        double min = 0.0;
+        double max = 0.0;
+        double lmax = 0.0;
+
+        // -----------------------
+        // -  Background
+        // -----------------------
+        
+        std::vector<TH1*> hbgRatioSumVec;
+        int index = -1;
+        double scale = 1;
+        int fixedBin;
+        for(auto& histName : histNameVec)
+        {
+            index++;
+            TH1* hbgSum = nullptr;
+            for(auto& entry : hc_.bgVec_)
+            {
+                //Get new histogram
+                entry.histName = histName;
+                entry.rebin = rebin;
+                entry.retrieveHistogram();
+            
+                if(!hbgSum) hbgSum = static_cast<TH1*>(entry.h->Clone());
+                else        hbgSum->Add(entry.h.get());
+            
+            }
+            //std::cout<<"Index = "<<index<<"  histName = "<<histName<<std::endl;
+
+            TH1* hbgRatioSum = static_cast<TH1*>(new TH1F(hbgSum->GetName(),hbgSum->GetName(),hbgSum->GetNbinsX(),0, hbgSum->GetNbinsX()));
+            hbgRatioSum->SetLineColor(color[index]);
+            hbgRatioSum->SetLineWidth(2.0);
+            hbgRatioSum->SetMarkerColor(color[index]);
+            leg->AddEntry(hbgRatioSum,(fisherNames[index]).c_str(), "l");
+            for(int i = 0; i < hbgSum->GetNbinsX(); i++)
+            {
+                auto getErrorRatioSq = [](int i, TH1* h){return pow(h->GetBinError(i)/h->GetBinContent(i),2);};
+                double val = hbgSum->GetBinContent(i+1) / hbgSum->GetBinContent(i);
+                double error = val*sqrt( getErrorRatioSq(i+1, hbgSum) + getErrorRatioSq(i, hbgSum) );
+                if(hbgSum->GetBinContent(i) == 0 || hbgSum->GetBinContent(i+1) == 0) 
+                {
+                    hbgRatioSum->SetBinContent(i, 0);
+                }
+                else
+                {
+                    hbgRatioSum->SetBinContent(i, hbgSum->GetBinContent(i+1)/hbgSum->GetBinContent(i));
+                    hbgRatioSum->SetBinError(i, error);
+                }
+            }
+
+            smartMax(hbgRatioSum, leg, static_cast<TPad*>(gPad), min, max, lmax, false);
+            hbgRatioSumVec.push_back(hbgRatioSum);
+        }
+        
+        //create a dummy histogram to act as the axes
+        histInfo dummy(new TH1D("dummy", "dummy", 1000, hbgRatioSumVec[0]->GetBinLowEdge(1), hbgRatioSumVec[0]->GetBinLowEdge(hbgRatioSumVec[0]->GetNbinsX()) + hbgRatioSumVec[0]->GetBinWidth(hbgRatioSumVec[0]->GetNbinsX())));
+        setupDummy(dummy, leg, histTitle, xAxisLabel, yAxisLabel, isLogY, xmin, xmax, min, max, lmax);
+
+        //draw dummy axes
+        dummy.draw();
+
+        //Switch to logY if desired
+        gPad->SetLogy(isLogY);
+
+        //draw all fisher plots
+        for(auto& h : hbgRatioSumVec)
+        {
+            h->Draw("same E");
+        }
+
+        //plot legend
+        leg->Draw("same");
+
+        //Draw dummy hist again to get axes on top of histograms
+        dummy.draw("AXIS");
+
+        //Draw CMS and lumi lables
+        //drawLables(lumi);
+
+        //save new plot to file
+        c->Print( ("outputPlots/fisherRatio_" + histTitle + ".pdf").c_str() );
+        c->Print( ("outputPlots/fisherRatio_" + histTitle + ".png").c_str() );
+
+        //clean up dynamic memory
+        delete c;
+        delete leg;
+        for (auto* obj :  hbgRatioSumVec)
         {
             delete obj;
         }
