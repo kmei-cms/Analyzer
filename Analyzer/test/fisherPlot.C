@@ -45,7 +45,8 @@ void fisherPlot()
 {
     TH1::AddDirectory(false);
 
-    std::string path = "lep0Ana_TestFisherV8-May-30-2018";
+    //std::string path = "lep0Ana_TestFisherV8-May-30-2018";
+    std::string path = "lep0Ana_TestFisherV8_Corr-June-3-2018";
     
     std::vector<histInfo> bgEntries = {
         {"DYJetsToLL_M-50", "condor/output-files/" + path + "/DYJetsToLL_M-50/DYJetsToLL_M-50.root", "hist", kBlack      },        
