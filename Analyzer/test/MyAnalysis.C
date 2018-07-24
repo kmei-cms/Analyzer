@@ -11,6 +11,7 @@
 
 #include "Framework/Framework/include/RunTopTagger.h"
 #include "Framework/Framework/include/RunFisher.h"
+#include "Framework/Framework/include/DeepEventShape.h"
 #include "Framework/Framework/include/Muon.h"
 #include "Framework/Framework/include/Electron.h"
 #include "Framework/Framework/include/Jet.h"
@@ -51,11 +52,11 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         // Define classes/functions that add variables on the fly
         std::shared_ptr<RunTopTagger> rtt;
         if ( !isSkim ) rtt = std::make_shared<RunTopTagger>();
-        RunFisher runFisher;
-        //RunFisher runFisher("test");
         Muon muon;
         Electron electron;
         Jet jet;
+        RunFisher runFisher;
+        DeepEventShape deepEventShape;
         BJet bjet;
         CommonVariables commonVariables;
         Baseline baseline;
@@ -66,6 +67,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerFunction( std::move(electron) );
         tr.registerFunction( std::move(jet) );
         tr.registerFunction( std::move(runFisher) );
+        tr.registerFunction( std::move(deepEventShape) );
         tr.registerFunction( std::move(bjet) );
         tr.registerFunction( std::move(commonVariables) );
         tr.registerFunction( std::move(baseline) );
