@@ -130,7 +130,7 @@ $(ODIR)/%.o : $(WDIR)/%.cc
 $(ODIR)/%.o : $(WDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
 
-MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o $(ODIR)/EventShapeVariables.o $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o
+MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
 
 plot: $(ODIR)/plot.o
