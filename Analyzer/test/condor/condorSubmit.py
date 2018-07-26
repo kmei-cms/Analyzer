@@ -37,6 +37,8 @@ filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MyAnalysis" % repo,
                    environ["CMSSW_BASE"] + "/src/TopTagger/TopTagger/test/libTopTagger.so",
                    environ["CMSSW_BASE"] + "/src/%s/test/sampleSets.cfg" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/sampleCollections.cfg" % repo,
+                   environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape.cfg" % repo,
+                   environ["CMSSW_BASE"] + "/src/%s/test/testDeepEventShape/tfModel_frozen.pb" % repo,
                    ]
 
 def makeExeAndFriendsTarball(filestoTransfer, fname):

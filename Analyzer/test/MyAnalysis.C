@@ -7,6 +7,7 @@
 #include "Analyzer/Analyzer/include/AnalyzeEventSelection.h"
 #include "Analyzer/Analyzer/include/AnalyzeEventShape.h"
 #include "Analyzer/Analyzer/include/Analyze0Lep.h"
+#include "Analyzer/Analyzer/include/Analyze1Lep.h"
 #include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
 
 #include "Framework/Framework/include/RunTopTagger.h"
@@ -119,7 +120,7 @@ int main(int argc, char *argv[])
 {
     int opt, option_index = 0;
     bool doBackground = false, doTopTagger = false, doEventSelection = false, 
-         doEventShape = false, do0Lep = false, doStealthTT = false;
+         doEventShape = false, do0Lep = false, do1Lep = false, doStealthTT = false;
     bool runOnCondor = false;
     bool isSkim = false;
     std::string histFile = "", dataSets = "";
@@ -131,6 +132,7 @@ int main(int argc, char *argv[])
         {"doEventSelection",   no_argument, 0, 's'},
         {"doEventShape",       no_argument, 0, 'p'},
         {"do0Lep",             no_argument, 0, 'z'},
+        {"do1Lep",             no_argument, 0, 'o'},
         {"doStealthTT",        no_argument, 0, 'x'},
         {"condor",             no_argument, 0, 'c'},
         {"histFile",     required_argument, 0, 'H'},
@@ -140,7 +142,7 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-    while((opt = getopt_long(argc, argv, "btspzxcH:D:N:M:E:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "btspzoxcH:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
@@ -149,6 +151,7 @@ int main(int argc, char *argv[])
             case 's': doEventSelection = true;              break;
             case 'p': doEventShape     = true;              break;
             case 'z': do0Lep           = true;              break;
+            case 'o': do1Lep           = true;              break;
             case 'x': doStealthTT      = true;              break;
             case 'c': runOnCondor      = true;              break;
             case 'H': histFile         = optarg;            break;
@@ -197,6 +200,11 @@ int main(int argc, char *argv[])
         {
             printf("\n\n running Analyze0Lep\n\n") ;
             run<Analyze0Lep>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
+        }
+        else if(do1Lep)
+        {
+            printf("\n\n running Analyze1Lep\n\n") ;
+            run<Analyze1Lep>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
         }
         else if(doStealthTT)
         {
