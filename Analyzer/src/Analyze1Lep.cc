@@ -44,6 +44,19 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
     my_histos.emplace("blind_ntops_j2", std::make_shared<TH1D>("blind_ntops_j2","blind_ntops_j2", 10,  0,     10  ) );
     my_histos.emplace("blind_ntops_j3", std::make_shared<TH1D>("blind_ntops_j3","blind_ntops_j3", 10,  0,     10  ) );
 
+    my_histos.emplace("fwm2_top6", std::make_shared<TH1D>("fwm2_top6","fwm2_top6", 50, 0, 1 ) );
+    my_histos.emplace("fwm3_top6", std::make_shared<TH1D>("fwm3_top6","fwm3_top6", 50, 0, 1 ) );
+    my_histos.emplace("fwm4_top6", std::make_shared<TH1D>("fwm4_top6","fwm4_top6", 50, 0, 1 ) );
+    my_histos.emplace("fwm5_top6", std::make_shared<TH1D>("fwm5_top6","fwm5_top6", 50, 0, 1 ) );
+    my_histos.emplace("fwm6_top6", std::make_shared<TH1D>("fwm6_top6","fwm6_top6", 50, 0, 1 ) );
+    my_histos.emplace("fwm7_top6", std::make_shared<TH1D>("fwm7_top6","fwm7_top6", 50, 0, 1 ) );
+    my_histos.emplace("fwm8_top6", std::make_shared<TH1D>("fwm8_top6","fwm8_top6", 50, 0, 1 ) );
+    my_histos.emplace("fwm9_top6", std::make_shared<TH1D>("fwm9_top6","fwm9_top6", 50, 0, 1 ) );
+    my_histos.emplace("fwm10_top6", std::make_shared<TH1D>("fwm10_top6","fwm10_top6", 50, 0, 1 ) );
+    my_histos.emplace("jmt_ev0_top6", std::make_shared<TH1D>("jmt_ev0_top6","jmt_ev0_top6", 50, 0, 1 ) );
+    my_histos.emplace("jmt_ev1_top6", std::make_shared<TH1D>("jmt_ev1_top6","jmt_ev1_top6", 50, 0, 1 ) );
+    my_histos.emplace("jmt_ev2_top6", std::make_shared<TH1D>("jmt_ev2_top6","jmt_ev2_top6", 50, 0, 1 ) );
+
     for(auto& mycut : cutMap)
     {
         my_histos.emplace("h_njets_1l_"+mycut.first, std::make_shared<TH1D>(("h_njets_1l_"+mycut.first).c_str(),("h_njets_1l_"+mycut.first).c_str(), 20, 0, 20));
@@ -56,6 +69,7 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
         my_2d_histos.emplace("h_njets_bdt_1l_"+mycut.first, std::make_shared<TH2D>(("h_njets_bdt_1l_"+mycut.first).c_str(),("h_njets_bdt_1l_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
         my_2d_histos.emplace("h_njets_fisher_1l_"+mycut.first, std::make_shared<TH2D>(("h_njets_fisher_1l_"+mycut.first).c_str(),("h_njets_fisher_1l_"+mycut.first).c_str(), 15, 0, 15, fB, -0.5, 0.5));
         my_2d_histos.emplace("h_njets_deepESM_1l_"+mycut.first, std::make_shared<TH2D>(("h_njets_deepESM_1l_"+mycut.first).c_str(),("h_njets_deepESM_1l_"+mycut.first).c_str(), 15, 0, 15, fB, 0.0, 1.0));
+        my_tp_histos.emplace("hTp_njets_fisher_1l_"+mycut.first, std::make_shared<TProfile>(("hTp_njets_fisher_1l_"+mycut.first).c_str(),("hTp_njets_fisher_1l_"+mycut.first).c_str(), 15, 0, 15, -0.5, 0.5));
         my_tp_histos.emplace("hTp_njets_deepESM_1l_"+mycut.first, std::make_shared<TProfile>(("hTp_njets_deepESM_1l_"+mycut.first).c_str(),("hTp_njets_deepESM_1l_"+mycut.first).c_str(), 15, 0, 15, 0.0, 1.0));
 
         my_histos.emplace("blind_njets_1l_"+mycut.first, std::make_shared<TH1D>(("blind_njets_1l_"+mycut.first).c_str(),("blind_njets_1l_"+mycut.first).c_str(), 20, 0, 20));
@@ -68,6 +82,7 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
         my_2d_histos.emplace("blind_njets_bdt_1l_"+mycut.first, std::make_shared<TH2D>(("blind_njets_bdt_1l_"+mycut.first).c_str(),("blind_njets_bdt_1l_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
         my_2d_histos.emplace("blind_njets_fisher_1l_"+mycut.first, std::make_shared<TH2D>(("blind_njets_fisher_1l_"+mycut.first).c_str(),("blind_njets_fisher_1l_"+mycut.first).c_str(), 15, 0, 15, fB, -0.5, 0.5));
         my_2d_histos.emplace("blind_njets_deepESM_1l_"+mycut.first, std::make_shared<TH2D>(("blind_njets_deepESM_1l_"+mycut.first).c_str(),("blind_njets_deepESM_1l_"+mycut.first).c_str(), 15, 0, 15, fB, 0.0, 1.0));
+        my_tp_histos.emplace("blindTp_njets_fisher_1l_"+mycut.first, std::make_shared<TProfile>(("blindTp_njets_fisher_1l_"+mycut.first).c_str(),("blindTp_njets_fisher_1l_"+mycut.first).c_str(), 15, 0, 15, -0.5, 0.5));
         my_tp_histos.emplace("blindTp_njets_deepESM_1l_"+mycut.first, std::make_shared<TProfile>(("blindTp_njets_deepESM_1l_"+mycut.first).c_str(),("blindTp_njets_deepESM_1l_"+mycut.first).c_str(), 15, 0, 15, 0.0, 1.0));
     }
 
@@ -112,7 +127,18 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& passMadHT            = tr.getVar<bool>("passMadHT");
         const auto& passBaseline1l_Good  = tr.getVar<bool>("passBaseline1l_Good");
         const auto& deepESM_val          = tr.getVar<double>("deepEventShape_val");
-
+        const auto& fwm2_top6            = tr.getVar<double>("fwm2_top6");
+        const auto& fwm3_top6            = tr.getVar<double>("fwm3_top6");
+        const auto& fwm4_top6            = tr.getVar<double>("fwm4_top6");
+        const auto& fwm5_top6            = tr.getVar<double>("fwm5_top6");
+        const auto& fwm6_top6            = tr.getVar<double>("fwm6_top6");
+        const auto& fwm7_top6            = tr.getVar<double>("fwm7_top6");
+        const auto& fwm8_top6            = tr.getVar<double>("fwm8_top6");
+        const auto& fwm9_top6            = tr.getVar<double>("fwm9_top6");
+        const auto& fwm10_top6           = tr.getVar<double>("fwm10_top6");
+        const auto& jmt_ev0_top6         = tr.getVar<double>("jmt_ev0_top6");
+        const auto& jmt_ev1_top6         = tr.getVar<double>("jmt_ev1_top6");
+        const auto& jmt_ev2_top6         = tr.getVar<double>("jmt_ev2_top6");
         // ------------------------
         // -- Print event number
         // -----------------------        
@@ -402,6 +428,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_2d_histos["h_njets_bdt_1l_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
                 my_2d_histos["h_njets_fisher_1l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
                 my_2d_histos["h_njets_deepESM_1l_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
+                my_tp_histos["hTp_njets_fisher_1l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
                 my_tp_histos["hTp_njets_deepESM_1l_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
 
                 if ( NJets_pt30 < 9 )
@@ -416,6 +443,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                     my_2d_histos["blind_njets_bdt_1l_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
                     my_2d_histos["blind_njets_fisher_1l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
                     my_2d_histos["blind_njets_deepESM_1l_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
+                    my_tp_histos["blindTp_njets_fisher_1l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
                     my_tp_histos["blindTp_njets_deepESM_1l_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
                 }
             }
@@ -483,6 +511,23 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             my_histos["blind_ntops_j1"]->Fill(ntops_1jet, eventweight);
             my_histos["blind_ntops_j2"]->Fill(ntops_2jet, eventweight);
             my_histos["blind_ntops_j3"]->Fill(ntops_3jet, eventweight);        
+        }
+
+        // Fill histos for deepESM and Fisher training
+        if(passBaseline1l_Good)
+        {
+            my_histos["fwm2_top6"]->Fill(fwm2_top6, eventweight);
+            my_histos["fwm3_top6"]->Fill(fwm3_top6, eventweight);
+            my_histos["fwm4_top6"]->Fill(fwm4_top6, eventweight);
+            my_histos["fwm5_top6"]->Fill(fwm5_top6, eventweight);
+            my_histos["fwm6_top6"]->Fill(fwm6_top6, eventweight);
+            my_histos["fwm7_top6"]->Fill(fwm7_top6, eventweight);
+            my_histos["fwm8_top6"]->Fill(fwm8_top6, eventweight);
+            my_histos["fwm9_top6"]->Fill(fwm9_top6, eventweight);
+            my_histos["fwm10_top6"]->Fill(fwm10_top6, eventweight);
+            my_histos["jmt_ev0_top6"]->Fill(jmt_ev0_top6, eventweight);
+            my_histos["jmt_ev1_top6"]->Fill(jmt_ev1_top6, eventweight);
+            my_histos["jmt_ev2_top6"]->Fill(jmt_ev2_top6, eventweight);
         }
 
     } // end of event loop
