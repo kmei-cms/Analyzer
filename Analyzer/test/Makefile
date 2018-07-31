@@ -126,7 +126,7 @@ $(ODIR)/%.o : $(WDIR)/%.cc
 $(ODIR)/%.o : $(WDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir) -o $@ -c $<
 
-MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o $(ODIR)/EventShapeVariables.o $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o
+MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/CalculateBTagSF.o $(ODIR)/AnalyzeBTagSF.o $(ODIR)/AnalyzeHadTrigger.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/BTagCorrector.o $(ODIR)/PileupWeights.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o $(ODIR)/EventShapeVariables.o $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
 
 plot: $(ODIR)/plot.o
