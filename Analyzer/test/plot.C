@@ -12,7 +12,20 @@ int main()
 {
     TH1::AddDirectory(false);
 
-    std::string pathtest = "lep0Ana_TestFisher-May-3-2018";
+    //std::string pathtest = "lep0Ana_TestFisher-May-3-2018";
+    //std::string pathtest = "lep0Ana_TestFisherV2-May-5-2018";
+    //std::string pathtest = "lep0Ana_TestFisherV3-May-5-2018";
+    //std::string pathtest = "lep0Ana_TestFisherV4-May-7-2018";
+    //std::string pathtest = "lep0Ana_TestFisherV5-May-8-2018";
+    //std::string pathtest = "lep0Ana_TestFisherV6-May-10-2018";
+    //std::string pathtest = "lep0Ana_TestFisherV7-May-10-2018";
+    //std::string pathtest = "lep0Ana_TestFisherV8-May-10-2018";
+    //std::string pathtest = "lep0Ana_TestFisherV9-May-15-2018";
+    //std::string pathtest = "lep0Ana_TestFisherV10-May-18-2018";
+    //std::string pathtest = "lep0Ana_TestFisherV11-May-22-2018";
+    //std::string pathtest = "lep0Ana_TestFisherV12-May-22-2018";
+    //std::string pathtest = "lep0Ana_TestFisherV13-May-23-2018";
+    std::string pathtest = "lep0Ana_TestFisherV8_Corr-June-3-2018";
     std::string pathold = "lep0Ana-May-3-25-2018";
     std::string path = pathtest;
 
@@ -90,7 +103,7 @@ int main()
     std::map< std::string, HistInfoCollection > rocMapTest = { {"Test", histInfoCollectionRocTest},
     };
     std::map< std::string, HistInfoCollection > rocMap = { {"Test", histInfoCollectionRocTest},
-                                                           {"V3", histInfoCollectionRocOld},
+                                                           //{"V3", histInfoCollectionRocOld},
     };
 
     //make plotter object with the required sources for histograms specified
@@ -133,7 +146,7 @@ int main()
         "ge6j_HT500_ge2b_ge2t"     ,
         "ge6j_HT500_ge2b_ge2t_f1"  , "ge6j_HT500_ge2b_ge2t_f2"  , "ge6j_HT500_ge2b_ge2t_f3"  , "ge6j_HT500_ge2b_ge2t_f4"  ,
         
-        //"ge6j_HT500_ge2b_ge2t11"   , "ge6j_HT500_ge2b_ge2t12"   , "ge6j_HT500_ge2b_ge2t13"   , "ge6j_HT500_ge2b_ge2t22"   , "ge6j_HT500_ge2b_ge2t23", "ge6j_HT500_ge2b_ge2t33",
+        "ge6j_HT500_ge2b_ge2t11"   , "ge6j_HT500_ge2b_ge2t12"   , "ge6j_HT500_ge2b_ge2t13"   , "ge6j_HT500_ge2b_ge2t22"   , "ge6j_HT500_ge2b_ge2t23", "ge6j_HT500_ge2b_ge2t33",
         //"ge6j_HT500_ge2b_ge2t11_f1", "ge6j_HT500_ge2b_ge2t11_f2", "ge6j_HT500_ge2b_ge2t11_f3", "ge6j_HT500_ge2b_ge2t11_f4",
         //"ge6j_HT500_ge2b_ge2t12_f1", "ge6j_HT500_ge2b_ge2t12_f2", "ge6j_HT500_ge2b_ge2t12_f3", "ge6j_HT500_ge2b_ge2t12_f4",
         //"ge6j_HT500_ge2b_ge2t13_f1", "ge6j_HT500_ge2b_ge2t13_f2", "ge6j_HT500_ge2b_ge2t13_f3", "ge6j_HT500_ge2b_ge2t13_f4",
@@ -171,14 +184,14 @@ int main()
         plt.plotStack( "h_nb_0l_"   +mycut, "N_{B}" , "Events", true);        
         plt.plotStack( "h_HT_0l_"   +mycut, "H_{T}" , "Events", true);        
         plt.plotStack( "h_fisher_0l_"+mycut, "fisher value" , "Events", true, 4);        
-
+        
         // Make Normalized fisher
         pltSkim.plotNormFisher("h_fisher_0l_"+mycut, "fisher value" , "Events", false, 4);
         
         // - Make fisher Roc Curve
         pltRoc.plotRocFisher("h_fisher_0l_"+mycut,"Background","Signal", false);
         pltRocCompare.plotRocFisher("h_fisher_0l_"+mycut,"Background","Signal", true);
-
+                
         //Need these until we un blind
         plt.plotStack( "blind_njets_0l_"+mycut, "N_{J}" , "Events", true);
         plt.plotStack( "blind_ntops_0l_"+mycut, "N_{T}" , "Events", true);
@@ -197,7 +210,7 @@ int main()
     plt.plotStack("h_ntops_j1", "N_{1T}", "Events", true);
     plt.plotStack("h_ntops_j2", "N_{2T}", "Events", true);
     plt.plotStack("h_ntops_j3", "N_{3T}", "Events", true);
-
+    
     plt.plotStack("blind_met"     , "MET"   , "Events", true);
     plt.plotStack("blind_ht"      , "H_{T}" , "Events", true);
     plt.plotStack("blind_bdt"     , "bdt"   , "Events", true);
@@ -253,17 +266,18 @@ int main()
     for (auto& f : fisherHolder)
     {
         plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true, 9);
+        plt.plotRatioFisher(f.cutNames_,  f.plotName_, "N_{J}", "N_{J+1} / N_{J}", false);
     }
     
     // --------------------
     // - Compute Yields
     // --------------------
 
-    for(std::string mycut : mycuts_0l)
-    {
-        const auto& yieldMap = histInfoCollection.computeYields("h_njets_0l_"+mycut,"njets",12,20);
-        //const auto& yieldMap = histInfoCollection.computeYields("h_njets_0l_"+mycut,"njets",6,8);
-        auto allbg  = yieldMap.find("AllBG"); auto data_JetHT = yieldMap.find("Data_JetHT"); auto ttbar = yieldMap.find("T#bar{T}"); auto QCD = yieldMap.find("QCD");
-        printf("%45.45s:  %s: %12.0lf   %s: %12.0lf   %s: %12.0lf   %s: %12.0lf\n",("h_njets_0l_"+mycut).c_str(), (data_JetHT->first).c_str(), data_JetHT->second, (allbg->first).c_str(), allbg->second, "ttbar", ttbar->second, (QCD->first).c_str(), QCD->second );
-    }       
+    //for(std::string mycut : mycuts_0l)
+    //{
+    //    const auto& yieldMap = histInfoCollection.computeYields("h_njets_0l_"+mycut,"njets",12,20);
+    //    //const auto& yieldMap = histInfoCollection.computeYields("h_njets_0l_"+mycut,"njets",6,8);
+    //    auto allbg  = yieldMap.find("AllBG"); auto data_JetHT = yieldMap.find("Data_JetHT"); auto ttbar = yieldMap.find("T#bar{T}"); auto QCD = yieldMap.find("QCD");
+    //    printf("%45.45s:  %s: %12.0lf   %s: %12.0lf   %s: %12.0lf   %s: %12.0lf\n",("h_njets_0l_"+mycut).c_str(), (data_JetHT->first).c_str(), data_JetHT->second, (allbg->first).c_str(), allbg->second, "ttbar", ttbar->second, (QCD->first).c_str(), QCD->second );
+    //}       
 }

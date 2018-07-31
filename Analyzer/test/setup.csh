@@ -32,7 +32,7 @@ echo ""
 echo "|--------------------------------------|"
 echo "|      Checking repos for updates      |"
 echo "|--------------------------------------|"
-echo "If it asks for you password too many times you can do something like the following:"
+echo "If it asks for your password too many times you can do something like the following:"
 echo "         ssh-add ~/.ssh/id_rsa"
 status.sh
 
