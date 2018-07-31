@@ -22,7 +22,7 @@ public:
     ~AnalyzeEventSelection(){};
     
     void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false);
-    void InitHistos();
+    void InitHistos(NTupleReader &tr);
     void WriteHistos(TFile* outfile);
     
 };

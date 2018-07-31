@@ -20,10 +20,9 @@
 
 AnalyzeEventSelection::AnalyzeEventSelection()
 {
-    InitHistos();
 }
 
-void AnalyzeEventSelection::InitHistos()
+void AnalyzeEventSelection::InitHistos(NTupleReader &tr)
 {
     TH1::SetDefaultSumw2();
 

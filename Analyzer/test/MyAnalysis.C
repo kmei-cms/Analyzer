@@ -2,7 +2,12 @@
 #include "SusyAnaTools/Tools/NTupleReader.h"
 #include "TopTagger/CfgParser/include/TTException.h"
 
-#include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
+#include "Analyzer/Analyzer/include/AnalyzeBackground.h"
+#include "Analyzer/Analyzer/include/AnalyzeTopTagger.h"
+#include "Analyzer/Analyzer/include/AnalyzeEventSelection.h"
+#include "Analyzer/Analyzer/include/AnalyzeEventShape.h"
+//#include "Analyzer/Analyzer/include/Analyze0Lep.h"
+//#include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
 #include "Analyzer/Analyzer/include/AnalyzeHadTrigger.h"
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
@@ -138,13 +143,21 @@ std::set<AnaSamples::FileSummary> setFS(const std::string& dataSets, const bool&
 int main(int argc, char *argv[])
 {
     int opt, option_index = 0;
-    bool doBTagSF = false; bool calcBTagSF = false; bool doTrigAnalysis = false;
+    bool doBackground = false, doTopTagger = false, doEventSelection = false, 
+             doEventShape = false, do0Lep = false, doStealthTT = false,
+             doBTagSF = false; bool calcBTagSF = false; bool doTrigAnalysis = false;
     bool runOnCondor = false;
     bool isSkim = false;
     std::string histFile = "", dataSets = "";
     int nFiles = -1, startFile = 0, maxEvts = -1;
 
     static struct option long_options[] = {
+        {"doBackground",       no_argument, 0, 'b'},
+        {"doTopTagger",        no_argument, 0, 't'},
+        {"doEventSelection",   no_argument, 0, 's'},
+        {"doEventShape",       no_argument, 0, 'p'},
+//        {"do0Lep",             no_argument, 0, 'z'},
+//        {"doStealthTT",        no_argument, 0, 'x'},
         {"calcBTagSF",         no_argument, 0, 'f'},
         {"doBTagSF",           no_argument, 0, 'g'},
         {"doTrigAnalysis",     no_argument, 0, 'a'},
@@ -156,10 +169,16 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-    while((opt = getopt_long(argc, argv, "fgacH:D:N:M:E:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "btspzxfgacH:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
+            case 'b': doBackground     = true;              break;
+            case 't': doTopTagger      = true;              break;
+            case 's': doEventSelection = true;              break;
+            case 'p': doEventShape     = true;              break;
+//            case 'z': do0Lep           = true;              break;
+//            case 'x': doStealthTT      = true;              break;
             case 'f': calcBTagSF       = true;              break;
             case 'g': doBTagSF         = true;              break;
             case 'a': doTrigAnalysis   = true;              break;
@@ -177,7 +196,7 @@ int main(int argc, char *argv[])
     if(runOnCondor)
     {
         char thistFile[128];
-        sprintf(thistFile, "MyHadTrigAnalysis_%s_%d.root", dataSets.c_str(), startFile);
+        sprintf(thistFile, "MyAnalysis_%s_%d.root", dataSets.c_str(), startFile);
         histFile = thistFile;
     }
 
@@ -186,12 +205,42 @@ int main(int argc, char *argv[])
     
     try
     {
-        if(doBTagSF)
+        if(doBackground)
+        {
+            printf("\n\n running AnalyzeBackground\n\n" ) ;
+            run<AnalyzeBackground>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
+        }
+        else if(doTopTagger)
+        {
+            printf("\n\n running AnalyzeTopTagger\n\n" ) ;
+            run<AnalyzeTopTagger>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
+        }
+        else if(doEventSelection)
+        {
+            printf("\n\n running AnalyzeEventSelection\n\n") ;
+            run<AnalyzeEventSelection>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
+        }
+        else if(doEventShape)
+        {
+            printf("\n\n running AnalyzeEventShape\n\n") ;
+            run<AnalyzeEventShape>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
+        }
+//        else if(do0Lep)
+//        {
+//            printf("\n\n running Analyze0Lep\n\n") ;
+//            run<Analyze0Lep>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
+//        }
+//        else if(doStealthTT)
+//        {
+//            printf("\n\n running AnalyzeStealthTopTagger\n\n") ;
+//            run<AnalyzeStealthTopTagger>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
+//        }
+        else if(doBTagSF)
         {
             printf("\n\n running AnalyzeBTagSF\n\n") ;
             run<AnalyzeBTagSF>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
         }
-        if(doTrigAnalysis)
+        else if(doTrigAnalysis)
         {
             printf("\n\n running AnalyzeHadTrigger\n\n") ;
             run<AnalyzeHadTrigger>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);

@@ -21,10 +21,9 @@
 AnalyzeEventShape::AnalyzeEventShape()
 {
     printf("\n\n In AnalyzeEventShape constructor.\n\n") ; fflush( stdout ) ;
-    InitHistos();
 }
 
-void AnalyzeEventShape::InitHistos()
+void AnalyzeEventShape::InitHistos(NTupleReader &tr)
 {
 
     printf("\n\n In AnalyzeEventShape::InitHistos\n\n" ) ;
