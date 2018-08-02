@@ -128,6 +128,8 @@ bool AnalyzeEventShape::PassTriggerElectron(const std::vector<std::string>& Trig
 
 void AnalyzeEventShape::WriteHistos(TFile* outfile)
 {
+    outfile->cd();
+
     for (const auto &p : my_histos) {
         p.second->Write();
     }

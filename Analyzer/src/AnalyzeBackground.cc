@@ -312,15 +312,20 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, boo
 
 void AnalyzeBackground::WriteHistos(TFile* outfile)
 {
+    outfile->cd();
+
     for (const auto &p : my_histos) {
+        p.second->SetDirectory(outfile);
         p.second->Write();
     }
     
     for (const auto &p : my_2d_histos) {
+        p.second->SetDirectory(outfile);
         p.second->Write();
     }
     
     for (const auto &p : my_efficiencies) {
+        p.second->SetDirectory(outfile);
         p.second->Write();
     }
     
