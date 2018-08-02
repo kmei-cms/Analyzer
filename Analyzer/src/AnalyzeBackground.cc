@@ -19,9 +19,10 @@
 
 AnalyzeBackground::AnalyzeBackground()
 {
+    InitHistos();
 }
 
-void AnalyzeBackground::InitHistos(NTupleReader &tr)
+void AnalyzeBackground::InitHistos()
 {
     TH1::SetDefaultSumw2();
 

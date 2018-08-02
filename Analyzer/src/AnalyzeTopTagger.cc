@@ -20,9 +20,10 @@
 
 AnalyzeTopTagger::AnalyzeTopTagger()
 {
+    InitHistos();
 }
 
-void AnalyzeTopTagger::InitHistos(NTupleReader &tr)
+void AnalyzeTopTagger::InitHistos()
 {
     TH1::SetDefaultSumw2();
 

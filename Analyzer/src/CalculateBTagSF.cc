@@ -21,16 +21,13 @@
 #include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
 #include "SusyAnaTools/Tools/BTagCorrector.h"
 
-CalculateBTagSF::CalculateBTagSF()
+CalculateBTagSF::CalculateBTagSF() : initHistos(false)
 {
 }
 
 
-void CalculateBTagSF::InitHistos(NTupleReader& tr)
+void CalculateBTagSF::InitHistos(std::string histoFileTag)
 {
-    tr.goToEvent(1);
-    const auto& histoFileTag = tr.getVar<std::string>("filetag");
-    
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
 
@@ -41,6 +38,8 @@ void CalculateBTagSF::InitHistos(NTupleReader& tr)
     const double etaBins[] = { 0.0, 0.8, 1.6, 2.4 };
 
     // Declare all your histograms here, that way we can fill them for multiple chains
+
+    std::cout<<histoFileTag<<std::endl;
 
     my_2d_histos.emplace( "n_eff_b_"+histoFileTag,     std::make_shared<TH2D>( ("n_eff_b_"+histoFileTag ).c_str(),     ( "n_eff_b_Efficiency_"+histoFileTag ).c_str(),     nPtBins, ptBins, nEtaBins, etaBins ) );
     my_2d_histos.emplace( "n_eff_c_"+histoFileTag,     std::make_shared<TH2D>( ("n_eff_c_"+histoFileTag ).c_str(),     ( "n_eff_c_Efficiency_"+histoFileTag ).c_str(),     nPtBins, ptBins, nEtaBins, etaBins ) );
@@ -89,6 +88,14 @@ void CalculateBTagSF::Loop(NTupleReader& tr, double weight, int maxevents, bool 
         const auto& recoJetsBtag        = tr.getVec<double>("Jets_bDiscriminatorCSV");
         const auto& recoJetsFlavor      = tr.getVec<int>("Jets_hadronFlavor");
 
+        //-----------------------------------
+        //-- Initialize Histograms
+        //----------------------------------
+        
+        if( !initHistos ) {
+            InitHistos(filetag);
+            initHistos = true;
+        }
         //------------------------------------
         //-- Print Event Number
         //------------------------------------
@@ -109,7 +116,6 @@ void CalculateBTagSF::Loop(NTupleReader& tr, double weight, int maxevents, bool 
         if( passMadHT )
         {
             const auto& Weight = tr.getVar<double>("Weight");
-            
             eventweight         = Lumi*Weight;
             
             for( unsigned int ij = 0; ij < Jets.size(); ++ij ) {

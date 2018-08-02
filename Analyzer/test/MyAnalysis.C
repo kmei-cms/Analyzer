@@ -6,10 +6,9 @@
 #include "Analyzer/Analyzer/include/AnalyzeTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeEventSelection.h"
 #include "Analyzer/Analyzer/include/AnalyzeEventShape.h"
-//#include "Analyzer/Analyzer/include/Analyze0Lep.h"
-//#include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
+#include "Analyzer/Analyzer/include/Analyze0Lep.h"
+#include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
-#include "Analyzer/Analyzer/include/AnalyzeHadTrigger.h"
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 
 #include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
@@ -40,7 +39,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
 {
     std::cout << "Initializing..." << std::endl;
     const int jecOn = 0; 
-    const int jerOn = 1;
+    const int jerOn = 0;
     
     if( jecOn * jerOn != 0 || std::fabs(jecOn) > 1 || std::fabs(jerOn) > 1) {
             std::cerr<<"Invalid values of jecOn and jerOn. They should be either -1, 0, or 1, and you cannot have both jet energy corrections and jet energy resolutions on at the same time"<<std::endl;
@@ -100,7 +99,6 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerFunction( std::move(baseline) );
 
         // Loop over all of the events and fill histos
-        a.InitHistos(tr);
         a.Loop(tr, weight, maxEvts);
 
         // Cleaning up dynamic memory
@@ -145,7 +143,7 @@ int main(int argc, char *argv[])
     int opt, option_index = 0;
     bool doBackground = false, doTopTagger = false, doEventSelection = false, 
              doEventShape = false, do0Lep = false, doStealthTT = false,
-             doBTagSF = false; bool calcBTagSF = false; bool doTrigAnalysis = false;
+             doBTagSF = false, calcBTagSF = false;
     bool runOnCondor = false;
     bool isSkim = false;
     std::string histFile = "", dataSets = "";
@@ -156,11 +154,10 @@ int main(int argc, char *argv[])
         {"doTopTagger",        no_argument, 0, 't'},
         {"doEventSelection",   no_argument, 0, 's'},
         {"doEventShape",       no_argument, 0, 'p'},
-//        {"do0Lep",             no_argument, 0, 'z'},
-//        {"doStealthTT",        no_argument, 0, 'x'},
+        {"do0Lep",             no_argument, 0, 'z'},
+        {"doStealthTT",        no_argument, 0, 'x'},
         {"calcBTagSF",         no_argument, 0, 'f'},
         {"doBTagSF",           no_argument, 0, 'g'},
-        {"doTrigAnalysis",     no_argument, 0, 'a'},
         {"condor",             no_argument, 0, 'c'},
         {"histFile",     required_argument, 0, 'H'},
         {"dataSets",     required_argument, 0, 'D'},
@@ -169,7 +166,7 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-    while((opt = getopt_long(argc, argv, "btspzxfgacH:D:N:M:E:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "btspzxfgcH:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
@@ -177,11 +174,10 @@ int main(int argc, char *argv[])
             case 't': doTopTagger      = true;              break;
             case 's': doEventSelection = true;              break;
             case 'p': doEventShape     = true;              break;
-//            case 'z': do0Lep           = true;              break;
-//            case 'x': doStealthTT      = true;              break;
+            case 'z': do0Lep           = true;              break;
+            case 'x': doStealthTT      = true;              break;
             case 'f': calcBTagSF       = true;              break;
             case 'g': doBTagSF         = true;              break;
-            case 'a': doTrigAnalysis   = true;              break;
             case 'c': runOnCondor      = true;              break;
             case 'H': histFile         = optarg;            break;
             case 'D': dataSets         = optarg;            break;
@@ -225,25 +221,20 @@ int main(int argc, char *argv[])
             printf("\n\n running AnalyzeEventShape\n\n") ;
             run<AnalyzeEventShape>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
         }
-//        else if(do0Lep)
-//        {
-//            printf("\n\n running Analyze0Lep\n\n") ;
-//            run<Analyze0Lep>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-//        }
-//        else if(doStealthTT)
-//        {
-//            printf("\n\n running AnalyzeStealthTopTagger\n\n") ;
-//            run<AnalyzeStealthTopTagger>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-//        }
+        else if(do0Lep)
+        {
+            printf("\n\n running Analyze0Lep\n\n") ;
+            run<Analyze0Lep>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
+        }
+        else if(doStealthTT)
+        {
+            printf("\n\n running AnalyzeStealthTopTagger\n\n") ;
+            run<AnalyzeStealthTopTagger>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
+        }
         else if(doBTagSF)
         {
             printf("\n\n running AnalyzeBTagSF\n\n") ;
             run<AnalyzeBTagSF>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-        }
-        else if(doTrigAnalysis)
-        {
-            printf("\n\n running AnalyzeHadTrigger\n\n") ;
-            run<AnalyzeHadTrigger>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
         }
         else if(calcBTagSF)
         {

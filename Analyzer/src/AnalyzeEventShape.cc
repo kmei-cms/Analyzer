@@ -21,9 +21,10 @@
 AnalyzeEventShape::AnalyzeEventShape()
 {
     printf("\n\n In AnalyzeEventShape constructor.\n\n") ; fflush( stdout ) ;
+    InitHistos();
 }
 
-void AnalyzeEventShape::InitHistos(NTupleReader &tr)
+void AnalyzeEventShape::InitHistos()
 {
 
     printf("\n\n In AnalyzeEventShape::InitHistos\n\n" ) ;
@@ -127,6 +128,8 @@ bool AnalyzeEventShape::PassTriggerElectron(const std::vector<std::string>& Trig
 
 void AnalyzeEventShape::WriteHistos(TFile* outfile)
 {
+    outfile->cd();
+
     for (const auto &p : my_histos) {
         p.second->Write();
     }

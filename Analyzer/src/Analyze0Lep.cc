@@ -487,6 +487,8 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
 
 void Analyze0Lep::WriteHistos(TFile* outfile)
 {
+    outfile->cd();
+    
     for (const auto &p : my_histos) {
         p.second->Write();
     }

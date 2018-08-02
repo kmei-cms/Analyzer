@@ -22,7 +22,7 @@ public :
    ~AnalyzeBTagSF(){};
 
    void     Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false);
-   virtual void     InitHistos(NTupleReader &tr);
+   virtual void     InitHistos();
    virtual void     WriteHistos(TFile* outfile);
 };
 

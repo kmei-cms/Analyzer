@@ -23,10 +23,11 @@
 
 AnalyzeBTagSF::AnalyzeBTagSF()
 {
+    InitHistos();
 }
 
 
-void AnalyzeBTagSF::InitHistos(NTupleReader &tr)
+void AnalyzeBTagSF::InitHistos()
 {
     
     TH1::SetDefaultSumw2();
