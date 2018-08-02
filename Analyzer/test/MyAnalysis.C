@@ -35,6 +35,7 @@
 #include <iostream>
 #include <getopt.h>
 #include <string>
+#include <functional>
 
 std::string color(const std::string& text, const std::string& color)
 {
@@ -92,12 +93,12 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         if ( !isSkim ) rtt = std::make_shared<RunTopTagger>();
 
         RunFisher runFisher("v3",myVarSuffix);
-        if( runtype == "MC" ) {
-            BTagCorrector bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
-            Pileup_Sys pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
-            tr.registerFunction( std::move(bTagCorrector) );
-            tr.registerFunction( std::move(pileup) );
-        }
+        //if( runtype == "MC" ) {
+        //    BTagCorrector bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
+        //    Pileup_Sys pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
+        //    tr.registerFunction( std::move(bTagCorrector) );
+        //    tr.registerFunction( std::move(pileup) );
+        //}
         Muon muon;
         Electron electron;
         MakeMVAVariables makeMVAVariables(false, myVarSuffix);
@@ -223,53 +224,24 @@ int main(int argc, char *argv[])
 
     std::set<AnaSamples::FileSummary> vvf = setFS(dataSets, runOnCondor); 
     TFile* outfile = TFile::Open(histFile.c_str(), "RECREATE");
+
+    std::vector<std::pair<bool, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,bool,TFile*)>>> AnalyzerPairVec = {
+        {doBackground,     run<AnalyzeBackground>},
+        {doTopTagger,      run<AnalyzeTopTagger>},
+        {doEventSelection, run<AnalyzeEventSelection>},
+        {doEventShape,     run<AnalyzeEventShape>},
+        {do0Lep,           run<Analyze0Lep>},
+        {do1Lep,           run<Analyze1Lep>},
+        {doStealthTT,      run<AnalyzeStealthTopTagger>},
+        {doBTagSF,         run<AnalyzeBTagSF>},
+        {calcBTagSF,       run<CalculateBTagSF>},
+    }; 
     
     try
     {
-        if(doBackground)
+        for(auto& pair : AnalyzerPairVec)
         {
-            printf("\n\n running AnalyzeBackground\n\n" ) ;
-            run<AnalyzeBackground>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-        }
-        else if(doTopTagger)
-        {
-            printf("\n\n running AnalyzeTopTagger\n\n" ) ;
-            run<AnalyzeTopTagger>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-        }
-        else if(doEventSelection)
-        {
-            printf("\n\n running AnalyzeEventSelection\n\n") ;
-            run<AnalyzeEventSelection>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-        }
-        else if(doEventShape)
-        {
-            printf("\n\n running AnalyzeEventShape\n\n") ;
-            run<AnalyzeEventShape>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-        }
-        else if(do0Lep)
-        {
-            printf("\n\n running Analyze0Lep\n\n") ;
-            run<Analyze0Lep>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-        }
-        else if(do1Lep)
-        {
-            printf("\n\n running Analyze1Lep\n\n") ;
-            run<Analyze1Lep>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-        }
-        else if(doStealthTT)
-        {
-            printf("\n\n running AnalyzeStealthTopTagger\n\n") ;
-            run<AnalyzeStealthTopTagger>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-        }
-        else if(doBTagSF)
-        {
-            printf("\n\n running AnalyzeBTagSF\n\n") ;
-            run<AnalyzeBTagSF>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-        }
-        else if(calcBTagSF)
-        {
-            printf("\n\n running CalculateBTagSF\n\n") ;
-            run<CalculateBTagSF>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
+            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
         }
         outfile->Close();
     }
