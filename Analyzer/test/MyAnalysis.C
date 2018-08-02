@@ -36,19 +36,32 @@
 #include <getopt.h>
 #include <string>
 
+std::string color(const std::string& text, const std::string& color)
+{
+    std::string c;
+    if(color=="red") c = "31";
+    else if(color=="green") c = "32";
+    else if(color=="yellow") c = "33";
+    else if(color=="blue") c = "34";
+    else if(color=="white") c = "37";
+    
+    return "\033[1;"+c+"m"+ text +"\033[0m";
+}
+
 template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
                                     int startFile, int nFiles, int maxEvts, 
                                     bool isSkim, TFile* outfile)
 {
     std::cout << "Initializing..." << std::endl;
-    const int jecOn = 0, jeron = 0; 
+    const int jecOn = 0, jerOn = 0; 
     
     if( jecOn * jerOn != 0 || std::fabs(jecOn) > 1 || std::fabs(jerOn) > 1) 
     {
-        std::cerr<<"Invalid values of jecOn and jerOn. "
+        std::cerr<<color("Error: ", "red")
+                 <<"Invalid values of jecOn and jerOn. "
                  <<"They should be either -1, 0, or 1. "
                  <<"you cannot have both jet energy corrections and jet energy resolutions on at the same time"<<std::endl;
-        return 0;
+        return;
     }
 
     std::string                 myVarSuffix = "";
@@ -152,12 +165,8 @@ int main(int argc, char *argv[])
 {
     int opt, option_index = 0;
     bool doBackground = false, doTopTagger = false, doEventSelection = false, 
-<<<<<<< HEAD
-         doEventShape = false, do0Lep = false, do1Lep = false, doStealthTT = false;
-=======
-             doEventShape = false, do0Lep = false, doStealthTT = false,
-             doBTagSF = false, calcBTagSF = false;
->>>>>>> bdba041a8b9a70d34dbc012958529f0767436a22
+        doEventShape = false, do0Lep = false, do1Lep = false, doStealthTT = false,
+        doBTagSF = false, calcBTagSF = false;
     bool runOnCondor = false;
     bool isSkim = false;
     std::string histFile = "", dataSets = "";
@@ -181,11 +190,7 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-<<<<<<< HEAD
-    while((opt = getopt_long(argc, argv, "btspzoxcH:D:N:M:E:", long_options, &option_index)) != -1)
-=======
-    while((opt = getopt_long(argc, argv, "btspzxfgcH:D:N:M:E:", long_options, &option_index)) != -1)
->>>>>>> bdba041a8b9a70d34dbc012958529f0767436a22
+    while((opt = getopt_long(argc, argv, "btspzoxfgcH:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
