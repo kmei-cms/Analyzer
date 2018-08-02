@@ -46,7 +46,7 @@ INCLUDESDIRS    += -I$(TENSORFLOW_DIR)/include
 
 #OBJS       = $(patsubst %, $(ODIR)/%, $(OBJ))
 
-PROGRAMS = MyAnalysis  plot
+PROGRAMS = MyAnalysis  plot_0l plot_1l
 
 all: mkobj sampPyWrap $(PROGRAMS)
 
@@ -133,7 +133,10 @@ $(ODIR)/%.o : $(WDIR)/%.cpp
 MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/Analyze1Lep.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
 
-plot: $(ODIR)/plot.o
+plot_0l: $(ODIR)/plot_0l.o
+	$(LD) $^ $(LIBS) -o $@
+
+plot_1l: $(ODIR)/plot_1l.o
 	$(LD) $^ $(LIBS) -o $@
 
 clean:
