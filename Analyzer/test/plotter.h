@@ -283,7 +283,7 @@ public:
         delete bgStack;
     }
 
-    void plotRocFisher(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool firstOnly = false, int rebin = -1, const double xmin = 999.9, const double xmax = -999.9, double lumi = 36100)
+    void plotRocFisher(std::string histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool firstOnly = false, int rebin = -1, const double xmin = 999.9, const double xmax = -999.9, double lumi = 36100)
     {
         //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
         TH1::AddDirectory(false);
@@ -325,6 +325,7 @@ public:
         std::vector<TGraph*> graphVec;
         for(auto& mhc : mhc_)
         {
+            if(mhc.first == "fisher") histName = "h_fisher_1l_ge6j_ge1b";
             //std::cout<<mhc.first<<std::endl;
             THStack *bgStack = new THStack();
             std::shared_ptr<TH1> hbgSum;
@@ -338,6 +339,7 @@ public:
             int lineStyle = (mhc.first == "Test") ?  kSolid : kDashed;
             int markStyle = (mhc.first == "Test") ?  kFullCircle : kFullSquare;
             drawRocCurve(mhc.first, graphVec, rocBgVec, rocSigVec, firstOnly, leg, lineStyle, markStyle);
+            std::cout<<histName<<" "<<mhc.first<<std::endl;
         }
 
         TF1* line1 = new TF1( "line1","1",0,1);

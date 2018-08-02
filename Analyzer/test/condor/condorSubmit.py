@@ -29,6 +29,19 @@ with file(environ["CMSSW_BASE"] + "/src/%s/test/TopTagger.cfg" % repo) as meowtt
     for line in meowttcfgFile:
         if "modelFile" in line:
             mvaFileName = line.split("=")[1].strip().strip("\"")
+            print "------------------------------------------------"            
+            print "TopTagger trainig:", mvaFileName
+            print "------------------------------------------------"
+            break
+
+ESMVAFileName = ""
+with file(environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape.cfg" % repo) as ESMcfgFile:
+    for line in ESMcfgFile:
+        if "modelFile" in line:
+            ESMVAFileName = line.split("=")[1].strip().strip("\"")
+            print "------------------------------------------------"
+            print "DeepESM training:", ESMVAFileName
+            print "------------------------------------------------"
             break
 
 filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MyAnalysis" % repo, 
@@ -37,6 +50,8 @@ filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MyAnalysis" % repo,
                    environ["CMSSW_BASE"] + "/src/TopTagger/TopTagger/test/libTopTagger.so",
                    environ["CMSSW_BASE"] + "/src/%s/test/sampleSets.cfg" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/sampleCollections.cfg" % repo,
+                   environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape.cfg" % repo,
+                   environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,ESMVAFileName),
                    ]
 
 def makeExeAndFriendsTarball(filestoTransfer, fname):

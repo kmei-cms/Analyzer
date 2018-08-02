@@ -7,6 +7,7 @@
 #include "Analyzer/Analyzer/include/AnalyzeEventSelection.h"
 #include "Analyzer/Analyzer/include/AnalyzeEventShape.h"
 #include "Analyzer/Analyzer/include/Analyze0Lep.h"
+#include "Analyzer/Analyzer/include/Analyze1Lep.h"
 #include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
@@ -17,6 +18,8 @@
 
 #include "Framework/Framework/include/RunTopTagger.h"
 #include "Framework/Framework/include/RunFisher.h"
+#include "Framework/Framework/include/DeepEventShape.h"
+#include "Framework/Framework/include/MakeMVAVariables.h"
 #include "Framework/Framework/include/Muon.h"
 #include "Framework/Framework/include/Electron.h"
 #include "Framework/Framework/include/Jet.h"
@@ -32,17 +35,34 @@
 #include <iostream>
 #include <getopt.h>
 #include <string>
+#include <functional>
+
+std::string color(const std::string& text, const std::string& color)
+{
+    std::string c;
+    if(color=="red") c = "31";
+    else if(color=="green") c = "32";
+    else if(color=="yellow") c = "33";
+    else if(color=="blue") c = "34";
+    else if(color=="white") c = "37";
+    
+    return "\033[1;"+c+"m"+ text +"\033[0m";
+}
 
 template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
                                     int startFile, int nFiles, int maxEvts, 
                                     bool isSkim, TFile* outfile)
 {
     std::cout << "Initializing..." << std::endl;
-    const int jecOn = 0; 
-    const int jerOn = 0;
+    const int jecOn = 0, jerOn = 0; 
     
-    if( jecOn * jerOn != 0 || std::fabs(jecOn) > 1 || std::fabs(jerOn) > 1) {
-            std::cerr<<"Invalid values of jecOn and jerOn. They should be either -1, 0, or 1, and you cannot have both jet energy corrections and jet energy resolutions on at the same time"<<std::endl;
+    if( jecOn * jerOn != 0 || std::fabs(jecOn) > 1 || std::fabs(jerOn) > 1) 
+    {
+        std::cerr<<color("Error: ", "red")
+                 <<"Invalid values of jecOn and jerOn. "
+                 <<"They should be either -1, 0, or 1. "
+                 <<"you cannot have both jet energy corrections and jet energy resolutions on at the same time"<<std::endl;
+        return;
     }
 
     std::string                 myVarSuffix = "";
@@ -71,18 +91,20 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         // Define classes/functions that add variables on the fly
         std::shared_ptr<RunTopTagger> rtt;
         if ( !isSkim ) rtt = std::make_shared<RunTopTagger>();
+
         RunFisher runFisher("v3",myVarSuffix);
-        //RunFisher runFisher("test");
-        if( runtype == "MC" ) {
-            BTagCorrector bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
-            Pileup_Sys pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
-            tr.registerFunction( std::move(bTagCorrector) );
-            tr.registerFunction( std::move(pileup) );
-        }
+        //if( runtype == "MC" ) {
+        //    BTagCorrector bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
+        //    Pileup_Sys pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
+        //    tr.registerFunction( std::move(bTagCorrector) );
+        //    tr.registerFunction( std::move(pileup) );
+        //}
         Muon muon;
         Electron electron;
+        MakeMVAVariables makeMVAVariables(false, myVarSuffix);
         Jet jet(myVarSuffix);
         BJet bjet(myVarSuffix);
+        DeepEventShape deepEventShape;
         ScaleFactors scaleFactors;
         CommonVariables commonVariables;
         Baseline baseline;
@@ -91,9 +113,11 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         if ( !isSkim ) tr.registerFunction( std::move(*rtt) );
         tr.registerFunction( std::move(muon) );
         tr.registerFunction( std::move(electron) );
+        tr.registerFunction( std::move(makeMVAVariables) );
         tr.registerFunction( std::move(jet) );
-        tr.registerFunction( std::move(runFisher) );
         tr.registerFunction( std::move(bjet) );
+        tr.registerFunction( std::move(runFisher) );
+        tr.registerFunction( std::move(deepEventShape) );
         tr.registerFunction( std::move(commonVariables) );
         tr.registerFunction( std::move(scaleFactors) );
         tr.registerFunction( std::move(baseline) );
@@ -142,8 +166,8 @@ int main(int argc, char *argv[])
 {
     int opt, option_index = 0;
     bool doBackground = false, doTopTagger = false, doEventSelection = false, 
-             doEventShape = false, do0Lep = false, doStealthTT = false,
-             doBTagSF = false, calcBTagSF = false;
+        doEventShape = false, do0Lep = false, do1Lep = false, doStealthTT = false,
+        doBTagSF = false, calcBTagSF = false;
     bool runOnCondor = false;
     bool isSkim = false;
     std::string histFile = "", dataSets = "";
@@ -155,6 +179,7 @@ int main(int argc, char *argv[])
         {"doEventSelection",   no_argument, 0, 's'},
         {"doEventShape",       no_argument, 0, 'p'},
         {"do0Lep",             no_argument, 0, 'z'},
+        {"do1Lep",             no_argument, 0, 'o'},
         {"doStealthTT",        no_argument, 0, 'x'},
         {"calcBTagSF",         no_argument, 0, 'f'},
         {"doBTagSF",           no_argument, 0, 'g'},
@@ -166,7 +191,7 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-    while((opt = getopt_long(argc, argv, "btspzxfgcH:D:N:M:E:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "btspzoxfgcH:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
@@ -175,6 +200,7 @@ int main(int argc, char *argv[])
             case 's': doEventSelection = true;              break;
             case 'p': doEventShape     = true;              break;
             case 'z': do0Lep           = true;              break;
+            case 'o': do1Lep           = true;              break;
             case 'x': doStealthTT      = true;              break;
             case 'f': calcBTagSF       = true;              break;
             case 'g': doBTagSF         = true;              break;
@@ -198,48 +224,24 @@ int main(int argc, char *argv[])
 
     std::set<AnaSamples::FileSummary> vvf = setFS(dataSets, runOnCondor); 
     TFile* outfile = TFile::Open(histFile.c_str(), "RECREATE");
+
+    std::vector<std::pair<bool, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,bool,TFile*)>>> AnalyzerPairVec = {
+        {doBackground,     run<AnalyzeBackground>},
+        {doTopTagger,      run<AnalyzeTopTagger>},
+        {doEventSelection, run<AnalyzeEventSelection>},
+        {doEventShape,     run<AnalyzeEventShape>},
+        {do0Lep,           run<Analyze0Lep>},
+        {do1Lep,           run<Analyze1Lep>},
+        {doStealthTT,      run<AnalyzeStealthTopTagger>},
+        {doBTagSF,         run<AnalyzeBTagSF>},
+        {calcBTagSF,       run<CalculateBTagSF>},
+    }; 
     
     try
     {
-        if(doBackground)
+        for(auto& pair : AnalyzerPairVec)
         {
-            printf("\n\n running AnalyzeBackground\n\n" ) ;
-            run<AnalyzeBackground>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-        }
-        else if(doTopTagger)
-        {
-            printf("\n\n running AnalyzeTopTagger\n\n" ) ;
-            run<AnalyzeTopTagger>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-        }
-        else if(doEventSelection)
-        {
-            printf("\n\n running AnalyzeEventSelection\n\n") ;
-            run<AnalyzeEventSelection>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-        }
-        else if(doEventShape)
-        {
-            printf("\n\n running AnalyzeEventShape\n\n") ;
-            run<AnalyzeEventShape>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-        }
-        else if(do0Lep)
-        {
-            printf("\n\n running Analyze0Lep\n\n") ;
-            run<Analyze0Lep>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-        }
-        else if(doStealthTT)
-        {
-            printf("\n\n running AnalyzeStealthTopTagger\n\n") ;
-            run<AnalyzeStealthTopTagger>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-        }
-        else if(doBTagSF)
-        {
-            printf("\n\n running AnalyzeBTagSF\n\n") ;
-            run<AnalyzeBTagSF>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
-        }
-        else if(calcBTagSF)
-        {
-            printf("\n\n running CalculateBTagSF\n\n") ;
-            run<CalculateBTagSF>(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
+            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
         }
         outfile->Close();
     }
