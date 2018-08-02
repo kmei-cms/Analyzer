@@ -455,6 +455,8 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
 
 void AnalyzeEventSelection::WriteHistos(TFile* outfile)
 {
+    outfile->cd();
+
     for (const auto &p : my_histos) {
         p.second->Write();
     }
