@@ -48,6 +48,7 @@ template<typename H> std::unique_ptr<H> GetHisto(const std::string& histName, hi
     entry.histName = histName;
     entry.retrieveHistogram();
     h.reset( static_cast<H*>(entry.h->Clone()) );
+    h->SetFillColor(entry.color);
     return h;    
 }
 
@@ -58,7 +59,8 @@ void MVAPlot()
     //std::string path = "deepESM_v1";
     //std::string path = "deepESM_v2";
     //std::string path = "deepESM_GRfalse_1Layer";
-    std::string path = "deepESM_GRtrue_1Layer";
+    //std::string path = "deepESM_GRtrue_1Layer";
+    std::string path = "deepESM_GRfalse_1Layer_8Vars";
     
     std::vector<histInfo> bgEntries = {
         //{"DYJetsToLL_M-50", "condor/output-files/" + path + "/DYJetsToLL_M-50/DYJetsToLL_M-50.root", "hist", kBlack      },        
@@ -182,6 +184,7 @@ void MVAPlot()
             h1->GetYaxis()->SetTitle("Events");            
             h1->Scale(norm / h1->Integral() );
             h1->SetMaximum( h1->GetBinContent(h1->GetMaximumBin()) * 1.3);
+            h1->SetFillStyle(3005);
             h1->Draw("hist");
             leg->AddEntry(h1.get(), (entry.legEntry+"_"+v).c_str(), "F");
     
@@ -190,6 +193,7 @@ void MVAPlot()
             h2->Draw("hist same");
             leg->AddEntry(h2.get(), ("TT_"+v).c_str(), "F");
             leg->Draw();
+            h1->Draw("hist same");
             c->Print((entry.legEntry+"_"+v+"_.png").c_str());            
         }
     }
