@@ -54,7 +54,6 @@ template<typename H> std::unique_ptr<H> GetHisto(const std::string& histName, hi
 void MVAPlot()
 {
     TH1::AddDirectory(false);
-
     //std::string path = "lep0Ana_TestFisherV8-May-30-2018";
     //std::string path = "deepESM_v1";
     //std::string path = "deepESM_v2";
@@ -78,14 +77,6 @@ void MVAPlot()
         {"RPV_850", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", kRed + 1    },
     };
 
-
-    //std::vector<std::string> histNameVec = {
-    //    "h_fisher_0l_6j_HT500_ge2b","h_fisher_0l_7j_HT500_ge2b",
-    //    "h_fisher_0l_8j_HT500_ge2b","h_fisher_0l_9j_HT500_ge2b",
-    //    "h_fisher_0l_10j_HT500_ge2b","h_fisher_0l_11j_HT500_ge2b",
-    //    "h_fisher_0l_12j_HT500_ge2b","h_fisher_0l_13j_HT500_ge2b",
-    //    "h_fisher_0l_14j_HT500_ge2b","h_fisher_0l_15j_HT500_ge2b"
-    //};
     std::vector<std::string> histNameVec = {
         "h_deepESM_1l_6j_ge1b","h_deepESM_1l_7j_ge1b",
         "h_deepESM_1l_8j_ge1b","h_deepESM_1l_9j_ge1b",
@@ -134,17 +125,16 @@ void MVAPlot()
         double integral = baseline->Integral(0,i);
         double iMax = baseline->Integral(0,baseline->GetNbinsX());
         double ratio = integral/iMax;
-        if(0.240 < ratio && ratio < 0.260) std::cout<<"1/4 of Events: "<<baseline->GetBinCenter(i)<<std::endl;
-        if(0.495 < ratio && ratio < 0.505) std::cout<<"1/2 of Events: "<<baseline->GetBinCenter(i)<<std::endl;
-        if(0.745 < ratio && ratio < 0.755) std::cout<<"3/4 of Events: "<<baseline->GetBinCenter(i)<<std::endl;
+        if(abs(ratio - 0.25) < 0.005) std::cout<<"1/4 of Events: "<<baseline->GetBinCenter(i)<<std::endl;
+        if(abs(ratio - 0.50) < 0.050) std::cout<<"2/4 of Events: "<<baseline->GetBinCenter(i)<<std::endl;
+        if(abs(ratio - 0.75) < 0.015) std::cout<<"3/4 of Events: "<<baseline->GetBinCenter(i)<<std::endl;
         integralBaseline->SetBinContent(i, ratio);
     }
     integralBaseline->Draw("hist");
     c->Print(("Integral_"+baselineName+".png").c_str());    
-
+    
     //Make plots to show NJet dependance 
     std::vector<std::string> variables = {"deepESM", "fisher"};
-    //std::vector<std::string> variables = {"deepESM"};
     std::vector<histInfo> entries = sigEntries; 
     entries.push_back(bgEntries[0]);
     for(const auto& v : variables)
@@ -161,13 +151,13 @@ void MVAPlot()
             hprofile->Draw("same");
             hprofile->SetLineColor(kRed);
             hprofile->SetMarkerColor(kRed);
-
+    
             gStyle->SetPalette(kRainBow);
             gStyle->SetStatY(0.89);
             gStyle->SetStatX(0.35);
             //gStyle->SetStatW(0.3);
             //gStyle->SetStatH(0.2); 
-
+    
             gPad->SetLeftMargin(0.12);
             gPad->SetRightMargin(0.15);
             gPad->SetTopMargin(0.08);
@@ -175,7 +165,7 @@ void MVAPlot()
             gPad->SetTicks(1,1);
             c->Print((entry.legEntry+"_"+v+"_nJetDependance.png").c_str());            
         }
-
+    
         for(auto& entry : sigEntries)
         {
             TLegend *leg = new TLegend(0.20, 0.76, 0.89, 0.88);
@@ -184,7 +174,7 @@ void MVAPlot()
             leg->SetLineWidth(1);
             leg->SetNColumns(3);
             leg->SetTextFont(42);
-
+    
             double norm = 1.0;
             std::unique_ptr<TH1> h1 = GetHisto<TH1>("h_"+v+"_1l_ge6j_ge1b", entry);
             h1->SetStats(0);
@@ -194,7 +184,7 @@ void MVAPlot()
             h1->SetMaximum( h1->GetBinContent(h1->GetMaximumBin()) * 1.3);
             h1->Draw("hist");
             leg->AddEntry(h1.get(), (entry.legEntry+"_"+v).c_str(), "F");
-
+    
             std::unique_ptr<TH1> h2 = GetHisto<TH1>("h_"+v+"_1l_ge6j_ge1b", bgEntries[0]);
             h2->Scale(norm / h2->Integral() );
             h2->Draw("hist same");
@@ -203,11 +193,51 @@ void MVAPlot()
             c->Print((entry.legEntry+"_"+v+"_.png").c_str());            
         }
     }
-
-    //Make Roc Plots
-    //std::unique_ptr<TH1> h = GetHisto<TH1>("h_deepESM_1l_ge6j_ge1b", sigEntries[0]);
-    //rocInfo deepESMRocInfo = { makeFisherVec(std::move(h)), sigEntries[0].legEntry, sigEntries[0].color};
-
+    
+    //Make input variable plots
+    std::vector<std::string> trainingVars = {"fwm2_top6","fwm3_top6","fwm4_top6","fwm5_top6","fwm6_top6","fwm7_top6","fwm8_top6","fwm9_top6","fwm10_top6","jmt_ev0_top6","jmt_ev1_top6","jmt_ev2_top6"};
+    for(const auto& v : trainingVars)
+    {
+        TLegend *leg = new TLegend(0.65, 0.80, 0.89, 0.88);
+        leg->SetFillStyle(0);
+        leg->SetBorderSize(0);
+        leg->SetLineWidth(1);
+        leg->SetNColumns(1);
+        leg->SetTextFont(42);
+    
+        double norm = 1.0;
+        std::unique_ptr<TH1> hBG = GetHisto<TH2>(v, bgEntries[0]);
+        hBG->Draw("hist");
+        hBG->SetStats(0);
+        hBG->SetFillColor(kBlue - 9);
+        hBG->Scale(norm / hBG->Integral() );
+        hBG->SetMaximum( hBG->GetBinContent(hBG->GetMaximumBin()) * 1.3);
+        hBG->GetYaxis()->SetTitle("A.U.");
+        hBG->GetXaxis()->SetTitle(v.c_str());
+        hBG->SetTitle( ("Input variable: "+v).c_str() );
+        leg->AddEntry(hBG.get() , "TT", "F");
+        std::unique_ptr<TH1> hSig = AddedHistos(v, sigEntries);
+        hSig->Scale(norm / hSig->Integral() );
+        hSig->Draw("hist same");
+        hSig->SetLineColor(kRed);
+        hSig->SetMarkerColor(kRed);
+        hSig->SetFillColor(kRed);
+        hSig->SetFillStyle(3005);
+        leg->AddEntry(hSig.get() , "Signal", "F");
+        leg->Draw();
+    
+        gStyle->SetStatY(0.89);
+        gStyle->SetStatX(0.35);
+        //gStyle->SetStatW(0.3);
+        //gStyle->SetStatH(0.2); 
+    
+        gPad->SetLeftMargin(0.12);
+        gPad->SetRightMargin(0.15);
+        gPad->SetTopMargin(0.08);
+        gPad->SetBottomMargin(0.12);
+        gPad->SetTicks(1,1);
+        c->Print((v+".png").c_str());                    
+    }
 
     delete c;
 }
