@@ -89,11 +89,10 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerDerivedVar<bool>("blind",true);
 
         // Define classes/functions that add variables on the fly
-        std::shared_ptr<RunTopTagger> rtt;
         if ( !isSkim ) 
         {
-            rtt = std::make_shared<RunTopTagger>();
-            tr.registerFunction( std::move(*rtt) );
+            RunTopTagger rtt;
+            tr.registerFunction( std::move(rtt) );
         }
         //if( runtype == "MC" ) 
         //{
