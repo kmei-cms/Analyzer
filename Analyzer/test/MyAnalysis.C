@@ -105,24 +105,24 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         //}
         Muon muon;
         Electron electron;
-        MakeMVAVariables makeMVAVariables(false, myVarSuffix);
         Jet jet(myVarSuffix);
         BJet bjet(myVarSuffix);
         RunFisher runFisher("v3",myVarSuffix);
-        DeepEventShape deepEventShape;
         CommonVariables commonVariables;
         Baseline baseline;
+        MakeMVAVariables makeMVAVariables(false, myVarSuffix);
+        DeepEventShape deepEventShape;
 
         // Register classes/functions that add variables on the fly
         tr.registerFunction( std::move(muon) );
         tr.registerFunction( std::move(electron) );
-        tr.registerFunction( std::move(makeMVAVariables) );
         tr.registerFunction( std::move(jet) );
         tr.registerFunction( std::move(bjet) );
         tr.registerFunction( std::move(runFisher) );
-        tr.registerFunction( std::move(deepEventShape) );
         tr.registerFunction( std::move(commonVariables) );
         tr.registerFunction( std::move(baseline) );
+        tr.registerFunction( std::move(makeMVAVariables) );
+        tr.registerFunction( std::move(deepEventShape) );
 
         // Loop over all of the events and fill histos
         a.Loop(tr, weight, maxEvts);
