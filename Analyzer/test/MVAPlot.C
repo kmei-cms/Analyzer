@@ -60,8 +60,13 @@ void MVAPlot()
     //std::string path = "deepESM_v2";
     //std::string path = "deepESM_GRfalse_1Layer";
     //std::string path = "deepESM_GRtrue_1Layer";
-    std::string path = "deepESM_GRfalse_1Layer_8Vars";
-    
+    //std::string path = "deepESM_GRfalse_1Layer_8Vars";
+    //std::string path = "deepESM_GRtrue_1Layer_8Vars";
+    //std::string path = "deepESM_GRtrue_1Layer_9Vars_nJets";
+    //std::string path = "deepESM_GRfalse_1Layer_9Vars_nJets";    
+    //std::string path = "deepESM_GRtrue15-2_4Vars_1Layer";
+    std::string path = "deepESM_GRtrue15-20_4Vars_1Layer";
+
     std::vector<histInfo> bgEntries = {
         //{"DYJetsToLL_M-50", "condor/output-files/" + path + "/DYJetsToLL_M-50/DYJetsToLL_M-50.root", "hist", kBlack      },        
         //{"Rare",            "condor/output-files/" + path + "/Rare/Rare.root",                       "hist", kCyan + 1   },
@@ -100,6 +105,7 @@ void MVAPlot()
         wSum += nE*mean;
         nEvts += nE;
         means.push_back(mean);
+        histo->Scale(1.0 / histo->Integral() );
         histo->Draw("hist");        
         c->Print(("all_MVA_"+name+".png").c_str());    
     }

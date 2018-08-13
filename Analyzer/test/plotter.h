@@ -380,7 +380,7 @@ public:
     }
 
     void plotFisher(const std::vector<std::string>& histNameVec, const std::string& histTitle, const std::string& xAxisLabel, 
-                    const std::string& yAxisLabel = "Events",    const bool isLogY = false,    const int fixedJetBin = -1,  
+                    const std::string& yAxisLabel = "Events",    const bool isLogY = false,    const int fixedJetBin = -1, const std::string name = "Fisher",
                     int rebin = -1, const double xmin = 999.9, const double xmax = -999.9, double lumi = 36100)
     {
         //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
@@ -409,7 +409,7 @@ public:
         
         //Setup color and name for fisher plots
         std::vector<int> color = {kRed,kBlue,kGreen+2,kMagenta};
-        std::vector<std::string> fisherNames = {"Fisher Bin 1","Fisher Bin 2","Fisher Bin 3","Fisher Bin 4"};
+        std::vector<std::string> fisherNames = {name+" Bin 1",name+" Bin 2",name+" Bin 3",name+" Bin 4"};
 
         //get maximum from histos and fill TLegend
         double min = 0.0;
@@ -493,8 +493,8 @@ public:
         //drawLables(lumi);
 
         //save new plot to file
-        c->Print( ("outputPlots/fisher_" + histTitle + ".pdf").c_str() );
-        c->Print( ("outputPlots/fisher_" + histTitle + ".png").c_str() );
+        c->Print( ("outputPlots/"+name+"_" + histTitle + ".pdf").c_str() );
+        c->Print( ("outputPlots/"+name+"_" + histTitle + ".png").c_str() );
 
         //clean up dynamic memory
         delete c;
@@ -506,8 +506,8 @@ public:
     }
 
     void plotRatioFisher(const std::vector<std::string>& histNameVec, const std::string& histTitle, const std::string& xAxisLabel, 
-                    const std::string& yAxisLabel = "Events",    const bool isLogY = false,  
-                    int rebin = -1, const double xmin = 999.9, const double xmax = -999.9, double lumi = 36100)
+                         const std::string& yAxisLabel = "Events",    const bool isLogY = false,  const int start = 6, const std::string name = "Fisher",
+                         int rebin = -1, const double xmin = 999.9, const double xmax = -999.9, double lumi = 36100)
     {
         //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
         TH1::AddDirectory(false);
@@ -535,7 +535,7 @@ public:
         
         //Setup color and name for fisher plots
         std::vector<int> color = {kRed,kBlue,kGreen+2,kMagenta};
-        std::vector<std::string> fisherNames = {"Fisher Bin 1","Fisher Bin 2","Fisher Bin 3","Fisher Bin 4"};
+        std::vector<std::string> fisherNames = {name+" Bin 1",name+" Bin 2",name+" Bin 3",name+" Bin 4"};
 
         //get maximum from histos and fill TLegend
         double min = 0.0;
@@ -577,7 +577,7 @@ public:
                 auto getErrorRatioSq = [](int i, TH1* h){return pow(h->GetBinError(i)/h->GetBinContent(i),2);};
                 double val = hbgSum->GetBinContent(i+1) / hbgSum->GetBinContent(i);
                 double error = val*sqrt( getErrorRatioSq(i+1, hbgSum) + getErrorRatioSq(i, hbgSum) );
-                if(hbgSum->GetBinContent(i) == 0 || hbgSum->GetBinContent(i+1) == 0) 
+                if(hbgSum->GetBinContent(i) == 0 || hbgSum->GetBinContent(i+1) == 0 || i <= (start+1)) 
                 {
                     hbgRatioSum->SetBinContent(i, 0);
                 }
@@ -618,8 +618,8 @@ public:
         //drawLables(lumi);
 
         //save new plot to file
-        c->Print( ("outputPlots/fisherRatio_" + histTitle + ".pdf").c_str() );
-        c->Print( ("outputPlots/fisherRatio_" + histTitle + ".png").c_str() );
+        c->Print( ("outputPlots/"+name+"Ratio_" + histTitle + ".pdf").c_str() );
+        c->Print( ("outputPlots/"+name+"Ratio_" + histTitle + ".png").c_str() );
 
         //clean up dynamic memory
         delete c;
