@@ -89,38 +89,40 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerDerivedVar<bool>("blind",true);
 
         // Define classes/functions that add variables on the fly
-        std::shared_ptr<RunTopTagger> rtt;
-        if ( !isSkim ) rtt = std::make_shared<RunTopTagger>();
-
-        RunFisher runFisher("v3",myVarSuffix);
-        //if( runtype == "MC" ) {
+        if ( !isSkim ) 
+        {
+            RunTopTagger rtt;
+            tr.registerFunction( std::move(rtt) );
+        }
+        //if( runtype == "MC" ) 
+        //{
         //    BTagCorrector bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
         //    Pileup_Sys pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
+        //    ScaleFactors scaleFactors;
         //    tr.registerFunction( std::move(bTagCorrector) );
         //    tr.registerFunction( std::move(pileup) );
+        //    tr.registerFunction( std::move(scaleFactors) );
         //}
         Muon muon;
         Electron electron;
-        MakeMVAVariables makeMVAVariables(false, myVarSuffix);
         Jet jet(myVarSuffix);
         BJet bjet(myVarSuffix);
-        DeepEventShape deepEventShape;
-        ScaleFactors scaleFactors;
+        RunFisher runFisher("v3",myVarSuffix);
         CommonVariables commonVariables;
         Baseline baseline;
+        MakeMVAVariables makeMVAVariables(false, myVarSuffix);
+        DeepEventShape deepEventShape;
 
         // Register classes/functions that add variables on the fly
-        if ( !isSkim ) tr.registerFunction( std::move(*rtt) );
         tr.registerFunction( std::move(muon) );
         tr.registerFunction( std::move(electron) );
-        tr.registerFunction( std::move(makeMVAVariables) );
         tr.registerFunction( std::move(jet) );
         tr.registerFunction( std::move(bjet) );
         tr.registerFunction( std::move(runFisher) );
-        tr.registerFunction( std::move(deepEventShape) );
         tr.registerFunction( std::move(commonVariables) );
-        tr.registerFunction( std::move(scaleFactors) );
         tr.registerFunction( std::move(baseline) );
+        tr.registerFunction( std::move(makeMVAVariables) );
+        tr.registerFunction( std::move(deepEventShape) );
 
         // Loop over all of the events and fill histos
         a.Loop(tr, weight, maxEvts);
