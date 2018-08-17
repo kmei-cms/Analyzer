@@ -109,8 +109,8 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         BJet bjet(myVarSuffix);
         RunFisher runFisher("v3",myVarSuffix);
         CommonVariables commonVariables;
-        Baseline baseline;
         MakeMVAVariables makeMVAVariables(false, myVarSuffix);
+        Baseline baseline;
         DeepEventShape deepEventShape;
 
         // Register classes/functions that add variables on the fly
@@ -120,8 +120,8 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerFunction( std::move(bjet) );
         tr.registerFunction( std::move(runFisher) );
         tr.registerFunction( std::move(commonVariables) );
-        tr.registerFunction( std::move(baseline) );
         tr.registerFunction( std::move(makeMVAVariables) );
+        tr.registerFunction( std::move(baseline) );
         tr.registerFunction( std::move(deepEventShape) );
 
         // Loop over all of the events and fill histos
