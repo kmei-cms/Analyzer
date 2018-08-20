@@ -121,6 +121,8 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerFunction( std::move(bjet) );
         tr.registerFunction( std::move(runFisher) );
         tr.registerFunction( std::move(commonVariables) );
+        if(runtype != "Data")
+            tr.registerFunction( std::move(scaleFactors) );
         tr.registerFunction( std::move(baseline) );
         tr.registerFunction( std::move(makeMVAVariables) );
         tr.registerFunction( std::move(deepEventShape) );
@@ -195,7 +197,11 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
+<<<<<<< HEAD
     while((opt = getopt_long(argc, argv, "bwtspzoxfgcH:D:N:M:E:", long_options, &option_index)) != -1)
+=======
+    while((opt = getopt_long(argc, argv, "bwtspzxfgcH:D:N:M:E:", long_options, &option_index)) != -1)
+>>>>>>> Add flag for new analyzer and temporarily disable scale factors
     {
         switch(opt)
         {
