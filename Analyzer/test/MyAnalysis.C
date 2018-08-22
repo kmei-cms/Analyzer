@@ -9,8 +9,8 @@
 #include "Analyzer/Analyzer/include/Analyze0Lep.h"
 #include "Analyzer/Analyzer/include/Analyze1Lep.h"
 #include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
-#include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
-#include "Analyzer/Analyzer/include/CalculateBTagSF.h"
+//#include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
+//#include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 
 #include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
 #include "SusyAnaTools/Tools/BTagCorrector.h"
@@ -183,8 +183,8 @@ int main(int argc, char *argv[])
         {"do0Lep",             no_argument, 0, 'z'},
         {"do1Lep",             no_argument, 0, 'o'},
         {"doStealthTT",        no_argument, 0, 'x'},
-        {"calcBTagSF",         no_argument, 0, 'f'},
-        {"doBTagSF",           no_argument, 0, 'g'},
+//        {"calcBTagSF",         no_argument, 0, 'f'},
+//        {"doBTagSF",           no_argument, 0, 'g'},
         {"condor",             no_argument, 0, 'c'},
         {"histFile",     required_argument, 0, 'H'},
         {"dataSets",     required_argument, 0, 'D'},
@@ -204,8 +204,8 @@ int main(int argc, char *argv[])
             case 'z': do0Lep           = true;              break;
             case 'o': do1Lep           = true;              break;
             case 'x': doStealthTT      = true;              break;
-            case 'f': calcBTagSF       = true;              break;
-            case 'g': doBTagSF         = true;              break;
+//            case 'f': calcBTagSF       = true;              break;
+//            case 'g': doBTagSF         = true;              break;
             case 'c': runOnCondor      = true;              break;
             case 'H': histFile         = optarg;            break;
             case 'D': dataSets         = optarg;            break;
@@ -235,8 +235,8 @@ int main(int argc, char *argv[])
         {do0Lep,           run<Analyze0Lep>},
         {do1Lep,           run<Analyze1Lep>},
         {doStealthTT,      run<AnalyzeStealthTopTagger>},
-        {doBTagSF,         run<AnalyzeBTagSF>},
-        {calcBTagSF,       run<CalculateBTagSF>},
+//        {doBTagSF,         run<AnalyzeBTagSF>},
+//        {calcBTagSF,       run<CalculateBTagSF>},
     }; 
     
     try
