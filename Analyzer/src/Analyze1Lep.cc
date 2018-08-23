@@ -56,6 +56,13 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
     my_histos.emplace("jmt_ev0_top6", std::make_shared<TH1D>("jmt_ev0_top6","jmt_ev0_top6", 50, 0, 1 ) );
     my_histos.emplace("jmt_ev1_top6", std::make_shared<TH1D>("jmt_ev1_top6","jmt_ev1_top6", 50, 0, 1 ) );
     my_histos.emplace("jmt_ev2_top6", std::make_shared<TH1D>("jmt_ev2_top6","jmt_ev2_top6", 50, 0, 1 ) );
+    for(unsigned int i = 1; i <= 6 ; i++) //Bad hard code
+    {
+        my_histos.emplace("Jet_pt_"+std::to_string(i),  std::make_shared<TH1D>(("Jet_pt_"+std::to_string(i)).c_str(),("Jet_pt_"+std::to_string(i)).c_str(), 300, 0, 3000 ));
+        my_histos.emplace("Jet_eta_"+std::to_string(i), std::make_shared<TH1D>(("Jet_eta_"+std::to_string(i)).c_str(),("Jet_eta_"+std::to_string(i)).c_str(), 100, -6, 6 ));
+        my_histos.emplace("Jet_phi_"+std::to_string(i), std::make_shared<TH1D>(("Jet_phi_"+std::to_string(i)).c_str(),("Jet_phi_"+std::to_string(i)).c_str(), 160, -8, 8 ));
+        my_histos.emplace("Jet_m_"+std::to_string(i),   std::make_shared<TH1D>(("Jet_m_"+std::to_string(i)).c_str(),("Jet_m_"+std::to_string(i)).c_str(), 300, 0, 3000 ));
+    }
 
     for(auto& mycut : cutMap)
     {
@@ -161,6 +168,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& jmt_ev2_top6         = tr.getVar<double>("jmt_ev2_top6");
         const auto& BestCombo            = tr.getVar<std::pair<TLorentzVector, TLorentzVector>>("BestCombo");
         const auto& MegaJetsMatched      = tr.getVar<bool>("MegaJetsTopsGenMatched");
+        const auto& Jets_cm_top6         = tr.getVec<TLorentzVector>("Jets_cm_top6");
         double bestComboAvgMass = ( BestCombo.first.M() + BestCombo.second.M() )/2;
         double bestComboMassDiff = BestCombo.first.M() - BestCombo.second.M();
         double bestComboAvgPt = ( BestCombo.first.Pt() + BestCombo.second.Pt() )/2;
@@ -572,6 +580,13 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             my_histos["jmt_ev0_top6"]->Fill(jmt_ev0_top6, eventweight);
             my_histos["jmt_ev1_top6"]->Fill(jmt_ev1_top6, eventweight);
             my_histos["jmt_ev2_top6"]->Fill(jmt_ev2_top6, eventweight);
+            for(unsigned int i = 0; i < Jets_cm_top6.size(); i++)
+            {
+                my_histos["Jet_pt_"+std::to_string(i+1)]->Fill(static_cast<double>(Jets_cm_top6.at(i).Pt()), eventweight);
+                my_histos["Jet_eta_"+std::to_string(i+1)]->Fill(static_cast<double>(Jets_cm_top6.at(i).Eta()), eventweight);
+                my_histos["Jet_phi_"+std::to_string(i+1)]->Fill(static_cast<double>(Jets_cm_top6.at(i).Phi()), eventweight);
+                my_histos["Jet_m_"+std::to_string(i+1)]->Fill(static_cast<double>(Jets_cm_top6.at(i).M()), eventweight);
+            }
         }
 
     } // end of event loop
