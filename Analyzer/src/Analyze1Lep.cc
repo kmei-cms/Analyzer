@@ -73,6 +73,7 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
         my_histos.emplace("h_fisher_1l_"+mycut.first,std::make_shared<TH1D>(("h_fisher_1l_"+mycut.first).c_str(),("h_fisher_1l_"+mycut.first).c_str(), fB, -0.5, 0.5));
         my_histos.emplace("h_deepESM_1l_"+mycut.first,std::make_shared<TH1D>(("h_deepESM_1l_"+mycut.first).c_str(),("h_deepESM_1l_"+mycut.first).c_str(), fB, 0.0, 1.0));
         my_histos.emplace("h_BestComboMass_1l_"+mycut.first,std::make_shared<TH1D>(("h_BestComboMass_1l_"+mycut.first).c_str(),("h_BestComboMass_1l_"+mycut.first).c_str(), 300, 0, 3000));
+        my_histos.emplace("h_genBestComboMass_1l_"+mycut.first,std::make_shared<TH1D>(("h_genBestComboMass_1l_"+mycut.first).c_str(),("h_genBestComboMass_1l_"+mycut.first).c_str(), 300, 0, 3000));
         my_histos.emplace("h_BestComboPt_1l_"+mycut.first,std::make_shared<TH1D>(("h_BestComboPt_1l_"+mycut.first).c_str(),("h_BestComboPt_1l_"+mycut.first).c_str(), 300, 0.0, 3000));
         my_histos.emplace("h_BestComboMassDiff_1l_"+mycut.first,std::make_shared<TH1D>(("h_BestComboMassDiff_1l_"+mycut.first).c_str(),("h_BestComboMassDiff_1l_"+mycut.first).c_str(), 500, -500, 500));
         my_histos.emplace("h_BestComboRelDiff_1l_"+mycut.first ,std::make_shared<TH1D>(("h_BestComboRelDiff_1l_"+mycut.first).c_str(),("h_BestComboRelDiff_1l_"+mycut.first).c_str(), 400, -2, 2));
@@ -173,6 +174,8 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         double bestComboMassDiff = BestCombo.first.M() - BestCombo.second.M();
         double bestComboAvgPt = ( BestCombo.first.Pt() + BestCombo.second.Pt() )/2;
         double bestComboRelDiff = bestComboMassDiff / bestComboAvgMass;
+        const auto& genBestCombo         = tr.getVar<std::pair<TLorentzVector, TLorentzVector>>("genBestCombo");
+        double genComboAvgMass = ( genBestCombo.first.M() + genBestCombo.second.M() )/2;
 
         // ------------------------
         // -- Print event number
@@ -297,10 +300,11 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"ge2t"                        , pass_1l && pass_ge2t                                                     },
             {"ge6j_ge2b"                   , pass_1l && pass_njet_pt45 && pass_njet_pt45_2btag                        },
             {"ge6j_ge1b"                   , passBaseline1l_Good                                                      },                         
-            {"ge6j_ge1b_d1"                , passBaseline1l_Good && deepESM_bin1                                       },                         
-            {"ge6j_ge1b_d2"                , passBaseline1l_Good && deepESM_bin2                                       },                         
-            {"ge6j_ge1b_d3"                , passBaseline1l_Good && deepESM_bin3                                       },                         
-            {"ge6j_ge1b_d4"                , passBaseline1l_Good && deepESM_bin4                                       },                         
+            {"ge6j_ge1b_ge8esm"            , passBaseline1l_Good && deepESM_val >= 0.8                                 },                         
+            {"ge6j_ge1b_d1"                , passBaseline1l_Good && deepESM_bin1                                      },                         
+            {"ge6j_ge1b_d2"                , passBaseline1l_Good && deepESM_bin2                                      },                         
+            {"ge6j_ge1b_d3"                , passBaseline1l_Good && deepESM_bin3                                      },                         
+            {"ge6j_ge1b_d4"                , passBaseline1l_Good && deepESM_bin4                                      },                         
             {"6j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 6                                   },
             {"7j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 7                                   },
             {"8j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 8                                   },
@@ -460,6 +464,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_histos["h_fisher_1l_"  +kv.first]->Fill(fisher_val, eventweight);
                 my_histos["h_deepESM_1l_"  +kv.first]->Fill(deepESM_val, eventweight);
                 my_histos["h_BestComboMass_1l_"+kv.first]->Fill(bestComboAvgMass, eventweight);
+                my_histos["h_genBestComboMass_1l_"+kv.first]->Fill(genComboAvgMass, eventweight);
                 my_histos["h_BestComboPt_1l_"+kv.first]->Fill(bestComboAvgPt, eventweight);
                 my_histos["h_BestComboMassDiff_1l_"+kv.first]->Fill(bestComboMassDiff, eventweight);
                 my_histos["h_BestComboRelDiff_1l_"+kv.first]->Fill(bestComboRelDiff, eventweight);
