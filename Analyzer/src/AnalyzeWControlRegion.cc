@@ -31,6 +31,7 @@ void AnalyzeWControlRegion::InitHistos(const std::map<std::string, bool>& cutMap
     {
         my_histos.emplace("h_njets_"+mycut.first,std::make_shared<TH1D>(("h_njets_"+mycut.first).c_str(),("h_njets_"+mycut.first).c_str(),15,0,15));
         my_histos.emplace("h_nbjets_"+mycut.first,std::make_shared<TH1D>(("h_nbjets_"+mycut.first).c_str(),("h_nbjets_"+mycut.first).c_str(),5,0,5));
+        my_histos.emplace("h_nbjets_loose_"+mycut.first,std::make_shared<TH1D>(("h_nbjets_loose_"+mycut.first).c_str(),("h_nbjets_loose_"+mycut.first).c_str(),5,0,5));
         my_histos.emplace("h_met_"+mycut.first,std::make_shared<TH1D>(("h_met_"+mycut.first).c_str(),("h_met_"+mycut.first).c_str(),50,0,500));
         my_histos.emplace("h_mT_"+mycut.first,std::make_shared<TH1D>(("h_mT_"+mycut.first).c_str(),("h_mT_"+mycut.first).c_str(),40,0,200));
         my_histos.emplace("h_HT_"+mycut.first,std::make_shared<TH1D>(("h_HT_"+mycut.first).c_str(),("h_HT_"+mycut.first).c_str(),30,0,1500));
@@ -55,34 +56,32 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
 {
     while(tr.getNextEvent())
     {
-        //const auto& ntops                   = tr.getVar<int>("ntops");
-        //const auto& ntops_3jet              = tr.getVar<int>("ntops_3jet");
-        //const auto& ntops_2jet              = tr.getVar<int>("ntops_2jet");
-        //const auto& ntops_1jet              = tr.getVar<int>("ntops_1jet");
         const auto& runtype                 = tr.getVar<std::string>("runtype");
         const auto& filetag                 = tr.getVar<std::string>("filetag");
         const auto& JetID                   = tr.getVar<bool>("JetID");
         const auto& passTrigger             = tr.getVar<bool>("passTrigger");
 
+        const auto& Jets                    = tr.getVec<TLorentzVector>("Jets");
+        const auto& Jets_CSV                = tr.getVec<double>("Jets_bDiscriminatorCSV");
         const auto& NGoodJets_pt30          = tr.getVar<int>("NGoodJets_pt30");
-        const auto& GoodJets_pt30           = tr.getVec<TLorentzVector>("GoodJets_pt30");
-        const auto& GoodJets_pt30_CSV       = tr.getVec<double>("GoodJets_pt30_bDiscriminatorCSV");
-        //const auto& NJets_pt45          = tr.getVar<int>("NJets_pt45");
-        //const auto& BJets_pt30          = tr.getVec<TLorentzVector>("BJets_pt30");
-        //const auto& NBJets_pt30         = tr.getVar<int>("NBJets_pt30");
-        //const auto& BJets_pt45          = tr.getVec<TLorentzVector>("BJets_pt45");
-        //const auto& NBJets_pt45         = tr.getVar<int>("NBJets_pt45");
-        const auto& NGoodBJets_pt30     = tr.getVar<int>("NGoodBJets_pt30");
-        const auto& NGoodBJets_pt30_loose     = tr.getVar<int>("NGoodBJets_pt30_loose");
+        const auto& GoodJets_pt30           = tr.getVec<bool>("GoodJets_pt30");
+        const auto& NGoodBJets_pt30         = tr.getVar<int>("NGoodBJets_pt30");
+        const auto& GoodBJets_pt30          = tr.getVec<bool>("GoodBJets_pt30");
+        const auto& NGoodBJets_pt30_loose   = tr.getVar<int>("NGoodBJets_pt30_loose");
+        const auto& GoodBJets_pt30_loose    = tr.getVec<bool>("GoodBJets_pt30_loose");
+
         const auto& GoodLeptons         = tr.getVec<TLorentzVector>("GoodLeptons");
         const auto& NGoodLeptons        = tr.getVar<int>("NGoodLeptons");
-        const auto& GoodMuons           = tr.getVec<TLorentzVector>("GoodMuons");
+        
+        const auto& Muons               = tr.getVec<TLorentzVector>("Muons");
+        const auto& MuonsMTW            = tr.getVec<double>("MuonsMTW");
+        const auto& GoodMuons           = tr.getVec<bool>("GoodMuons");
         const auto& NGoodMuons          = tr.getVar<int>("NGoodMuons");
-        const auto& GoodMuonsMTW        = tr.getVec<double>("GoodMuonsMTW");
-        const auto& GoodElectrons       = tr.getVec<TLorentzVector>("GoodElectrons");
+        const auto& Electrons           = tr.getVec<TLorentzVector>("Electrons");
+        const auto& ElectronsMTW        = tr.getVec<double>("ElectronsMTW");
+        const auto& GoodElectrons       = tr.getVec<bool>("GoodElectrons");
         const auto& NGoodElectrons      = tr.getVar<int>("NGoodElectrons");
-        const auto& GoodElectronsMTW    = tr.getVec<double>("GoodElectronsMTW");
-        //const auto& HT_trigger          = tr.getVar<double>("HT_trigger");
+        
         const auto& Mbl                 = tr.getVar<double>("Mbl");
         const auto& HT                  = tr.getVar<double>("HT");
         const auto& MET                 = tr.getVar<double>("MET");
@@ -131,27 +130,62 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
 
         // jet cuts
         bool pass_0b = NGoodBJets_pt30 == 0;
+        bool pass_0b_loose = NGoodBJets_pt30_loose == 0;
         // compute dphi with highest pT jet
         double dphi = -1;
         if (NGoodJets_pt30 > 0)
         {
-            dphi = utility::calcDPhi(METPhi,GoodJets_pt30[0].Phi());
+            for (int i = 0; i<Jets.size() ; ++i)
+            {
+                if(GoodJets_pt30[i])
+                {
+                    dphi = utility::calcDPhi(METPhi,Jets[i].Phi());
+                    break;
+                }
+            }
         }
+        bool pass_dphi = dphi > 0.5; 
+
         std::vector<double> Mbl_all;
         double Mbl_maxCSV = -1;
         double Mbl_maxpT = -1;
         if (pass_1l && NGoodJets_pt30 > 0)
         {
-            Mbl_maxpT = (GoodLeptons[0]+GoodJets_pt30[0]).M();
-            int maxCSV_index = 0;
-            for (int i=0; i<NGoodJets_pt30; ++i)
+            TLorentzVector Jet_maxpT;
+            for (int i = 0; i<Jets.size() ; ++i)
             {
-                if(GoodJets_pt30_CSV[i] > GoodJets_pt30_CSV[maxCSV_index])
+                if(GoodJets_pt30[i])
+                {
+                    Jet_maxpT = Jets[i];
+                    break;
+                }
+            }
+            Mbl_maxpT = (GoodLeptons[0]+Jet_maxpT).M();
+
+            int maxCSV_index = -1;
+            for (int i=0; i<Jets.size(); ++i)
+            {
+                if(!GoodJets_pt30[i]) continue;
+                if(maxCSV_index == -1)
                     maxCSV_index = i;
-                double temp = (GoodLeptons[0]+GoodJets_pt30[i]).M();
+                else if(Jets_CSV[i] > Jets_CSV[maxCSV_index])
+                    maxCSV_index = i;
+
+                double temp = (GoodLeptons[0]+Jets[i]).M();
                 Mbl_all.push_back(temp);
             }
-            Mbl_maxCSV = (GoodLeptons[0]+GoodJets_pt30[maxCSV_index]).M();
+            Mbl_maxCSV = (GoodLeptons[0]+Jets[maxCSV_index]).M();
+        }
+        bool pass_Mbl_maxpT = Mbl_maxpT > 30 && Mbl_maxpT < 180;
+        bool pass_Mbl_maxCSV = Mbl_maxCSV > 30 && Mbl_maxCSV < 180;
+        bool pass_Mbl_all = false;
+        for(double mbl : Mbl_all)
+        {
+            if (mbl > 30 && mbl < 180)
+            {
+                pass_Mbl_all = true;
+                break;
+            }
         }
 
         // -------------------
@@ -162,6 +196,15 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
             {"1l"                                 , goodEvent && pass_1l                                                             },
             {"1l_mT"                              , goodEvent && pass_1l && pass_mT                                                  },
             {"1l_mT_0b"                           , goodEvent && pass_1l && pass_mT && pass_0b                                       },
+            {"1l_mT_0b_dphi"                      , goodEvent && pass_1l && pass_mT && pass_0b && pass_dphi                          },
+            {"1l_mT_0b_dphi_mbl_maxpT"            , goodEvent && pass_1l && pass_mT && pass_0b && pass_dphi && pass_Mbl_maxpT        },
+            {"1l_mT_0b_dphi_mbl_maxCSV"           , goodEvent && pass_1l && pass_mT && pass_0b && pass_dphi && pass_Mbl_maxCSV       },
+            {"1l_mT_0b_dphi_mbl_all"              , goodEvent && pass_1l && pass_mT && pass_0b && pass_dphi && pass_Mbl_all          },
+            {"1l_mT_0b_loose"                           , goodEvent && pass_1l && pass_mT && pass_0b_loose                                       },
+            {"1l_mT_0b_loose_dphi"                      , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi                          },
+            {"1l_mT_0b_loose_dphi_mbl_maxpT"            , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && pass_Mbl_maxpT        },
+            {"1l_mT_0b_loose_dphi_mbl_maxCSV"           , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && pass_Mbl_maxCSV       },
+            {"1l_mT_0b_loose_dphi_mbl_all"              , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && pass_Mbl_all          },
         };
         
         // Initialize Histograms
@@ -178,25 +221,46 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
             {
                 my_histos["h_njets_"   +kv.first]->Fill(NGoodJets_pt30, eventweight);
                 my_histos["h_nbjets_"  +kv.first]->Fill(NGoodBJets_pt30, eventweight);
+                my_histos["h_nbjets_loose_"  +kv.first]->Fill(NGoodBJets_pt30_loose, eventweight);
                 my_histos["h_met_"     +kv.first]->Fill(MET, eventweight);
                 my_histos["h_mT_"      +kv.first]->Fill(mT, eventweight);
                 my_histos["h_HT_"      +kv.first]->Fill(HT, eventweight);
+                my_histos["h_dphi_"    +kv.first]->Fill(dphi, eventweight);
 
                 my_histos["h_lepton_pT_"   +kv.first]->Fill(GoodLeptons[0].Pt(), eventweight);
                 my_histos["h_lepton_eta_"  +kv.first]->Fill(GoodLeptons[0].Eta(), eventweight);
                 my_histos["h_lepton_phi_"  +kv.first]->Fill(GoodLeptons[0].Phi(), eventweight);
 
+                my_histos["h_Mbl_maxCSV_"  +kv.first]->Fill(Mbl_maxCSV, eventweight);
+                my_histos["h_Mbl_maxpT_"  +kv.first]->Fill(Mbl_maxpT, eventweight);
+                for (double mbl: Mbl_all)
+                    my_histos["h_Mbl_all_"  +kv.first]->Fill(mbl, eventweight);
+
                 if (NGoodMuons > 0)
                 {
-                    my_histos["h_muon_pT_"   +kv.first]->Fill(GoodMuons[0].Pt(), eventweight);
-                    my_histos["h_muon_eta_"  +kv.first]->Fill(GoodMuons[0].Eta(), eventweight);
-                    my_histos["h_muon_phi_"  +kv.first]->Fill(GoodMuons[0].Phi(), eventweight);
+                    for (int m=0; m<Muons.size(); ++m)
+                    {
+                        if(GoodMuons[m])
+                        {
+                            my_histos["h_muon_pT_"   +kv.first]->Fill(Muons[m].Pt(), eventweight);
+                            my_histos["h_muon_eta_"  +kv.first]->Fill(Muons[m].Eta(), eventweight);
+                            my_histos["h_muon_phi_"  +kv.first]->Fill(Muons[m].Phi(), eventweight);
+                            break;
+                        }
+                    }
                 } 
                 if (NGoodElectrons > 0)
                 {
-                    my_histos["h_electron_pT_"   +kv.first]->Fill(GoodElectrons[0].Pt(), eventweight);
-                    my_histos["h_electron_eta_"  +kv.first]->Fill(GoodElectrons[0].Eta(), eventweight);
-                    my_histos["h_electron_phi_"  +kv.first]->Fill(GoodElectrons[0].Phi(), eventweight);
+                    for (int m=0; m<Electrons.size(); ++m)
+                    {
+                        if(GoodElectrons[m])
+                        {
+                            my_histos["h_electron_pT_"   +kv.first]->Fill(Electrons[m].Pt(), eventweight);
+                            my_histos["h_electron_eta_"  +kv.first]->Fill(Electrons[m].Eta(), eventweight);
+                            my_histos["h_electron_phi_"  +kv.first]->Fill(Electrons[m].Phi(), eventweight);
+                            break;
+                        }
+                    }
                 }
             }
         }
