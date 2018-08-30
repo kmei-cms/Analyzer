@@ -178,7 +178,7 @@ public:
 
         //save new plot to file
         c->Print(("outputPlots/" + histName + ".pdf").c_str());
-        c->Print(("outputPlots/" + histName + ".png").c_str());
+        //c->Print(("outputPlots/" + histName + ".png").c_str());
 
         //clean up dynamic memory
         delete c;
@@ -275,7 +275,7 @@ public:
 
         //save new plot to file
         c->Print(("outputPlots/fisherNorm_" + histName + ".pdf").c_str());
-        c->Print(("outputPlots/fisherNorm_" + histName + ".png").c_str());
+        //c->Print(("outputPlots/fisherNorm_" + histName + ".png").c_str());
 
         //clean up dynamic memory
         delete c;
@@ -364,12 +364,12 @@ public:
         if(firstOnly) 
         {
             c->Print(("outputPlots/fisherRocCompare_" + histName + ".pdf").c_str());
-            c->Print(("outputPlots/fisherRocCompare_" + histName + ".png").c_str());
+            //c->Print(("outputPlots/fisherRocCompare_" + histName + ".png").c_str());
         }
         else
         {
             c->Print(("outputPlots/fisherRoc_" + histName + ".pdf").c_str());
-            c->Print(("outputPlots/fisherRoc_" + histName + ".png").c_str());
+            //c->Print(("outputPlots/fisherRoc_" + histName + ".png").c_str());
         }
         //c->Print("test.pdf");
 
@@ -494,7 +494,7 @@ public:
 
         //save new plot to file
         c->Print( ("outputPlots/"+name+"_" + histTitle + ".pdf").c_str() );
-        c->Print( ("outputPlots/"+name+"_" + histTitle + ".png").c_str() );
+        //c->Print( ("outputPlots/"+name+"_" + histTitle + ".png").c_str() );
 
         //clean up dynamic memory
         delete c;
@@ -619,7 +619,7 @@ public:
 
         //save new plot to file
         c->Print( ("outputPlots/"+name+"Ratio_" + histTitle + ".pdf").c_str() );
-        c->Print( ("outputPlots/"+name+"Ratio_" + histTitle + ".png").c_str() );
+        //c->Print( ("outputPlots/"+name+"Ratio_" + histTitle + ".png").c_str() );
 
         //clean up dynamic memory
         delete c;
