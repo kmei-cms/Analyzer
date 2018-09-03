@@ -14,7 +14,7 @@ void setHistInfo(const std::string& path, std::vector<histInfo>& data, std::vect
     //this uses the initializer syntax to initialize the histInfo object
     //               leg entry root file                 draw options  draw color
     data = {
-        {"Data_JetHT", "condor/output-files/" + path + "/Data_JetHT/Data_JetHT.root", "PEX0", kBlack},
+        //{"Data_JetHT", "condor/output-files/" + path + "/Data_JetHT/Data_JetHT.root", "PEX0", kBlack},
     };
     
     std::vector<int> bgColor = {kRed, kBlack, kBlue};
@@ -25,8 +25,9 @@ void setHistInfo(const std::string& path, std::vector<histInfo>& data, std::vect
     };
     sig = {
         {"RPV 850", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", sigColor[color]        },
-        //{"SYY 650", "condor/output-files/" + path + "/AllSignal/MyAnalysis_stealth_stop_650_SYY_0.root", "hist", kBlue      },
-        {"RPV 350", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_350_0.root",         "hist", kGreen       },
+        {"SYY 650", "condor/output-files/" + path + "/AllSignal/MyAnalysis_stealth_stop_650_SYY_0.root", "hist", kRed      },
+        {"RPV 450", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_450_0.root",         "hist", kCyan + 2       },
+        {"RPV 350", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_350_0.root",         "hist", kGreen + 2       },
     };
 }
 
@@ -39,7 +40,9 @@ int main()
     //std::string pathGRtrue = "deepESM_GRtrue_1Layer_8Vars";
     //std::string pathGRtrue = "deepESM_GRtrue_1Layer_9Vars_nJets";
     //std::string pathGRtrue = "deepESM_GRtrue15-2_4Vars_1Layer";
-    std::string pathGRtrue = "deepESM_GRtrue15-20_4Vars_1Layer";
+    //std::string pathGRtrue = "deepESM_GRtrue15-20_4Vars_1Layer";
+    //std::string pathGRtrue = "deepESM_7Vars_GRtrue_HighWeight";
+    std::string pathGRtrue = "deepESM_7Vars_GRtrue_HighWeight_noMETMassVar";
     std::string pathFisher = "deepESM_GRfalse_1Layer";
 
     std::vector<histInfo> data_GRfalse, bg_GRfalse, sig_GRfalse;
@@ -80,14 +83,14 @@ int main()
         //"2t"                          
         //"ge1t"                        
         //"ge2t"                        
-        //"ge6j_ge2b"                   
-        "ge6j_ge1b"                                            
-        //"ge6j_ge1b_1t"                
-        //"ge6j_ge1b_ge1t"                                                    
-        //"ge6j_ge1b_1t1"               
-        //"ge6j_ge1b_1t2"               
-        //"ge6j_ge1b_1t3"               
-        //"ge6j_ge1b_1t2or3"            
+        "ge6j_ge1b",
+            "ge6j_ge2b",                 
+            "ge6j_ge1b_1t",
+            "ge6j_ge1b_ge1t",                                                    
+            //"ge6j_ge1b_1t1"               
+            //"ge6j_ge1b_1t2"               
+            //"ge6j_ge1b_1t3"               
+            //"ge6j_ge1b_1t2or3"            
         //"ge6j_ge1b_ge1t1"             
         //"ge6j_ge1b_ge1t2"             
         //"ge6j_ge1b_ge1t3"             
@@ -102,6 +105,12 @@ int main()
         //
         //// Make Normalized fisher
         //pltSkim.plotNormFisher("h_fisher_1l_"+mycut, "fisher value" , "Events", false, 4);
+        plt.plotNormFisher("h_BestComboMass_1l_"+mycut, "Average BestCombo Mass [GeV]" , "Events", false, 4);
+        plt.plotNormFisher("h_BestComboPt_1l_"+mycut, "Average BestCombo P_{T} [GeV]" , "Events", false, 4);
+        plt.plotNormFisher("h_BestComboMassDiff_1l_"+mycut, "BestCombo Mass Diff [GeV]" , "Events", false, 2);
+        plt.plotNormFisher("h_BestComboMassDiffAbs_1l_"+mycut, "BestCombo Mass Abs(Diff) [GeV]" , "Events", false, 2);
+        plt.plotNormFisher("h_BestComboRelDiff_1l_"+mycut, "BestCombo Rel Diff" , "Events", false, 2);
+        plt.plotNormFisher("h_BestComboRelDiffAbs_1l_"+mycut, "BestCombo Rel Abs(Diff)" , "Events", false, 2);
         //
         // - Make  Roc Curve
         //pltRoc.plotRocFisher("h_deepESM_1l_"+mycut,"Background","Signal", false);

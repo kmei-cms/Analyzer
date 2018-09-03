@@ -56,6 +56,13 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
     my_histos.emplace("jmt_ev0_top6", std::make_shared<TH1D>("jmt_ev0_top6","jmt_ev0_top6", 50, 0, 1 ) );
     my_histos.emplace("jmt_ev1_top6", std::make_shared<TH1D>("jmt_ev1_top6","jmt_ev1_top6", 50, 0, 1 ) );
     my_histos.emplace("jmt_ev2_top6", std::make_shared<TH1D>("jmt_ev2_top6","jmt_ev2_top6", 50, 0, 1 ) );
+    for(unsigned int i = 1; i <= 6 ; i++) //Bad hard code
+    {
+        my_histos.emplace("Jet_pt_"+std::to_string(i),  std::make_shared<TH1D>(("Jet_pt_"+std::to_string(i)).c_str(),("Jet_pt_"+std::to_string(i)).c_str(), 300, 0, 3000 ));
+        my_histos.emplace("Jet_eta_"+std::to_string(i), std::make_shared<TH1D>(("Jet_eta_"+std::to_string(i)).c_str(),("Jet_eta_"+std::to_string(i)).c_str(), 100, -6, 6 ));
+        my_histos.emplace("Jet_phi_"+std::to_string(i), std::make_shared<TH1D>(("Jet_phi_"+std::to_string(i)).c_str(),("Jet_phi_"+std::to_string(i)).c_str(), 160, -8, 8 ));
+        my_histos.emplace("Jet_m_"+std::to_string(i),   std::make_shared<TH1D>(("Jet_m_"+std::to_string(i)).c_str(),("Jet_m_"+std::to_string(i)).c_str(), 300, 0, 3000 ));
+    }
 
     for(auto& mycut : cutMap)
     {
@@ -65,10 +72,25 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
         my_histos.emplace("h_bdt_1l_"+mycut.first,   std::make_shared<TH1D>(("h_bdt_1l_"+mycut.first).c_str(),("h_bdt_1l_"+mycut.first).c_str(), 40, -0.5, 0.5));
         my_histos.emplace("h_fisher_1l_"+mycut.first,std::make_shared<TH1D>(("h_fisher_1l_"+mycut.first).c_str(),("h_fisher_1l_"+mycut.first).c_str(), fB, -0.5, 0.5));
         my_histos.emplace("h_deepESM_1l_"+mycut.first,std::make_shared<TH1D>(("h_deepESM_1l_"+mycut.first).c_str(),("h_deepESM_1l_"+mycut.first).c_str(), fB, 0.0, 1.0));
-    
+        my_histos.emplace("h_BestComboMass_1l_"+mycut.first,std::make_shared<TH1D>(("h_BestComboMass_1l_"+mycut.first).c_str(),("h_BestComboMass_1l_"+mycut.first).c_str(), 300, 0, 3000));
+        my_histos.emplace("h_genBestComboMass_1l_"+mycut.first,std::make_shared<TH1D>(("h_genBestComboMass_1l_"+mycut.first).c_str(),("h_genBestComboMass_1l_"+mycut.first).c_str(), 300, 0, 3000));
+        my_histos.emplace("h_BestComboPt_1l_"+mycut.first,std::make_shared<TH1D>(("h_BestComboPt_1l_"+mycut.first).c_str(),("h_BestComboPt_1l_"+mycut.first).c_str(), 300, 0.0, 3000));
+        my_histos.emplace("h_BestComboMassDiff_1l_"+mycut.first,std::make_shared<TH1D>(("h_BestComboMassDiff_1l_"+mycut.first).c_str(),("h_BestComboMassDiff_1l_"+mycut.first).c_str(), 500, -500, 500));
+        my_histos.emplace("h_BestComboRelDiff_1l_"+mycut.first ,std::make_shared<TH1D>(("h_BestComboRelDiff_1l_"+mycut.first).c_str(),("h_BestComboRelDiff_1l_"+mycut.first).c_str(), 400, -2, 2));
+        my_histos.emplace("h_BestComboMassDiffAbs_1l_"+mycut.first,std::make_shared<TH1D>(("h_BestComboMassDiffAbs_1l_"+mycut.first).c_str(),("h_BestComboMassDiffAbs_1l_"+mycut.first).c_str(), 250, 0, 500));
+        my_histos.emplace("h_BestComboRelDiffAbs_1l_"+mycut.first ,std::make_shared<TH1D>(("h_BestComboRelDiffAbs_1l_"+mycut.first).c_str(),("h_BestComboRelDiffAbs_1l_"+mycut.first).c_str(), 200, 0, 2));
+        my_histos.emplace("h_GenMBestComboMass_1l_"+mycut.first,std::make_shared<TH1D>(("h_GenMBestComboMass_1l_"+mycut.first).c_str(),("h_GenMBestComboMass_1l_"+mycut.first).c_str(), 300, 0, 3000));
+        my_histos.emplace("h_GenMBestComboPt_1l_"+mycut.first,std::make_shared<TH1D>(("h_GenMBestComboPt_1l_"+mycut.first).c_str(),("h_GenMBestComboPt_1l_"+mycut.first).c_str(), 300, 0.0, 3000));
+        my_histos.emplace("h_GenMBestComboMassDiff_1l_"+mycut.first,std::make_shared<TH1D>(("h_GenMBestComboMassDiff_1l_"+mycut.first).c_str(),("h_GenMBestComboMassDiff_1l_"+mycut.first).c_str(), 500, -500, 500));
+        my_histos.emplace("h_GenMBestComboRelDiff_1l_"+mycut.first ,std::make_shared<TH1D>(("h_GenMBestComboRelDiff_1l_"+mycut.first).c_str(),("h_GenMBestComboRelDiff_1l_"+mycut.first).c_str(), 400, -2, 2));
+        my_histos.emplace("h_GenMBestComboMassDiffAbs_1l_"+mycut.first,std::make_shared<TH1D>(("h_GenMBestComboMassDiffAbs_1l_"+mycut.first).c_str(),("h_GenMBestComboMassDiffAbs_1l_"+mycut.first).c_str(), 250, 0, 500));
+        my_histos.emplace("h_GenMBestComboRelDiffAbs_1l_"+mycut.first ,std::make_shared<TH1D>(("h_GenMBestComboRelDiffAbs_1l_"+mycut.first).c_str(),("h_GenMBestComboRelDiffAbs_1l_"+mycut.first).c_str(), 200, 0, 2));
+        my_histos.emplace("h_GenMNjets_1l_"+mycut.first, std::make_shared<TH1D>(("h_GenMNjets_1l_"+mycut.first).c_str(),("h_GenMNjets_1l_"+mycut.first).c_str(), 20, 0, 20));    
+
         my_2d_histos.emplace("h_njets_bdt_1l_"+mycut.first, std::make_shared<TH2D>(("h_njets_bdt_1l_"+mycut.first).c_str(),("h_njets_bdt_1l_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
         my_2d_histos.emplace("h_njets_fisher_1l_"+mycut.first, std::make_shared<TH2D>(("h_njets_fisher_1l_"+mycut.first).c_str(),("h_njets_fisher_1l_"+mycut.first).c_str(), 15, 0, 15, fB, -0.5, 0.5));
         my_2d_histos.emplace("h_njets_deepESM_1l_"+mycut.first, std::make_shared<TH2D>(("h_njets_deepESM_1l_"+mycut.first).c_str(),("h_njets_deepESM_1l_"+mycut.first).c_str(), 15, 0, 15, fB, 0.0, 1.0));
+        my_2d_histos.emplace("h_njets_BestComboMass_1l_"+mycut.first, std::make_shared<TH2D>(("h_njets_BestComboMass_1l_"+mycut.first).c_str(),("h_njets_BestComboMass_1l_"+mycut.first).c_str(), 15, 0, 15, 300, 0, 3000));
         my_tp_histos.emplace("hTp_njets_fisher_1l_"+mycut.first, std::make_shared<TProfile>(("hTp_njets_fisher_1l_"+mycut.first).c_str(),("hTp_njets_fisher_1l_"+mycut.first).c_str(), 15, 0, 15, -0.5, 0.5));
         my_tp_histos.emplace("hTp_njets_deepESM_1l_"+mycut.first, std::make_shared<TProfile>(("hTp_njets_deepESM_1l_"+mycut.first).c_str(),("hTp_njets_deepESM_1l_"+mycut.first).c_str(), 15, 0, 15, 0.0, 1.0));
 
@@ -145,6 +167,16 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& jmt_ev0_top6         = tr.getVar<double>("jmt_ev0_top6");
         const auto& jmt_ev1_top6         = tr.getVar<double>("jmt_ev1_top6");
         const auto& jmt_ev2_top6         = tr.getVar<double>("jmt_ev2_top6");
+        const auto& BestCombo            = tr.getVar<std::pair<TLorentzVector, TLorentzVector>>("BestCombo");
+        const auto& MegaJetsMatched      = tr.getVar<bool>("MegaJetsTopsGenMatched");
+        const auto& Jets_cm_top6         = tr.getVec<TLorentzVector>("Jets_cm_top6");
+        double bestComboAvgMass = ( BestCombo.first.M() + BestCombo.second.M() )/2;
+        double bestComboMassDiff = BestCombo.first.M() - BestCombo.second.M();
+        double bestComboAvgPt = ( BestCombo.first.Pt() + BestCombo.second.Pt() )/2;
+        double bestComboRelDiff = bestComboMassDiff / bestComboAvgMass;
+        const auto& genBestCombo         = tr.getVar<std::pair<TLorentzVector, TLorentzVector>>("genBestCombo");
+        double genComboAvgMass = ( genBestCombo.first.M() + genBestCombo.second.M() )/2;
+
         // ------------------------
         // -- Print event number
         // -----------------------        
@@ -268,10 +300,11 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"ge2t"                        , pass_1l && pass_ge2t                                                     },
             {"ge6j_ge2b"                   , pass_1l && pass_njet_pt45 && pass_njet_pt45_2btag                        },
             {"ge6j_ge1b"                   , passBaseline1l_Good                                                      },                         
-            {"ge6j_ge1b_d1"                , passBaseline1l_Good && deepESM_bin1                                       },                         
-            {"ge6j_ge1b_d2"                , passBaseline1l_Good && deepESM_bin2                                       },                         
-            {"ge6j_ge1b_d3"                , passBaseline1l_Good && deepESM_bin3                                       },                         
-            {"ge6j_ge1b_d4"                , passBaseline1l_Good && deepESM_bin4                                       },                         
+            {"ge6j_ge1b_ge8esm"            , passBaseline1l_Good && deepESM_val >= 0.8                                 },                         
+            {"ge6j_ge1b_d1"                , passBaseline1l_Good && deepESM_bin1                                      },                         
+            {"ge6j_ge1b_d2"                , passBaseline1l_Good && deepESM_bin2                                      },                         
+            {"ge6j_ge1b_d3"                , passBaseline1l_Good && deepESM_bin3                                      },                         
+            {"ge6j_ge1b_d4"                , passBaseline1l_Good && deepESM_bin4                                      },                         
             {"6j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 6                                   },
             {"7j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 7                                   },
             {"8j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 8                                   },
@@ -430,10 +463,28 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_histos["h_bdt_1l_"     +kv.first]->Fill(eventshape_bdt_val, eventweight);
                 my_histos["h_fisher_1l_"  +kv.first]->Fill(fisher_val, eventweight);
                 my_histos["h_deepESM_1l_"  +kv.first]->Fill(deepESM_val, eventweight);
+                my_histos["h_BestComboMass_1l_"+kv.first]->Fill(bestComboAvgMass, eventweight);
+                my_histos["h_genBestComboMass_1l_"+kv.first]->Fill(genComboAvgMass, eventweight);
+                my_histos["h_BestComboPt_1l_"+kv.first]->Fill(bestComboAvgPt, eventweight);
+                my_histos["h_BestComboMassDiff_1l_"+kv.first]->Fill(bestComboMassDiff, eventweight);
+                my_histos["h_BestComboRelDiff_1l_"+kv.first]->Fill(bestComboRelDiff, eventweight);
+                my_histos["h_BestComboMassDiffAbs_1l_"+kv.first]->Fill(abs(bestComboMassDiff), eventweight);
+                my_histos["h_BestComboRelDiffAbs_1l_"+kv.first]->Fill(abs(bestComboRelDiff), eventweight);
+                if(MegaJetsMatched)
+                {
+                    my_histos["h_GenMBestComboMass_1l_"+kv.first]->Fill(bestComboAvgMass, eventweight);
+                    my_histos["h_GenMBestComboPt_1l_"+kv.first]->Fill(bestComboAvgPt, eventweight);
+                    my_histos["h_GenMBestComboMassDiff_1l_"+kv.first]->Fill(bestComboMassDiff, eventweight);
+                    my_histos["h_GenMBestComboRelDiff_1l_"+kv.first]->Fill(bestComboRelDiff, eventweight);
+                    my_histos["h_GenMBestComboMassDiffAbs_1l_"+kv.first]->Fill(abs(bestComboMassDiff), eventweight);
+                    my_histos["h_GenMBestComboRelDiffAbs_1l_"+kv.first]->Fill(abs(bestComboRelDiff), eventweight);
+                    my_histos["h_GenMNjets_1l_"+kv.first]->Fill(NJets_pt30, eventweight);
+                }
 
                 my_2d_histos["h_njets_bdt_1l_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
                 my_2d_histos["h_njets_fisher_1l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
                 my_2d_histos["h_njets_deepESM_1l_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
+                my_2d_histos["h_njets_BestComboMass_1l_"+kv.first]->Fill(NJets_pt30, bestComboAvgMass, eventweight);
                 my_tp_histos["hTp_njets_fisher_1l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
                 my_tp_histos["hTp_njets_deepESM_1l_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
 
@@ -534,6 +585,13 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             my_histos["jmt_ev0_top6"]->Fill(jmt_ev0_top6, eventweight);
             my_histos["jmt_ev1_top6"]->Fill(jmt_ev1_top6, eventweight);
             my_histos["jmt_ev2_top6"]->Fill(jmt_ev2_top6, eventweight);
+            for(unsigned int i = 0; i < Jets_cm_top6.size(); i++)
+            {
+                my_histos["Jet_pt_"+std::to_string(i+1)]->Fill(static_cast<double>(Jets_cm_top6.at(i).Pt()), eventweight);
+                my_histos["Jet_eta_"+std::to_string(i+1)]->Fill(static_cast<double>(Jets_cm_top6.at(i).Eta()), eventweight);
+                my_histos["Jet_phi_"+std::to_string(i+1)]->Fill(static_cast<double>(Jets_cm_top6.at(i).Phi()), eventweight);
+                my_histos["Jet_m_"+std::to_string(i+1)]->Fill(static_cast<double>(Jets_cm_top6.at(i).M()), eventweight);
+            }
         }
 
     } // end of event loop
