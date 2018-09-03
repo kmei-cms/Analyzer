@@ -9,8 +9,8 @@
 #include "Analyzer/Analyzer/include/Analyze0Lep.h"
 #include "Analyzer/Analyzer/include/Analyze1Lep.h"
 #include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
-//#include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
-//#include "Analyzer/Analyzer/include/CalculateBTagSF.h"
+#include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
+#include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 
 #include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
 #include "SusyAnaTools/Tools/BTagCorrector.h"
@@ -31,6 +31,7 @@
 #include "TH1D.h"
 #include "TFile.h"
 #include "TChain.h"
+#include "TGraph.h"
 
 #include <iostream>
 #include <getopt.h>
@@ -94,15 +95,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
             RunTopTagger rtt;
             tr.registerFunction( std::move(rtt) );
         }
-        //if( runtype == "MC" ) 
-        //{
-        //    BTagCorrector bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
-        //    Pileup_Sys pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
-        //    ScaleFactors scaleFactors;
-        //    tr.registerFunction( std::move(bTagCorrector) );
-        //    tr.registerFunction( std::move(pileup) );
-        //    tr.registerFunction( std::move(scaleFactors) );
-        //}
+        
         Muon muon;
         Electron electron;
         Jet jet(myVarSuffix);
@@ -111,7 +104,8 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         CommonVariables commonVariables;
         Baseline baseline;
         MakeMVAVariables makeMVAVariables(false, myVarSuffix);
-        DeepEventShape deepEventShape;
+        //DeepEventShape deepEventShape;
+        
 
         // Register classes/functions that add variables on the fly
         tr.registerFunction( std::move(muon) );
@@ -122,8 +116,17 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerFunction( std::move(commonVariables) );
         tr.registerFunction( std::move(baseline) );
         tr.registerFunction( std::move(makeMVAVariables) );
-        tr.registerFunction( std::move(deepEventShape) );
+    //    tr.registerFunction( std::move(deepEventShape) );
 
+        if( runtype == "MC" ) 
+        {
+            BTagCorrector bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
+            Pileup_Sys pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
+            ScaleFactors scaleFactors("ElectronScaleFactors_Run2016.root","allINone_leptonSF_Moriond17.root");
+            tr.registerFunction( std::move(bTagCorrector) );
+            tr.registerFunction( std::move(pileup) );
+            tr.registerFunction( std::move(scaleFactors) );
+        }
         // Loop over all of the events and fill histos
         a.Loop(tr, weight, maxEvts);
 
@@ -183,8 +186,8 @@ int main(int argc, char *argv[])
         {"do0Lep",             no_argument, 0, 'z'},
         {"do1Lep",             no_argument, 0, 'o'},
         {"doStealthTT",        no_argument, 0, 'x'},
-//        {"calcBTagSF",         no_argument, 0, 'f'},
-//        {"doBTagSF",           no_argument, 0, 'g'},
+        {"calcBTagSF",         no_argument, 0, 'f'},
+        {"doBTagSF",           no_argument, 0, 'g'},
         {"condor",             no_argument, 0, 'c'},
         {"histFile",     required_argument, 0, 'H'},
         {"dataSets",     required_argument, 0, 'D'},
@@ -204,8 +207,8 @@ int main(int argc, char *argv[])
             case 'z': do0Lep           = true;              break;
             case 'o': do1Lep           = true;              break;
             case 'x': doStealthTT      = true;              break;
-//            case 'f': calcBTagSF       = true;              break;
-//            case 'g': doBTagSF         = true;              break;
+            case 'f': calcBTagSF       = true;              break;
+            case 'g': doBTagSF         = true;              break;
             case 'c': runOnCondor      = true;              break;
             case 'H': histFile         = optarg;            break;
             case 'D': dataSets         = optarg;            break;
@@ -235,8 +238,8 @@ int main(int argc, char *argv[])
         {do0Lep,           run<Analyze0Lep>},
         {do1Lep,           run<Analyze1Lep>},
         {doStealthTT,      run<AnalyzeStealthTopTagger>},
-//        {doBTagSF,         run<AnalyzeBTagSF>},
-//        {calcBTagSF,       run<CalculateBTagSF>},
+        {doBTagSF,         run<AnalyzeBTagSF>},
+        {calcBTagSF,       run<CalculateBTagSF>},
     }; 
     
     try
