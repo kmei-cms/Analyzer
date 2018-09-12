@@ -28,13 +28,15 @@ if (! -f sampleSets.cfg) then
 endif
 
 # Check repos for updates
-echo ""
-echo "|--------------------------------------|"
-echo "|      Checking repos for updates      |"
-echo "|--------------------------------------|"
-echo "If it asks for your password too many times you can do something like the following:"
-echo "         ssh-add ~/.ssh/id_rsa"
-status.sh
+if ("$1" == "-s") then
+    echo ""
+    echo "|--------------------------------------|"
+    echo "|      Checking repos for updates      |"
+    echo "|--------------------------------------|"
+    echo "If it asks for your password too many times you can do something like the following:"
+    echo "         ssh-add ~/.ssh/id_rsa"
+    status.sh
+endif
 
 ## Copy over filelists if they are not present or have changed
 #echo""
