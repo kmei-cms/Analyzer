@@ -60,6 +60,8 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
         const auto& filetag                 = tr.getVar<std::string>("filetag");
         const auto& JetID                   = tr.getVar<bool>("JetID");
         const auto& passTrigger             = tr.getVar<bool>("passTrigger");
+        const auto& passTriggerMuon         = tr.getVar<bool>("passTriggerMuon");
+        const auto& passTriggerElectron     = tr.getVar<bool>("passTriggerElectron");
 
         const auto& Jets                    = tr.getVec<TLorentzVector>("Jets");
         const auto& Jets_CSV                = tr.getVec<double>("Jets_bDiscriminatorCSV");
@@ -112,8 +114,8 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
         if(!goodEvent) continue;
 
         // lepton cuts
-        bool pass_1mu = (runtype != "Data" || filetag == "Data_SingleMuon")     && NGoodMuons == 1;
-        bool pass_1el = (runtype != "Data" || filetag == "Data_SingleElectron") && NGoodElectrons == 1;
+        bool pass_1mu = (runtype != "Data" || filetag == "Data_SingleMuon")     && NGoodMuons == 1 && passTriggerMuon;
+        bool pass_1el = (runtype != "Data" || filetag == "Data_SingleElectron") && NGoodElectrons == 1 && passTriggerElectron;
         bool pass_1l = pass_1mu || pass_1el;
         // compute mT 
         TLorentzVector metLV;
@@ -195,17 +197,20 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
         const std::map<std::string, bool> cut_map 
         {
             {"1l"                                 , goodEvent && pass_1l                                                             },
+            {"1l_met"                             , goodEvent && pass_1l && MET>30                                                   },
             {"1l_mT"                              , goodEvent && pass_1l && pass_mT                                                  },
-            {"1l_mT_0b"                           , goodEvent && pass_1l && pass_mT && pass_0b                                       },
-            {"1l_mT_0b_dphi"                      , goodEvent && pass_1l && pass_mT && pass_0b && pass_dphi                          },
-            {"1l_mT_0b_dphi_mbl_maxpT"            , goodEvent && pass_1l && pass_mT && pass_0b && pass_dphi && !pass_Mbl_maxpT        },
-            {"1l_mT_0b_dphi_mbl_maxCSV"           , goodEvent && pass_1l && pass_mT && pass_0b && pass_dphi && !pass_Mbl_maxCSV       },
-            {"1l_mT_0b_dphi_mbl_all"              , goodEvent && pass_1l && pass_mT && pass_0b && pass_dphi && !pass_Mbl_all          },
+            {"1l_mT_met"                          , goodEvent && pass_1l && pass_mT && MET>30                                        },
+                //{"1l_mT_0b"                           , goodEvent && pass_1l && pass_mT && pass_0b                                       },
+                //{"1l_mT_0b_dphi"                      , goodEvent && pass_1l && pass_mT && pass_0b && pass_dphi                          },
+                //{"1l_mT_0b_dphi_mbl_maxpT"            , goodEvent && pass_1l && pass_mT && pass_0b && pass_dphi && !pass_Mbl_maxpT        },
+                //{"1l_mT_0b_dphi_mbl_maxCSV"           , goodEvent && pass_1l && pass_mT && pass_0b && pass_dphi && !pass_Mbl_maxCSV       },
+                //{"1l_mT_0b_dphi_mbl_all"              , goodEvent && pass_1l && pass_mT && pass_0b && pass_dphi && !pass_Mbl_all          },
             {"1l_mT_0b_loose"                           , goodEvent && pass_1l && pass_mT && pass_0b_loose                                       },
-            {"1l_mT_0b_loose_dphi"                      , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi                          },
-            {"1l_mT_0b_loose_dphi_mbl_maxpT"            , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && !pass_Mbl_maxpT        },
-            {"1l_mT_0b_loose_dphi_mbl_maxCSV"           , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && !pass_Mbl_maxCSV       },
-            {"1l_mT_0b_loose_dphi_mbl_all"              , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && !pass_Mbl_all          },
+            {"1l_mT_0b_loose_met"                       , goodEvent && pass_1l && pass_mT && pass_0b_loose && MET>30                             },
+            {"1l_mT_0b_loose_met_dphi"                  , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && MET>30                         },
+            {"1l_mT_0b_loose_met_dphi_mbl_maxpT"        , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && MET>30 && !pass_Mbl_maxpT        },
+            {"1l_mT_0b_loose_met_dphi_mbl_maxCSV"       , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && MET>30 && !pass_Mbl_maxCSV       },
+            {"1l_mT_0b_loose_met_dphi_mbl_all"          , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && MET>30 && !pass_Mbl_all          },
         };
         
         // Initialize Histograms
