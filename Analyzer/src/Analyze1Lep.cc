@@ -197,7 +197,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             const auto& Weight  = tr.getVar<double>("Weight");
             double lumi = 35900; // Lumi for 2016
             // Weight from NTuples            
-            eventweight = (1/3)*lumi*Weight;
+            eventweight = lumi*Weight;
         }
 
         // -------------------------------
