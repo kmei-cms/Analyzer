@@ -72,6 +72,7 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
         my_histos.emplace("h_bdt_"+mycut.first,   std::make_shared<TH1D>(("h_bdt_"+mycut.first).c_str(),("h_bdt_"+mycut.first).c_str(), 40, -0.5, 0.5));
         my_histos.emplace("h_fisher_"+mycut.first,std::make_shared<TH1D>(("h_fisher_"+mycut.first).c_str(),("h_fisher_"+mycut.first).c_str(), fB, -0.5, 0.5));
         my_histos.emplace("h_deepESM_"+mycut.first,std::make_shared<TH1D>(("h_deepESM_"+mycut.first).c_str(),("h_deepESM_"+mycut.first).c_str(), fB, 0.0, 1.0));
+        my_histos.emplace("h_photonPt_"+mycut.first,std::make_shared<TH1D>(("h_photonPt_"+mycut.first).c_str(),("h_photonPt_"+mycut.first).c_str(), 200, 0, 2000));
         my_histos.emplace("h_BestComboMass_"+mycut.first,std::make_shared<TH1D>(("h_BestComboMass_"+mycut.first).c_str(),("h_BestComboMass_"+mycut.first).c_str(), 300, 0, 3000));
         my_histos.emplace("h_genBestComboMass_"+mycut.first,std::make_shared<TH1D>(("h_genBestComboMass_"+mycut.first).c_str(),("h_genBestComboMass_"+mycut.first).c_str(), 300, 0, 3000));
         my_histos.emplace("h_BestComboPt_"+mycut.first,std::make_shared<TH1D>(("h_BestComboPt_"+mycut.first).c_str(),("h_BestComboPt_"+mycut.first).c_str(), 300, 0.0, 3000));
@@ -149,7 +150,9 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& passMadHT            = tr.getVar<bool>("passMadHT");
               auto  passBaseline1l_Good  = tr.getVar<bool>("passBaseline1l_Good");
         const auto& Mbl                  = tr.getVar<double>("Mbl");
-        passBaseline1l_Good = passBaseline1l_Good && Mbl>30 && Mbl<180;
+                    passBaseline1l_Good  = passBaseline1l_Good && Mbl>30 && Mbl<180;
+        const auto& Photons              = tr.getVec<TLorentzVector>("Photons");
+        const auto& GoodPhotons          = tr.getVec<bool>("GoodPhotons");
         const auto& NGoodPhotons         = tr.getVar<int>("NGoodPhotons");
         const auto& passBaseline1g_Good  = tr.getVar<bool>("passBaseline1photon_Good"); 
         const auto& deepESM_val          = tr.getVar<double>("deepESM_val");
@@ -204,6 +207,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // -- Define cuts
         // -------------------------------
 
+        bool pass_0l              = NGoodLeptons==0;
         bool pass_1l              = NGoodLeptons==1;
         bool pass_njet_pt45       = NJets_pt45>=6;
         bool pass_njet_pt45_1btag = NBJets_pt45 >= 1;
@@ -290,7 +294,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // -------------------                        
         const std::map<std::string, bool> cut_map_1l 
         {
-            {"1l_"                            , pass_1l                                                                  },
+            {"1l"                            , pass_1l                                                                  },
             {"1l_ge6j"                        , pass_1l && pass_njet_pt45                                                },
             {"1l_ge2b"                        , pass_1l && pass_njet_pt45_2btag                                          },
             {"1l_1t"                          , pass_1l && pass_1t                                                       },
@@ -456,7 +460,8 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"1l_ge6j_ge1b_ge2t22or23or33_d2" , passBaseline1l_Good && pass_ge2t22or23or33_d2                            },
             {"1l_ge6j_ge1b_ge2t22or23or33_d3" , passBaseline1l_Good && pass_ge2t22or23or33_d3                            },
             {"1l_ge6j_ge1b_ge2t22or23or33_d4" , passBaseline1l_Good && pass_ge2t22or23or33_d4                            },
-            {"0l_1g"                          , pass_1l && NGoodPhotons == 1                                             },
+            {"0l"                             , pass_0l                                                                  },
+            {"0l_1g"                          , pass_0l && NGoodPhotons == 1                                             },
             {"0l_ge7j_1g"                     , passBaseline1g_Good                                                      },
         };
 
@@ -479,7 +484,13 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_histos["h_nb_"      +kv.first]->Fill(NBJets, eventweight);
                 my_histos["h_bdt_"     +kv.first]->Fill(eventshape_bdt_val, eventweight);
                 my_histos["h_fisher_"  +kv.first]->Fill(fisher_val, eventweight);
-                my_histos["h_deepESM_"  +kv.first]->Fill(deepESM_val, eventweight);
+                my_histos["h_deepESM_" +kv.first]->Fill(deepESM_val, eventweight);
+                for(int i = 0; i < Photons.size(); i++)
+                {
+                    if(!GoodPhotons[i]) continue;
+                    double photonPt = Photons[i].Pt();
+                    my_histos["h_photonPt_"+kv.first]->Fill(photonPt, eventweight);
+                }
                 my_histos["h_BestComboMass_"+kv.first]->Fill(bestComboAvgMass, eventweight);
                 my_histos["h_genBestComboMass_"+kv.first]->Fill(genComboAvgMass, eventweight);
                 my_histos["h_BestComboPt_"+kv.first]->Fill(bestComboAvgPt, eventweight);
@@ -564,7 +575,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         my_histos["h_met"     ]->Fill(MET, eventweight);
         my_histos["h_bdt"     ]->Fill(eventshape_bdt_val, eventweight);
         my_histos["h_fisher"  ]->Fill(fisher_val, eventweight);
-        my_histos["h_deepESM"  ]->Fill(deepESM_val, eventweight);
+        my_histos["h_deepESM" ]->Fill(deepESM_val, eventweight);
         my_histos["h_njets"   ]->Fill(NJets_pt30, eventweight);
         my_histos["h_nb"      ]->Fill(NBJets, eventweight);
         my_histos["h_ntops"   ]->Fill(ntops, eventweight);        
@@ -578,7 +589,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             my_histos["blind_met"     ]->Fill(MET, eventweight);
             my_histos["blind_bdt"     ]->Fill(eventshape_bdt_val, eventweight);
             my_histos["blind_fisher"  ]->Fill(fisher_val, eventweight);
-            my_histos["blind_deepESM"  ]->Fill(deepESM_val, eventweight);
+            my_histos["blind_deepESM" ]->Fill(deepESM_val, eventweight);
             my_histos["blind_njets"   ]->Fill(NJets_pt30, eventweight);
             my_histos["blind_nb"      ]->Fill(NBJets, eventweight);
             my_histos["blind_ntops"   ]->Fill(ntops, eventweight);        
