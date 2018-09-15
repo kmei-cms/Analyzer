@@ -56,7 +56,7 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
     my_histos.emplace("jmt_ev0_top6", std::make_shared<TH1D>("jmt_ev0_top6","jmt_ev0_top6", 50, 0, 1 ) );
     my_histos.emplace("jmt_ev1_top6", std::make_shared<TH1D>("jmt_ev1_top6","jmt_ev1_top6", 50, 0, 1 ) );
     my_histos.emplace("jmt_ev2_top6", std::make_shared<TH1D>("jmt_ev2_top6","jmt_ev2_top6", 50, 0, 1 ) );
-    for(unsigned int i = 1; i <= 6 ; i++) //Bad hard code
+    for(unsigned int i = 1; i <= 7 ; i++) //Bad hard code
     {
         my_histos.emplace("Jet_pt_"+std::to_string(i),  std::make_shared<TH1D>(("Jet_pt_"+std::to_string(i)).c_str(),("Jet_pt_"+std::to_string(i)).c_str(), 300, 0, 3000 ));
         my_histos.emplace("Jet_eta_"+std::to_string(i), std::make_shared<TH1D>(("Jet_eta_"+std::to_string(i)).c_str(),("Jet_eta_"+std::to_string(i)).c_str(), 100, -6, 6 ));
@@ -300,7 +300,14 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"ge2t"                        , pass_1l && pass_ge2t                                                     },
             {"ge6j_ge2b"                   , pass_1l && pass_njet_pt45 && pass_njet_pt45_2btag                        },
             {"ge6j_ge1b"                   , passBaseline1l_Good                                                      },                         
-            {"ge6j_ge1b_ge8esm"            , passBaseline1l_Good && deepESM_val >= 0.8                                 },                         
+            {"ge6j_ge1b_ge5esm"            , passBaseline1l_Good && deepESM_val >= 0.5                                },                         
+            {"ge6j_ge1b_ge5-6esm"          , passBaseline1l_Good && deepESM_val >= 0.5 && deepESM_val < 0.6           },                         
+            {"ge6j_ge1b_ge6-7esm"          , passBaseline1l_Good && deepESM_val >= 0.6 && deepESM_val < 0.7           },                         
+            {"ge6j_ge1b_ge7-8esm"          , passBaseline1l_Good && deepESM_val >= 0.7 && deepESM_val < 0.8           },                         
+            {"ge6j_ge1b_ge8-95esm"         , passBaseline1l_Good && deepESM_val >= 0.8 && deepESM_val < 0.95          },                         
+            {"ge6j_ge1b_ge8esm"            , passBaseline1l_Good && deepESM_val >= 0.8                                },                         
+            {"ge6j_ge1b_ge95esm"           , passBaseline1l_Good && deepESM_val >= 0.95                               },                         
+            {"ge6j_ge1b_l8esm"             , passBaseline1l_Good && deepESM_val <  0.8                                },                         
             {"ge6j_ge1b_d1"                , passBaseline1l_Good && deepESM_bin1                                      },                         
             {"ge6j_ge1b_d2"                , passBaseline1l_Good && deepESM_bin2                                      },                         
             {"ge6j_ge1b_d3"                , passBaseline1l_Good && deepESM_bin3                                      },                         
@@ -317,6 +324,9 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"15j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 15                                  },
                                                  
             {"ge6j_ge1b_1t"                , passBaseline1l_Good && pass_1t                                           },
+            {"ge6j_ge1b_1t_ge8esm"         , passBaseline1l_Good && pass_1t && deepESM_val >= 0.8                     },                         
+            {"ge6j_ge1b_1t_ge95esm"        , passBaseline1l_Good && pass_1t && deepESM_val >= 0.95                    },                         
+            {"ge6j_ge1b_1t_l8esm"          , passBaseline1l_Good && pass_1t && deepESM_val <  0.8                     },                         
             {"ge6j_ge1b_1t_d1"             , passBaseline1l_Good && pass_1t_d1                                        },
             {"ge6j_ge1b_1t_d2"             , passBaseline1l_Good && pass_1t_d2                                        }, 
             {"ge6j_ge1b_1t_d3"             , passBaseline1l_Good && pass_1t_d3                                        }, 
@@ -364,6 +374,9 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"ge6j_ge1b_ge1t3_d4"          , passBaseline1l_Good && pass_ge1t3_d4                                     },
                                                  
             {"ge6j_ge1b_2t"                , passBaseline1l_Good && pass_2t                                           },
+            {"ge6j_ge1b_2t_ge8esm"         , passBaseline1l_Good && pass_2t && deepESM_val >= 0.8                     },                         
+            {"ge6j_ge1b_2t_ge95esm"        , passBaseline1l_Good && pass_2t && deepESM_val >= 0.95                    },                         
+            {"ge6j_ge1b_2t_l8esm"          , passBaseline1l_Good && pass_2t && deepESM_val <  0.8                     },                         
             {"ge6j_ge1b_2t_d1"             , passBaseline1l_Good && pass_2t_d1                                        },
             {"ge6j_ge1b_2t_d2"             , passBaseline1l_Good && pass_2t_d2                                        }, 
             {"ge6j_ge1b_2t_d3"             , passBaseline1l_Good && pass_2t_d3                                        }, 
