@@ -19,7 +19,7 @@
 
 #include "Framework/Framework/include/RunTopTagger.h"
 #include "Framework/Framework/include/RunFisher.h"
-#include "Framework/Framework/include/DeepEventShape.h"
+//#include "Framework/Framework/include/DeepEventShape.h"
 #include "Framework/Framework/include/MakeMVAVariables.h"
 #include "Framework/Framework/include/Muon.h"
 #include "Framework/Framework/include/Electron.h"
@@ -105,7 +105,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         CommonVariables commonVariables;
         MakeMVAVariables makeMVAVariables(false, myVarSuffix);
         Baseline baseline;
-        DeepEventShape deepEventShape;
+        //DeepEventShape deepEventShape;
 
         // Register classes/functions that add variables on the fly
         tr.registerFunction( std::move(muon) );
@@ -116,7 +116,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerFunction( std::move(commonVariables) );
         tr.registerFunction( std::move(makeMVAVariables) );
         tr.registerFunction( std::move(baseline) );
-        tr.registerFunction( std::move(deepEventShape) );
+        //tr.registerFunction( std::move(deepEventShape) );
 
         if( runtype == "MC" ) 
         {

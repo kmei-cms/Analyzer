@@ -46,7 +46,7 @@ INCLUDESDIRS    += -I$(TENSORFLOW_DIR)/include
 
 #OBJS       = $(patsubst %, $(ODIR)/%, $(OBJ))
 
-PROGRAMS = MyAnalysis  plot_0l plot_1l
+PROGRAMS = MySlimmedAnalysis  #plot_0l plot_1l
 
 all: mkobj sampPyWrap $(PROGRAMS)
 
@@ -132,6 +132,8 @@ $(ODIR)/%.o : $(WDIR)/%.cpp
 
 #MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/BTagCorrector.o $(ODIR)/PileupWeights.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/Analyze1Lep.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o
 MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/MakeNJetDists.o $(ODIR)/CalculateBTagSF.o $(ODIR)/AnalyzeBTagSF.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/BTagCorrector.o $(ODIR)/PileupWeights.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/Analyze1Lep.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o
+
+MySlimmedAnalysis: $(ODIR)/MySlimmedAnalysis.o $(ODIR)/MakeNJetDists.o $(ODIR)/CalculateBTagSF.o $(ODIR)/AnalyzeBTagSF.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/BTagCorrector.o $(ODIR)/PileupWeights.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/Analyze1Lep.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
 
 plot_0l: $(ODIR)/plot_0l.o
