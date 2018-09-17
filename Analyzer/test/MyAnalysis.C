@@ -24,6 +24,7 @@
 #include "Framework/Framework/include/Electron.h"
 #include "Framework/Framework/include/Jet.h"
 #include "Framework/Framework/include/BJet.h"
+#include "Framework/Framework/include/Photon.h"
 #include "Framework/Framework/include/ScaleFactors.h"
 #include "Framework/Framework/include/CommonVariables.h"
 #include "Framework/Framework/include/Baseline.h"
@@ -107,6 +108,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         Electron electron;
         Jet jet(myVarSuffix);
         BJet bjet(myVarSuffix);
+        Photon photon;
         RunFisher runFisher("v3",myVarSuffix);
         CommonVariables commonVariables;
         MakeMVAVariables makeMVAVariables(false, myVarSuffix);
@@ -118,6 +120,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerFunction( std::move(electron) );
         tr.registerFunction( std::move(jet) );
         tr.registerFunction( std::move(bjet) );
+        tr.registerFunction( std::move(photon) );
         tr.registerFunction( std::move(runFisher) );
         tr.registerFunction( std::move(commonVariables) );
         tr.registerFunction( std::move(makeMVAVariables) );
