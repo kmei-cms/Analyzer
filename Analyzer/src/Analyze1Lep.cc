@@ -66,46 +66,47 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
 
     for(auto& mycut : cutMap)
     {
-        my_histos.emplace("h_njets_1l_"+mycut.first, std::make_shared<TH1D>(("h_njets_1l_"+mycut.first).c_str(),("h_njets_1l_"+mycut.first).c_str(), 20, 0, 20));
-        my_histos.emplace("h_ntops_1l_"+mycut.first, std::make_shared<TH1D>(("h_ntops_1l_"+mycut.first).c_str(),("h_ntops_1l_"+mycut.first).c_str(), 10, 0, 10));
-        my_histos.emplace("h_nb_1l_"+mycut.first,    std::make_shared<TH1D>(("h_nb_1l_"+mycut.first).c_str(),("h_nb_1l_"+mycut.first).c_str(), 10, 0, 10));
-        my_histos.emplace("h_bdt_1l_"+mycut.first,   std::make_shared<TH1D>(("h_bdt_1l_"+mycut.first).c_str(),("h_bdt_1l_"+mycut.first).c_str(), 40, -0.5, 0.5));
-        my_histos.emplace("h_fisher_1l_"+mycut.first,std::make_shared<TH1D>(("h_fisher_1l_"+mycut.first).c_str(),("h_fisher_1l_"+mycut.first).c_str(), fB, -0.5, 0.5));
-        my_histos.emplace("h_deepESM_1l_"+mycut.first,std::make_shared<TH1D>(("h_deepESM_1l_"+mycut.first).c_str(),("h_deepESM_1l_"+mycut.first).c_str(), fB, 0.0, 1.0));
-        my_histos.emplace("h_BestComboMass_1l_"+mycut.first,std::make_shared<TH1D>(("h_BestComboMass_1l_"+mycut.first).c_str(),("h_BestComboMass_1l_"+mycut.first).c_str(), 300, 0, 3000));
-        my_histos.emplace("h_genBestComboMass_1l_"+mycut.first,std::make_shared<TH1D>(("h_genBestComboMass_1l_"+mycut.first).c_str(),("h_genBestComboMass_1l_"+mycut.first).c_str(), 300, 0, 3000));
-        my_histos.emplace("h_BestComboPt_1l_"+mycut.first,std::make_shared<TH1D>(("h_BestComboPt_1l_"+mycut.first).c_str(),("h_BestComboPt_1l_"+mycut.first).c_str(), 300, 0.0, 3000));
-        my_histos.emplace("h_BestComboMassDiff_1l_"+mycut.first,std::make_shared<TH1D>(("h_BestComboMassDiff_1l_"+mycut.first).c_str(),("h_BestComboMassDiff_1l_"+mycut.first).c_str(), 500, -500, 500));
-        my_histos.emplace("h_BestComboRelDiff_1l_"+mycut.first ,std::make_shared<TH1D>(("h_BestComboRelDiff_1l_"+mycut.first).c_str(),("h_BestComboRelDiff_1l_"+mycut.first).c_str(), 400, -2, 2));
-        my_histos.emplace("h_BestComboMassDiffAbs_1l_"+mycut.first,std::make_shared<TH1D>(("h_BestComboMassDiffAbs_1l_"+mycut.first).c_str(),("h_BestComboMassDiffAbs_1l_"+mycut.first).c_str(), 250, 0, 500));
-        my_histos.emplace("h_BestComboRelDiffAbs_1l_"+mycut.first ,std::make_shared<TH1D>(("h_BestComboRelDiffAbs_1l_"+mycut.first).c_str(),("h_BestComboRelDiffAbs_1l_"+mycut.first).c_str(), 200, 0, 2));
-        my_histos.emplace("h_GenMBestComboMass_1l_"+mycut.first,std::make_shared<TH1D>(("h_GenMBestComboMass_1l_"+mycut.first).c_str(),("h_GenMBestComboMass_1l_"+mycut.first).c_str(), 300, 0, 3000));
-        my_histos.emplace("h_GenMBestComboPt_1l_"+mycut.first,std::make_shared<TH1D>(("h_GenMBestComboPt_1l_"+mycut.first).c_str(),("h_GenMBestComboPt_1l_"+mycut.first).c_str(), 300, 0.0, 3000));
-        my_histos.emplace("h_GenMBestComboMassDiff_1l_"+mycut.first,std::make_shared<TH1D>(("h_GenMBestComboMassDiff_1l_"+mycut.first).c_str(),("h_GenMBestComboMassDiff_1l_"+mycut.first).c_str(), 500, -500, 500));
-        my_histos.emplace("h_GenMBestComboRelDiff_1l_"+mycut.first ,std::make_shared<TH1D>(("h_GenMBestComboRelDiff_1l_"+mycut.first).c_str(),("h_GenMBestComboRelDiff_1l_"+mycut.first).c_str(), 400, -2, 2));
-        my_histos.emplace("h_GenMBestComboMassDiffAbs_1l_"+mycut.first,std::make_shared<TH1D>(("h_GenMBestComboMassDiffAbs_1l_"+mycut.first).c_str(),("h_GenMBestComboMassDiffAbs_1l_"+mycut.first).c_str(), 250, 0, 500));
-        my_histos.emplace("h_GenMBestComboRelDiffAbs_1l_"+mycut.first ,std::make_shared<TH1D>(("h_GenMBestComboRelDiffAbs_1l_"+mycut.first).c_str(),("h_GenMBestComboRelDiffAbs_1l_"+mycut.first).c_str(), 200, 0, 2));
-        my_histos.emplace("h_GenMNjets_1l_"+mycut.first, std::make_shared<TH1D>(("h_GenMNjets_1l_"+mycut.first).c_str(),("h_GenMNjets_1l_"+mycut.first).c_str(), 20, 0, 20));    
+        my_histos.emplace("h_njets_"+mycut.first, std::make_shared<TH1D>(("h_njets_"+mycut.first).c_str(),("h_njets_"+mycut.first).c_str(), 20, 0, 20));
+        my_histos.emplace("h_ntops_"+mycut.first, std::make_shared<TH1D>(("h_ntops_"+mycut.first).c_str(),("h_ntops_"+mycut.first).c_str(), 10, 0, 10));
+        my_histos.emplace("h_nb_"+mycut.first,    std::make_shared<TH1D>(("h_nb_"+mycut.first).c_str(),("h_nb_"+mycut.first).c_str(), 10, 0, 10));
+        my_histos.emplace("h_bdt_"+mycut.first,   std::make_shared<TH1D>(("h_bdt_"+mycut.first).c_str(),("h_bdt_"+mycut.first).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("h_fisher_"+mycut.first,std::make_shared<TH1D>(("h_fisher_"+mycut.first).c_str(),("h_fisher_"+mycut.first).c_str(), fB, -0.5, 0.5));
+        my_histos.emplace("h_deepESM_"+mycut.first,std::make_shared<TH1D>(("h_deepESM_"+mycut.first).c_str(),("h_deepESM_"+mycut.first).c_str(), fB, 0.0, 1.0));
+        my_histos.emplace("h_photonPt_"+mycut.first,std::make_shared<TH1D>(("h_photonPt_"+mycut.first).c_str(),("h_photonPt_"+mycut.first).c_str(), 200, 0, 2000));
+        my_histos.emplace("h_BestComboMass_"+mycut.first,std::make_shared<TH1D>(("h_BestComboMass_"+mycut.first).c_str(),("h_BestComboMass_"+mycut.first).c_str(), 300, 0, 3000));
+        my_histos.emplace("h_genBestComboMass_"+mycut.first,std::make_shared<TH1D>(("h_genBestComboMass_"+mycut.first).c_str(),("h_genBestComboMass_"+mycut.first).c_str(), 300, 0, 3000));
+        my_histos.emplace("h_BestComboPt_"+mycut.first,std::make_shared<TH1D>(("h_BestComboPt_"+mycut.first).c_str(),("h_BestComboPt_"+mycut.first).c_str(), 300, 0.0, 3000));
+        my_histos.emplace("h_BestComboMassDiff_"+mycut.first,std::make_shared<TH1D>(("h_BestComboMassDiff_"+mycut.first).c_str(),("h_BestComboMassDiff_"+mycut.first).c_str(), 500, -500, 500));
+        my_histos.emplace("h_BestComboRelDiff_"+mycut.first ,std::make_shared<TH1D>(("h_BestComboRelDiff_"+mycut.first).c_str(),("h_BestComboRelDiff_"+mycut.first).c_str(), 400, -2, 2));
+        my_histos.emplace("h_BestComboMassDiffAbs_"+mycut.first,std::make_shared<TH1D>(("h_BestComboMassDiffAbs_"+mycut.first).c_str(),("h_BestComboMassDiffAbs_"+mycut.first).c_str(), 250, 0, 500));
+        my_histos.emplace("h_BestComboRelDiffAbs_"+mycut.first ,std::make_shared<TH1D>(("h_BestComboRelDiffAbs_"+mycut.first).c_str(),("h_BestComboRelDiffAbs_"+mycut.first).c_str(), 200, 0, 2));
+        my_histos.emplace("h_GenMBestComboMass_"+mycut.first,std::make_shared<TH1D>(("h_GenMBestComboMass_"+mycut.first).c_str(),("h_GenMBestComboMass_"+mycut.first).c_str(), 300, 0, 3000));
+        my_histos.emplace("h_GenMBestComboPt_"+mycut.first,std::make_shared<TH1D>(("h_GenMBestComboPt_"+mycut.first).c_str(),("h_GenMBestComboPt_"+mycut.first).c_str(), 300, 0.0, 3000));
+        my_histos.emplace("h_GenMBestComboMassDiff_"+mycut.first,std::make_shared<TH1D>(("h_GenMBestComboMassDiff_"+mycut.first).c_str(),("h_GenMBestComboMassDiff_"+mycut.first).c_str(), 500, -500, 500));
+        my_histos.emplace("h_GenMBestComboRelDiff_"+mycut.first ,std::make_shared<TH1D>(("h_GenMBestComboRelDiff_"+mycut.first).c_str(),("h_GenMBestComboRelDiff_"+mycut.first).c_str(), 400, -2, 2));
+        my_histos.emplace("h_GenMBestComboMassDiffAbs_"+mycut.first,std::make_shared<TH1D>(("h_GenMBestComboMassDiffAbs_"+mycut.first).c_str(),("h_GenMBestComboMassDiffAbs_"+mycut.first).c_str(), 250, 0, 500));
+        my_histos.emplace("h_GenMBestComboRelDiffAbs_"+mycut.first ,std::make_shared<TH1D>(("h_GenMBestComboRelDiffAbs_"+mycut.first).c_str(),("h_GenMBestComboRelDiffAbs_"+mycut.first).c_str(), 200, 0, 2));
+        my_histos.emplace("h_GenMNjets_"+mycut.first, std::make_shared<TH1D>(("h_GenMNjets_"+mycut.first).c_str(),("h_GenMNjets_"+mycut.first).c_str(), 20, 0, 20));    
 
-        my_2d_histos.emplace("h_njets_bdt_1l_"+mycut.first, std::make_shared<TH2D>(("h_njets_bdt_1l_"+mycut.first).c_str(),("h_njets_bdt_1l_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
-        my_2d_histos.emplace("h_njets_fisher_1l_"+mycut.first, std::make_shared<TH2D>(("h_njets_fisher_1l_"+mycut.first).c_str(),("h_njets_fisher_1l_"+mycut.first).c_str(), 15, 0, 15, fB, -0.5, 0.5));
-        my_2d_histos.emplace("h_njets_deepESM_1l_"+mycut.first, std::make_shared<TH2D>(("h_njets_deepESM_1l_"+mycut.first).c_str(),("h_njets_deepESM_1l_"+mycut.first).c_str(), 15, 0, 15, fB, 0.0, 1.0));
-        my_2d_histos.emplace("h_njets_BestComboMass_1l_"+mycut.first, std::make_shared<TH2D>(("h_njets_BestComboMass_1l_"+mycut.first).c_str(),("h_njets_BestComboMass_1l_"+mycut.first).c_str(), 15, 0, 15, 300, 0, 3000));
-        my_tp_histos.emplace("hTp_njets_fisher_1l_"+mycut.first, std::make_shared<TProfile>(("hTp_njets_fisher_1l_"+mycut.first).c_str(),("hTp_njets_fisher_1l_"+mycut.first).c_str(), 15, 0, 15, -0.5, 0.5));
-        my_tp_histos.emplace("hTp_njets_deepESM_1l_"+mycut.first, std::make_shared<TProfile>(("hTp_njets_deepESM_1l_"+mycut.first).c_str(),("hTp_njets_deepESM_1l_"+mycut.first).c_str(), 15, 0, 15, 0.0, 1.0));
+        my_2d_histos.emplace("h_njets_bdt_"+mycut.first, std::make_shared<TH2D>(("h_njets_bdt_"+mycut.first).c_str(),("h_njets_bdt_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("h_njets_fisher_"+mycut.first, std::make_shared<TH2D>(("h_njets_fisher_"+mycut.first).c_str(),("h_njets_fisher_"+mycut.first).c_str(), 15, 0, 15, fB, -0.5, 0.5));
+        my_2d_histos.emplace("h_njets_deepESM_"+mycut.first, std::make_shared<TH2D>(("h_njets_deepESM_"+mycut.first).c_str(),("h_njets_deepESM_"+mycut.first).c_str(), 15, 0, 15, fB, 0.0, 1.0));
+        my_2d_histos.emplace("h_njets_BestComboMass_"+mycut.first, std::make_shared<TH2D>(("h_njets_BestComboMass_"+mycut.first).c_str(),("h_njets_BestComboMass_"+mycut.first).c_str(), 15, 0, 15, 300, 0, 3000));
+        my_tp_histos.emplace("hTp_njets_fisher_"+mycut.first, std::make_shared<TProfile>(("hTp_njets_fisher_"+mycut.first).c_str(),("hTp_njets_fisher_"+mycut.first).c_str(), 15, 0, 15, -0.5, 0.5));
+        my_tp_histos.emplace("hTp_njets_deepESM_"+mycut.first, std::make_shared<TProfile>(("hTp_njets_deepESM_"+mycut.first).c_str(),("hTp_njets_deepESM_"+mycut.first).c_str(), 15, 0, 15, 0.0, 1.0));
 
-        my_histos.emplace("blind_njets_1l_"+mycut.first, std::make_shared<TH1D>(("blind_njets_1l_"+mycut.first).c_str(),("blind_njets_1l_"+mycut.first).c_str(), 20, 0, 20));
-        my_histos.emplace("blind_ntops_1l_"+mycut.first, std::make_shared<TH1D>(("blind_ntops_1l_"+mycut.first).c_str(),("blind_ntops_1l_"+mycut.first).c_str(), 10, 0, 10));
-        my_histos.emplace("blind_nb_1l_"+mycut.first,    std::make_shared<TH1D>(("blind_nb_1l_"+mycut.first).c_str(),("blind_nb_1l_"+mycut.first).c_str(), 10, 0, 10));
-        my_histos.emplace("blind_bdt_1l_"+mycut.first,   std::make_shared<TH1D>(("blind_bdt_1l_"+mycut.first).c_str(),("blind_bdt_1l_"+mycut.first).c_str(), 40, -0.5, 0.5));
-        my_histos.emplace("blind_fisher_1l_"+mycut.first,std::make_shared<TH1D>(("blind_fisher_1l_"+mycut.first).c_str(),("blind_fisher_1l_"+mycut.first).c_str(), fB, -0.5, 0.5));
-        my_histos.emplace("blind_deepESM_1l_"+mycut.first,std::make_shared<TH1D>(("blind_deepESM_1l_"+mycut.first).c_str(),("blind_deepESM_1l_"+mycut.first).c_str(), fB, 0.0, 1.0));
+        my_histos.emplace("blind_njets_"+mycut.first, std::make_shared<TH1D>(("blind_njets_"+mycut.first).c_str(),("blind_njets_"+mycut.first).c_str(), 20, 0, 20));
+        my_histos.emplace("blind_ntops_"+mycut.first, std::make_shared<TH1D>(("blind_ntops_"+mycut.first).c_str(),("blind_ntops_"+mycut.first).c_str(), 10, 0, 10));
+        my_histos.emplace("blind_nb_"+mycut.first,    std::make_shared<TH1D>(("blind_nb_"+mycut.first).c_str(),("blind_nb_"+mycut.first).c_str(), 10, 0, 10));
+        my_histos.emplace("blind_bdt_"+mycut.first,   std::make_shared<TH1D>(("blind_bdt_"+mycut.first).c_str(),("blind_bdt_"+mycut.first).c_str(), 40, -0.5, 0.5));
+        my_histos.emplace("blind_fisher_"+mycut.first,std::make_shared<TH1D>(("blind_fisher_"+mycut.first).c_str(),("blind_fisher_"+mycut.first).c_str(), fB, -0.5, 0.5));
+        my_histos.emplace("blind_deepESM_"+mycut.first,std::make_shared<TH1D>(("blind_deepESM_"+mycut.first).c_str(),("blind_deepESM_"+mycut.first).c_str(), fB, 0.0, 1.0));
     
-        my_2d_histos.emplace("blind_njets_bdt_1l_"+mycut.first, std::make_shared<TH2D>(("blind_njets_bdt_1l_"+mycut.first).c_str(),("blind_njets_bdt_1l_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
-        my_2d_histos.emplace("blind_njets_fisher_1l_"+mycut.first, std::make_shared<TH2D>(("blind_njets_fisher_1l_"+mycut.first).c_str(),("blind_njets_fisher_1l_"+mycut.first).c_str(), 15, 0, 15, fB, -0.5, 0.5));
-        my_2d_histos.emplace("blind_njets_deepESM_1l_"+mycut.first, std::make_shared<TH2D>(("blind_njets_deepESM_1l_"+mycut.first).c_str(),("blind_njets_deepESM_1l_"+mycut.first).c_str(), 15, 0, 15, fB, 0.0, 1.0));
-        my_tp_histos.emplace("blindTp_njets_fisher_1l_"+mycut.first, std::make_shared<TProfile>(("blindTp_njets_fisher_1l_"+mycut.first).c_str(),("blindTp_njets_fisher_1l_"+mycut.first).c_str(), 15, 0, 15, -0.5, 0.5));
-        my_tp_histos.emplace("blindTp_njets_deepESM_1l_"+mycut.first, std::make_shared<TProfile>(("blindTp_njets_deepESM_1l_"+mycut.first).c_str(),("blindTp_njets_deepESM_1l_"+mycut.first).c_str(), 15, 0, 15, 0.0, 1.0));
+        my_2d_histos.emplace("blind_njets_bdt_"+mycut.first, std::make_shared<TH2D>(("blind_njets_bdt_"+mycut.first).c_str(),("blind_njets_bdt_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
+        my_2d_histos.emplace("blind_njets_fisher_"+mycut.first, std::make_shared<TH2D>(("blind_njets_fisher_"+mycut.first).c_str(),("blind_njets_fisher_"+mycut.first).c_str(), 15, 0, 15, fB, -0.5, 0.5));
+        my_2d_histos.emplace("blind_njets_deepESM_"+mycut.first, std::make_shared<TH2D>(("blind_njets_deepESM_"+mycut.first).c_str(),("blind_njets_deepESM_"+mycut.first).c_str(), 15, 0, 15, fB, 0.0, 1.0));
+        my_tp_histos.emplace("blindTp_njets_fisher_"+mycut.first, std::make_shared<TProfile>(("blindTp_njets_fisher_"+mycut.first).c_str(),("blindTp_njets_fisher_"+mycut.first).c_str(), 15, 0, 15, -0.5, 0.5));
+        my_tp_histos.emplace("blindTp_njets_deepESM_"+mycut.first, std::make_shared<TProfile>(("blindTp_njets_deepESM_"+mycut.first).c_str(),("blindTp_njets_deepESM_"+mycut.first).c_str(), 15, 0, 15, 0.0, 1.0));
     }
 
     // Cut flows
@@ -149,7 +150,11 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& passMadHT            = tr.getVar<bool>("passMadHT");
               auto  passBaseline1l_Good  = tr.getVar<bool>("passBaseline1l_Good");
         const auto& Mbl                  = tr.getVar<double>("Mbl");
-        passBaseline1l_Good = passBaseline1l_Good && Mbl>30 && Mbl<180;
+                    passBaseline1l_Good  = passBaseline1l_Good && Mbl>30 && Mbl<180;
+        const auto& Photons              = tr.getVec<TLorentzVector>("Photons");
+        const auto& GoodPhotons          = tr.getVec<bool>("GoodPhotons");
+        const auto& NGoodPhotons         = tr.getVar<int>("NGoodPhotons");
+        const auto& passBaseline1g_Good  = tr.getVar<bool>("passBaseline1photon_Good"); 
         const auto& deepESM_val          = tr.getVar<double>("deepESM_val");
         const auto& deepESM_bin1         = tr.getVar<bool>("deepESM_bin1");
         const auto& deepESM_bin2         = tr.getVar<bool>("deepESM_bin2");
@@ -202,9 +207,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // -- Define cuts
         // -------------------------------
 
-        // Global cuts
-        if ( !(passTrigger && passMadHT) ) continue;
-        
+        bool pass_0l              = NGoodLeptons==0;
         bool pass_1l              = NGoodLeptons==1;
         bool pass_njet_pt45       = NJets_pt45>=6;
         bool pass_njet_pt45_1btag = NBJets_pt45 >= 1;
@@ -291,172 +294,175 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // -------------------                        
         const std::map<std::string, bool> cut_map_1l 
         {
-            {""                            , pass_1l                                                                  },
-            {"ge6j"                        , pass_1l && pass_njet_pt45                                                },
-            {"ge2b"                        , pass_1l && pass_njet_pt45_2btag                                          },
-            {"1t"                          , pass_1l && pass_1t                                                       },
-            {"2t"                          , pass_1l && pass_2t                                                       },
-            {"ge1t"                        , pass_1l && pass_ge1t                                                     },
-            {"ge2t"                        , pass_1l && pass_ge2t                                                     },
-            {"ge6j_ge2b"                   , pass_1l && pass_njet_pt45 && pass_njet_pt45_2btag                        },
-            {"ge6j_ge1b"                   , passBaseline1l_Good                                                      },                         
-            {"ge6j_ge1b_ge5esm"            , passBaseline1l_Good && deepESM_val >= 0.5                                },                         
-            {"ge6j_ge1b_ge5-6esm"          , passBaseline1l_Good && deepESM_val >= 0.5 && deepESM_val < 0.6           },                         
-            {"ge6j_ge1b_ge6-7esm"          , passBaseline1l_Good && deepESM_val >= 0.6 && deepESM_val < 0.7           },                         
-            {"ge6j_ge1b_ge7-8esm"          , passBaseline1l_Good && deepESM_val >= 0.7 && deepESM_val < 0.8           },                         
-            {"ge6j_ge1b_ge8-95esm"         , passBaseline1l_Good && deepESM_val >= 0.8 && deepESM_val < 0.95          },                         
-            {"ge6j_ge1b_ge8esm"            , passBaseline1l_Good && deepESM_val >= 0.8                                },                         
-            {"ge6j_ge1b_ge95esm"           , passBaseline1l_Good && deepESM_val >= 0.95                               },                         
-            {"ge6j_ge1b_l8esm"             , passBaseline1l_Good && deepESM_val <  0.8                                },                         
-            {"ge6j_ge1b_d1"                , passBaseline1l_Good && deepESM_bin1                                      },                         
-            {"ge6j_ge1b_d2"                , passBaseline1l_Good && deepESM_bin2                                      },                         
-            {"ge6j_ge1b_d3"                , passBaseline1l_Good && deepESM_bin3                                      },                         
-            {"ge6j_ge1b_d4"                , passBaseline1l_Good && deepESM_bin4                                      },                         
-            {"6j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 6                                   },
-            {"7j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 7                                   },
-            {"8j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 8                                   },
-            {"9j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 9                                   },
-            {"10j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 10                                  },
-            {"11j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 11                                  },
-            {"12j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 12                                  },
-            {"13j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 13                                  },
-            {"14j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 14                                  },
-            {"15j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 15                                  },
+            {"1l"                            , pass_1l                                                                  },
+            {"1l_ge6j"                        , pass_1l && pass_njet_pt45                                                },
+            {"1l_ge2b"                        , pass_1l && pass_njet_pt45_2btag                                          },
+            {"1l_1t"                          , pass_1l && pass_1t                                                       },
+            {"1l_2t"                          , pass_1l && pass_2t                                                       },
+            {"1l_ge1t"                        , pass_1l && pass_ge1t                                                     },
+            {"1l_ge2t"                        , pass_1l && pass_ge2t                                                     },
+            {"1l_ge6j_ge2b"                   , pass_1l && pass_njet_pt45 && pass_njet_pt45_2btag                        },
+            {"1l_ge6j_ge1b"                   , passBaseline1l_Good                                                      },                         
+            {"1l_ge6j_ge1b_ge5esm"            , passBaseline1l_Good && deepESM_val >= 0.5                                },                         
+            {"1l_ge6j_ge1b_ge5-6esm"          , passBaseline1l_Good && deepESM_val >= 0.5 && deepESM_val < 0.6           },                         
+            {"1l_ge6j_ge1b_ge6-7esm"          , passBaseline1l_Good && deepESM_val >= 0.6 && deepESM_val < 0.7           },                         
+            {"1l_ge6j_ge1b_ge7-8esm"          , passBaseline1l_Good && deepESM_val >= 0.7 && deepESM_val < 0.8           },                         
+            {"1l_ge6j_ge1b_ge8-95esm"         , passBaseline1l_Good && deepESM_val >= 0.8 && deepESM_val < 0.95          },                         
+            {"1l_ge6j_ge1b_ge8esm"            , passBaseline1l_Good && deepESM_val >= 0.8                                },                         
+            {"1l_ge6j_ge1b_ge95esm"           , passBaseline1l_Good && deepESM_val >= 0.95                               },                         
+            {"1l_ge6j_ge1b_l8esm"             , passBaseline1l_Good && deepESM_val <  0.8                                },                         
+            {"1l_ge6j_ge1b_d1"                , passBaseline1l_Good && deepESM_bin1                                      },                         
+            {"1l_ge6j_ge1b_d2"                , passBaseline1l_Good && deepESM_bin2                                      },                         
+            {"1l_ge6j_ge1b_d3"                , passBaseline1l_Good && deepESM_bin3                                      },                         
+            {"1l_ge6j_ge1b_d4"                , passBaseline1l_Good && deepESM_bin4                                      },                         
+            {"1l_6j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 6                                   },
+            {"1l_7j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 7                                   },
+            {"1l_8j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 8                                   },
+            {"1l_9j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 9                                   },
+            {"1l_10j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 10                                  },
+            {"1l_11j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 11                                  },
+            {"1l_12j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 12                                  },
+            {"1l_13j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 13                                  },
+            {"1l_14j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 14                                  },
+            {"1l_15j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 15                                  },
                                                  
-            {"ge6j_ge1b_1t"                , passBaseline1l_Good && pass_1t                                           },
-            {"ge6j_ge1b_1t_ge8esm"         , passBaseline1l_Good && pass_1t && deepESM_val >= 0.8                     },                         
-            {"ge6j_ge1b_1t_ge95esm"        , passBaseline1l_Good && pass_1t && deepESM_val >= 0.95                    },                         
-            {"ge6j_ge1b_1t_l8esm"          , passBaseline1l_Good && pass_1t && deepESM_val <  0.8                     },                         
-            {"ge6j_ge1b_1t_d1"             , passBaseline1l_Good && pass_1t_d1                                        },
-            {"ge6j_ge1b_1t_d2"             , passBaseline1l_Good && pass_1t_d2                                        }, 
-            {"ge6j_ge1b_1t_d3"             , passBaseline1l_Good && pass_1t_d3                                        }, 
-            {"ge6j_ge1b_1t_d4"             , passBaseline1l_Good && pass_1t_d4                                        },
-            {"ge6j_ge1b_ge1t"              , passBaseline1l_Good && pass_ge1t                                         },
-            {"ge6j_ge1b_ge1t_d1"           , passBaseline1l_Good && pass_ge1t_d1                                      },
-            {"ge6j_ge1b_ge1t_d2"           , passBaseline1l_Good && pass_ge1t_d2                                      }, 
-            {"ge6j_ge1b_ge1t_d3"           , passBaseline1l_Good && pass_ge1t_d3                                      }, 
-            {"ge6j_ge1b_ge1t_d4"           , passBaseline1l_Good && pass_ge1t_d4                                      },
+            {"1l_ge6j_ge1b_1t"                , passBaseline1l_Good && pass_1t                                           },
+            {"1l_ge6j_ge1b_1t_ge8esm"         , passBaseline1l_Good && pass_1t && deepESM_val >= 0.8                     },                         
+            {"1l_ge6j_ge1b_1t_ge95esm"        , passBaseline1l_Good && pass_1t && deepESM_val >= 0.95                    },                         
+            {"1l_ge6j_ge1b_1t_l8esm"          , passBaseline1l_Good && pass_1t && deepESM_val <  0.8                     },                         
+            {"1l_ge6j_ge1b_1t_d1"             , passBaseline1l_Good && pass_1t_d1                                        },
+            {"1l_ge6j_ge1b_1t_d2"             , passBaseline1l_Good && pass_1t_d2                                        }, 
+            {"1l_ge6j_ge1b_1t_d3"             , passBaseline1l_Good && pass_1t_d3                                        }, 
+            {"1l_ge6j_ge1b_1t_d4"             , passBaseline1l_Good && pass_1t_d4                                        },
+            {"1l_ge6j_ge1b_ge1t"              , passBaseline1l_Good && pass_ge1t                                         },
+            {"1l_ge6j_ge1b_ge1t_d1"           , passBaseline1l_Good && pass_ge1t_d1                                      },
+            {"1l_ge6j_ge1b_ge1t_d2"           , passBaseline1l_Good && pass_ge1t_d2                                      }, 
+            {"1l_ge6j_ge1b_ge1t_d3"           , passBaseline1l_Good && pass_ge1t_d3                                      }, 
+            {"1l_ge6j_ge1b_ge1t_d4"           , passBaseline1l_Good && pass_ge1t_d4                                      },
                                                  
-            {"ge6j_ge1b_1t1"               , passBaseline1l_Good && pass_1t1                                          },
-            {"ge6j_ge1b_1t2"               , passBaseline1l_Good && pass_1t2                                          },
-            {"ge6j_ge1b_1t3"               , passBaseline1l_Good && pass_1t3                                          },
-            {"ge6j_ge1b_1t2or3"            , passBaseline1l_Good && pass_1t2or3                                       },
-            {"ge6j_ge1b_1t1_d1"            , passBaseline1l_Good && pass_1t1_d1                                       },
-            {"ge6j_ge1b_1t1_d2"            , passBaseline1l_Good && pass_1t1_d2                                       },
-            {"ge6j_ge1b_1t1_d3"            , passBaseline1l_Good && pass_1t1_d3                                       },
-            {"ge6j_ge1b_1t1_d4"            , passBaseline1l_Good && pass_1t1_d4                                       },
-            {"ge6j_ge1b_1t2_d1"            , passBaseline1l_Good && pass_1t2_d1                                       },
-            {"ge6j_ge1b_1t2_d2"            , passBaseline1l_Good && pass_1t2_d2                                       },
-            {"ge6j_ge1b_1t2_d3"            , passBaseline1l_Good && pass_1t2_d3                                       },
-            {"ge6j_ge1b_1t2_d4"            , passBaseline1l_Good && pass_1t2_d4                                       },
-            {"ge6j_ge1b_1t3_d1"            , passBaseline1l_Good && pass_1t3_d1                                       },
-            {"ge6j_ge1b_1t3_d2"            , passBaseline1l_Good && pass_1t3_d2                                       },
-            {"ge6j_ge1b_1t3_d3"            , passBaseline1l_Good && pass_1t3_d3                                       },
-            {"ge6j_ge1b_1t3_d4"            , passBaseline1l_Good && pass_1t3_d4                                       },
-            {"ge6j_ge1b_1t2or3_d1"         , passBaseline1l_Good && pass_1t2or3_d1                                    },
-            {"ge6j_ge1b_1t2or3_d2"         , passBaseline1l_Good && pass_1t2or3_d2                                    },
-            {"ge6j_ge1b_1t2or3_d3"         , passBaseline1l_Good && pass_1t2or3_d3                                    },
-            {"ge6j_ge1b_1t2or3_d4"         , passBaseline1l_Good && pass_1t2or3_d4                                    },
-            {"ge6j_ge1b_ge1t1"             , passBaseline1l_Good && pass_ge1t1                                        },
-            {"ge6j_ge1b_ge1t2"             , passBaseline1l_Good && pass_ge1t2                                        },
-            {"ge6j_ge1b_ge1t3"             , passBaseline1l_Good && pass_ge1t3                                        },
-            {"ge6j_ge1b_ge1t1_d1"          , passBaseline1l_Good && pass_ge1t1_d1                                     },
-            {"ge6j_ge1b_ge1t1_d2"          , passBaseline1l_Good && pass_ge1t1_d2                                     },
-            {"ge6j_ge1b_ge1t1_d3"          , passBaseline1l_Good && pass_ge1t1_d3                                     },
-            {"ge6j_ge1b_ge1t1_d4"          , passBaseline1l_Good && pass_ge1t1_d4                                     },
-            {"ge6j_ge1b_ge1t2_d1"          , passBaseline1l_Good && pass_ge1t2_d1                                     },
-            {"ge6j_ge1b_ge1t2_d2"          , passBaseline1l_Good && pass_ge1t2_d2                                     },
-            {"ge6j_ge1b_ge1t2_d3"          , passBaseline1l_Good && pass_ge1t2_d3                                     },
-            {"ge6j_ge1b_ge1t2_d4"          , passBaseline1l_Good && pass_ge1t2_d4                                     },
-            {"ge6j_ge1b_ge1t3_d1"          , passBaseline1l_Good && pass_ge1t3_d1                                     },
-            {"ge6j_ge1b_ge1t3_d2"          , passBaseline1l_Good && pass_ge1t3_d2                                     },
-            {"ge6j_ge1b_ge1t3_d3"          , passBaseline1l_Good && pass_ge1t3_d3                                     },
-            {"ge6j_ge1b_ge1t3_d4"          , passBaseline1l_Good && pass_ge1t3_d4                                     },
+            {"1l_ge6j_ge1b_1t1"               , passBaseline1l_Good && pass_1t1                                          },
+            {"1l_ge6j_ge1b_1t2"               , passBaseline1l_Good && pass_1t2                                          },
+            {"1l_ge6j_ge1b_1t3"               , passBaseline1l_Good && pass_1t3                                          },
+            {"1l_ge6j_ge1b_1t2or3"            , passBaseline1l_Good && pass_1t2or3                                       },
+            {"1l_ge6j_ge1b_1t1_d1"            , passBaseline1l_Good && pass_1t1_d1                                       },
+            {"1l_ge6j_ge1b_1t1_d2"            , passBaseline1l_Good && pass_1t1_d2                                       },
+            {"1l_ge6j_ge1b_1t1_d3"            , passBaseline1l_Good && pass_1t1_d3                                       },
+            {"1l_ge6j_ge1b_1t1_d4"            , passBaseline1l_Good && pass_1t1_d4                                       },
+            {"1l_ge6j_ge1b_1t2_d1"            , passBaseline1l_Good && pass_1t2_d1                                       },
+            {"1l_ge6j_ge1b_1t2_d2"            , passBaseline1l_Good && pass_1t2_d2                                       },
+            {"1l_ge6j_ge1b_1t2_d3"            , passBaseline1l_Good && pass_1t2_d3                                       },
+            {"1l_ge6j_ge1b_1t2_d4"            , passBaseline1l_Good && pass_1t2_d4                                       },
+            {"1l_ge6j_ge1b_1t3_d1"            , passBaseline1l_Good && pass_1t3_d1                                       },
+            {"1l_ge6j_ge1b_1t3_d2"            , passBaseline1l_Good && pass_1t3_d2                                       },
+            {"1l_ge6j_ge1b_1t3_d3"            , passBaseline1l_Good && pass_1t3_d3                                       },
+            {"1l_ge6j_ge1b_1t3_d4"            , passBaseline1l_Good && pass_1t3_d4                                       },
+            {"1l_ge6j_ge1b_1t2or3_d1"         , passBaseline1l_Good && pass_1t2or3_d1                                    },
+            {"1l_ge6j_ge1b_1t2or3_d2"         , passBaseline1l_Good && pass_1t2or3_d2                                    },
+            {"1l_ge6j_ge1b_1t2or3_d3"         , passBaseline1l_Good && pass_1t2or3_d3                                    },
+            {"1l_ge6j_ge1b_1t2or3_d4"         , passBaseline1l_Good && pass_1t2or3_d4                                    },
+            {"1l_ge6j_ge1b_ge1t1"             , passBaseline1l_Good && pass_ge1t1                                        },
+            {"1l_ge6j_ge1b_ge1t2"             , passBaseline1l_Good && pass_ge1t2                                        },
+            {"1l_ge6j_ge1b_ge1t3"             , passBaseline1l_Good && pass_ge1t3                                        },
+            {"1l_ge6j_ge1b_ge1t1_d1"          , passBaseline1l_Good && pass_ge1t1_d1                                     },
+            {"1l_ge6j_ge1b_ge1t1_d2"          , passBaseline1l_Good && pass_ge1t1_d2                                     },
+            {"1l_ge6j_ge1b_ge1t1_d3"          , passBaseline1l_Good && pass_ge1t1_d3                                     },
+            {"1l_ge6j_ge1b_ge1t1_d4"          , passBaseline1l_Good && pass_ge1t1_d4                                     },
+            {"1l_ge6j_ge1b_ge1t2_d1"          , passBaseline1l_Good && pass_ge1t2_d1                                     },
+            {"1l_ge6j_ge1b_ge1t2_d2"          , passBaseline1l_Good && pass_ge1t2_d2                                     },
+            {"1l_ge6j_ge1b_ge1t2_d3"          , passBaseline1l_Good && pass_ge1t2_d3                                     },
+            {"1l_ge6j_ge1b_ge1t2_d4"          , passBaseline1l_Good && pass_ge1t2_d4                                     },
+            {"1l_ge6j_ge1b_ge1t3_d1"          , passBaseline1l_Good && pass_ge1t3_d1                                     },
+            {"1l_ge6j_ge1b_ge1t3_d2"          , passBaseline1l_Good && pass_ge1t3_d2                                     },
+            {"1l_ge6j_ge1b_ge1t3_d3"          , passBaseline1l_Good && pass_ge1t3_d3                                     },
+            {"1l_ge6j_ge1b_ge1t3_d4"          , passBaseline1l_Good && pass_ge1t3_d4                                     },
                                                  
-            {"ge6j_ge1b_2t"                , passBaseline1l_Good && pass_2t                                           },
-            {"ge6j_ge1b_2t_ge8esm"         , passBaseline1l_Good && pass_2t && deepESM_val >= 0.8                     },                         
-            {"ge6j_ge1b_2t_ge95esm"        , passBaseline1l_Good && pass_2t && deepESM_val >= 0.95                    },                         
-            {"ge6j_ge1b_2t_l8esm"          , passBaseline1l_Good && pass_2t && deepESM_val <  0.8                     },                         
-            {"ge6j_ge1b_2t_d1"             , passBaseline1l_Good && pass_2t_d1                                        },
-            {"ge6j_ge1b_2t_d2"             , passBaseline1l_Good && pass_2t_d2                                        }, 
-            {"ge6j_ge1b_2t_d3"             , passBaseline1l_Good && pass_2t_d3                                        }, 
-            {"ge6j_ge1b_2t_d4"             , passBaseline1l_Good && pass_2t_d4                                        },
-            {"ge6j_ge1b_ge2t"              , passBaseline1l_Good && pass_ge2t                                         },
-            {"ge6j_ge1b_ge2t_d1"           , passBaseline1l_Good && pass_ge2t_d1                                      },
-            {"ge6j_ge1b_ge2t_d2"           , passBaseline1l_Good && pass_ge2t_d2                                      }, 
-            {"ge6j_ge1b_ge2t_d3"           , passBaseline1l_Good && pass_ge2t_d3                                      }, 
-            {"ge6j_ge1b_ge2t_d4"           , passBaseline1l_Good && pass_ge2t_d4                                      },
+            {"1l_ge6j_ge1b_2t"                , passBaseline1l_Good && pass_2t                                           },
+            {"1l_ge6j_ge1b_2t_ge8esm"         , passBaseline1l_Good && pass_2t && deepESM_val >= 0.8                     },                         
+            {"1l_ge6j_ge1b_2t_ge95esm"        , passBaseline1l_Good && pass_2t && deepESM_val >= 0.95                    },                         
+            {"1l_ge6j_ge1b_2t_l8esm"          , passBaseline1l_Good && pass_2t && deepESM_val <  0.8                     },                         
+            {"1l_ge6j_ge1b_2t_d1"             , passBaseline1l_Good && pass_2t_d1                                        },
+            {"1l_ge6j_ge1b_2t_d2"             , passBaseline1l_Good && pass_2t_d2                                        }, 
+            {"1l_ge6j_ge1b_2t_d3"             , passBaseline1l_Good && pass_2t_d3                                        }, 
+            {"1l_ge6j_ge1b_2t_d4"             , passBaseline1l_Good && pass_2t_d4                                        },
+            {"1l_ge6j_ge1b_ge2t"              , passBaseline1l_Good && pass_ge2t                                         },
+            {"1l_ge6j_ge1b_ge2t_d1"           , passBaseline1l_Good && pass_ge2t_d1                                      },
+            {"1l_ge6j_ge1b_ge2t_d2"           , passBaseline1l_Good && pass_ge2t_d2                                      }, 
+            {"1l_ge6j_ge1b_ge2t_d3"           , passBaseline1l_Good && pass_ge2t_d3                                      }, 
+            {"1l_ge6j_ge1b_ge2t_d4"           , passBaseline1l_Good && pass_ge2t_d4                                      },
                                                  
-            {"ge6j_ge1b_2t11"              , passBaseline1l_Good && pass_2t11                                         },
-            {"ge6j_ge1b_2t12"              , passBaseline1l_Good && pass_2t12                                         },
-            {"ge6j_ge1b_2t13"              , passBaseline1l_Good && pass_2t13                                         },
-            {"ge6j_ge1b_2t22"              , passBaseline1l_Good && pass_2t22                                         },
-            {"ge6j_ge1b_2t23"              , passBaseline1l_Good && pass_2t23                                         },
-            {"ge6j_ge1b_2t33"              , passBaseline1l_Good && pass_2t33                                         },
-            {"ge6j_ge1b_2t11_d1"           , passBaseline1l_Good && pass_2t11_d1                                      },
-            {"ge6j_ge1b_2t11_d2"           , passBaseline1l_Good && pass_2t11_d2                                      },
-            {"ge6j_ge1b_2t11_d3"           , passBaseline1l_Good && pass_2t11_d3                                      },
-            {"ge6j_ge1b_2t11_d4"           , passBaseline1l_Good && pass_2t11_d4                                      },
-            {"ge6j_ge1b_2t12_d1"           , passBaseline1l_Good && pass_2t12_d1                                      },
-            {"ge6j_ge1b_2t12_d2"           , passBaseline1l_Good && pass_2t12_d2                                      },
-            {"ge6j_ge1b_2t12_d3"           , passBaseline1l_Good && pass_2t12_d3                                      },
-            {"ge6j_ge1b_2t12_d4"           , passBaseline1l_Good && pass_2t12_d4                                      },
-            {"ge6j_ge1b_2t13_d1"           , passBaseline1l_Good && pass_2t13_d1                                      },
-            {"ge6j_ge1b_2t13_d2"           , passBaseline1l_Good && pass_2t13_d2                                      },
-            {"ge6j_ge1b_2t13_d3"           , passBaseline1l_Good && pass_2t13_d3                                      },
-            {"ge6j_ge1b_2t13_d4"           , passBaseline1l_Good && pass_2t13_d4                                      },
-            {"ge6j_ge1b_2t22_d1"           , passBaseline1l_Good && pass_2t22_d1                                      },
-            {"ge6j_ge1b_2t22_d2"           , passBaseline1l_Good && pass_2t22_d2                                      },
-            {"ge6j_ge1b_2t22_d3"           , passBaseline1l_Good && pass_2t22_d3                                      },
-            {"ge6j_ge1b_2t22_d4"           , passBaseline1l_Good && pass_2t22_d4                                      },
-            {"ge6j_ge1b_2t23_d1"           , passBaseline1l_Good && pass_2t23_d1                                      },
-            {"ge6j_ge1b_2t23_d2"           , passBaseline1l_Good && pass_2t23_d2                                      },
-            {"ge6j_ge1b_2t23_d3"           , passBaseline1l_Good && pass_2t23_d3                                      },
-            {"ge6j_ge1b_2t23_d4"           , passBaseline1l_Good && pass_2t23_d4                                      },
-            {"ge6j_ge1b_2t33_d1"           , passBaseline1l_Good && pass_2t33_d1                                      },
-            {"ge6j_ge1b_2t33_d2"           , passBaseline1l_Good && pass_2t33_d2                                      },
-            {"ge6j_ge1b_2t33_d3"           , passBaseline1l_Good && pass_2t33_d3                                      },
-            {"ge6j_ge1b_2t33_d4"           , passBaseline1l_Good && pass_2t33_d4                                      },
-            {"ge6j_ge1b_ge2t11"            , passBaseline1l_Good && pass_ge2t11                                       },
-            {"ge6j_ge1b_ge2t12"            , passBaseline1l_Good && pass_ge2t12                                       },
-            {"ge6j_ge1b_ge2t13"            , passBaseline1l_Good && pass_ge2t13                                       },
-            {"ge6j_ge1b_ge2t11or12or13"    , passBaseline1l_Good && pass_ge2t11or12or13                               },
-            {"ge6j_ge1b_ge2t22"            , passBaseline1l_Good && pass_ge2t22                                       },
-            {"ge6j_ge1b_ge2t23"            , passBaseline1l_Good && pass_ge2t23                                       },
-            {"ge6j_ge1b_ge2t33"            , passBaseline1l_Good && pass_ge2t33                                       },
-            {"ge6j_ge1b_ge2t22or23or33"    , passBaseline1l_Good && pass_ge2t22or23or33                               },
-            {"ge6j_ge1b_ge2t11_d1"         , passBaseline1l_Good && pass_ge2t11_d1                                    },
-            {"ge6j_ge1b_ge2t11_d2"         , passBaseline1l_Good && pass_ge2t11_d2                                    },
-            {"ge6j_ge1b_ge2t11_d3"         , passBaseline1l_Good && pass_ge2t11_d3                                    },
-            {"ge6j_ge1b_ge2t11_d4"         , passBaseline1l_Good && pass_ge2t11_d4                                    },
-            {"ge6j_ge1b_ge2t12_d1"         , passBaseline1l_Good && pass_ge2t12_d1                                    },
-            {"ge6j_ge1b_ge2t12_d2"         , passBaseline1l_Good && pass_ge2t12_d2                                    },
-            {"ge6j_ge1b_ge2t12_d3"         , passBaseline1l_Good && pass_ge2t12_d3                                    },
-            {"ge6j_ge1b_ge2t12_d4"         , passBaseline1l_Good && pass_ge2t12_d4                                    },
-            {"ge6j_ge1b_ge2t13_d1"         , passBaseline1l_Good && pass_ge2t13_d1                                    },
-            {"ge6j_ge1b_ge2t13_d2"         , passBaseline1l_Good && pass_ge2t13_d2                                    },
-            {"ge6j_ge1b_ge2t13_d3"         , passBaseline1l_Good && pass_ge2t13_d3                                    },
-            {"ge6j_ge1b_ge2t13_d4"         , passBaseline1l_Good && pass_ge2t13_d4                                    },
-            {"ge6j_ge1b_ge2t11or12or13_d1" , passBaseline1l_Good && pass_ge2t11or12or13_d1                            },
-            {"ge6j_ge1b_ge2t11or12or13_d2" , passBaseline1l_Good && pass_ge2t11or12or13_d2                            },
-            {"ge6j_ge1b_ge2t11or12or13_d3" , passBaseline1l_Good && pass_ge2t11or12or13_d3                            },
-            {"ge6j_ge1b_ge2t11or12or13_d4" , passBaseline1l_Good && pass_ge2t11or12or13_d4                            },
-            {"ge6j_ge1b_ge2t22_d1"         , passBaseline1l_Good && pass_ge2t22_d1                                    },
-            {"ge6j_ge1b_ge2t22_d2"         , passBaseline1l_Good && pass_ge2t22_d2                                    },
-            {"ge6j_ge1b_ge2t22_d3"         , passBaseline1l_Good && pass_ge2t22_d3                                    },
-            {"ge6j_ge1b_ge2t22_d4"         , passBaseline1l_Good && pass_ge2t22_d4                                    },
-            {"ge6j_ge1b_ge2t23_d1"         , passBaseline1l_Good && pass_ge2t23_d1                                    },
-            {"ge6j_ge1b_ge2t23_d2"         , passBaseline1l_Good && pass_ge2t23_d2                                    },
-            {"ge6j_ge1b_ge2t23_d3"         , passBaseline1l_Good && pass_ge2t23_d3                                    },
-            {"ge6j_ge1b_ge2t23_d4"         , passBaseline1l_Good && pass_ge2t23_d4                                    },
-            {"ge6j_ge1b_ge2t33_d1"         , passBaseline1l_Good && pass_ge2t33_d1                                    },
-            {"ge6j_ge1b_ge2t33_d2"         , passBaseline1l_Good && pass_ge2t33_d2                                    },
-            {"ge6j_ge1b_ge2t33_d3"         , passBaseline1l_Good && pass_ge2t33_d3                                    },
-            {"ge6j_ge1b_ge2t33_d4"         , passBaseline1l_Good && pass_ge2t33_d4                                    },
-            {"ge6j_ge1b_ge2t22or23or33_d1" , passBaseline1l_Good && pass_ge2t22or23or33_d1                            },
-            {"ge6j_ge1b_ge2t22or23or33_d2" , passBaseline1l_Good && pass_ge2t22or23or33_d2                            },
-            {"ge6j_ge1b_ge2t22or23or33_d3" , passBaseline1l_Good && pass_ge2t22or23or33_d3                            },
-            {"ge6j_ge1b_ge2t22or23or33_d4" , passBaseline1l_Good && pass_ge2t22or23or33_d4                            },
+            {"1l_ge6j_ge1b_2t11"              , passBaseline1l_Good && pass_2t11                                         },
+            {"1l_ge6j_ge1b_2t12"              , passBaseline1l_Good && pass_2t12                                         },
+            {"1l_ge6j_ge1b_2t13"              , passBaseline1l_Good && pass_2t13                                         },
+            {"1l_ge6j_ge1b_2t22"              , passBaseline1l_Good && pass_2t22                                         },
+            {"1l_ge6j_ge1b_2t23"              , passBaseline1l_Good && pass_2t23                                         },
+            {"1l_ge6j_ge1b_2t33"              , passBaseline1l_Good && pass_2t33                                         },
+            {"1l_ge6j_ge1b_2t11_d1"           , passBaseline1l_Good && pass_2t11_d1                                      },
+            {"1l_ge6j_ge1b_2t11_d2"           , passBaseline1l_Good && pass_2t11_d2                                      },
+            {"1l_ge6j_ge1b_2t11_d3"           , passBaseline1l_Good && pass_2t11_d3                                      },
+            {"1l_ge6j_ge1b_2t11_d4"           , passBaseline1l_Good && pass_2t11_d4                                      },
+            {"1l_ge6j_ge1b_2t12_d1"           , passBaseline1l_Good && pass_2t12_d1                                      },
+            {"1l_ge6j_ge1b_2t12_d2"           , passBaseline1l_Good && pass_2t12_d2                                      },
+            {"1l_ge6j_ge1b_2t12_d3"           , passBaseline1l_Good && pass_2t12_d3                                      },
+            {"1l_ge6j_ge1b_2t12_d4"           , passBaseline1l_Good && pass_2t12_d4                                      },
+            {"1l_ge6j_ge1b_2t13_d1"           , passBaseline1l_Good && pass_2t13_d1                                      },
+            {"1l_ge6j_ge1b_2t13_d2"           , passBaseline1l_Good && pass_2t13_d2                                      },
+            {"1l_ge6j_ge1b_2t13_d3"           , passBaseline1l_Good && pass_2t13_d3                                      },
+            {"1l_ge6j_ge1b_2t13_d4"           , passBaseline1l_Good && pass_2t13_d4                                      },
+            {"1l_ge6j_ge1b_2t22_d1"           , passBaseline1l_Good && pass_2t22_d1                                      },
+            {"1l_ge6j_ge1b_2t22_d2"           , passBaseline1l_Good && pass_2t22_d2                                      },
+            {"1l_ge6j_ge1b_2t22_d3"           , passBaseline1l_Good && pass_2t22_d3                                      },
+            {"1l_ge6j_ge1b_2t22_d4"           , passBaseline1l_Good && pass_2t22_d4                                      },
+            {"1l_ge6j_ge1b_2t23_d1"           , passBaseline1l_Good && pass_2t23_d1                                      },
+            {"1l_ge6j_ge1b_2t23_d2"           , passBaseline1l_Good && pass_2t23_d2                                      },
+            {"1l_ge6j_ge1b_2t23_d3"           , passBaseline1l_Good && pass_2t23_d3                                      },
+            {"1l_ge6j_ge1b_2t23_d4"           , passBaseline1l_Good && pass_2t23_d4                                      },
+            {"1l_ge6j_ge1b_2t33_d1"           , passBaseline1l_Good && pass_2t33_d1                                      },
+            {"1l_ge6j_ge1b_2t33_d2"           , passBaseline1l_Good && pass_2t33_d2                                      },
+            {"1l_ge6j_ge1b_2t33_d3"           , passBaseline1l_Good && pass_2t33_d3                                      },
+            {"1l_ge6j_ge1b_2t33_d4"           , passBaseline1l_Good && pass_2t33_d4                                      },
+            {"1l_ge6j_ge1b_ge2t11"            , passBaseline1l_Good && pass_ge2t11                                       },
+            {"1l_ge6j_ge1b_ge2t12"            , passBaseline1l_Good && pass_ge2t12                                       },
+            {"1l_ge6j_ge1b_ge2t13"            , passBaseline1l_Good && pass_ge2t13                                       },
+            {"1l_ge6j_ge1b_ge2t11or12or13"    , passBaseline1l_Good && pass_ge2t11or12or13                               },
+            {"1l_ge6j_ge1b_ge2t22"            , passBaseline1l_Good && pass_ge2t22                                       },
+            {"1l_ge6j_ge1b_ge2t23"            , passBaseline1l_Good && pass_ge2t23                                       },
+            {"1l_ge6j_ge1b_ge2t33"            , passBaseline1l_Good && pass_ge2t33                                       },
+            {"1l_ge6j_ge1b_ge2t22or23or33"    , passBaseline1l_Good && pass_ge2t22or23or33                               },
+            {"1l_ge6j_ge1b_ge2t11_d1"         , passBaseline1l_Good && pass_ge2t11_d1                                    },
+            {"1l_ge6j_ge1b_ge2t11_d2"         , passBaseline1l_Good && pass_ge2t11_d2                                    },
+            {"1l_ge6j_ge1b_ge2t11_d3"         , passBaseline1l_Good && pass_ge2t11_d3                                    },
+            {"1l_ge6j_ge1b_ge2t11_d4"         , passBaseline1l_Good && pass_ge2t11_d4                                    },
+            {"1l_ge6j_ge1b_ge2t12_d1"         , passBaseline1l_Good && pass_ge2t12_d1                                    },
+            {"1l_ge6j_ge1b_ge2t12_d2"         , passBaseline1l_Good && pass_ge2t12_d2                                    },
+            {"1l_ge6j_ge1b_ge2t12_d3"         , passBaseline1l_Good && pass_ge2t12_d3                                    },
+            {"1l_ge6j_ge1b_ge2t12_d4"         , passBaseline1l_Good && pass_ge2t12_d4                                    },
+            {"1l_ge6j_ge1b_ge2t13_d1"         , passBaseline1l_Good && pass_ge2t13_d1                                    },
+            {"1l_ge6j_ge1b_ge2t13_d2"         , passBaseline1l_Good && pass_ge2t13_d2                                    },
+            {"1l_ge6j_ge1b_ge2t13_d3"         , passBaseline1l_Good && pass_ge2t13_d3                                    },
+            {"1l_ge6j_ge1b_ge2t13_d4"         , passBaseline1l_Good && pass_ge2t13_d4                                    },
+            {"1l_ge6j_ge1b_ge2t11or12or13_d1" , passBaseline1l_Good && pass_ge2t11or12or13_d1                            },
+            {"1l_ge6j_ge1b_ge2t11or12or13_d2" , passBaseline1l_Good && pass_ge2t11or12or13_d2                            },
+            {"1l_ge6j_ge1b_ge2t11or12or13_d3" , passBaseline1l_Good && pass_ge2t11or12or13_d3                            },
+            {"1l_ge6j_ge1b_ge2t11or12or13_d4" , passBaseline1l_Good && pass_ge2t11or12or13_d4                            },
+            {"1l_ge6j_ge1b_ge2t22_d1"         , passBaseline1l_Good && pass_ge2t22_d1                                    },
+            {"1l_ge6j_ge1b_ge2t22_d2"         , passBaseline1l_Good && pass_ge2t22_d2                                    },
+            {"1l_ge6j_ge1b_ge2t22_d3"         , passBaseline1l_Good && pass_ge2t22_d3                                    },
+            {"1l_ge6j_ge1b_ge2t22_d4"         , passBaseline1l_Good && pass_ge2t22_d4                                    },
+            {"1l_ge6j_ge1b_ge2t23_d1"         , passBaseline1l_Good && pass_ge2t23_d1                                    },
+            {"1l_ge6j_ge1b_ge2t23_d2"         , passBaseline1l_Good && pass_ge2t23_d2                                    },
+            {"1l_ge6j_ge1b_ge2t23_d3"         , passBaseline1l_Good && pass_ge2t23_d3                                    },
+            {"1l_ge6j_ge1b_ge2t23_d4"         , passBaseline1l_Good && pass_ge2t23_d4                                    },
+            {"1l_ge6j_ge1b_ge2t33_d1"         , passBaseline1l_Good && pass_ge2t33_d1                                    },
+            {"1l_ge6j_ge1b_ge2t33_d2"         , passBaseline1l_Good && pass_ge2t33_d2                                    },
+            {"1l_ge6j_ge1b_ge2t33_d3"         , passBaseline1l_Good && pass_ge2t33_d3                                    },
+            {"1l_ge6j_ge1b_ge2t33_d4"         , passBaseline1l_Good && pass_ge2t33_d4                                    },
+            {"1l_ge6j_ge1b_ge2t22or23or33_d1" , passBaseline1l_Good && pass_ge2t22or23or33_d1                            },
+            {"1l_ge6j_ge1b_ge2t22or23or33_d2" , passBaseline1l_Good && pass_ge2t22or23or33_d2                            },
+            {"1l_ge6j_ge1b_ge2t22or23or33_d3" , passBaseline1l_Good && pass_ge2t22or23or33_d3                            },
+            {"1l_ge6j_ge1b_ge2t22or23or33_d4" , passBaseline1l_Good && pass_ge2t22or23or33_d4                            },
+            {"0l"                             , pass_0l                                                                  },
+            {"0l_1g"                          , pass_0l && NGoodPhotons == 1                                             },
+            {"0l_ge7j_1g"                     , passBaseline1g_Good                                                      },
         };
 
         // Initialize Histograms
@@ -466,55 +472,64 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             initHistos = true;
         }
 
+        // Global cuts
+        if ( !(passTrigger && passMadHT) ) continue;
+
         for(auto& kv : cut_map_1l)
         {
             if(kv.second)
             {
-                my_histos["h_njets_1l_"   +kv.first]->Fill(NJets_pt30, eventweight);
-                my_histos["h_ntops_1l_"   +kv.first]->Fill(ntops, eventweight);
-                my_histos["h_nb_1l_"      +kv.first]->Fill(NBJets, eventweight);
-                my_histos["h_bdt_1l_"     +kv.first]->Fill(eventshape_bdt_val, eventweight);
-                my_histos["h_fisher_1l_"  +kv.first]->Fill(fisher_val, eventweight);
-                my_histos["h_deepESM_1l_"  +kv.first]->Fill(deepESM_val, eventweight);
-                my_histos["h_BestComboMass_1l_"+kv.first]->Fill(bestComboAvgMass, eventweight);
-                my_histos["h_genBestComboMass_1l_"+kv.first]->Fill(genComboAvgMass, eventweight);
-                my_histos["h_BestComboPt_1l_"+kv.first]->Fill(bestComboAvgPt, eventweight);
-                my_histos["h_BestComboMassDiff_1l_"+kv.first]->Fill(bestComboMassDiff, eventweight);
-                my_histos["h_BestComboRelDiff_1l_"+kv.first]->Fill(bestComboRelDiff, eventweight);
-                my_histos["h_BestComboMassDiffAbs_1l_"+kv.first]->Fill(abs(bestComboMassDiff), eventweight);
-                my_histos["h_BestComboRelDiffAbs_1l_"+kv.first]->Fill(abs(bestComboRelDiff), eventweight);
+                my_histos["h_njets_"   +kv.first]->Fill(NJets_pt30, eventweight);
+                my_histos["h_ntops_"   +kv.first]->Fill(ntops, eventweight);
+                my_histos["h_nb_"      +kv.first]->Fill(NBJets, eventweight);
+                my_histos["h_bdt_"     +kv.first]->Fill(eventshape_bdt_val, eventweight);
+                my_histos["h_fisher_"  +kv.first]->Fill(fisher_val, eventweight);
+                my_histos["h_deepESM_" +kv.first]->Fill(deepESM_val, eventweight);
+                for(int i = 0; i < Photons.size(); i++)
+                {
+                    if(!GoodPhotons[i]) continue;
+                    double photonPt = Photons[i].Pt();
+                    my_histos["h_photonPt_"+kv.first]->Fill(photonPt, eventweight);
+                }
+                my_histos["h_BestComboMass_"+kv.first]->Fill(bestComboAvgMass, eventweight);
+                my_histos["h_genBestComboMass_"+kv.first]->Fill(genComboAvgMass, eventweight);
+                my_histos["h_BestComboPt_"+kv.first]->Fill(bestComboAvgPt, eventweight);
+                my_histos["h_BestComboMassDiff_"+kv.first]->Fill(bestComboMassDiff, eventweight);
+                my_histos["h_BestComboRelDiff_"+kv.first]->Fill(bestComboRelDiff, eventweight);
+                my_histos["h_BestComboMassDiffAbs_"+kv.first]->Fill(abs(bestComboMassDiff), eventweight);
+                my_histos["h_BestComboRelDiffAbs_"+kv.first]->Fill(abs(bestComboRelDiff), eventweight);
                 if(MegaJetsMatched)
                 {
-                    my_histos["h_GenMBestComboMass_1l_"+kv.first]->Fill(bestComboAvgMass, eventweight);
-                    my_histos["h_GenMBestComboPt_1l_"+kv.first]->Fill(bestComboAvgPt, eventweight);
-                    my_histos["h_GenMBestComboMassDiff_1l_"+kv.first]->Fill(bestComboMassDiff, eventweight);
-                    my_histos["h_GenMBestComboRelDiff_1l_"+kv.first]->Fill(bestComboRelDiff, eventweight);
-                    my_histos["h_GenMBestComboMassDiffAbs_1l_"+kv.first]->Fill(abs(bestComboMassDiff), eventweight);
-                    my_histos["h_GenMBestComboRelDiffAbs_1l_"+kv.first]->Fill(abs(bestComboRelDiff), eventweight);
-                    my_histos["h_GenMNjets_1l_"+kv.first]->Fill(NJets_pt30, eventweight);
+                    my_histos["h_GenMBestComboMass_"+kv.first]->Fill(bestComboAvgMass, eventweight);
+                    my_histos["h_GenMBestComboPt_"+kv.first]->Fill(bestComboAvgPt, eventweight);
+                    my_histos["h_GenMBestComboMassDiff_"+kv.first]->Fill(bestComboMassDiff, eventweight);
+                    my_histos["h_GenMBestComboRelDiff_"+kv.first]->Fill(bestComboRelDiff, eventweight);
+                    my_histos["h_GenMBestComboMassDiffAbs_"+kv.first]->Fill(abs(bestComboMassDiff), eventweight);
+                    my_histos["h_GenMBestComboRelDiffAbs_"+kv.first]->Fill(abs(bestComboRelDiff), eventweight);
+                    my_histos["h_GenMNjets_"+kv.first]->Fill(NJets_pt30, eventweight);
                 }
 
-                my_2d_histos["h_njets_bdt_1l_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
-                my_2d_histos["h_njets_fisher_1l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
-                my_2d_histos["h_njets_deepESM_1l_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
-                my_2d_histos["h_njets_BestComboMass_1l_"+kv.first]->Fill(NJets_pt30, bestComboAvgMass, eventweight);
-                my_tp_histos["hTp_njets_fisher_1l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
-                my_tp_histos["hTp_njets_deepESM_1l_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
+                my_2d_histos["h_njets_bdt_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
+                my_2d_histos["h_njets_fisher_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
+                my_2d_histos["h_njets_deepESM_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
+                my_2d_histos["h_njets_BestComboMass_"+kv.first]->Fill(NJets_pt30, bestComboAvgMass, eventweight);
+                my_tp_histos["hTp_njets_fisher_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
+                my_tp_histos["hTp_njets_deepESM_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
 
                 if ( NJets_pt30 < 9 )
                 {
-                    my_histos["blind_njets_1l_"   +kv.first]->Fill(NJets_pt30, eventweight);
-                    my_histos["blind_ntops_1l_"   +kv.first]->Fill(ntops, eventweight);
-                    my_histos["blind_nb_1l_"      +kv.first]->Fill(NBJets, eventweight);
-                    my_histos["blind_bdt_1l_"     +kv.first]->Fill(eventshape_bdt_val, eventweight);
-                    my_histos["blind_fisher_1l_"  +kv.first]->Fill(fisher_val, eventweight);
-                    my_histos["blind_deepESM_1l_"  +kv.first]->Fill(deepESM_val, eventweight);
+                    my_histos["blind_njets_"   +kv.first]->Fill(NJets_pt30, eventweight);
+                    my_histos["blind_ntops_"   +kv.first]->Fill(ntops, eventweight);
+                    my_histos["blind_nb_"      +kv.first]->Fill(NBJets, eventweight);
+                    my_histos["blind_bdt_"     +kv.first]->Fill(eventshape_bdt_val, eventweight);
+                    my_histos["blind_fisher_"  +kv.first]->Fill(fisher_val, eventweight);
+                    my_histos["blind_deepESM_"  +kv.first]->Fill(deepESM_val, eventweight);
                 
-                    my_2d_histos["blind_njets_bdt_1l_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
-                    my_2d_histos["blind_njets_fisher_1l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
-                    my_2d_histos["blind_njets_deepESM_1l_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
-                    my_tp_histos["blindTp_njets_fisher_1l_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
-                    my_tp_histos["blindTp_njets_deepESM_1l_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
+                    my_2d_histos["blind_njets_bdt_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
+                    my_2d_histos["blind_njets_fisher_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
+                    my_2d_histos["blind_njets_deepESM_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
+                    my_tp_histos["blindTp_njets_fisher_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
+                    my_tp_histos["blindTp_njets_deepESM_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
                 }
             }
         }
@@ -560,7 +575,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         my_histos["h_met"     ]->Fill(MET, eventweight);
         my_histos["h_bdt"     ]->Fill(eventshape_bdt_val, eventweight);
         my_histos["h_fisher"  ]->Fill(fisher_val, eventweight);
-        my_histos["h_deepESM"  ]->Fill(deepESM_val, eventweight);
+        my_histos["h_deepESM" ]->Fill(deepESM_val, eventweight);
         my_histos["h_njets"   ]->Fill(NJets_pt30, eventweight);
         my_histos["h_nb"      ]->Fill(NBJets, eventweight);
         my_histos["h_ntops"   ]->Fill(ntops, eventweight);        
@@ -574,7 +589,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             my_histos["blind_met"     ]->Fill(MET, eventweight);
             my_histos["blind_bdt"     ]->Fill(eventshape_bdt_val, eventweight);
             my_histos["blind_fisher"  ]->Fill(fisher_val, eventweight);
-            my_histos["blind_deepESM"  ]->Fill(deepESM_val, eventweight);
+            my_histos["blind_deepESM" ]->Fill(deepESM_val, eventweight);
             my_histos["blind_njets"   ]->Fill(NJets_pt30, eventweight);
             my_histos["blind_nb"      ]->Fill(NBJets, eventweight);
             my_histos["blind_ntops"   ]->Fill(ntops, eventweight);        
