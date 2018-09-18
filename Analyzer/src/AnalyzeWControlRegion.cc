@@ -39,6 +39,7 @@ void AnalyzeWControlRegion::InitHistos(const std::map<std::string, bool>& cutMap
         my_histos.emplace("h_Mbl_maxpT_"+mycut.first,std::make_shared<TH1D>(("h_Mbl_maxpT_"+mycut.first).c_str(),("h_Mbl_maxpT_"+mycut.first).c_str(),30,0,300));
         my_histos.emplace("h_Mbl_maxCSV_"+mycut.first,std::make_shared<TH1D>(("h_Mbl_maxCSV_"+mycut.first).c_str(),("h_Mbl_maxCSV_"+mycut.first).c_str(),30,0,300));
         my_histos.emplace("h_Mbl_all_"+mycut.first,std::make_shared<TH1D>(("h_Mbl_all_"+mycut.first).c_str(),("h_Mbl_all_"+mycut.first).c_str(),30,0,300));
+        my_histos.emplace("h_nleptons_"+mycut.first,std::make_shared<TH1D>(("h_nleptons_"+mycut.first).c_str(),("h_njets_"+mycut.first).c_str(),5,0,5));
 
         my_histos.emplace("h_lepton_pT_"+mycut.first,std::make_shared<TH1D>(("h_lepton_pT_"+mycut.first).c_str(),("h_lepton_pT_"+mycut.first).c_str(),50,0,500));
         my_histos.emplace("h_muon_pT_"+mycut.first,std::make_shared<TH1D>(("h_muon_pT_"+mycut.first).c_str(),("h_muon_pT_"+mycut.first).c_str(),50,0,500));
@@ -114,9 +115,12 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
         if(!goodEvent) continue;
 
         // lepton cuts
-        bool pass_1mu = (runtype != "Data" || filetag == "Data_SingleMuon")     && NGoodMuons == 1 && passTriggerMuon;
-        bool pass_1el = (runtype != "Data" || filetag == "Data_SingleElectron") && NGoodElectrons == 1 && passTriggerElectron;
+        bool pass_1mu = (runtype != "Data" || filetag == "Data_SingleMuon")     && NGoodMuons == 1 && NGoodElectrons == 0 && passTriggerMuon;
+        bool pass_1el = (runtype != "Data" || filetag == "Data_SingleElectron") && NGoodElectrons == 1 && NGoodMuons == 0 && passTriggerElectron;
         bool pass_1l = pass_1mu || pass_1el;
+
+        if(!pass_1l) continue;
+
         // compute mT 
         TLorentzVector metLV;
         metLV.SetPtEtaPhiE(MET,0,METPhi,MET);
@@ -196,7 +200,18 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
         // -------------------                        
         const std::map<std::string, bool> cut_map 
         {
-            {"1l"                                 , goodEvent && pass_1l                                                             },
+            {"1l"                                 , goodEvent && pass_1l                                            },
+            {"1l_0b_loose"                        , goodEvent && pass_1l && pass_0b_loose                           },
+            {"1l_0b_loose_mT"                     , goodEvent && pass_1l && pass_0b_loose && pass_mT                },
+            {"1l_0b_loose_met"                    , goodEvent && pass_1l && pass_0b_loose && MET>30                 },
+            {"1l_0b_loose_mbl_maxpT"              , goodEvent && pass_1l && pass_0b_loose && !pass_Mbl_maxpT        },
+            {"1l_0b_loose_mbl_maxCSV"             , goodEvent && pass_1l && pass_0b_loose && !pass_Mbl_maxCSV       },
+            {"1l_0b_loose_mbl_all"                , goodEvent && pass_1l && pass_0b_loose && !pass_Mbl_all          },
+            {"1l_0b_loose_mT_met"                       , goodEvent && pass_1l && pass_mT && pass_0b_loose && MET>30                             },
+            {"1l_0b_loose_mT_met_dphi"                  , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && MET>30                         },
+            {"1l_0b_loose_mT_met_dphi_mbl_maxpT"        , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && MET>30 && !pass_Mbl_maxpT        },
+            {"1l_0b_loose_mT_met_dphi_mbl_maxCSV"       , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && MET>30 && !pass_Mbl_maxCSV       },
+            {"1l_0b_loose_mT_met_dphi_mbl_all"          , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && MET>30 && !pass_Mbl_all          },
             {"1l_met"                             , goodEvent && pass_1l && MET>30                                                   },
             {"1l_mT"                              , goodEvent && pass_1l && pass_mT                                                  },
             {"1l_mT_met"                          , goodEvent && pass_1l && pass_mT && MET>30                                        },
@@ -205,12 +220,40 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
                 //{"1l_mT_0b_dphi_mbl_maxpT"            , goodEvent && pass_1l && pass_mT && pass_0b && pass_dphi && !pass_Mbl_maxpT        },
                 //{"1l_mT_0b_dphi_mbl_maxCSV"           , goodEvent && pass_1l && pass_mT && pass_0b && pass_dphi && !pass_Mbl_maxCSV       },
                 //{"1l_mT_0b_dphi_mbl_all"              , goodEvent && pass_1l && pass_mT && pass_0b && pass_dphi && !pass_Mbl_all          },
-            {"1l_mT_0b_loose"                           , goodEvent && pass_1l && pass_mT && pass_0b_loose                                       },
-            {"1l_mT_0b_loose_met"                       , goodEvent && pass_1l && pass_mT && pass_0b_loose && MET>30                             },
-            {"1l_mT_0b_loose_met_dphi"                  , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && MET>30                         },
-            {"1l_mT_0b_loose_met_dphi_mbl_maxpT"        , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && MET>30 && !pass_Mbl_maxpT        },
-            {"1l_mT_0b_loose_met_dphi_mbl_maxCSV"       , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && MET>30 && !pass_Mbl_maxCSV       },
-            {"1l_mT_0b_loose_met_dphi_mbl_all"          , goodEvent && pass_1l && pass_mT && pass_0b_loose && pass_dphi && MET>30 && !pass_Mbl_all          },
+
+            {"1mu"                                 , goodEvent && pass_1mu                                            },
+            {"1mu_0b_loose"                        , goodEvent && pass_1mu && pass_0b_loose                           },
+            {"1mu_0b_loose_mT"                     , goodEvent && pass_1mu && pass_0b_loose && pass_mT                },
+            {"1mu_0b_loose_met"                    , goodEvent && pass_1mu && pass_0b_loose && MET>30                 },
+            {"1mu_0b_loose_mbl_maxpT"              , goodEvent && pass_1mu && pass_0b_loose && !pass_Mbl_maxpT        },
+            {"1mu_0b_loose_mbl_maxCSV"             , goodEvent && pass_1mu && pass_0b_loose && !pass_Mbl_maxCSV       },
+            {"1mu_0b_loose_mbl_all"                , goodEvent && pass_1mu && pass_0b_loose && !pass_Mbl_all          },
+            {"1mu_0b_loose_mT_met"                       , goodEvent && pass_1mu && pass_mT && pass_0b_loose && MET>30                             },
+            {"1mu_0b_loose_mT_met_dphi"                  , goodEvent && pass_1mu && pass_mT && pass_0b_loose && pass_dphi && MET>30                         },
+            {"1mu_0b_loose_mT_met_dphi_mbl_maxpT"        , goodEvent && pass_1mu && pass_mT && pass_0b_loose && pass_dphi && MET>30 && !pass_Mbl_maxpT        },
+            {"1mu_0b_loose_mT_met_dphi_mbl_maxCSV"       , goodEvent && pass_1mu && pass_mT && pass_0b_loose && pass_dphi && MET>30 && !pass_Mbl_maxCSV       },
+            {"1mu_0b_loose_mT_met_dphi_mbl_all"          , goodEvent && pass_1mu && pass_mT && pass_0b_loose && pass_dphi && MET>30 && !pass_Mbl_all          },
+            {"1mu_met"                             , goodEvent && pass_1mu && MET>30                                                   },
+            {"1mu_mT"                              , goodEvent && pass_1mu && pass_mT                                                  },
+            {"1mu_mT_met"                          , goodEvent && pass_1mu && pass_mT && MET>30                                        },
+
+
+            {"1el"                                 , goodEvent && pass_1el                                            },
+            {"1el_0b_loose"                        , goodEvent && pass_1el && pass_0b_loose                           },
+            {"1el_0b_loose_mT"                     , goodEvent && pass_1el && pass_0b_loose && pass_mT                },
+            {"1el_0b_loose_met"                    , goodEvent && pass_1el && pass_0b_loose && MET>30                 },
+            {"1el_0b_loose_mbl_maxpT"              , goodEvent && pass_1el && pass_0b_loose && !pass_Mbl_maxpT        },
+            {"1el_0b_loose_mbl_maxCSV"             , goodEvent && pass_1el && pass_0b_loose && !pass_Mbl_maxCSV       },
+            {"1el_0b_loose_mbl_all"                , goodEvent && pass_1el && pass_0b_loose && !pass_Mbl_all          },
+            {"1el_0b_loose_mT_met"                       , goodEvent && pass_1el && pass_mT && pass_0b_loose && MET>30                             },
+            {"1el_0b_loose_mT_met_dphi"                  , goodEvent && pass_1el && pass_mT && pass_0b_loose && pass_dphi && MET>30                         },
+            {"1el_0b_loose_mT_met_dphi_mbl_maxpT"        , goodEvent && pass_1el && pass_mT && pass_0b_loose && pass_dphi && MET>30 && !pass_Mbl_maxpT        },
+            {"1el_0b_loose_mT_met_dphi_mbl_maxCSV"       , goodEvent && pass_1el && pass_mT && pass_0b_loose && pass_dphi && MET>30 && !pass_Mbl_maxCSV       },
+            {"1el_0b_loose_mT_met_dphi_mbl_all"          , goodEvent && pass_1el && pass_mT && pass_0b_loose && pass_dphi && MET>30 && !pass_Mbl_all          },
+            {"1el_met"                             , goodEvent && pass_1el && MET>30                                                   },
+            {"1el_mT"                              , goodEvent && pass_1el && pass_mT                                                  },
+            {"1el_mT_met"                          , goodEvent && pass_1el && pass_mT && MET>30                                        },
+
         };
         
         // Initialize Histograms
@@ -241,6 +284,7 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
                 my_histos["h_Mbl_maxpT_"  +kv.first]->Fill(Mbl_maxpT, eventweight);
                 for (double mbl: Mbl_all)
                     my_histos["h_Mbl_all_"  +kv.first]->Fill(mbl, eventweight);
+                my_histos["h_nleptons_" +kv.first]->Fill(NGoodLeptons, eventweight);
 
                 if (NGoodMuons > 0)
                 {
