@@ -124,8 +124,8 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         if( runtype == "MC" ) 
         {
             //std::string eosPath =   "root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/";
-            BTagCorrector<double> bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
-            Pileup_Sys<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
+            BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
+            Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
             ScaleFactors scaleFactors("allInOne_leptonSF_Moriond17.root");
             tr.registerFunction( std::move(bTagCorrector) );
             tr.registerFunction( std::move(pileup) );
