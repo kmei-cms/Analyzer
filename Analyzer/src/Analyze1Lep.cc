@@ -18,6 +18,7 @@ Analyze1Lep::Analyze1Lep() : initHistos(false)
 void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
 {
     TH1::SetDefaultSumw2();
+    TH2::SetDefaultSumw2();
 
     int fB = 200;
 
@@ -294,7 +295,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // -------------------                        
         const std::map<std::string, bool> cut_map_1l 
         {
-            {"1l"                            , pass_1l                                                                  },
+            {"1l"                             , pass_1l                                                                  },
             {"1l_ge6j"                        , pass_1l && pass_njet_pt45                                                },
             {"1l_ge2b"                        , pass_1l && pass_njet_pt45_2btag                                          },
             {"1l_1t"                          , pass_1l && pass_1t                                                       },
@@ -621,27 +622,30 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_histos["Jet_m_"+std::to_string(i+1)]->Fill(static_cast<double>(Jets_cm_top6.at(i).M()), eventweight);
             }
         }
-
     } // end of event loop
-
 }
 
 void Analyze1Lep::WriteHistos(TFile* outfile)
 {
-    for (const auto &p : my_histos) {
+    outfile->cd();
+    
+    for(const auto& p : my_histos) 
+    {
         p.second->Write();
     }
     
-    for (const auto &p : my_2d_histos) {
+    for(const auto& p : my_2d_histos) 
+    {
         p.second->Write();
     }
 
-    for (const auto &p : my_tp_histos) {
+    for(const auto& p : my_tp_histos) 
+    {
         p.second->Write();
     }
     
-    for (const auto &p : my_efficiencies) {
+    for(const auto& p : my_efficiencies) 
+    {
         p.second->Write();
-    }
-    
+    }    
 }
