@@ -12,6 +12,7 @@
 #include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
+#include "Analyzer/Analyzer/include/MakeNJetDists.h"
 
 #include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
 #include "SusyAnaTools/Tools/BTagCorrector.h"
@@ -25,6 +26,7 @@
 #include "Framework/Framework/include/Electron.h"
 #include "Framework/Framework/include/Jet.h"
 #include "Framework/Framework/include/BJet.h"
+#include "Framework/Framework/include/Photon.h"
 #include "Framework/Framework/include/ScaleFactors.h"
 #include "Framework/Framework/include/CommonVariables.h"
 #include "Framework/Framework/include/Baseline.h"
@@ -32,6 +34,7 @@
 #include "TH1D.h"
 #include "TFile.h"
 #include "TChain.h"
+#include "TGraph.h"
 
 #include <iostream>
 #include <getopt.h>
@@ -95,19 +98,12 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
             RunTopTagger rtt;
             tr.registerFunction( std::move(rtt) );
         }
-        //if( runtype == "MC" ) 
-        //{
-        //    BTagCorrector bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
-        //    Pileup_Sys pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
-        //    ScaleFactors scaleFactors;
-        //    tr.registerFunction( std::move(bTagCorrector) );
-        //    tr.registerFunction( std::move(pileup) );
-        //    tr.registerFunction( std::move(scaleFactors) );
-        //}
+        
         Muon muon;
         Electron electron;
         Jet jet(myVarSuffix);
         BJet bjet(myVarSuffix);
+        Photon photon;
         RunFisher runFisher("v3",myVarSuffix);
         CommonVariables commonVariables;
         MakeMVAVariables makeMVAVariables(false, myVarSuffix);
@@ -119,12 +115,23 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerFunction( std::move(electron) );
         tr.registerFunction( std::move(jet) );
         tr.registerFunction( std::move(bjet) );
+        tr.registerFunction( std::move(photon) );
         tr.registerFunction( std::move(runFisher) );
         tr.registerFunction( std::move(commonVariables) );
         tr.registerFunction( std::move(makeMVAVariables) );
         tr.registerFunction( std::move(baseline) );
         //tr.registerFunction( std::move(deepEventShape) );
 
+        if( runtype == "MC" ) 
+        {
+            //std::string eosPath =   "root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/";
+            BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
+            Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
+            ScaleFactors scaleFactors("allInOne_leptonSF_Moriond17.root");
+            tr.registerFunction( std::move(bTagCorrector) );
+            tr.registerFunction( std::move(pileup) );
+            tr.registerFunction( std::move(scaleFactors) );
+        }
         // Loop over all of the events and fill histos
         a.Loop(tr, weight, maxEvts);
 
@@ -170,7 +177,7 @@ int main(int argc, char *argv[])
     int opt, option_index = 0;
     bool doBackground = false, doTopTagger = false, doEventSelection = false, 
          doEventShape = false, do0Lep = false, do1Lep = false, doStealthTT = false,
-         doBTagSF = false, calcBTagSF = false, doWControlRegion = false;
+         doBTagSF = false, calcBTagSF = false, doWControlRegion = false, makeNJetDists = false;
     bool runOnCondor = false;
     bool isSkim = false;
     std::string histFile = "", dataSets = "";
@@ -187,6 +194,7 @@ int main(int argc, char *argv[])
         {"doStealthTT",        no_argument, 0, 'x'},
         {"calcBTagSF",         no_argument, 0, 'f'},
         {"doBTagSF",           no_argument, 0, 'g'},
+        {"makeNJetDists",      no_argument, 0, 'n'},
         {"condor",             no_argument, 0, 'c'},
         {"histFile",     required_argument, 0, 'H'},
         {"dataSets",     required_argument, 0, 'D'},
@@ -195,8 +203,7 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-
-    while((opt = getopt_long(argc, argv, "bwtspzoxfgcH:D:N:M:E:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "bwtspzoxfgncH:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
@@ -210,6 +217,7 @@ int main(int argc, char *argv[])
             case 'x': doStealthTT      = true;              break;
             case 'f': calcBTagSF       = true;              break;
             case 'g': doBTagSF         = true;              break;
+            case 'n': makeNJetDists    = true;              break;
             case 'c': runOnCondor      = true;              break;
             case 'H': histFile         = optarg;            break;
             case 'D': dataSets         = optarg;            break;
@@ -242,6 +250,7 @@ int main(int argc, char *argv[])
         {doStealthTT,      run<AnalyzeStealthTopTagger>},
         {doBTagSF,         run<AnalyzeBTagSF>},
         {calcBTagSF,       run<CalculateBTagSF>},
+        {makeNJetDists,    run<MakeNJetDists>},
     }; 
     
     try

@@ -75,7 +75,8 @@ void AnalyzeBTagSF::InitHistos()
     my_histos.emplace( "h_nj_pdfSF_u",      std::make_shared<TH1D>( "h_nj_pdfSF_u",     "h_nj_pdfSF_u",     20, 0.0, 20.0) );
     my_histos.emplace( "h_nj_pdfSF_d",      std::make_shared<TH1D>( "h_nj_pdfSF_d",     "h_nj_pdfSF_d",     20, 0.0, 20.0) );
 
-
+    my_histos.emplace( "h_eleSF",           std::make_shared<TH1D>( "h_eleSF",          "h_eleSF",          60, -1.2, 2.0 ) );
+    my_histos.emplace( "h_muSF",            std::make_shared<TH1D>( "h_muSF",           "h_muSF",           60, -1.2, 2.0 ) );
 /*    std::vector<std::string> genericVectorOfTags    { "myTag" };
 
     for( std::string nJetsTag : njets_fisherDist_tags ) {
@@ -129,6 +130,9 @@ void AnalyzeBTagSF::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         const auto& pdfSF_u             = tr.getVar<double>("PDFweightUp");
         const auto& pdfSF_d             = tr.getVar<double>("PDFweightDown");
 
+        const auto& electronSF          = tr.getVar<double>("leadGoodElectronSF");
+        const auto& muonSF              = tr.getVar<double>("leadGoodMuonSF");
+
 
         //------------------------------------
         //-- Print Event Number
@@ -171,7 +175,9 @@ void AnalyzeBTagSF::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         }
 
         else continue;
-        
+ 
+        my_histos["h_muSF"]->Fill(muonSF);
+        my_histos["h_eleSF"]->Fill(electronSF);
         //std::cout<<ntru_PV<<std::endl;
         my_histos["h_btagSF"]->Fill(bTagSF);
         my_histos["h_btagSF_u"]->Fill(bTagSF_u);

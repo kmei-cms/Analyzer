@@ -34,15 +34,15 @@ with file(environ["CMSSW_BASE"] + "/src/%s/test/TopTagger.cfg" % repo) as meowtt
             print "------------------------------------------------"
             break
 
-# ESMVAFileName = ""
-# with file(environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape.cfg" % repo) as ESMcfgFile:
-#     for line in ESMcfgFile:
-#         if "modelFile" in line:
-#             ESMVAFileName = line.split("=")[1].strip().strip("\"")
-#             print "------------------------------------------------"
-#             print "DeepESM training:", ESMVAFileName
-#             print "------------------------------------------------"
-#             break
+ESMVAFileName = ""
+with file(environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape.cfg" % repo) as ESMcfgFile:
+    for line in ESMcfgFile:
+        if "modelFile" in line:
+            ESMVAFileName = line.split("=")[1].strip().strip("\"")
+            print "------------------------------------------------"
+            print "DeepESM training:", ESMVAFileName
+            print "------------------------------------------------"
+            break
 
 filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MyAnalysis" % repo, 
                    environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,mvaFileName),
@@ -50,8 +50,12 @@ filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MyAnalysis" % repo,
                    environ["CMSSW_BASE"] + "/src/TopTagger/TopTagger/test/libTopTagger.so",
                    environ["CMSSW_BASE"] + "/src/%s/test/sampleSets.cfg" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/sampleCollections.cfg" % repo,
-                   #environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape.cfg" % repo,
-                   #environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,ESMVAFileName),
+                   environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape.cfg" % repo,
+                   environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,ESMVAFileName),
+                   environ["CMSSW_BASE"] + "/src/%s/test/PileupHistograms_0121_69p2mb_pm4p6.root" % repo,
+                   environ["CMSSW_BASE"] + "/src/%s/test/allInOne_BTagEff.root" % repo,
+                   environ["CMSSW_BASE"] + "/src/%s/test/allInOne_leptonSF_Moriond17.root" % repo,
+                   environ["CMSSW_BASE"] + "/src/%s/test/CSVv2_Moriond17_B_H.csv" % repo,
                    ]
 
 def makeExeAndFriendsTarball(filestoTransfer, fname):
