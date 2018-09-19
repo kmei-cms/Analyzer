@@ -3,6 +3,7 @@
 #include "TopTagger/CfgParser/include/TTException.h"
 
 #include "Analyzer/Analyzer/include/AnalyzeBackground.h"
+#include "Analyzer/Analyzer/include/AnalyzeWControlRegion.h"
 #include "Analyzer/Analyzer/include/AnalyzeTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeEventSelection.h"
 #include "Analyzer/Analyzer/include/AnalyzeEventShape.h"
@@ -175,8 +176,8 @@ int main(int argc, char *argv[])
 {
     int opt, option_index = 0;
     bool doBackground = false, doTopTagger = false, doEventSelection = false, 
-        doEventShape = false, do0Lep = false, do1Lep = false, doStealthTT = false,
-        doBTagSF = false, calcBTagSF = false, makeNJetDists = false;
+         doEventShape = false, do0Lep = false, do1Lep = false, doStealthTT = false,
+         doBTagSF = false, calcBTagSF = false, doWControlRegion = false, makeNJetDists = false;
     bool runOnCondor = false;
     bool isSkim = false;
     std::string histFile = "", dataSets = "";
@@ -184,6 +185,7 @@ int main(int argc, char *argv[])
 
     static struct option long_options[] = {
         {"doBackground",       no_argument, 0, 'b'},
+        {"doWControlRegion",   no_argument, 0, 'w'},
         {"doTopTagger",        no_argument, 0, 't'},
         {"doEventSelection",   no_argument, 0, 's'},
         {"doEventShape",       no_argument, 0, 'p'},
@@ -201,11 +203,12 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-    while((opt = getopt_long(argc, argv, "btspzoxfgncH:D:N:M:E:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "bwtspzoxfgncH:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
             case 'b': doBackground     = true;              break;
+            case 'w': doWControlRegion = true;              break;
             case 't': doTopTagger      = true;              break;
             case 's': doEventSelection = true;              break;
             case 'p': doEventShape     = true;              break;
@@ -238,6 +241,7 @@ int main(int argc, char *argv[])
 
     std::vector<std::pair<bool, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,bool,TFile*)>>> AnalyzerPairVec = {
         {doBackground,     run<AnalyzeBackground>},
+        {doWControlRegion, run<AnalyzeWControlRegion>},
         {doTopTagger,      run<AnalyzeTopTagger>},
         {doEventSelection, run<AnalyzeEventSelection>},
         {doEventShape,     run<AnalyzeEventShape>},
