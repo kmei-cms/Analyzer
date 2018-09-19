@@ -66,7 +66,13 @@ void MVAPlot()
     //std::string path = "deepESM_GRfalse_1Layer_9Vars_nJets";    
     //std::string path = "deepESM_GRtrue15-2_4Vars_1Layer";
     //std::string path = "deepESM_GRtrue15-20_4Vars_1Layer";
-    std::string path = "deepESM_7Vars_GRtrue_HighWeight";
+    //std::string path = "deepESM_7Vars_GRtrue_HighWeight";
+    //std::string path = "deepESM_GRfalse_1Layer_24Vars";
+    //std::string path = "deepESM_GRtrue_1Layer_24Vars";
+    //std::string path = "deepESM_GRtrue_1Layer_24Vars_v2";
+    //std::string path = "deepESM_GRtrue_1Layer_24Vars_10inclusive";
+    //std::string path = "deepESM_GRtrue_3Layer_28Vars";
+    std::string path = "deepESM_MyCodeTrue_3Layer_28Vars";
 
     std::vector<histInfo> bgEntries = {
         //{"DYJetsToLL_M-50", "condor/output-files/" + path + "/DYJetsToLL_M-50/DYJetsToLL_M-50.root", "hist", kBlack      },        
@@ -80,8 +86,12 @@ void MVAPlot()
 
     //vector summarizing signal histograms to include in the plot
     std::vector<histInfo> sigEntries = {
-        //{"RPV_350", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_350_0.root",         "hist", kMagenta + 2},
-        //{"SYY_650", "condor/output-files/" + path + "/AllSignal/MyAnalysis_stealth_stop_650_SYY_0.root", "hist", kGreen + 3  },
+        {"RPV_350", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_350_0.root",         "hist", kMagenta + 2},
+        {"RPV_450", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_450_0.root",         "hist", kMagenta + 2},
+        {"RPV_550", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_550_0.root",         "hist", kMagenta + 2},
+        {"RPV_650", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_650_0.root",         "hist", kMagenta + 2},
+        {"RPV_750", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_750_0.root",         "hist", kMagenta + 2},
+        {"SYY_650", "condor/output-files/" + path + "/AllSignal/MyAnalysis_stealth_stop_650_SYY_0.root", "hist", kGreen + 3  },
         {"RPV_850", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", kRed + 1    },
     };
 
@@ -111,7 +121,7 @@ void MVAPlot()
     //    c->Print(("all_MVA_"+name+".png").c_str());    
     //}
     //
-    //Print out NJet corrections for MVA training
+    ////Print out NJet corrections for MVA training
     //double wAvg = wSum/nEvts;
     //std::cout<<"Weighted Avg: "<<wAvg<<std::endl;
     //std::cout<<"------------Corrections----------"<<std::endl;
@@ -122,37 +132,45 @@ void MVAPlot()
     //    std::cout<<"{"<<i<<", "<<wAvg - m<<"},"<<std::endl;
     //}
     //
-    ////Get the baseline distribution and define the 4 MVA bins
-    ////std::string baselineName = "h_fisher_0l_ge6j_HT500_ge2b";
-    //std::string baselineName = "h_deepESM_1l_ge6j_ge1b";
-    //std::unique_ptr<TH1> baseline = AddedHistos(baselineName, bgEntries);
-    //std::unique_ptr<TH1> integralBaseline;
-    //integralBaseline.reset(static_cast<TH1*>(baseline->Clone("Integral")));
-    //std::cout<<"Might have to tune the ratio bounds until you get a value"<<std::endl;
-    //for(int i = 0; i < baseline->GetNbinsX(); i++)
-    //{
-    //    double integral = baseline->Integral(0,i);
-    //    double iMax = baseline->Integral(0,baseline->GetNbinsX());
-    //    double ratio = integral/iMax;
-    //    if(abs(ratio - 0.25) < 0.005) std::cout<<"1/4 of Events: "<<baseline->GetBinCenter(i)<<std::endl;
-    //    if(abs(ratio - 0.50) < 0.050) std::cout<<"2/4 of Events: "<<baseline->GetBinCenter(i)<<std::endl;
-    //    if(abs(ratio - 0.75) < 0.015) std::cout<<"3/4 of Events: "<<baseline->GetBinCenter(i)<<std::endl;
-    //    integralBaseline->SetBinContent(i, ratio);
-    //}
-    //integralBaseline->Draw("hist");
-    //c->Print(("Integral_"+baselineName+".png").c_str());    
+    //Get the baseline distribution and define the 4 MVA bins
+    //std::string baselineName = "h_fisher_0l_ge6j_HT500_ge2b";
+    std::string baselineName = "h_deepESM_1l_ge6j_ge1b";
+    std::unique_ptr<TH1> baseline = AddedHistos(baselineName, bgEntries);
+    std::unique_ptr<TH1> integralBaseline;
+    integralBaseline.reset(static_cast<TH1*>(baseline->Clone("Integral")));
+    std::cout<<"Might have to tune the ratio bounds until you get a value"<<std::endl;
+    for(int i = 0; i < baseline->GetNbinsX(); i++)
+    {
+        double integral = baseline->Integral(0,i);
+        double iMax = baseline->Integral(0,baseline->GetNbinsX());
+        double ratio = integral/iMax;
+        //std::cout<<integral<<" "<<iMax<<" "<<ratio<<std::endl;
+        if(abs(ratio - 0.25) < 0.005) std::cout<<"1/4 of Events: "<<baseline->GetBinCenter(i)<<std::endl;
+        if(abs(ratio - 0.50) < 0.005) std::cout<<"2/4 of Events: "<<baseline->GetBinCenter(i)<<std::endl;
+        if(abs(ratio - 0.75) < 0.005) std::cout<<"3/4 of Events: "<<baseline->GetBinCenter(i)<<std::endl;
+        integralBaseline->SetBinContent(i, ratio);
+    }
+    integralBaseline->Draw("hist");
+    c->Print(("Integral_"+baselineName+".png").c_str());    
     
     //Make plots to show NJet dependance 
-    std::vector<std::string> variables = {"deepESM", "fisher", "BestComboMass"};
+    //std::vector<std::string> variables = {"deepESM", "fisher", "BestComboMass"};
+    std::vector<std::string> variables = {"deepESM", "fisher"};
+    //std::vector<std::string> variables = {"deepESM"};
     std::vector<histInfo> entries = sigEntries; 
     entries.push_back(bgEntries[0]);
     for(const auto& v : variables)
     {
         for(auto& entry : entries)
         {
+            //std::unique_ptr<TH1F> dummy(new TH1F("Dummy","dummy", 10, 0, 20));
+            //dummy->SetMaximum(1.1);
+            //dummy->SetMinimum(-0.1);
+            //dummy->Draw();
             std::unique_ptr<TH2> h2d = GetHisto<TH2>("h_njets_"+v+"_1l_ge6j_ge1b", entry);
+            h2d->GetYaxis()->SetRangeUser(-10, 10);
             h2d->Draw("COLZ");
-            h2d->RebinY(4);
+            h2d->RebinY(2);
             h2d->GetYaxis()->SetTitle((v+" Discriminator").c_str());
             h2d->GetXaxis()->SetTitle("N_{J}");
             h2d->SetTitle( (entry.legEntry+": "+entry.histName).c_str() );
@@ -161,13 +179,13 @@ void MVAPlot()
             hprofile->Draw("same");
             hprofile->SetLineColor(kRed);
             hprofile->SetMarkerColor(kRed);
-    
+        
             gStyle->SetPalette(kRainBow);
             gStyle->SetStatY(0.89);
             gStyle->SetStatX(0.35);
             //gStyle->SetStatW(0.3);
             //gStyle->SetStatH(0.2); 
-    
+        
             gPad->SetLeftMargin(0.12);
             gPad->SetRightMargin(0.15);
             gPad->SetTopMargin(0.08);
@@ -185,73 +203,78 @@ void MVAPlot()
             leg->SetLineWidth(1);
             leg->SetNColumns(3);
             leg->SetTextFont(42);
-    
+        
             double norm = 1.0;
             std::unique_ptr<TH1> h1 = GetHisto<TH1>("h_"+v+"_1l_ge6j_ge1b", entry);
+            h1->Rebin(4);
             h1->SetStats(0);
             h1->GetXaxis()->SetTitle((v+" Discriminator").c_str());
             h1->GetYaxis()->SetTitle("Events");            
             h1->Scale(norm / h1->Integral() );
-            h1->SetMaximum( h1->GetBinContent(h1->GetMaximumBin()) * 1.3);
+            double h1max = h1->GetBinContent(h1->GetMaximumBin()) * 1.3;
             h1->SetFillStyle(3005);
             h1->Draw("hist");
             leg->AddEntry(h1.get(), (entry.legEntry+"_"+v).c_str(), "F");
-    
+        
             std::unique_ptr<TH1> h2 = GetHisto<TH1>("h_"+v+"_1l_ge6j_ge1b", bgEntries[0]);
+            h2->Rebin(4);
             h2->Scale(norm / h2->Integral() );
+            double h2max = h2->GetBinContent(h2->GetMaximumBin()) * 1.3;
             h2->Draw("hist same");
             leg->AddEntry(h2.get(), ("TT_"+v).c_str(), "F");
             leg->Draw();
+            h1->SetMaximum( std::max(h1max, h2max) );
             h1->Draw("hist same");
             c->Print((entry.legEntry+"_"+v+"_.png").c_str());            
         }
     }
-    
-    //Make input variable plots
-    std::vector<std::string> trainingVars = {"fwm2_top6","fwm3_top6","fwm4_top6","fwm5_top6","fwm6_top6","fwm7_top6","fwm8_top6","fwm9_top6","fwm10_top6",
-                                             "jmt_ev0_top6","jmt_ev1_top6","jmt_ev2_top6", "h_BestComboMass_1l_ge6j_ge1b"};
-    for(const auto& v : trainingVars)
-    {
-        TLegend *leg = new TLegend(0.65, 0.80, 0.89, 0.88);
-        leg->SetFillStyle(0);
-        leg->SetBorderSize(0);
-        leg->SetLineWidth(1);
-        leg->SetNColumns(1);
-        leg->SetTextFont(42);
-    
-        double norm = 1.0;
-        std::unique_ptr<TH1> hBG = GetHisto<TH2>(v, bgEntries[0]);
-        hBG->Draw("hist");
-        hBG->SetStats(0);
-        hBG->SetFillColor(kBlue - 9);
-        hBG->Scale(norm / hBG->Integral() );
-        hBG->SetMaximum( hBG->GetBinContent(hBG->GetMaximumBin()) * 1.3);
-        hBG->GetYaxis()->SetTitle("A.U.");
-        hBG->GetXaxis()->SetTitle(v.c_str());
-        hBG->SetTitle( ("Input variable: "+v).c_str() );
-        leg->AddEntry(hBG.get() , "TT", "F");
-        std::unique_ptr<TH1> hSig = AddedHistos(v, sigEntries);
-        hSig->Scale(norm / hSig->Integral() );
-        hSig->Draw("hist same");
-        hSig->SetLineColor(kRed);
-        hSig->SetMarkerColor(kRed);
-        hSig->SetFillColor(kRed);
-        hSig->SetFillStyle(3005);
-        leg->AddEntry(hSig.get() , "Signal", "F");
-        leg->Draw();
-    
-        gStyle->SetStatY(0.89);
-        gStyle->SetStatX(0.35);
-        //gStyle->SetStatW(0.3);
-        //gStyle->SetStatH(0.2); 
-    
-        gPad->SetLeftMargin(0.12);
-        gPad->SetRightMargin(0.15);
-        gPad->SetTopMargin(0.08);
-        gPad->SetBottomMargin(0.12);
-        gPad->SetTicks(1,1);
-        c->Print((v+".png").c_str());                    
-    }
+    //
+    ////Make input variable plots
+    ////std::vector<std::string> trainingVars = {"fwm2_top6","fwm3_top6","fwm4_top6","fwm5_top6","fwm6_top6","fwm7_top6","fwm8_top6","fwm9_top6","fwm10_top6",
+    ////                                         "jmt_ev0_top6","jmt_ev1_top6","jmt_ev2_top6", "h_BestComboMass_1l_ge6j_ge1b"};
+    //std::vector<std::string> trainingVars = {"h_BestComboMass_1l_ge6j_ge1b"};
+    //for(const auto& v : trainingVars)
+    //{
+    //    TLegend *leg = new TLegend(0.65, 0.80, 0.89, 0.88);
+    //    leg->SetFillStyle(0);
+    //    leg->SetBorderSize(0);
+    //    leg->SetLineWidth(1);
+    //    leg->SetNColumns(1);
+    //    leg->SetTextFont(42);
+    //
+    //    double norm = 1.0;
+    //    std::unique_ptr<TH1> hBG = GetHisto<TH2>(v, bgEntries[0]);
+    //    hBG->Draw("hist");
+    //    hBG->SetStats(0);
+    //    hBG->SetFillColor(kBlue - 9);
+    //    hBG->Scale(norm / hBG->Integral() );
+    //    hBG->SetMaximum( hBG->GetBinContent(hBG->GetMaximumBin()) * 1.3);
+    //    hBG->GetYaxis()->SetTitle("A.U.");
+    //    hBG->GetXaxis()->SetTitle(v.c_str());
+    //    hBG->SetTitle( ("Input variable: "+v).c_str() );
+    //    leg->AddEntry(hBG.get() , "TT", "F");
+    //    std::unique_ptr<TH1> hSig = AddedHistos(v, sigEntries);
+    //    hSig->Scale(norm / hSig->Integral() );
+    //    hSig->Draw("hist same");
+    //    hSig->SetLineColor(kRed);
+    //    hSig->SetMarkerColor(kRed);
+    //    hSig->SetFillColor(kRed);
+    //    hSig->SetFillStyle(3005);
+    //    leg->AddEntry(hSig.get() , "Signal", "F");
+    //    leg->Draw();
+    //
+    //    gStyle->SetStatY(0.89);
+    //    gStyle->SetStatX(0.35);
+    //    //gStyle->SetStatW(0.3);
+    //    //gStyle->SetStatH(0.2); 
+    //
+    //    gPad->SetLeftMargin(0.12);
+    //    gPad->SetRightMargin(0.15);
+    //    gPad->SetTopMargin(0.08);
+    //    gPad->SetBottomMargin(0.12);
+    //    gPad->SetTicks(1,1);
+    //    c->Print((v+".png").c_str());                    
+    //}
 
     delete c;
 }
