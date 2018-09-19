@@ -131,7 +131,7 @@ $(ODIR)/%.o : $(WDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
 
 MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/NTupleReader.o $(ODIR)/MiniTupleMaker.o $(ODIR)/MakeMiniTree.o $(ODIR)/CalculateBTagSF.o $(ODIR)/AnalyzeBTagSF.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/BTagCorrector.o $(ODIR)/PileupWeights.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/Analyze1Lep.o  $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o 
-#	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
+	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
 
 MyTreeMaker: $(ODIR)/MyTreeMaker.o $(ODIR)/MakeNJetDists.o $(ODIR)/MiniTupleMaker.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/BTagCorrector.o $(ODIR)/PileupWeights.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
