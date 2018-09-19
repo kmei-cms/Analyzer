@@ -136,10 +136,10 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& ntops_1jet           = tr.getVar<int>("ntops_1jet");
         const auto& runtype              = tr.getVar<std::string>("runtype");     
         const auto& filetag              = tr.getVar<std::string>("filetag");
-        const auto& NJets_pt30           = tr.getVar<int>("NJets_pt30");
-        const auto& NJets_pt45           = tr.getVar<int>("NJets_pt45");
-        const auto& NBJets               = tr.getVar<int>("NBJets");
-        const auto& NBJets_pt45          = tr.getVar<int>("NBJets_pt45");
+        const auto& NGoodJets_pt30       = tr.getVar<int>("NGoodJets_pt30");
+        const auto& NGoodJets_pt45       = tr.getVar<int>("NGoodJets_pt45");
+        const auto& NGoodBJets           = tr.getVar<int>("NGoodBJets");
+        const auto& NGoodBJets_pt45      = tr.getVar<int>("NGoodBJets_pt45");
         const auto& NGoodLeptons         = tr.getVar<int>("NGoodLeptons");
         //const auto& fisher_bin1          = tr.getVar<bool>("fisher_bin1");
         //const auto& fisher_bin2          = tr.getVar<bool>("fisher_bin2");
@@ -208,11 +208,11 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // -- Define cuts
         // -------------------------------
 
-        bool pass_0l              = NGoodLeptons==0;
-        bool pass_1l              = NGoodLeptons==1;
-        bool pass_njet_pt45       = NJets_pt45>=6;
-        bool pass_njet_pt45_1btag = NBJets_pt45 >= 1;
-        bool pass_njet_pt45_2btag = NBJets_pt45 >= 2;
+        bool pass_0l              = NGoodLeptons == 0;
+        bool pass_1l              = NGoodLeptons == 1;
+        bool pass_njet_pt45       = NGoodJets_pt45 >= 7;
+        bool pass_njet_pt45_1btag = NGoodBJets_pt45 >= 1;
+        bool pass_njet_pt45_2btag = NGoodBJets_pt45 >= 2;
 
         // ---------------------------
         // --    1 Top selection
@@ -316,16 +316,16 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"1l_ge6j_ge1b_d2"                , passBaseline1l_Good && deepESM_bin2                                      },                         
             {"1l_ge6j_ge1b_d3"                , passBaseline1l_Good && deepESM_bin3                                      },                         
             {"1l_ge6j_ge1b_d4"                , passBaseline1l_Good && deepESM_bin4                                      },                         
-            {"1l_6j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 6                                   },
-            {"1l_7j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 7                                   },
-            {"1l_8j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 8                                   },
-            {"1l_9j_ge1b"                     , passBaseline1l_Good && NJets_pt45 == 9                                   },
-            {"1l_10j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 10                                  },
-            {"1l_11j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 11                                  },
-            {"1l_12j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 12                                  },
-            {"1l_13j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 13                                  },
-            {"1l_14j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 14                                  },
-            {"1l_15j_ge1b"                    , passBaseline1l_Good && NJets_pt45 == 15                                  },
+            {"1l_6j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt45 == 6                                   },
+            {"1l_7j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt45 == 7                                   },
+            {"1l_8j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt45 == 8                                   },
+            {"1l_9j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt45 == 9                                   },
+            {"1l_10j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt45 == 10                                  },
+            {"1l_11j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt45 == 11                                  },
+            {"1l_12j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt45 == 12                                  },
+            {"1l_13j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt45 == 13                                  },
+            {"1l_14j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt45 == 14                                  },
+            {"1l_15j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt45 == 15                                  },
                                                  
             {"1l_ge6j_ge1b_1t"                , passBaseline1l_Good && pass_1t                                           },
             {"1l_ge6j_ge1b_1t_ge8esm"         , passBaseline1l_Good && pass_1t && deepESM_val >= 0.8                     },                         
@@ -480,9 +480,9 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         {
             if(kv.second)
             {
-                my_histos["h_njets_"   +kv.first]->Fill(NJets_pt30, eventweight);
+                my_histos["h_njets_"   +kv.first]->Fill(NGoodJets_pt30, eventweight);
                 my_histos["h_ntops_"   +kv.first]->Fill(ntops, eventweight);
-                my_histos["h_nb_"      +kv.first]->Fill(NBJets, eventweight);
+                my_histos["h_nb_"      +kv.first]->Fill(NGoodBJets, eventweight);
                 my_histos["h_bdt_"     +kv.first]->Fill(eventshape_bdt_val, eventweight);
                 my_histos["h_fisher_"  +kv.first]->Fill(fisher_val, eventweight);
                 my_histos["h_deepESM_" +kv.first]->Fill(deepESM_val, eventweight);
@@ -507,30 +507,30 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                     my_histos["h_GenMBestComboRelDiff_"+kv.first]->Fill(bestComboRelDiff, eventweight);
                     my_histos["h_GenMBestComboMassDiffAbs_"+kv.first]->Fill(abs(bestComboMassDiff), eventweight);
                     my_histos["h_GenMBestComboRelDiffAbs_"+kv.first]->Fill(abs(bestComboRelDiff), eventweight);
-                    my_histos["h_GenMNjets_"+kv.first]->Fill(NJets_pt30, eventweight);
+                    my_histos["h_GenMNjets_"+kv.first]->Fill(NGoodJets_pt30, eventweight);
                 }
 
-                my_2d_histos["h_njets_bdt_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
-                my_2d_histos["h_njets_fisher_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
-                my_2d_histos["h_njets_deepESM_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
-                my_2d_histos["h_njets_BestComboMass_"+kv.first]->Fill(NJets_pt30, bestComboAvgMass, eventweight);
-                my_tp_histos["hTp_njets_fisher_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
-                my_tp_histos["hTp_njets_deepESM_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
+                my_2d_histos["h_njets_bdt_"+kv.first]->Fill(NGoodJets_pt30, eventshape_bdt_val, eventweight);
+                my_2d_histos["h_njets_fisher_"+kv.first]->Fill(NGoodJets_pt30, fisher_val, eventweight);
+                my_2d_histos["h_njets_deepESM_"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, eventweight);
+                my_2d_histos["h_njets_BestComboMass_"+kv.first]->Fill(NGoodJets_pt30, bestComboAvgMass, eventweight);
+                my_tp_histos["hTp_njets_fisher_"+kv.first]->Fill(NGoodJets_pt30, fisher_val, eventweight);
+                my_tp_histos["hTp_njets_deepESM_"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, eventweight);
 
-                if ( NJets_pt30 < 9 )
+                if ( NGoodJets_pt30 <= 8 )
                 {
-                    my_histos["blind_njets_"   +kv.first]->Fill(NJets_pt30, eventweight);
+                    my_histos["blind_njets_"   +kv.first]->Fill(NGoodJets_pt30, eventweight);
                     my_histos["blind_ntops_"   +kv.first]->Fill(ntops, eventweight);
-                    my_histos["blind_nb_"      +kv.first]->Fill(NBJets, eventweight);
+                    my_histos["blind_nb_"      +kv.first]->Fill(NGoodBJets, eventweight);
                     my_histos["blind_bdt_"     +kv.first]->Fill(eventshape_bdt_val, eventweight);
                     my_histos["blind_fisher_"  +kv.first]->Fill(fisher_val, eventweight);
                     my_histos["blind_deepESM_"  +kv.first]->Fill(deepESM_val, eventweight);
                 
-                    my_2d_histos["blind_njets_bdt_"+kv.first]->Fill(NJets_pt30, eventshape_bdt_val, eventweight);
-                    my_2d_histos["blind_njets_fisher_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
-                    my_2d_histos["blind_njets_deepESM_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
-                    my_tp_histos["blindTp_njets_fisher_"+kv.first]->Fill(NJets_pt30, fisher_val, eventweight);
-                    my_tp_histos["blindTp_njets_deepESM_"+kv.first]->Fill(NJets_pt30, deepESM_val, eventweight);
+                    my_2d_histos["blind_njets_bdt_"+kv.first]->Fill(NGoodJets_pt30, eventshape_bdt_val, eventweight);
+                    my_2d_histos["blind_njets_fisher_"+kv.first]->Fill(NGoodJets_pt30, fisher_val, eventweight);
+                    my_2d_histos["blind_njets_deepESM_"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, eventweight);
+                    my_tp_histos["blindTp_njets_fisher_"+kv.first]->Fill(NGoodJets_pt30, fisher_val, eventweight);
+                    my_tp_histos["blindTp_njets_deepESM_"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, eventweight);
                 }
             }
         }
@@ -538,33 +538,33 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // Fill event selection efficiencies
         //my_efficiencies["event_sel_total"]->Fill(true,0);
         //my_efficiencies["event_sel_total"]->Fill(HT_trigger>500,1);
-        //my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && NJets_pt45>=6 ,2);
-        //my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && NJets_pt45>=6 && NBJets_pt45>0 ,3);
-        //my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && NJets_pt45>=6 && NBJets_pt45>0 && ntops>0 ,4);
-        //my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && NJets_pt45>=6 && NBJets_pt45>0 && ntops>0 && NBJets_pt45>1 ,5);
-        //my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && NJets_pt45>=6 && NBJets_pt45>0 && ntops>0 && NBJets_pt45>1 && ntops>1 ,6);
-        //my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && NJets_pt45>=6 && NBJets_pt45>0 && ntops>0 && NBJets_pt45>1 && ntops>1 && NJets_pt30>=8 ,7);
+        //my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && NGoodJets_pt45>=6 ,2);
+        //my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && NGoodJets_pt45>=6 && NGoodBJets_pt45>0 ,3);
+        //my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && NGoodJets_pt45>=6 && NGoodBJets_pt45>0 && ntops>0 ,4);
+        //my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && NGoodJets_pt45>=6 && NGoodBJets_pt45>0 && ntops>0 && NGoodBJets_pt45>1 ,5);
+        //my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && NGoodJets_pt45>=6 && NGoodBJets_pt45>0 && ntops>0 && NGoodBJets_pt45>1 && ntops>1 ,6);
+        //my_efficiencies["event_sel_total"]->Fill(HT_trigger>500 && NGoodJets_pt45>=6 && NGoodBJets_pt45>0 && ntops>0 && NGoodBJets_pt45>1 && ntops>1 && NGoodJets_pt30>=8 ,7);
         //
         //my_efficiencies["event_sel"]->Fill(true,0);
         //my_efficiencies["event_sel"]->Fill(HT_trigger>500,1);
         //if(HT_trigger>500)
         //{
-        //    my_efficiencies["event_sel"]->Fill(NJets_pt45>=6,2);
-        //    if (NJets_pt45>=6)
+        //    my_efficiencies["event_sel"]->Fill(NGoodJets_pt45>=6,2);
+        //    if (NGoodJets_pt45>=6)
         //    {
-        //        my_efficiencies["event_sel"]->Fill(NBJets_pt45>0,3);
-        //        if (NBJets_pt45>0)
+        //        my_efficiencies["event_sel"]->Fill(NGoodBJets_pt45>0,3);
+        //        if (NGoodBJets_pt45>0)
         //        {
         //            my_efficiencies["event_sel"]->Fill(ntops>0,4);
         //            if (ntops>0)
         //            {
-        //                my_efficiencies["event_sel"]->Fill(NBJets_pt45>1,5);
-        //                if (NBJets_pt45>1)
+        //                my_efficiencies["event_sel"]->Fill(NGoodBJets_pt45>1,5);
+        //                if (NGoodBJets_pt45>1)
         //                {
         //                    my_efficiencies["event_sel"]->Fill(ntops>1,6);
         //                    if (ntops>1)
         //                    {
-        //                        my_efficiencies["event_sel"]->Fill(NJets_pt30>=8,7);
+        //                        my_efficiencies["event_sel"]->Fill(NGoodJets_pt30>=8,7);
         //                    }
         //                }
         //            }
@@ -577,22 +577,22 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         my_histos["h_bdt"     ]->Fill(eventshape_bdt_val, eventweight);
         my_histos["h_fisher"  ]->Fill(fisher_val, eventweight);
         my_histos["h_deepESM" ]->Fill(deepESM_val, eventweight);
-        my_histos["h_njets"   ]->Fill(NJets_pt30, eventweight);
-        my_histos["h_nb"      ]->Fill(NBJets, eventweight);
+        my_histos["h_njets"   ]->Fill(NGoodJets_pt30, eventweight);
+        my_histos["h_nb"      ]->Fill(NGoodBJets, eventweight);
         my_histos["h_ntops"   ]->Fill(ntops, eventweight);        
         my_histos["h_ntops_j1"]->Fill(ntops_1jet, eventweight);
         my_histos["h_ntops_j2"]->Fill(ntops_2jet, eventweight);
         my_histos["h_ntops_j3"]->Fill(ntops_3jet, eventweight);        
 
         // Do the blind cuts, for now, for data MC plots
-        if ( NJets_pt30 < 9 )
+        if ( NGoodJets_pt30 <= 8 )
         {
             my_histos["blind_met"     ]->Fill(MET, eventweight);
             my_histos["blind_bdt"     ]->Fill(eventshape_bdt_val, eventweight);
             my_histos["blind_fisher"  ]->Fill(fisher_val, eventweight);
             my_histos["blind_deepESM" ]->Fill(deepESM_val, eventweight);
-            my_histos["blind_njets"   ]->Fill(NJets_pt30, eventweight);
-            my_histos["blind_nb"      ]->Fill(NBJets, eventweight);
+            my_histos["blind_njets"   ]->Fill(NGoodJets_pt30, eventweight);
+            my_histos["blind_nb"      ]->Fill(NGoodBJets, eventweight);
             my_histos["blind_ntops"   ]->Fill(ntops, eventweight);        
             my_histos["blind_ntops_j1"]->Fill(ntops_1jet, eventweight);
             my_histos["blind_ntops_j2"]->Fill(ntops_2jet, eventweight);
