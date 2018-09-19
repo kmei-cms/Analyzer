@@ -14,12 +14,12 @@ repo = "Analyzer/Analyzer"
 # Parse command line arguments
 parser = optparse.OptionParser("usage: %prog [options]\n")
 
-parser.add_option ('-n',  dest='numfile', type='int', default = 5, help="number of files per job")
+parser.add_option ('-n',  dest='numfile', type='int', default = 2, help="number of files per job")
 parser.add_option ('-d',  dest='datasets', type='string', default = '', help="List of datasets, comma separated")
 parser.add_option ('-l',  dest='dataCollections', action='store_true', default = False, help="List all datacollections")
 parser.add_option ('-L',  dest='dataCollectionslong', action='store_true', default = False, help="List all datacollections and sub collections")
 parser.add_option ('-c',  dest='noSubmit', action='store_true', default = False, help="Do not submit jobs.  Only create condor_submit.txt.")
-parser.add_option ('--analyze',  dest='analyze', default = 'b', help="AnalyzeTopTagger (t), AnalyzeBackground (b), AnalyzeEventSelection (s), Analyze0Lep (z), AnalyzeStealthTopTagger (x)")
+parser.add_option ('--analyze',  dest='analyze', default = 'n', help="AnalyzeTopTagger (t), AnalyzeBackground (b), AnalyzeEventSelection (s), Analyze0Lep (z), AnalyzeStealthTopTagger (x), MakeNJetDists (n)")
 
 options, args = parser.parse_args()
 
@@ -51,6 +51,10 @@ filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MyAnalysis" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/sampleSets.cfg" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/sampleCollections.cfg" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape.cfg" % repo,
+                   environ["CMSSW_BASE"] + "/src/%s/test/allInOne_BTagEff.root" % repo,
+                   environ["CMSSW_BASE"] + "/src/%s/test/allInOne_leptonSF_Moriond17.root" % repo,
+                   environ["CMSSW_BASE"] + "/src/%s/test/PileupHistograms_0121_69p2mb_pm4p6.root" % repo,
+                   environ["CMSSW_BASE"] + "/src/%s/test/CSVv2_Moriond17_B_H.csv" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,ESMVAFileName),
                    ]
 

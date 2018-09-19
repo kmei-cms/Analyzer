@@ -37,7 +37,7 @@ INCLUDES += $(shell $(PYTHONCFG) --includes)
 
 LIBS            = $(shell root-config --glibs)
 LIBSTOPTAGGER  += -L$(TTTDIR) -lTopTagger
-CXXFLAGS       += -DDOTENSORFLOW                      
+CXXFLAGS       += -DDOTENSORFLOW  
 LIBS           += -L$(TENSORFLOW_DIR)/lib -ltensorflow
 #LHAPDFLIB      = -L$(LHAPDF_DATA_PATH)/../../lib -lLHAPDF
 
@@ -46,7 +46,7 @@ INCLUDESDIRS    += -I$(TENSORFLOW_DIR)/include
 
 #OBJS       = $(patsubst %, $(ODIR)/%, $(OBJ))
 
-PROGRAMS = MyAnalysis plot_0l plot_1l
+PROGRAMS = MyTreeMaker MyAnalysis#MySkimAnalysis #plot_0l plot_1l
 
 all: mkobj sampPyWrap $(PROGRAMS)
 
@@ -130,9 +130,13 @@ $(ODIR)/%.o : $(WDIR)/%.cc
 $(ODIR)/%.o : $(WDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
 
-MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/MakeNJetDists.o $(ODIR)/CalculateBTagSF.o $(ODIR)/AnalyzeBTagSF.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/BTagCorrector.o $(ODIR)/PileupWeights.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/Analyze1Lep.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o
+MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/NTupleReader.o $(ODIR)/MiniTupleMaker.o $(ODIR)/MakeMiniTree.o $(ODIR)/CalculateBTagSF.o $(ODIR)/AnalyzeBTagSF.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/BTagCorrector.o $(ODIR)/PileupWeights.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/Analyze1Lep.o  $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o 
+#	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
 
+MyTreeMaker: $(ODIR)/MyTreeMaker.o $(ODIR)/MakeNJetDists.o $(ODIR)/MiniTupleMaker.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/BTagCorrector.o $(ODIR)/PileupWeights.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
+#MySkimAnalysis: $(ODIR)/MySkimAnalysis.o $(ODIR)/MakeNJetDists.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/BTagCorrector.o $(ODIR)/PileupWeights.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o
+#	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
 
 plot_0l: $(ODIR)/plot_0l.o
 	$(LD) $^ $(LIBS) -o $@
