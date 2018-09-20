@@ -59,10 +59,20 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
     my_histos.emplace("jmt_ev2_top6", std::make_shared<TH1D>("jmt_ev2_top6","jmt_ev2_top6", 50, 0, 1 ) );
     for(unsigned int i = 1; i <= 7 ; i++) //Bad hard code
     {
-        my_histos.emplace("Jet_pt_"+std::to_string(i),  std::make_shared<TH1D>(("Jet_pt_"+std::to_string(i)).c_str(),("Jet_pt_"+std::to_string(i)).c_str(), 300, 0, 3000 ));
-        my_histos.emplace("Jet_eta_"+std::to_string(i), std::make_shared<TH1D>(("Jet_eta_"+std::to_string(i)).c_str(),("Jet_eta_"+std::to_string(i)).c_str(), 100, -6, 6 ));
-        my_histos.emplace("Jet_phi_"+std::to_string(i), std::make_shared<TH1D>(("Jet_phi_"+std::to_string(i)).c_str(),("Jet_phi_"+std::to_string(i)).c_str(), 160, -8, 8 ));
-        my_histos.emplace("Jet_m_"+std::to_string(i),   std::make_shared<TH1D>(("Jet_m_"+std::to_string(i)).c_str(),("Jet_m_"+std::to_string(i)).c_str(), 300, 0, 3000 ));
+        my_histos.emplace("Jet_cm_pt_"+std::to_string(i)+"_1l_ge6j_ge1b",  std::make_shared<TH1D>(("Jet_cm_pt_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_cm_pt_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 300, 0, 3000 ));
+        my_histos.emplace("Jet_cm_eta_"+std::to_string(i)+"_1l_ge6j_ge1b", std::make_shared<TH1D>(("Jet_cm_eta_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_cm_eta_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 100, -6, 6 ));
+        my_histos.emplace("Jet_cm_phi_"+std::to_string(i)+"_1l_ge6j_ge1b", std::make_shared<TH1D>(("Jet_cm_phi_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_cm_phi_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 160, -8, 8 ));
+        my_histos.emplace("Jet_cm_m_"+std::to_string(i)+"_1l_ge6j_ge1b",   std::make_shared<TH1D>(("Jet_cm_m_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_cm_m_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 300, 0, 3000 ));
+
+        my_histos.emplace("Jet_pt_"+std::to_string(i)+"_1l_ge6j_ge1b",  std::make_shared<TH1D>(("Jet_pt_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_pt_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 300, 0, 3000 ));
+        my_histos.emplace("Jet_eta_"+std::to_string(i)+"_1l_ge6j_ge1b", std::make_shared<TH1D>(("Jet_eta_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_eta_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 100, -6, 6 ));
+        my_histos.emplace("Jet_phi_"+std::to_string(i)+"_1l_ge6j_ge1b", std::make_shared<TH1D>(("Jet_phi_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_phi_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 160, -8, 8 ));
+        my_histos.emplace("Jet_m_"+std::to_string(i)+"_1l_ge6j_ge1b",   std::make_shared<TH1D>(("Jet_m_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_m_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 300, 0, 3000 ));
+
+        my_2d_histos.emplace("Jet_cm_pt_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b", std::make_shared<TH2D>(("Jet_cm_pt_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(),("Jet_cm_pt_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(), 300, 0, 3000, fB, 0.0, 1.0));
+        my_2d_histos.emplace("Jet_cm_eta_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b", std::make_shared<TH2D>(("Jet_cm_eta_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(),("Jet_cm_eta_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(), 100, -6, 6, fB, 0.0, 1.0));
+        my_2d_histos.emplace("Jet_cm_phi_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b", std::make_shared<TH2D>(("Jet_cm_phi_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(),("Jet_cm_phi_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(), 160, -8, 8, fB, 0.0, 1.0));
+        my_2d_histos.emplace("Jet_cm_m_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b", std::make_shared<TH2D>(("Jet_cm_m_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(),("Jet_cm_m_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(), 300, 0, 3000, fB, 0.0, 1.0));
     }
 
     for(auto& mycut : cutMap)
@@ -176,6 +186,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& BestCombo            = tr.getVar<std::pair<TLorentzVector, TLorentzVector>>("BestCombo");
         const auto& MegaJetsMatched      = tr.getVar<bool>("MegaJetsTopsGenMatched");
         const auto& Jets_cm_top6         = tr.getVec<TLorentzVector>("Jets_cm_top6");
+        const auto& Jets_top6            = tr.getVec<TLorentzVector>("Jets_top6");
         double bestComboAvgMass = ( BestCombo.first.M() + BestCombo.second.M() )/2;
         double bestComboMassDiff = BestCombo.first.M() - BestCombo.second.M();
         double bestComboAvgPt = ( BestCombo.first.Pt() + BestCombo.second.Pt() )/2;
@@ -517,7 +528,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_tp_histos["hTp_njets_fisher_"+kv.first]->Fill(NGoodJets_pt30, fisher_val, eventweight);
                 my_tp_histos["hTp_njets_deepESM_"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, eventweight);
 
-                if ( NGoodJets_pt30 <= 8 )
+                if ( NGoodJets_pt30 <= 7 )
                 {
                     my_histos["blind_njets_"   +kv.first]->Fill(NGoodJets_pt30, eventweight);
                     my_histos["blind_ntops_"   +kv.first]->Fill(ntops, eventweight);
@@ -585,7 +596,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         my_histos["h_ntops_j3"]->Fill(ntops_3jet, eventweight);        
 
         // Do the blind cuts, for now, for data MC plots
-        if ( NGoodJets_pt30 <= 8 )
+        if ( NGoodJets_pt30 <= 7 )
         {
             my_histos["blind_met"     ]->Fill(MET, eventweight);
             my_histos["blind_bdt"     ]->Fill(eventshape_bdt_val, eventweight);
@@ -614,12 +625,23 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             my_histos["jmt_ev0_top6"]->Fill(jmt_ev0_top6, eventweight);
             my_histos["jmt_ev1_top6"]->Fill(jmt_ev1_top6, eventweight);
             my_histos["jmt_ev2_top6"]->Fill(jmt_ev2_top6, eventweight);
+
             for(unsigned int i = 0; i < Jets_cm_top6.size(); i++)
             {
-                my_histos["Jet_pt_"+std::to_string(i+1)]->Fill(static_cast<double>(Jets_cm_top6.at(i).Pt()), eventweight);
-                my_histos["Jet_eta_"+std::to_string(i+1)]->Fill(static_cast<double>(Jets_cm_top6.at(i).Eta()), eventweight);
-                my_histos["Jet_phi_"+std::to_string(i+1)]->Fill(static_cast<double>(Jets_cm_top6.at(i).Phi()), eventweight);
-                my_histos["Jet_m_"+std::to_string(i+1)]->Fill(static_cast<double>(Jets_cm_top6.at(i).M()), eventweight);
+                my_histos["Jet_cm_pt_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).Pt()), eventweight);
+                my_histos["Jet_cm_eta_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).Eta()), eventweight);
+                my_histos["Jet_cm_phi_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).Phi()), eventweight);
+                my_histos["Jet_cm_m_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).M()), eventweight);
+
+                my_histos["Jet_pt_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_top6.at(i).Pt()), eventweight);
+                my_histos["Jet_eta_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_top6.at(i).Eta()), eventweight);
+                my_histos["Jet_phi_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_top6.at(i).Phi()), eventweight);
+                my_histos["Jet_m_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_top6.at(i).M()), eventweight);
+
+                my_2d_histos["Jet_cm_pt_"+std::to_string(i+1)+"_deepESM_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).Pt()), deepESM_val, eventweight);
+                my_2d_histos["Jet_cm_eta_"+std::to_string(i+1)+"_deepESM_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).Eta()), deepESM_val, eventweight);
+                my_2d_histos["Jet_cm_phi_"+std::to_string(i+1)+"_deepESM_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).Phi()), deepESM_val, eventweight);
+                my_2d_histos["Jet_cm_m_"+std::to_string(i+1)+"_deepESM_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).M()), deepESM_val, eventweight);
             }
         }
     } // end of event loop
