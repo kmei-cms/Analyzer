@@ -18,6 +18,8 @@
 #include "TopTagger/CfgParser/include/TTException.h"
 #include "Framework/Framework/include/SetUpTopTagger.h"
 
+#include "SusyAnaTools/Tools/MiniTupleMaker.h"
+#include "SusyAnaTools/Tools/PileupWeights.h"
 #include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
 #include "SusyAnaTools/Tools/BTagCorrector.h"
 
@@ -57,11 +59,16 @@ void MakeNJetDists::InitHistos()
                         if( ( sfTag == "all" || sfTag == "std" ) && uncertTag != "central" ) continue; //No fluctuations with all scale factors implemented and when no scale factors are applied
                         
                         std::string myHistoName = "h_njets_"+ptTag+"_"+nlepTag;
+                        std::string myHTHistoName = "h_ht_"+ptTag+"_"+nlepTag;
+                        std::string myMadHTHistoName = "h_madht_"+ptTag+"_"+nlepTag;
+                        
                         if( deepESMTag != "0" ) myHistoName = myHistoName+"_deepESMbin"+deepESMTag;
                         if( sfTag != "std" ) myHistoName = myHistoName+"_"+sfTag;
                         if( uncertTag != "central" ) myHistoName = myHistoName+"_"+uncertTag;
     
                         my_histos.emplace( myHistoName, std::make_shared<TH1D>( ( myHistoName ).c_str() , ( myHistoName ).c_str() , 8, 6.5, 14.5 ) );
+                        my_histos.emplace( myHTHistoName, std::make_shared<TH1D>( ( myHTHistoName ).c_str() , ( myHTHistoName ).c_str() , 28, 200, 2500 ) );
+                        my_histos.emplace( myMadHTHistoName, std::make_shared<TH1D>( ( myMadHTHistoName ).c_str() , ( myMadHTHistoName ).c_str() , 28, 200, 2500 ) );
                     }
                 }
             }
@@ -74,7 +81,6 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
 {
     while( tr.getNextEvent() )
     {
-
         const auto& runtype             = tr.getVar<std::string>("runtype");
         const auto& filetag             = tr.getVar<std::string>("filetag");
 
@@ -87,6 +93,9 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         const auto& NJets_pt45          = tr.getVar<int>("NGoodJets_pt45");
         const auto& NGoodElectrons      = tr.getVar<int>("NGoodElectrons");
         const auto& NGoodMuons          = tr.getVar<int>("NGoodMuons");
+        
+        const auto& HT                  = tr.getVar<double>("HT");
+        const auto& MadHT               = tr.getVar<double>("madHT");
 
         //------------------------------------
         //-- Print Event Number
@@ -127,9 +136,9 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         const auto& muLepWeightUp       = tr.getVar<double>("totGoodMuonSF_Up");
         const auto& muLepWeightDown     = tr.getVar<double>("totGoodMuonSF_Down");
 
-//        const auto& bTagWeight          = tr.getVar<float>("bTagSF_EventWeightSimple_Central");
-//        const auto& bTagWeightUp        = tr.getVar<float>("bTagSF_EventWeightSimple_Up");
-//        const auto& bTagWeightDown      = tr.getVar<float>("bTagSF_EventWeightSimple_Down");
+        //const auto& bTagWeight          = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
+        //const auto& bTagWeightUp        = tr.getVar<double>("bTagSF_EventWeightSimple_Up");
+        //const auto& bTagWeightDown      = tr.getVar<double>("bTagSF_EventWeightSimple_Down");
         
         const auto& deepESMValue        = tr.getVar<double>("deepESM_val");
         const auto& deepESMbin1         = tr.getVar<bool>("deepESM_bin1");
@@ -137,8 +146,24 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         const auto& deepESMbin3         = tr.getVar<bool>("deepESM_bin3");
         const auto& deepESMbin4         = tr.getVar<bool>("deepESM_bin4");
         
+        //-----------------------------------
+        //  Initialize the tree
+        //-----------------------------------
         
-        
+        std::set<std::string> variables = {
+            "deepESM_val",
+            "Weight",
+            "NGoodJets_pt30"
+        };
+
+        if( tr.isFirstEvent() ) {
+            std::string myTreeName = "myMiniTree";
+            myTree = new TTree( (myTreeName).c_str() , (myTreeName).c_str() );
+            myMiniTuple = new MiniTupleMaker( myTree );
+            myMiniTuple->setTupleVars(variables);
+            myMiniTuple->initBranches(tr);
+        }
+
         //-------------------------------------
         //-- Make sure we do not double DY events 
         //------------------------------------
@@ -156,12 +181,12 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
             
         eventweight         = Lumi*Weight;
 
-
-        //------------------------------------
+        //-----------------------------------
         //-- Fill Histograms Below
         //-----------------------------------
         
         if( passBaseline0l ) {
+
             my_histos["h_njets_pt45_0l"]->Fill( NJets_pt45, eventweight );
             my_histos["h_njets_pt45_0l_pdf"]->Fill( NJets_pt45, eventweight*PDFWeight );
             my_histos["h_njets_pt45_0l_pup"]->Fill( NJets_pt45, eventweight*PileupWeight );
@@ -252,7 +277,10 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         }
 
         if( passBaseline1l ) {
+            
             my_histos["h_njets_pt30_1l"]->Fill( NJets_pt30, eventweight );
+            my_histos["h_ht_pt30_1l"]->Fill( HT, eventweight );
+            my_histos["h_madht_pt30_1l"]->Fill( MadHT, eventweight );
             my_histos["h_njets_pt30_1l_qcd"]->Fill( NJets_pt30, eventweight*scaleWeight );
             my_histos["h_njets_pt30_1l_pdf"]->Fill( NJets_pt30, eventweight*PDFWeight );
             my_histos["h_njets_pt30_1l_pup"]->Fill( NJets_pt30, eventweight*PileupWeight );
@@ -343,6 +371,8 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
                 my_histos["h_njets_pt30_1l_deepESMbin4_pup_down"]->Fill( NJets_pt30, eventweight*PileupWeightDown );
                 my_histos["h_njets_pt30_1l_deepESMbin4_lep_down"]->Fill( NJets_pt30, eventweight*lepWeightDown );
             }
+
+            myMiniTuple->fill();
         }
 
     }//END of while tr.getNextEvent loop   
@@ -363,6 +393,10 @@ void MakeNJetDists::WriteHistos( TFile* outfile )
     for (const auto &p : my_efficiencies) {
         p.second->Write();
     }
+
+    myTree->Write();
+    delete myTree;    
+    delete myMiniTuple;
 
 }
 
