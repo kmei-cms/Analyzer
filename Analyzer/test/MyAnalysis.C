@@ -14,7 +14,6 @@
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
 #include "Analyzer/Analyzer/include/MakeMiniTree.h"
-#include "Analyzer/Analyzer/include/ValidateTTJetSample.h"
 
 #include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
 #include "SusyAnaTools/Tools/BTagCorrector.h"
@@ -92,7 +91,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         printf( "runtype: %s fileWeight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts ); fflush( stdout );
         tr.registerDerivedVar<std::string>("runtype",runtype);
         tr.registerDerivedVar<std::string>("filetag",file.tag);
-        tr.registerDerivedVar<double>("etaCut",2.4);
+        tr.registerDerivedVar<double>("etaCut",2.4); 
         tr.registerDerivedVar<bool>("blind",true);
 
         // Define classes/functions that add variables on the fly
@@ -260,13 +259,14 @@ int main(int argc, char *argv[])
         {makeMiniTree,     run<MakeMiniTree>},
         {makeNJetDists,    run<MakeNJetDists>},
     }; 
-    
+
     try
     {
         for(auto& pair : AnalyzerPairVec)
         {
-            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
+            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,isSkim,outfile); 
         }
+
         outfile->Close();
     }
     catch(const std::string e)
