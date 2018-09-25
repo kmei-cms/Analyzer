@@ -13,10 +13,12 @@
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
+#include "Analyzer/Analyzer/include/MakeMiniTree.h"
 
 #include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
 #include "SusyAnaTools/Tools/BTagCorrector.h"
 #include "SusyAnaTools/Tools/PileupWeights.h"
+#include "SusyAnaTools/Tools/MiniTupleMaker.h"
 
 #include "Framework/Framework/include/RunTopTagger.h"
 #include "Framework/Framework/include/RunFisher.h"
@@ -89,7 +91,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         printf( "runtype: %s fileWeight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts ); fflush( stdout );
         tr.registerDerivedVar<std::string>("runtype",runtype);
         tr.registerDerivedVar<std::string>("filetag",file.tag);
-        tr.registerDerivedVar<double>("etaCut",2.4);
+        tr.registerDerivedVar<double>("etaCut",2.4); 
         tr.registerDerivedVar<bool>("blind",true);
 
         // Define classes/functions that add variables on the fly
@@ -177,7 +179,9 @@ int main(int argc, char *argv[])
     int opt, option_index = 0;
     bool doBackground = false, doTopTagger = false, doEventSelection = false, 
          doEventShape = false, do0Lep = false, do1Lep = false, doStealthTT = false,
-         doBTagSF = false, calcBTagSF = false, doWControlRegion = false, makeNJetDists = false;
+         doBTagSF = false, calcBTagSF = false, doWControlRegion = false, 
+         makeMiniTree = false, makeNJetDists = false;
+
     bool runOnCondor = false;
     bool isSkim = false;
     std::string histFile = "", dataSets = "";
@@ -194,6 +198,7 @@ int main(int argc, char *argv[])
         {"doStealthTT",        no_argument, 0, 'x'},
         {"calcBTagSF",         no_argument, 0, 'f'},
         {"doBTagSF",           no_argument, 0, 'g'},
+        {"makeMiniTree",       no_argument, 0, 'm'},
         {"makeNJetDists",      no_argument, 0, 'n'},
         {"condor",             no_argument, 0, 'c'},
         {"histFile",     required_argument, 0, 'H'},
@@ -203,7 +208,7 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-    while((opt = getopt_long(argc, argv, "bwtspzoxfgncH:D:N:M:E:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "bwtspzoxfgmncH:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
@@ -217,6 +222,7 @@ int main(int argc, char *argv[])
             case 'x': doStealthTT      = true;              break;
             case 'f': calcBTagSF       = true;              break;
             case 'g': doBTagSF         = true;              break;
+            case 'm': makeMiniTree     = true;              break;
             case 'n': makeNJetDists    = true;              break;
             case 'c': runOnCondor      = true;              break;
             case 'H': histFile         = optarg;            break;
@@ -250,15 +256,17 @@ int main(int argc, char *argv[])
         {doStealthTT,      run<AnalyzeStealthTopTagger>},
         {doBTagSF,         run<AnalyzeBTagSF>},
         {calcBTagSF,       run<CalculateBTagSF>},
+        {makeMiniTree,     run<MakeMiniTree>},
         {makeNJetDists,    run<MakeNJetDists>},
     }; 
-    
+
     try
     {
         for(auto& pair : AnalyzerPairVec)
         {
-            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
+            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,isSkim,outfile); 
         }
+
         outfile->Close();
     }
     catch(const std::string e)
