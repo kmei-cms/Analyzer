@@ -72,7 +72,7 @@ public:
         // -  Setup plots
         // ------------------------
         THStack *bgStack = new THStack();
-        hc_.setUpBG(histName, rebin, bgStack, hbgSum_);
+        hc_.setUpBG(histName, rebin, bgStack, hbgSum_, true, false);
         hc_.setUpSignal(histName, rebin);
         hc_.setUpData(histName, rebin);
 

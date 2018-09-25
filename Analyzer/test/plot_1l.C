@@ -15,6 +15,7 @@ void setHistInfo(const std::string& path, std::vector<histInfo>& data, std::vect
     //               leg entry root file                 draw options  draw color
     data = {
         //{"Data_JetHT", "condor/output-files/" + path + "/Data_JetHT/Data_JetHT.root", "PEX0", kBlack},
+        {"Data_SingleLepton" , "condor/output-files/" + path + "/Data_SingleLepton/Data_SingleLepton.root", "PEX0", kBlack},
         //{"Data 1 #gamma", "condor/output-files/" + path + "/Data_SinglePhoton/Data_SinglePhoton.root", "PEX0", kBlack}, 
     };
     
@@ -22,16 +23,25 @@ void setHistInfo(const std::string& path, std::vector<histInfo>& data, std::vect
     std::vector<int> sigColor = {kBlack, kBlue, kRed};
 
     bg = {
-        //{"T#bar{T}",   "condor/output-files/" + path + "/TT/TT.root", "hist", bgColor[color]        },
-        //{"Rare",           "condor/output-files/" + path + "/Rare/Rare.root",             "hist", kOrange + 2 },  
-        //{"Diboson",        "condor/output-files/" + path + "/Diboson/Diboson.root",       "hist", kCyan + 1   },
-        //{"ST",             "condor/output-files/" + path + "/ST/ST.root",                 "hist", kMagenta + 1},  
-        {"T#bar{T}",       "condor/output-files/" + path + "/TT/TT.root",                 "hist", kYellow + 1 },
-        //{"T#bar{T}#gamma", "condor/output-files/" + path + "/TTGJets/TTGJets.root",       "hist", kBlue + 1   },
-        //{"W(l#nu) + jets", "condor/output-files/" + path + "/WJetsToLNu/WJetsToLNu.root", "hist", kRed + 1    },
-        //{"QCD",            "condor/output-files/" + path + "/QCD/QCD.root",               "hist", kBlue - 7   },  
-        //{"#gamma + jets",  "condor/output-files/" + path + "/SP/SP.root",                 "hist", kGreen + 1  },  
+        {"DYJetsToLL_M-50", "condor/output-files/" + path + "/DYJetsToLL_M-50/DYJetsToLL_M-50.root", "hist", kOrange + 2 },        
+        {"Rare",            "condor/output-files/" + path + "/Rare/Rare.root",                       "hist", kCyan + 1   },
+        {"Diboson",         "condor/output-files/" + path + "/Diboson/Diboson.root",                 "hist", kMagenta + 1},
+        {"WJetsToLNu",      "condor/output-files/" + path + "/WJetsToLNu/WJetsToLNu.root",           "hist", kYellow + 1 },
+        {"ST",              "condor/output-files/" + path + "/ST/ST.root",                           "hist", kRed + 1    },
+        {"QCD",             "condor/output-files/" + path + "/QCD/QCD.root",                         "hist", kGreen + 1  },
+        {"T#bar{T}",        "condor/output-files/" + path + "/TT/TT.root",                           "hist", kBlue - 7   },
     };
+    //bg = {
+    //    //{"T#bar{T}",   "condor/output-files/" + path + "/TT/TT.root", "hist", bgColor[color]        },
+    //    {"Rare",           "condor/output-files/" + path + "/Rare/Rare.root",             "hist", kOrange + 2 },  
+    //    {"Diboson",        "condor/output-files/" + path + "/Diboson/Diboson.root",       "hist", kCyan + 1   },
+    //    {"ST",             "condor/output-files/" + path + "/ST/ST.root",                 "hist", kMagenta + 1},  
+    //    {"T#bar{T}",       "condor/output-files/" + path + "/TT/TT.root",                 "hist", kYellow + 1 },
+    //    {"T#bar{T}#gamma", "condor/output-files/" + path + "/TTGJets/TTGJets.root",       "hist", kBlue + 1   },
+    //    {"W(l#nu) + jets", "condor/output-files/" + path + "/WJetsToLNu/WJetsToLNu.root", "hist", kRed + 1    },
+    //    {"QCD",            "condor/output-files/" + path + "/QCD/QCD.root",               "hist", kBlue - 7   },  
+    //    {"#gamma + jets",  "condor/output-files/" + path + "/SP/SP.root",                 "hist", kGreen + 1  },  
+    //};
     sig = {
         //{"RPV 850", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", sigColor[color]        },
         {"RPV 850", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", kRed        },
@@ -86,9 +96,9 @@ int main()
     //make plotter object with the required sources for histograms specified
     //Plotter pltRoc( std::move(rocMapTest) );
     Plotter pltRocCompare( std::move(rocMap) );
-    //Plotter plt( std::move(histInfoCollection_GRtrue) );
+    Plotter plt( std::move(histInfoCollection_GRtrue) );
     //Plotter plt( std::move(histInfoCollection_GRfalse) );
-    Plotter plt( std::move(histInfoCollection_fisher) );
+    //Plotter plt( std::move(histInfoCollection_fisher) );
     //Plotter plt( std::move(histInfoCollection_photon) );
 
     // --------------------
@@ -102,7 +112,7 @@ int main()
         //"1l_2t",                          
         //"1l_ge1t",                        
         //"1l_ge2t",                        
-        //"1l_ge6j_ge1b",
+        "1l_ge6j_ge1b",
         //"1l_ge6j_ge2b",                 
         //"1l_ge6j_ge1b_1t",
         //"1l_ge6j_ge1b_ge1t",                                                    
@@ -121,39 +131,40 @@ int main()
         //"1l_ge6j_ge1b_ge8esm",
         //"1l_ge6j_ge1b_1t_ge95esm",
         //"1l_ge6j_ge1b_1t_ge8esm",
-        "0l",
-        "0l_1g",
-        "0l_ge7j_1g",
+        //"0l",
+        //"0l_1g",
+        //"0l_ge7j_1g",
     };
 
-    //for(std::string mycut : mycuts_1l)
-    //{
-    //    plt.plotStack( "h_njets_"+mycut, "N_{J}" , "Events", false);
-    //    plt.plotStack( "h_photonPt_"+mycut, "P_{T}^{#gamma}" , "Events", false, 10);
-    //    plt.plotStack( "h_deepESM_"+mycut, "DeepESM" , "Events", false, 10);
-    //    //plt.plotStack( "h_ntops_"+mycut, "N_{T}" , "Events", true);
-    //    //plt.plotStack( "h_nb_"   +mycut, "N_{B}" , "Events", true);        
-    //    //plt.plotStack( "h_fisher_"+mycut, "fisher value" , "Events", true, 4);        
-    //    //
-    //    //// Make Normalized fisher
-    //    //pltSkim.plotNormFisher("h_fisher_1l_"+mycut, "fisher value" , "Events", false, 4);
-    //    //plt.plotNormFisher("h_BestComboMass_1l_"+mycut, "Average BestCombo Mass [GeV]" , "Events", false, 4);
-    //    //plt.plotNormFisher("h_BestComboPt_1l_"+mycut, "Average BestCombo P_{T} [GeV]" , "Events", false, 4);
-    //    //plt.plotNormFisher("h_BestComboMassDiff_1l_"+mycut, "BestCombo Mass Diff [GeV]" , "Events", false, 2);
-    //    //plt.plotNormFisher("h_BestComboMassDiffAbs_1l_"+mycut, "BestCombo Mass Abs(Diff) [GeV]" , "Events", false, 2);
-    //    //plt.plotNormFisher("h_BestComboRelDiff_1l_"+mycut, "BestCombo Rel Diff" , "Events", false, 2);
-    //    //plt.plotNormFisher("h_BestComboRelDiffAbs_1l_"+mycut, "BestCombo Rel Abs(Diff)" , "Events", false, 2);
-    //    //
-    //    // - Make  Roc Curve
-    //    //pltRoc.plotRocFisher("h_deepESM_1l_"+mycut,"Background","Signal", false);
-    //    //pltRocCompare.plotRocFisher(mycut,"Background","Signal", true);
-    //    //        
-    //    ////Need these until we un blind
-    //    //plt.plotStack( "blind_njets_1l_"+mycut, "N_{J}" , "Events", true);
-    //    //plt.plotStack( "blind_ntops_1l_"+mycut, "N_{T}" , "Events", true);
-    //    //plt.plotStack( "blind_nb_1l_"   +mycut, "N_{B}" , "Events", true);        
-    //    //plt.plotStack( "blind_fisher_1l_"+mycut, "fisher value" , "Events", true, 4);        
-    //}
+    for(std::string mycut : mycuts_1l)
+    {
+        plt.plotStack( "h_njets_"+mycut, "N_{J}" , "Events", true);
+        plt.plotStack( "h_deepESM_"+mycut, "DeepESM" , "Events", true, 10);
+        //plt.plotStack( "h_ntops_"+mycut, "N_{T}" , "Events", true);
+        //plt.plotStack( "h_nb_"   +mycut, "N_{B}" , "Events", true);        
+        //plt.plotStack( "h_fisher_"+mycut, "fisher value" , "Events", true, 4);        
+        //plt.plotStack( "h_photonPt_"+mycut, "P_{T}^{#gamma}" , "Events", false, 10);
+        //
+        //// Make Normalized fisher
+        //pltSkim.plotNormFisher("h_fisher_1l_"+mycut, "fisher value" , "Events", false, 4);
+        //plt.plotNormFisher("h_BestComboMass_1l_"+mycut, "Average BestCombo Mass [GeV]" , "Events", false, 4);
+        //plt.plotNormFisher("h_BestComboPt_1l_"+mycut, "Average BestCombo P_{T} [GeV]" , "Events", false, 4);
+        //plt.plotNormFisher("h_BestComboMassDiff_1l_"+mycut, "BestCombo Mass Diff [GeV]" , "Events", false, 2);
+        //plt.plotNormFisher("h_BestComboMassDiffAbs_1l_"+mycut, "BestCombo Mass Abs(Diff) [GeV]" , "Events", false, 2);
+        //plt.plotNormFisher("h_BestComboRelDiff_1l_"+mycut, "BestCombo Rel Diff" , "Events", false, 2);
+        //plt.plotNormFisher("h_BestComboRelDiffAbs_1l_"+mycut, "BestCombo Rel Abs(Diff)" , "Events", false, 2);
+        //
+        // - Make  Roc Curve
+        //pltRoc.plotRocFisher("h_deepESM_1l_"+mycut,"Background","Signal", false);
+        //pltRocCompare.plotRocFisher(mycut,"Background","Signal", true);
+        //        
+        ////Need these until we un blind
+        plt.plotStack( "blind_njets_"+mycut, "N_{J}" , "Events", true);
+        plt.plotStack( "blind_deepESM_"+mycut, "DeepESM" , "Events", true, 10);
+        //plt.plotStack( "blind_ntops_"+mycut, "N_{T}" , "Events", true);
+        //plt.plotStack( "blind_nb_"   +mycut, "N_{B}" , "Events", true);        
+        //plt.plotStack( "blind_fisher_"+mycut, "fisher value" , "Events", true, 10);        
+    }
     
     //plt.plotStack("h_met"     , "MET"   , "Events", true);
     //plt.plotStack("h_bdt"     , "bdt"   , "Events", true);
@@ -182,21 +193,21 @@ int main()
     // - Make fisher plots
     // --------------------
 
-    std::vector< FisherHolder > fisherHolder
-    {
-        //{ {"h_njets_1l_ge6j_ge1b_d1"  , "h_njets_1l_ge6j_ge1b_d2"  , "h_njets_1l_ge6j_ge1b_d3"  , "h_njets_1l_ge6j_ge1b_d4"  } , "njets_1l_ge6j_ge1b"  },
-        //{ {"h_njets_1l_ge6j_ge1b_ge6-7esm", "h_njets_1l_ge6j_ge1b_ge7-8esm", "h_njets_1l_ge6j_ge1b_ge8-95esm", "h_njets_1l_ge6j_ge1b_ge95esm" }, "njets_1l_ge6j_ge1b_esmBins"},
-        //{ {"h_njets_1l_ge6j_ge1b_ge5-6esm", "h_njets_1l_ge6j_ge1b_ge6-7esm", "h_njets_1l_ge6j_ge1b_ge7-8esm", "h_njets_1l_ge6j_ge1b_ge8-95esm", "h_njets_1l_ge6j_ge1b_ge95esm" }, "njets_1l_ge6j_ge1b_esmBins"},
-        { {"h_njets_1l_ge6j_ge1b_f1"  , "h_njets_1l_ge6j_ge1b_f2"  , "h_njets_1l_ge6j_ge1b_f3"  , "h_njets_1l_ge6j_ge1b_f4"  } , "njets_1l_ge6j_ge1b"  },
-    };
-    
-    for (auto& f : fisherHolder)
-    {
-        //plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true, 9, "DeepESM");
-        //plt.plotRatioFisher(f.cutNames_,  f.plotName_, "N_{J}", "N_{J+1} / N_{J}", false, 6, "DeepESM");
-        plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true, 9, "Fisher");
-        plt.plotRatioFisher(f.cutNames_,  f.plotName_, "N_{J}", "N_{J+1} / N_{J}", false, 6, "Fisher");
-    }
+    //std::vector< FisherHolder > fisherHolder
+    //{
+    //    //{ {"h_njets_1l_ge6j_ge1b_d1"  , "h_njets_1l_ge6j_ge1b_d2"  , "h_njets_1l_ge6j_ge1b_d3"  , "h_njets_1l_ge6j_ge1b_d4"  } , "njets_1l_ge6j_ge1b"  },
+    //    //{ {"h_njets_1l_ge6j_ge1b_ge6-7esm", "h_njets_1l_ge6j_ge1b_ge7-8esm", "h_njets_1l_ge6j_ge1b_ge8-95esm", "h_njets_1l_ge6j_ge1b_ge95esm" }, "njets_1l_ge6j_ge1b_esmBins"},
+    //    //{ {"h_njets_1l_ge6j_ge1b_ge5-6esm", "h_njets_1l_ge6j_ge1b_ge6-7esm", "h_njets_1l_ge6j_ge1b_ge7-8esm", "h_njets_1l_ge6j_ge1b_ge8-95esm", "h_njets_1l_ge6j_ge1b_ge95esm" }, "njets_1l_ge6j_ge1b_esmBins"},
+    //    { {"h_njets_1l_ge6j_ge1b_f1"  , "h_njets_1l_ge6j_ge1b_f2"  , "h_njets_1l_ge6j_ge1b_f3"  , "h_njets_1l_ge6j_ge1b_f4"  } , "njets_1l_ge6j_ge1b"  },
+    //};
+    //
+    //for (auto& f : fisherHolder)
+    //{
+    //    //plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true, 9, "DeepESM");
+    //    //plt.plotRatioFisher(f.cutNames_,  f.plotName_, "N_{J}", "N_{J+1} / N_{J}", false, 6, "DeepESM");
+    //    plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true, 9, "Fisher");
+    //    plt.plotRatioFisher(f.cutNames_,  f.plotName_, "N_{J}", "N_{J+1} / N_{J}", false, 6, "Fisher");
+    //}
     
     // --------------------
     // - Compute Yields

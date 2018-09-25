@@ -166,15 +166,37 @@ public:
 
     ~HistInfoCollection() {}
 
-    void setUpBG(const std::string& histName, int rebin, THStack* bgStack, std::shared_ptr<TH1>& hbgSum, const bool& setFill = true)
+    void setUpBG(const std::string& histName, int rebin, THStack* bgStack, std::shared_ptr<TH1>& hbgSum, const bool& setFill = true, const bool& scale = false)
     {
+        double dNum = 1, bNum = 1;
+        if(scale)
+        {
+            dNum = 0;
+            bNum = 0;
+            for(auto& entry : dataVec_)
+            {
+                entry.histName = histName;
+                entry.rebin = rebin;
+                entry.retrieveHistogram();            
+                dNum += entry.h->Integral(); 
+            }
+            for(auto& entry : bgVec_)
+            {
+                entry.histName = histName;
+                entry.rebin = rebin;
+                entry.retrieveHistogram();
+                bNum += entry.h->Integral();
+            } 
+        }
+        
         bool firstPass = true;
         for(auto& entry : bgVec_)
         {
             entry.histName = histName;
             entry.rebin = rebin;
             entry.retrieveHistogram();
-    
+            entry.h->Scale(dNum/bNum);
+
             bgStack->Add(entry.h.get(), entry.drawOptions.c_str());
             if(firstPass) 
             {

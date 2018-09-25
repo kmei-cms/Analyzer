@@ -59,20 +59,20 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
     my_histos.emplace("jmt_ev2_top6", std::make_shared<TH1D>("jmt_ev2_top6","jmt_ev2_top6", 50, 0, 1 ) );
     for(unsigned int i = 1; i <= 7 ; i++) //Bad hard code
     {
-        my_histos.emplace("Jet_cm_pt_"+std::to_string(i)+"_1l_ge6j_ge1b",  std::make_shared<TH1D>(("Jet_cm_pt_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_cm_pt_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 300, 0, 3000 ));
+        my_histos.emplace("Jet_cm_pt_"+std::to_string(i)+"_1l_ge6j_ge1b",  std::make_shared<TH1D>(("Jet_cm_pt_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_cm_pt_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 150, 0, 1500 ));
         my_histos.emplace("Jet_cm_eta_"+std::to_string(i)+"_1l_ge6j_ge1b", std::make_shared<TH1D>(("Jet_cm_eta_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_cm_eta_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 100, -6, 6 ));
-        my_histos.emplace("Jet_cm_phi_"+std::to_string(i)+"_1l_ge6j_ge1b", std::make_shared<TH1D>(("Jet_cm_phi_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_cm_phi_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 160, -8, 8 ));
-        my_histos.emplace("Jet_cm_m_"+std::to_string(i)+"_1l_ge6j_ge1b",   std::make_shared<TH1D>(("Jet_cm_m_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_cm_m_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 300, 0, 3000 ));
+        my_histos.emplace("Jet_cm_phi_"+std::to_string(i)+"_1l_ge6j_ge1b", std::make_shared<TH1D>(("Jet_cm_phi_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_cm_phi_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 80, -4, 4 ));
+        my_histos.emplace("Jet_cm_m_"+std::to_string(i)+"_1l_ge6j_ge1b",   std::make_shared<TH1D>(("Jet_cm_m_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_cm_m_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 20, 0, 200 ));
 
-        my_histos.emplace("Jet_pt_"+std::to_string(i)+"_1l_ge6j_ge1b",  std::make_shared<TH1D>(("Jet_pt_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_pt_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 300, 0, 3000 ));
+        my_histos.emplace("Jet_pt_"+std::to_string(i)+"_1l_ge6j_ge1b",  std::make_shared<TH1D>(("Jet_pt_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_pt_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 150, 0, 1500 ));
         my_histos.emplace("Jet_eta_"+std::to_string(i)+"_1l_ge6j_ge1b", std::make_shared<TH1D>(("Jet_eta_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_eta_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 100, -6, 6 ));
-        my_histos.emplace("Jet_phi_"+std::to_string(i)+"_1l_ge6j_ge1b", std::make_shared<TH1D>(("Jet_phi_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_phi_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 160, -8, 8 ));
-        my_histos.emplace("Jet_m_"+std::to_string(i)+"_1l_ge6j_ge1b",   std::make_shared<TH1D>(("Jet_m_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_m_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 300, 0, 3000 ));
+        my_histos.emplace("Jet_phi_"+std::to_string(i)+"_1l_ge6j_ge1b", std::make_shared<TH1D>(("Jet_phi_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_phi_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 80, -4, 4 ));
+        my_histos.emplace("Jet_m_"+std::to_string(i)+"_1l_ge6j_ge1b",   std::make_shared<TH1D>(("Jet_m_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_m_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 20, 0, 200 ));
 
-        my_2d_histos.emplace("Jet_cm_pt_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b", std::make_shared<TH2D>(("Jet_cm_pt_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(),("Jet_cm_pt_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(), 300, 0, 3000, fB, 0.0, 1.0));
-        my_2d_histos.emplace("Jet_cm_eta_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b", std::make_shared<TH2D>(("Jet_cm_eta_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(),("Jet_cm_eta_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(), 100, -6, 6, fB, 0.0, 1.0));
-        my_2d_histos.emplace("Jet_cm_phi_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b", std::make_shared<TH2D>(("Jet_cm_phi_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(),("Jet_cm_phi_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(), 160, -8, 8, fB, 0.0, 1.0));
-        my_2d_histos.emplace("Jet_cm_m_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b", std::make_shared<TH2D>(("Jet_cm_m_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(),("Jet_cm_m_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(), 300, 0, 3000, fB, 0.0, 1.0));
+        my_2d_histos.emplace("Jet_cm_pt_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b", std::make_shared<TH2D>(("Jet_cm_pt_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(),("Jet_cm_pt_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(), fB, 0.0, 1.0, 150, 0, 1500));
+        my_2d_histos.emplace("Jet_cm_eta_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b", std::make_shared<TH2D>(("Jet_cm_eta_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(),("Jet_cm_eta_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(), fB, 0.0, 1.0, 100, -6, 6));
+        my_2d_histos.emplace("Jet_cm_phi_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b", std::make_shared<TH2D>(("Jet_cm_phi_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(),("Jet_cm_phi_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(), fB, 0.0, 1.0, 80, -4, 4));
+        my_2d_histos.emplace("Jet_cm_m_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b", std::make_shared<TH2D>(("Jet_cm_m_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(),("Jet_cm_m_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(), fB, 0.0, 1.0, 20, 0, 200));
     }
 
     for(auto& mycut : cutMap)
@@ -638,10 +638,10 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_histos["Jet_phi_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_top6.at(i).Phi()), eventweight);
                 my_histos["Jet_m_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_top6.at(i).M()), eventweight);
 
-                my_2d_histos["Jet_cm_pt_"+std::to_string(i+1)+"_deepESM_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).Pt()), deepESM_val, eventweight);
-                my_2d_histos["Jet_cm_eta_"+std::to_string(i+1)+"_deepESM_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).Eta()), deepESM_val, eventweight);
-                my_2d_histos["Jet_cm_phi_"+std::to_string(i+1)+"_deepESM_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).Phi()), deepESM_val, eventweight);
-                my_2d_histos["Jet_cm_m_"+std::to_string(i+1)+"_deepESM_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).M()), deepESM_val, eventweight);
+                my_2d_histos["Jet_cm_pt_"+std::to_string(i+1)+"_deepESM_1l_ge6j_ge1b"]->Fill(static_cast<double>(deepESM_val, Jets_cm_top6.at(i).Pt()), eventweight);
+                my_2d_histos["Jet_cm_eta_"+std::to_string(i+1)+"_deepESM_1l_ge6j_ge1b"]->Fill(static_cast<double>(deepESM_val, Jets_cm_top6.at(i).Eta()), eventweight);
+                my_2d_histos["Jet_cm_phi_"+std::to_string(i+1)+"_deepESM_1l_ge6j_ge1b"]->Fill(static_cast<double>(deepESM_val, Jets_cm_top6.at(i).Phi()), eventweight);
+                my_2d_histos["Jet_cm_m_"+std::to_string(i+1)+"_deepESM_1l_ge6j_ge1b"]->Fill(static_cast<double>(deepESM_val, Jets_cm_top6.at(i).M()), eventweight);
             }
         }
     } // end of event loop
