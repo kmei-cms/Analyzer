@@ -37,7 +37,7 @@ INCLUDES += $(shell $(PYTHONCFG) --includes)
 
 LIBS            = $(shell root-config --glibs)
 LIBSTOPTAGGER  += -L$(TTTDIR) -lTopTagger
-CXXFLAGS       += -DDOTENSORFLOW  
+CXXFLAGS       += -DDOTENSORFLOW
 LIBS           += -L$(TENSORFLOW_DIR)/lib -ltensorflow
 #LHAPDFLIB      = -L$(LHAPDF_DATA_PATH)/../../lib -lLHAPDF
 
