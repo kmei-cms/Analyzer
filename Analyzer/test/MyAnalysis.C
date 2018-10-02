@@ -111,6 +111,11 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         MakeMVAVariables makeMVAVariables(false, myVarSuffix);
         Baseline baseline;
         DeepEventShape deepEventShape;
+        DeepEventShape deepEventShape_nJet7("DeepEventShape_nJet7.cfg");
+        DeepEventShape deepEventShape_nJet8("DeepEventShape_nJet8.cfg");
+        DeepEventShape deepEventShape_nJet9("DeepEventShape_nJet9.cfg");
+        DeepEventShape deepEventShape_nJet10("DeepEventShape_nJet10.cfg");
+        DeepEventShape deepEventShape_nJet11("DeepEventShape_nJet11.cfg");
 
         // Register classes/functions that add variables on the fly
         tr.registerFunction( std::move(muon) );
@@ -123,6 +128,11 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerFunction( std::move(makeMVAVariables) );
         tr.registerFunction( std::move(baseline) );
         tr.registerFunction( std::move(deepEventShape) );
+        tr.registerFunction( std::move(deepEventShape_nJet7) );
+        tr.registerFunction( std::move(deepEventShape_nJet8) );
+        tr.registerFunction( std::move(deepEventShape_nJet9) );
+        tr.registerFunction( std::move(deepEventShape_nJet10) );
+        tr.registerFunction( std::move(deepEventShape_nJet11) );
 
         if( runtype == "MC" ) 
         {
