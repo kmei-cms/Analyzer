@@ -9,6 +9,7 @@
 #include "Analyzer/Analyzer/include/AnalyzeEventShape.h"
 #include "Analyzer/Analyzer/include/Analyze0Lep.h"
 #include "Analyzer/Analyzer/include/Analyze1Lep.h"
+#include "Analyzer/Analyzer/include/AnalyzeNjetsMinusOneCS.h"
 #include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
@@ -57,7 +58,7 @@ std::string color(const std::string& text, const std::string& color)
 
 template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
                                     int startFile, int nFiles, int maxEvts, 
-                                    bool isSkim, TFile* outfile)
+                                    bool isSkim, TFile* outfile, bool isQuiet)
 {
     std::cout << "Initializing..." << std::endl;
     const int jecOn = 0, jerOn = 0; 
@@ -135,7 +136,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
             tr.registerFunction( std::move(scaleFactors) );
         }
         // Loop over all of the events and fill histos
-        a.Loop(tr, weight, maxEvts);
+        a.Loop(tr, weight, maxEvts, isQuiet);
 
         // Cleaning up dynamic memory
         delete ch;
@@ -180,7 +181,7 @@ int main(int argc, char *argv[])
     bool doBackground = false, doTopTagger = false, doEventSelection = false, 
          doEventShape = false, do0Lep = false, do1Lep = false, doStealthTT = false,
          doBTagSF = false, calcBTagSF = false, doWControlRegion = false, 
-         makeMiniTree = false, makeNJetDists = false;
+         makeMiniTree = false, makeNJetDists = false, doNjetsMinusOneCS = false, isQuiet = true ;
 
     bool runOnCondor = false;
     bool isSkim = false;
@@ -195,12 +196,14 @@ int main(int argc, char *argv[])
         {"doEventShape",       no_argument, 0, 'p'},
         {"do0Lep",             no_argument, 0, 'z'},
         {"do1Lep",             no_argument, 0, 'o'},
+        {"doNjetsMinusOneCS",  no_argument, 0, 'q'},
         {"doStealthTT",        no_argument, 0, 'x'},
         {"calcBTagSF",         no_argument, 0, 'f'},
         {"doBTagSF",           no_argument, 0, 'g'},
         {"makeMiniTree",       no_argument, 0, 'm'},
         {"makeNJetDists",      no_argument, 0, 'n'},
         {"condor",             no_argument, 0, 'c'},
+        {"verbose",            no_argument, 0, 'v'},
         {"histFile",     required_argument, 0, 'H'},
         {"dataSets",     required_argument, 0, 'D'},
         {"numFiles",     required_argument, 0, 'N'},
@@ -208,7 +211,7 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-    while((opt = getopt_long(argc, argv, "bwtspzoxfgmncH:D:N:M:E:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "bwtspzoqxfgmncvH:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
@@ -219,12 +222,14 @@ int main(int argc, char *argv[])
             case 'p': doEventShape     = true;              break;
             case 'z': do0Lep           = true;              break;
             case 'o': do1Lep           = true;              break;
+            case 'q': doNjetsMinusOneCS  = true;              break;
             case 'x': doStealthTT      = true;              break;
             case 'f': calcBTagSF       = true;              break;
             case 'g': doBTagSF         = true;              break;
             case 'm': makeMiniTree     = true;              break;
             case 'n': makeNJetDists    = true;              break;
             case 'c': runOnCondor      = true;              break;
+            case 'v': isQuiet          = false;             break;
             case 'H': histFile         = optarg;            break;
             case 'D': dataSets         = optarg;            break;
             case 'N': nFiles           = int(atoi(optarg)); break;
@@ -245,7 +250,7 @@ int main(int argc, char *argv[])
     std::set<AnaSamples::FileSummary> vvf = setFS(dataSets, runOnCondor); 
     TFile* outfile = TFile::Open(histFile.c_str(), "RECREATE");
 
-    std::vector<std::pair<bool, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,bool,TFile*)>>> AnalyzerPairVec = {
+    std::vector<std::pair<bool, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,bool,TFile*,bool)>>> AnalyzerPairVec = {
         {doBackground,     run<AnalyzeBackground>},
         {doWControlRegion, run<AnalyzeWControlRegion>},
         {doTopTagger,      run<AnalyzeTopTagger>},
@@ -253,6 +258,7 @@ int main(int argc, char *argv[])
         {doEventShape,     run<AnalyzeEventShape>},
         {do0Lep,           run<Analyze0Lep>},
         {do1Lep,           run<Analyze1Lep>},
+        {doNjetsMinusOneCS,           run<AnalyzeNjetsMinusOneCS>},
         {doStealthTT,      run<AnalyzeStealthTopTagger>},
         {doBTagSF,         run<AnalyzeBTagSF>},
         {calcBTagSF,       run<CalculateBTagSF>},
@@ -264,7 +270,7 @@ int main(int argc, char *argv[])
     {
         for(auto& pair : AnalyzerPairVec)
         {
-            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,isSkim,outfile); 
+            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,isSkim,outfile,isQuiet); 
         }
 
         outfile->Close();
