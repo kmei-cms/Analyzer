@@ -109,7 +109,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         Photon photon;
         RunFisher runFisher("v3",myVarSuffix);
         CommonVariables commonVariables;
-        MakeMVAVariables makeMVAVariables(false, myVarSuffix);
+        MakeMVAVariables makeMVAVariables(false, myVarSuffix, true);
         Baseline baseline;
         DeepEventShape deepEventShape;
 
@@ -215,26 +215,26 @@ int main(int argc, char *argv[])
     {
         switch(opt)
         {
-            case 'b': doBackground     = true;              break;
-            case 'w': doWControlRegion = true;              break;
-            case 't': doTopTagger      = true;              break;
-            case 's': doEventSelection = true;              break;
-            case 'p': doEventShape     = true;              break;
-            case 'z': do0Lep           = true;              break;
-            case 'o': do1Lep           = true;              break;
-            case 'q': doNjetsMinusOneCS  = true;              break;
-            case 'x': doStealthTT      = true;              break;
-            case 'f': calcBTagSF       = true;              break;
-            case 'g': doBTagSF         = true;              break;
-            case 'm': makeMiniTree     = true;              break;
-            case 'n': makeNJetDists    = true;              break;
-            case 'c': runOnCondor      = true;              break;
-            case 'v': isQuiet          = false;             break;
-            case 'H': histFile         = optarg;            break;
-            case 'D': dataSets         = optarg;            break;
-            case 'N': nFiles           = int(atoi(optarg)); break;
-            case 'M': startFile        = int(atoi(optarg)); break;
-            case 'E': maxEvts          = int(atoi(optarg)); break;
+            case 'b': doBackground      = true;              break;
+            case 'w': doWControlRegion  = true;              break;
+            case 't': doTopTagger       = true;              break;
+            case 's': doEventSelection  = true;              break;
+            case 'p': doEventShape      = true;              break;
+            case 'z': do0Lep            = true;              break;
+            case 'o': do1Lep            = true;              break;
+            case 'q': doNjetsMinusOneCS = true;              break;
+            case 'x': doStealthTT       = true;              break;
+            case 'f': calcBTagSF        = true;              break;
+            case 'g': doBTagSF          = true;              break;
+            case 'm': makeMiniTree      = true;              break;
+            case 'n': makeNJetDists     = true;              break;
+            case 'c': runOnCondor       = true;              break;
+            case 'v': isQuiet           = false;             break;
+            case 'H': histFile          = optarg;            break;
+            case 'D': dataSets          = optarg;            break;
+            case 'N': nFiles            = int(atoi(optarg)); break;
+            case 'M': startFile         = int(atoi(optarg)); break;
+            case 'E': maxEvts           = int(atoi(optarg)); break;
         }
     }
 
@@ -251,19 +251,19 @@ int main(int argc, char *argv[])
     TFile* outfile = TFile::Open(histFile.c_str(), "RECREATE");
 
     std::vector<std::pair<bool, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,bool,TFile*,bool)>>> AnalyzerPairVec = {
-        {doBackground,     run<AnalyzeBackground>},
-        {doWControlRegion, run<AnalyzeWControlRegion>},
-        {doTopTagger,      run<AnalyzeTopTagger>},
-        {doEventSelection, run<AnalyzeEventSelection>},
-        {doEventShape,     run<AnalyzeEventShape>},
-        {do0Lep,           run<Analyze0Lep>},
-        {do1Lep,           run<Analyze1Lep>},
-        {doNjetsMinusOneCS,           run<AnalyzeNjetsMinusOneCS>},
-        {doStealthTT,      run<AnalyzeStealthTopTagger>},
-        {doBTagSF,         run<AnalyzeBTagSF>},
-        {calcBTagSF,       run<CalculateBTagSF>},
-        {makeMiniTree,     run<MakeMiniTree>},
-        {makeNJetDists,    run<MakeNJetDists>},
+        {doBackground,      run<AnalyzeBackground>},
+        {doWControlRegion,  run<AnalyzeWControlRegion>},
+        {doTopTagger,       run<AnalyzeTopTagger>},
+        {doEventSelection,  run<AnalyzeEventSelection>},
+        {doEventShape,      run<AnalyzeEventShape>},
+        {do0Lep,            run<Analyze0Lep>},
+        {do1Lep,            run<Analyze1Lep>},
+        {doNjetsMinusOneCS, run<AnalyzeNjetsMinusOneCS>},
+        {doStealthTT,       run<AnalyzeStealthTopTagger>},
+        {doBTagSF,          run<AnalyzeBTagSF>},
+        {calcBTagSF,        run<CalculateBTagSF>},
+        {makeMiniTree,      run<MakeMiniTree>},
+        {makeNJetDists,     run<MakeNJetDists>},
     }; 
 
     try

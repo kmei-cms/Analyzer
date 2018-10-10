@@ -20,7 +20,7 @@ const char* mcname( int pdgid ) ;
 AnalyzeNjetsMinusOneCS::AnalyzeNjetsMinusOneCS() : initHistos(false)
 {
    printf("\n\n AnalyzeNjetsMinusOneCS::AnalyzeNjetsMinusOneCS : Creating instance of DeepEventShape for alternative calculation.\n\n") ;
-   des_ = new DeepEventShape( "DeepEventShape_alt.cfg", "Info", "_alt1" ) ;
+   //des_ = new DeepEventShape( "DeepEventShape_alt.cfg", "Info", "_alt1" ) ;
 }
 
 void AnalyzeNjetsMinusOneCS::InitHistos(const std::map<std::string, bool>& cutMap)
@@ -662,53 +662,92 @@ void AnalyzeNjetsMinusOneCS::Loop(NTupleReader& tr, double weight, int maxevents
 
      //--- Try the code for using an alternative jet collection.
 
-
-      std::string alt_jet_postfix("_alt1") ;
-
-      auto* alt_Jets = new std::vector<TLorentzVector>(); 
-      auto* alt_GoodJets = new std::vector<bool>() ;
-      int alt_NGoodJets(0) ; 
-
-      for ( unsigned int rji=0; rji<Jets.size(); rji++ ) {
-         if ( !GoodJets_pt30[rji] ) continue ;
-         alt_Jets->push_back( Jets.at(rji) ) ;
-         alt_GoodJets->push_back( true ) ;
-         alt_NGoodJets ++ ;
-      } // rji
-      TLorentzVector test_fakejet_tlv ;
-      test_fakejet_tlv.SetPtEtaPhiM( 100., 0.5, 2.0, 5.0 ) ;
-      alt_Jets->push_back( test_fakejet_tlv ) ;
-      alt_GoodJets->push_back( true ) ;
-      alt_NGoodJets ++ ;
-
-      if ( !isQuiet ) {
-         printf( "\n\n About to test registering alternative Jet collection vars.\n\n" ) ;
-      }
-      tr.registerDerivedVec( "Jets"+alt_jet_postfix, alt_Jets ) ;
-      tr.registerDerivedVec( "GoodJets"+alt_jet_postfix, alt_GoodJets ) ;
-      tr.registerDerivedVar( "NGoodJets"+alt_jet_postfix, alt_NGoodJets ) ;
-      if ( !isQuiet ) {
-         printf( "\n\n Done registering alternative Jet collection vars.\n\n" ) ;
-         printf( "  Calling MakeMVAVariables for this alternative jet collection.\n\n") ;
-      }
-
-      MakeMVAVariables mmv( true, alt_jet_postfix, alt_jet_postfix ) ;
-      mmv(tr) ;
-
-      if ( !isQuiet ) {
-         printf( "  back from MakeMVAVariables for this alternative jet collection.\n\n") ;
-         printf( "  trying DeepEventShape calculator with this alternative jet collection.\n\n") ;
-      }
-      (*des_)(tr) ;
+      //--------------------------------------------------------------------------
+      // Chris commented this out
+      //std::string alt_jet_postfix("_alt1") ;
+      //
+      //auto* alt_Jets = new std::vector<TLorentzVector>(); 
+      //auto* alt_GoodJets = new std::vector<bool>() ;
+      //int alt_NGoodJets(0) ; 
+      //
+      //for ( unsigned int rji=0; rji<Jets.size(); rji++ ) {
+      //   if ( !GoodJets_pt30[rji] ) continue ;
+      //   alt_Jets->push_back( Jets.at(rji) ) ;
+      //   alt_GoodJets->push_back( true ) ;
+      //   alt_NGoodJets ++ ;
+      //} // rji
+      //TLorentzVector test_fakejet_tlv ;
+      //test_fakejet_tlv.SetPtEtaPhiM( 100., 0.5, 2.0, 5.0 ) ;
+      //alt_Jets->push_back( test_fakejet_tlv ) ;
+      //alt_GoodJets->push_back( true ) ;
+      //alt_NGoodJets ++ ;
+      //
+      //if ( !isQuiet ) {
+      //   printf( "\n\n About to test registering alternative Jet collection vars.\n\n" ) ;
+      //}
+      //tr.registerDerivedVec( "Jets"+alt_jet_postfix, alt_Jets ) ;
+      //tr.registerDerivedVec( "GoodJets"+alt_jet_postfix, alt_GoodJets ) ;
+      //tr.registerDerivedVar( "NGoodJets"+alt_jet_postfix, alt_NGoodJets ) ;
+      //if ( !isQuiet ) {
+      //   printf( "\n\n Done registering alternative Jet collection vars.\n\n" ) ;
+      //   printf( "  Calling MakeMVAVariables for this alternative jet collection.\n\n") ;
+      //}
+      //
+      //MakeMVAVariables mmv( true, alt_jet_postfix, alt_jet_postfix ) ;
+      //mmv(tr) ;
+      //
+      //if ( !isQuiet ) {
+      //   printf( "  back from MakeMVAVariables for this alternative jet collection.\n\n") ;
+      //   printf( "  trying DeepEventShape calculator with this alternative jet collection.\n\n") ;
+      //}
+      //(*des_)(tr) ;
+      //
+      //
+      //const auto& deepESM_val_alt1 = tr.getVar<double>("deepESM_val_alt1") ;
+      //if ( !isQuiet ) {
+      //   printf( "     deepESM_val_alt1 = %7.3f\n", deepESM_val_alt1 ) ;
+      //}
       
-
-      const auto& deepESM_val_alt1 = tr.getVar<double>("deepESM_val_alt1") ;
-      if ( !isQuiet ) {
-         printf( "     deepESM_val_alt1 = %7.3f\n", deepESM_val_alt1 ) ;
-      }
-      
-
-
+      //-------------------------------------------------------------------------------------
+      // Owen try something like this instead
+      //const auto& Jets = tr.getVec<TLorentzVector>("Jets");
+      //const auto& GoodJets = tr.getVec<bool>("GoodJets");
+      //const auto& NGoodJets = tr.getVar<int>("NGoodJets");
+      //const auto& GoodLeptons = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
+      //const auto& NGoodLeptons = tr.getVar<int>("NGoodLeptons");
+      //const auto& MET = tr.getVar<double>("MET"); 
+      //const auto& METPhi = tr.getVar<double>("METPhi");
+      //const auto& runtype = tr.getVar<std::string>("runtype");
+      //
+      //int index = -1;
+      //for(auto jet : Jets)
+      //{
+      //    index++;           
+      //    if(!GoodJets[index]) continue;
+      //    auto* newJets = new std::vector<TLorentzVector>(Jets);
+      //    auto* newGoodJets = new std::vector<bool>(GoodJets);
+      //    auto* GoodLeptons_ = new std::vector<std::pair<std::string, TLorentzVector>>(GoodLeptons);
+      //      
+      //    newJets->push_back(jet);
+      //    newGoodJets->push_back(true);
+      //    int newNGoodJets = NGoodJets + 1;
+      //      
+      //    NTupleReader newtr;
+      //    newtr.registerDerivedVec("Jets", newJets);
+      //    newtr.registerDerivedVec("GoodJets", newGoodJets);
+      //    newtr.registerDerivedVar("NGoodJets", newNGoodJets);
+      //    newtr.registerDerivedVec("GoodLeptons", GoodLeptons_);
+      //    newtr.registerDerivedVar("NGoodLeptons", NGoodLeptons);
+      //    newtr.registerDerivedVar("MET", MET);
+      //    newtr.registerDerivedVar("METPhi", METPhi);
+      //
+      //    MakeMVAVariables makeMVAVariables;
+      //    makeMVAVariables(newtr);
+      //    DeepEventShape deepEventShape;
+      //    deepEventShape(newtr);
+      //    const auto& deepESM_val = newtr.getVar<double>("deepESM_val");
+      //    std::cout<<index<<" "<<newNGoodJets<<" "<<deepESM_val<<std::endl;
+      //}
 
 
 
