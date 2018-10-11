@@ -53,14 +53,11 @@ public:
         c->cd();
 
         // Upper plot will be in pad1: TPad(x1, y1, x2, y2)
-        if(hc_.dataVec_.size() != 0) 
-        {
-            TPad *pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
-            //pad1->SetBottomMargin(0); // Upper and lower plot are joined
-            //pad1->SetGridy();         // Horizontal grid
-            pad1->Draw();             // Draw the upper pad: pad1
-            pad1->cd();               // pad1 becomes the current pad
-        }
+        TPad *pad1 = new TPad("pad1", "pad1", 0.0, 0.31, 1.0, 1.0);
+        pad1->SetBottomMargin(0); // Upper and lower plot are joined
+        //pad1->SetGridy();         // Horizontal grid
+        pad1->Draw();             // Draw the upper pad: pad1
+        pad1->cd();               // pad1 becomes the current pad
         
         //Create TLegend
         TLegend *leg = new TLegend(0.20, 0.76, 0.89, 0.88);
@@ -75,7 +72,7 @@ public:
         // -  Setup plots
         // ------------------------
         THStack *bgStack = new THStack();
-        hc_.setUpBG(histName, rebin, bgStack, hbgSum_);
+        hc_.setUpBG(histName, rebin, bgStack, hbgSum_, true, false);
         hc_.setUpSignal(histName, rebin);
         hc_.setUpData(histName, rebin);
 
@@ -83,10 +80,12 @@ public:
         histInfo dummy(new TH1D("dummy", "dummy", 1000, hbgSum_->GetBinLowEdge(1), hbgSum_->GetBinLowEdge(hbgSum_->GetNbinsX()) + hbgSum_->GetBinWidth(hbgSum_->GetNbinsX())));
 
         //draw dummy axes
+        dummy.setupAxes(1.2, 0.4, 0.15, 0.15, 0.13, 0.13);
         dummy.draw();
 
         //Switch to logY if desired
         gPad->SetLogy(isLogY);
+        gPad->SetTicks(1,1);
 
         //get maximum from histos and fill TLegend
         double min = 0.0;
@@ -131,56 +130,61 @@ public:
             
         //Compute and draw yields for njets min to max
         //drawYields(histName,"njets",12,20);
+        //drawYields(histName, "h", 0, hc_.dataVec_[0].h->GetNbinsX());
 
         //Draw dummy hist again to get axes on top of histograms
         setupDummy(dummy, leg, histName, xAxisLabel, yAxisLabel, isLogY, xmin, xmax, min, max, lmax);
         //dummy.setupPad(0.12, 0.06, 0.08, 0.0);
         dummy.draw("AXIS");
                         
-        if(hc_.dataVec_.size() != 0)
-        {            
-            // lower plot will be in pad2
-            c->cd();          // Go back to the main canvas before defining pad2
-            TPad *pad2 = new TPad("pad2", "pad2", 0.0, 0.0, 1, 0.3);
-            //pad2->SetTopMargin(0);
-            //pad2->SetBottomMargin(0.2);
-            pad2->SetGridy(); // Horizontal grid
-            pad2->Draw();
-            pad2->cd();       // pad2 becomes the current pad        
-
-            //make ratio dummy
-            histInfo ratioDummy(new TH1D("rdummy", "rdummy", 1000, hc_.dataVec_[0].h->GetBinLowEdge(1), hc_.dataVec_[0].h->GetBinLowEdge(hc_.dataVec_[0].h->GetNbinsX()) + hc_.dataVec_[0].h->GetBinWidth(hc_.dataVec_[0].h->GetNbinsX())));
-            ratioDummy.h->GetXaxis()->SetTitle(xAxisLabel.c_str());
-            //ratioDummy.h->GetYaxis()->SetTitle(yAxisLabel.c_str());
-            ratioDummy.h->GetYaxis()->SetTitle("Data / BG");
-            ratioDummy.h->GetXaxis()->SetTickLength(0.1);
-            ratioDummy.h->GetYaxis()->SetTickLength(0.045);
-            ratioDummy.setupAxes(1.2, 0.4, 0.15, 0.15, 0.13, 0.13);
-            ratioDummy.h->GetYaxis()->SetNdivisions(6, 5, 0);
-            ratioDummy.h->GetXaxis()->SetRangeUser(xmin, xmax);
-            ratioDummy.h->GetYaxis()->SetRangeUser(0.5, 1.5);
-            ratioDummy.h->SetStats(0);
-            //ratioDummy.h->SetMinimum(0.5);
-            //ratioDummy.h->SetMaximum(1.5);
-
-            //Make ratio histogram for data / background.
-            histInfo ratio((TH1*)hc_.dataVec_[0].h->Clone());
-
-            // set pad margins: setupPad(left, right, top, bottom)
-            ratio.setupPad(0.12, 0.06, 0.0, 0.40);
+        // lower plot will be in pad2
+        c->cd();          // Go back to the main canvas before defining pad2
+        TPad *pad2 = new TPad("pad2", "pad2", 0.0, 0.0, 1.0, 0.3);
+        pad2->SetTopMargin(0);
+        pad2->SetBottomMargin(0.3);
+        //pad2->SetGridy(); // Horizontal grid
+        pad2->Draw();
+        pad2->cd();       // pad2 becomes the current pad        
+        gPad->SetTicks(1,1);
         
-            ratio.drawOptions = "ep";
-            ratio.color = kBlack;
+        //make ratio dummy
+        histInfo ratioDummy(new TH1D("rdummy", "rdummy", 1000, hc_.dataVec_[0].h->GetBinLowEdge(1), 
+                                     hc_.dataVec_[0].h->GetBinLowEdge(hc_.dataVec_[0].h->GetNbinsX()) + hc_.dataVec_[0].h->GetBinWidth(hc_.dataVec_[0].h->GetNbinsX())));
+        ratioDummy.h->GetXaxis()->SetTitle(xAxisLabel.c_str());
+        //ratioDummy.h->GetYaxis()->SetTitle(yAxisLabel.c_str());
+        ratioDummy.h->GetYaxis()->SetTitle("Data / BG");
+        ratioDummy.h->GetXaxis()->SetTickLength(0.1);
+        ratioDummy.h->GetYaxis()->SetTickLength(0.045);
+        ratioDummy.setupAxes(1.2, 0.5, 0.1, 0.1, 0.1, 0.1);
+        ratioDummy.h->GetYaxis()->SetNdivisions(6, 5, 0);
+        ratioDummy.h->GetXaxis()->SetRangeUser(xmin, xmax);
+        ratioDummy.h->GetYaxis()->SetRangeUser(0, 2.1);
+        ratioDummy.h->SetStats(0);
+        //ratioDummy.h->SetMinimum(0.5);
+        //ratioDummy.h->SetMaximum(1.5);
 
-            //ratio.h->SetLineColor(kBlack);
-            //ratio.h->Sumw2();
-            //ratio.h->SetStats(0);
-            ratio.h->Divide(hbgSum_.get());
-            ratio.h->SetMarkerStyle(21);
+        //Make ratio histogram for data / background.
+        histInfo ratio((TH1*)hc_.dataVec_[0].h->Clone());
+            
+        // set pad margins: setupPad(left, right, top, bottom)
+        //ratio.setupPad(0.12, 0.06, 0.0, 0.40);
+        
+        ratio.drawOptions = "ep";
+        ratio.color = kBlack;
+        
+        //ratio.h->SetLineColor(kBlack);
+        //ratio.h->Sumw2();
+        //ratio.h->SetStats(0);
+        ratio.h->Divide(hbgSum_.get());
+        ratio.h->SetMarkerStyle(21);
+        
+        ratioDummy.draw();
+        ratio.draw("same");
 
-            ratioDummy.draw();
-            ratio.draw("same");
-        }
+        TF1* line = new TF1("1" ,"1" ,-2000,20000);
+        line->SetLineColor(kRed);
+        line->Draw("same");
+        ratio.draw("same");
 
         //save new plot to file
         c->Print(("outputPlots/" + histName + ".pdf").c_str());
@@ -190,6 +194,7 @@ public:
         delete c;
         delete leg;
         delete bgStack;
+        delete line;
     }
 
     void plotNormFisher(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, int rebin = -1, const double xmin = 999.9, const double xmax = -999.9, double lumi = 36100)
@@ -289,7 +294,7 @@ public:
         delete bgStack;
     }
 
-    void plotRocFisher(std::string histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool firstOnly = false, int rebin = -1, const double xmin = 999.9, const double xmax = -999.9, double lumi = 36100)
+    void plotRocFisher(std::string histCut, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool firstOnly = false, int rebin = -1, const double xmin = 999.9, const double xmax = -999.9, double lumi = 36100)
     {
         //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
         TH1::AddDirectory(false);
@@ -329,10 +334,14 @@ public:
         // --------------------------
         std::vector<rocInfo> bgSumRocInfoVec;
         std::vector<TGraph*> graphVec;
+        std::string histName;
         for(auto& mhc : mhc_)
         {
-            //if(mhc.first == "fisher") histName = "h_fisher_1l_ge6j_ge1b";
-            //std::cout<<mhc.first<<std::endl;
+            if(mhc.first == "fisher")
+                histName = "h_"+mhc.first+"_1l_"+histCut;
+            else
+                histName = "h_deepESM_1l_"+histCut;
+            std::cout<<histName<<std::endl;
             THStack *bgStack = new THStack();
             std::shared_ptr<TH1> hbgSum;
             mhc.second.setUpBG(histName, rebin, bgStack, hbgSum, false);
@@ -604,6 +613,8 @@ public:
 
         //draw dummy axes
         dummy.draw();
+        dummy.h->SetMaximum(0.5);
+        dummy.h->SetMinimum(0.0);
 
         //Switch to logY if desired
         gPad->SetLogy(isLogY);
@@ -761,9 +772,10 @@ public:
         mark.SetTextSize(0.050);
         mark.SetTextFont(61);
         mark.DrawLatex(gPad->GetLeftMargin(), 1 - (gPad->GetTopMargin() - 0.017), "CMS"); // #scale[0.8]{#it{Preliminary}}");
-        mark.SetTextSize(0.040);
+        //mark.SetTextSize(0.040);
         mark.SetTextFont(52);
-        mark.DrawLatex(gPad->GetLeftMargin() + 0.11, 1 - (gPad->GetTopMargin() - 0.017), "Stealth 2018");
+        //mark.DrawLatex(gPad->GetLeftMargin() + 0.1, 1 - (gPad->GetTopMargin() - 0.017), "Stealth 2018");
+        mark.DrawLatex(gPad->GetLeftMargin() + 0.08, 1 - (gPad->GetTopMargin() - 0.017), "Preliminary");
 
         //Draw lumistamp
         mark.SetTextFont(42);
@@ -775,46 +787,60 @@ public:
     {
         const auto& yieldMap = hc_.computeYields(histName, histType, hbgSum_,  min, max);
         
-        if(hc_.bgVec_[0].histName.find( histType ) != std::string::npos)
+        int index = 0;
+        for(const auto& pair : yieldMap)
         {
-            auto data   = yieldMap.find("Data_JetHT");
-            auto allbg  = yieldMap.find("AllBG");
-            auto qcd    = yieldMap.find("QCD");
-            auto ttbar  = yieldMap.find("T#bar{T}");
-            auto rpv350 = yieldMap.find("RPV 350");
-            auto syy650 = yieldMap.find("SYY 650");
-    
-            char stamp_data[128];
-            char stamp_allbg[128];
-            char stamp_qcd[128];
-            char stamp_ttbar[128];
-            char stamp_rpv350[128];
-            char stamp_syy650[128];
-            sprintf(stamp_data,  "%-15.15s %8.0lf" , (data->first).c_str()  , data->second  );
-            sprintf(stamp_allbg, "%-15.15s %8.0lf" , (allbg->first).c_str() , allbg->second );
-            sprintf(stamp_qcd,   "%-15.15s %8.0lf" , (qcd->first  ).c_str() , qcd->second   );
-            sprintf(stamp_ttbar, "%-15.15s %8.0lf" , "TTbar"                , ttbar->second );
-            sprintf(stamp_rpv350,"%-15.15s %8.0lf" , (rpv350->first).c_str(), rpv350->second);
-            sprintf(stamp_syy650,"%-15.15s %8.0lf" , (syy650->first).c_str(), syy650->second);
-    
+            char stamp[128];
+            sprintf(stamp, "%-15.15s %8.0lf", pair.first.c_str(), pair.second);
             TLatex mark;
             mark.SetNDC(true);
-    
+            
             //Draw CMS mark
             mark.SetTextAlign(11);
             mark.SetTextSize(0.030);
             mark.SetTextFont(61);
-            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18       ), "Njets>=12 Yield");
-            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.03), stamp_data       );
-            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.06), stamp_allbg      );
-            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.09), stamp_qcd        );
-            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.12), stamp_ttbar      );
-            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.15), stamp_rpv350     );
-            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.18), stamp_syy650     );
+            mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.03*index), stamp);
+            index++;
         }
-    
-    }
 
+        //if(hc_.bgVec_[0].histName.find( histType ) != std::string::npos)
+        //{
+        //    auto data   = yieldMap.find("Data_JetHT");
+        //    auto allbg  = yieldMap.find("AllBG");
+        //    auto qcd    = yieldMap.find("QCD");
+        //    auto ttbar  = yieldMap.find("T#bar{T}");
+        //    auto rpv350 = yieldMap.find("RPV 350");
+        //    auto syy650 = yieldMap.find("SYY 650");
+        //
+        //    char stamp_data[128];
+        //    char stamp_allbg[128];
+        //    char stamp_qcd[128];
+        //    char stamp_ttbar[128];
+        //    char stamp_rpv350[128];
+        //    char stamp_syy650[128];
+        //    sprintf(stamp_data,  "%-15.15s %8.0lf" , (data->first).c_str()  , data->second  );
+        //    sprintf(stamp_allbg, "%-15.15s %8.0lf" , (allbg->first).c_str() , allbg->second );
+        //    sprintf(stamp_qcd,   "%-15.15s %8.0lf" , (qcd->first  ).c_str() , qcd->second   );
+        //    sprintf(stamp_ttbar, "%-15.15s %8.0lf" , "TTbar"                , ttbar->second );
+        //    sprintf(stamp_rpv350,"%-15.15s %8.0lf" , (rpv350->first).c_str(), rpv350->second);
+        //    sprintf(stamp_syy650,"%-15.15s %8.0lf" , (syy650->first).c_str(), syy650->second);
+        //
+        //    TLatex mark;
+        //    mark.SetNDC(true);
+        //
+        //    //Draw CMS mark
+        //    mark.SetTextAlign(11);
+        //    mark.SetTextSize(0.030);
+        //    mark.SetTextFont(61);
+        //    mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18       ), "Njets>=12 Yield");
+        //    mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.03), stamp_data       );
+        //    mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.06), stamp_allbg      );
+        //    mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.09), stamp_qcd        );
+        //    mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.12), stamp_ttbar      );
+        //    mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.15), stamp_rpv350     );
+        //    mark.DrawLatex(1 - (gPad->GetLeftMargin() + 0.25), 1 - (gPad->GetTopMargin() + 0.18 + 0.18), stamp_syy650     );
+        //}    
+    }
 };
 
 #endif

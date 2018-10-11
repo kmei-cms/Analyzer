@@ -113,7 +113,7 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
             "deepESM_val",
             "NGoodJets_pt30",
             "NGoodBJets_pt30",
-            "NGoodBJets_pt30_tight"
+            "NGoodBJets_pt30_tight",
             "Mbl",
             "ntops_1jet",
             "ntops_2jet",
