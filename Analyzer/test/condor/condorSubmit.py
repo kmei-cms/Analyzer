@@ -44,19 +44,6 @@ with file(environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape.cfg" % repo) as E
             print "------------------------------------------------"
             break
 
-filestoTransfer_nJet = []
-for nJet in list(x for x in range(7, 11+1)):
-    with file(environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape_nJet%i.cfg" % (repo, nJet)) as ESMcfgFile:
-        for line in ESMcfgFile:
-            if "modelFile" in line:
-                FileName = line.split("=")[1].strip().strip("\"")
-                filestoTransfer_nJet.append(environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo, FileName))
-                filestoTransfer_nJet.append(environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape_nJet%i.cfg" % (repo, nJet))
-                print "------------------------------------------------"
-                print "DeepESM nJet_%i training:" % nJet, FileName
-                print "------------------------------------------------"
-                break
-
 filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MyAnalysis" % repo, 
                    environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,mvaFileName),
                    environ["CMSSW_BASE"] + "/src/%s/test/TopTagger.cfg" % repo,
@@ -69,7 +56,7 @@ filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MyAnalysis" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/PileupHistograms_0121_69p2mb_pm4p6.root" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/CSVv2_Moriond17_B_H.csv" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,ESMVAFileName),
-                   ] + filestoTransfer_nJet
+                   ]
 
 print "--------------Files to Transfer-----------------"
 for i in filestoTransfer:    

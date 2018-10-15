@@ -57,7 +57,7 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
     my_histos.emplace("jmt_ev0_top6", std::make_shared<TH1D>("jmt_ev0_top6","jmt_ev0_top6", 50, 0, 1 ) );
     my_histos.emplace("jmt_ev1_top6", std::make_shared<TH1D>("jmt_ev1_top6","jmt_ev1_top6", 50, 0, 1 ) );
     my_histos.emplace("jmt_ev2_top6", std::make_shared<TH1D>("jmt_ev2_top6","jmt_ev2_top6", 50, 0, 1 ) );
-    for(unsigned int i = 1; i <= 20 ; i++) //Bad hard code
+    for(unsigned int i = 1; i <= 7 ; i++) //Bad hard code
     {
         my_histos.emplace("Jet_cm_pt_"+std::to_string(i)+"_1l_ge7j_ge1b",  std::make_shared<TH1D>(("Jet_cm_pt_"+std::to_string(i)+"_1l_ge7j_ge1b").c_str(),("Jet_cm_pt_"+std::to_string(i)+"_1l_ge7j_ge1b").c_str(), 150, 0, 1500 ));
         my_histos.emplace("Jet_cm_eta_"+std::to_string(i)+"_1l_ge7j_ge1b", std::make_shared<TH1D>(("Jet_cm_eta_"+std::to_string(i)+"_1l_ge7j_ge1b").c_str(),("Jet_cm_eta_"+std::to_string(i)+"_1l_ge7j_ge1b").c_str(), 100, -6, 6 ));
@@ -171,11 +171,11 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& GoodPhotons          = tr.getVec<bool>("GoodPhotons");
         const auto& NGoodPhotons         = tr.getVar<int>("NGoodPhotons");
         const auto& passBaseline1g_Good  = tr.getVar<bool>("passBaseline1photon_Good"); 
-        const auto& deepESM_val          = getnJetDeepESMVar<double>(tr, "val",  {7,8,9,10,11}, NGoodJets_pt30, true);
-        const auto& deepESM_bin1         = getnJetDeepESMVar<bool>(tr,   "bin1", {7,8,9,10,11}, NGoodJets_pt30, true);
-        const auto& deepESM_bin2         = getnJetDeepESMVar<bool>(tr,   "bin2", {7,8,9,10,11}, NGoodJets_pt30, true);
-        const auto& deepESM_bin3         = getnJetDeepESMVar<bool>(tr,   "bin3", {7,8,9,10,11}, NGoodJets_pt30, true);
-        const auto& deepESM_bin4         = getnJetDeepESMVar<bool>(tr,   "bin4", {7,8,9,10,11}, NGoodJets_pt30, true);        
+        const auto& deepESM_val          = tr.getVar<double>("deepESM_val");
+        const auto& deepESM_bin1         = tr.getVar<bool>("deepESM_bin1");
+        const auto& deepESM_bin2         = tr.getVar<bool>("deepESM_bin2");
+        const auto& deepESM_bin3         = tr.getVar<bool>("deepESM_bin3");
+        const auto& deepESM_bin4         = tr.getVar<bool>("deepESM_bin4");
         const auto& fwm2_top6            = tr.getVar<double>("fwm2_top6");
         const auto& fwm3_top6            = tr.getVar<double>("fwm3_top6");
         const auto& fwm4_top6            = tr.getVar<double>("fwm4_top6");
@@ -332,16 +332,16 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"1l_ge7j_ge1b_d2"                , passBaseline1l_Good && deepESM_bin2                                      },                         
             {"1l_ge7j_ge1b_d3"                , passBaseline1l_Good && deepESM_bin3                                      },                         
             {"1l_ge7j_ge1b_d4"                , passBaseline1l_Good && deepESM_bin4                                      },                         
-            {"1l_6j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt45 == 6                                   },
-            {"1l_7j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt45 == 7                                   },
-            {"1l_8j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt45 == 8                                   },
-            {"1l_9j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt45 == 9                                   },
-            {"1l_10j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt45 == 10                                  },
-            {"1l_11j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt45 == 11                                  },
-            {"1l_12j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt45 == 12                                  },
-            {"1l_13j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt45 == 13                                  },
-            {"1l_14j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt45 == 14                                  },
-            {"1l_15j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt45 == 15                                  },
+            {"1l_6j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt30 == 6                               },
+            {"1l_7j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt30 == 7                               },
+            {"1l_8j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt30 == 8                               },
+            {"1l_9j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt30 == 9                               },
+            {"1l_10j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt30 == 10                              },
+            {"1l_11j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt30 == 11                              },
+            {"1l_12j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt30 == 12                              },
+            {"1l_13j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt30 == 13                              },
+            {"1l_14j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt30 == 14                              },
+            {"1l_15j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt30 == 15                              },
                                                  
             {"1l_ge7j_ge1b_1t"                , passBaseline1l_Good && pass_1t                                           },
             {"1l_ge7j_ge1b_1t_ge8esm"         , passBaseline1l_Good && pass_1t && deepESM_val >= 0.8                     },                         
