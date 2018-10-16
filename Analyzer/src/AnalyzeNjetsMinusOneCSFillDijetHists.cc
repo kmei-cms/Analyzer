@@ -1,8 +1,9 @@
-#define AnalyzeNjetsMinusOneCS_cxx
+#define AnalyzeNjetsMinusOneCSFillDijetHists_cxx
 #include "SusyAnaTools/Tools/NTupleReader.h"
-#include "Analyzer/Analyzer/include/AnalyzeNjetsMinusOneCS.h"
+#include "Analyzer/Analyzer/include/AnalyzeNjetsMinusOneCSFillDijetHists.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
 #include "Framework/Framework/include/MakeMVAVariables.h"
+#include "Framework/Framework/include/DeepEventShape.h"
 
 
 #include <TH1D.h>
@@ -17,54 +18,166 @@
 char pname[100] ;
 const char* mcname( int pdgid ) ;
 
-AnalyzeNjetsMinusOneCS::AnalyzeNjetsMinusOneCS() : initHistos(false)
+//===========================================================================================================================
+
+
+AnalyzeNjetsMinusOneCSFillDijetHists::AnalyzeNjetsMinusOneCSFillDijetHists() : initHistos(false)
 {
-   printf("\n\n AnalyzeNjetsMinusOneCS::AnalyzeNjetsMinusOneCS : Creating instance of DeepEventShape for alternative calculation.\n\n") ;
-   //des_ = new DeepEventShape( "DeepEventShape_alt.cfg", "Info", "_alt1" ) ;
 }
 
-void AnalyzeNjetsMinusOneCS::InitHistos(const std::map<std::string, bool>& cutMap)
+//===========================================================================================================================
+
+
+void AnalyzeNjetsMinusOneCSFillDijetHists::InitHistos()
 {
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
 
     int fB = 200;
 
-    // Declare all your histograms here, that way we can fill them for multiple chains
-    my_histos.emplace("h_met",      std::make_shared<TH1D>("h_met",     "h_met",      20,  0,    200  ) );
-    my_histos.emplace("h_bdt",      std::make_shared<TH1D>("h_bdt",     "h_bdt",      40, -0.5,    0.5) );
-    my_histos.emplace("h_fisher",   std::make_shared<TH1D>("h_fisher",  "h_fisher",   fB, -0.5,    0.5) );
-    my_histos.emplace("h_deepESM",  std::make_shared<TH1D>("h_deepESM", "h_deepESM",  fB,  0,      1) );
-    my_histos.emplace("h_njets",    std::make_shared<TH1D>("h_njets",   "h_njets",    20,  0,     20  ) );
-    my_histos.emplace("h_nb",       std::make_shared<TH1D>("h_nb",      "h_nb",       10,  0,     10  ) );
-    for(unsigned int i = 1; i <= 7 ; i++) //Bad hard code
-    {
-        my_histos.emplace("Jet_cm_pt_"+std::to_string(i)+"_1l_ge6j_ge1b",  std::make_shared<TH1D>(("Jet_cm_pt_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_cm_pt_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 150, 0, 1500 ));
-        my_histos.emplace("Jet_cm_eta_"+std::to_string(i)+"_1l_ge6j_ge1b", std::make_shared<TH1D>(("Jet_cm_eta_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_cm_eta_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 100, -6, 6 ));
-        my_histos.emplace("Jet_cm_phi_"+std::to_string(i)+"_1l_ge6j_ge1b", std::make_shared<TH1D>(("Jet_cm_phi_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_cm_phi_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 80, -4, 4 ));
-        my_histos.emplace("Jet_cm_m_"+std::to_string(i)+"_1l_ge6j_ge1b",   std::make_shared<TH1D>(("Jet_cm_m_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_cm_m_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 20, 0, 200 ));
+    //---- Declare all your histograms here, that way we can fill them for multiple chains.
 
-        my_histos.emplace("Jet_pt_"+std::to_string(i)+"_1l_ge6j_ge1b",  std::make_shared<TH1D>(("Jet_pt_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_pt_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 150, 0, 1500 ));
-        my_histos.emplace("Jet_eta_"+std::to_string(i)+"_1l_ge6j_ge1b", std::make_shared<TH1D>(("Jet_eta_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_eta_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 100, -6, 6 ));
-        my_histos.emplace("Jet_phi_"+std::to_string(i)+"_1l_ge6j_ge1b", std::make_shared<TH1D>(("Jet_phi_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_phi_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 80, -4, 4 ));
-        my_histos.emplace("Jet_m_"+std::to_string(i)+"_1l_ge6j_ge1b",   std::make_shared<TH1D>(("Jet_m_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(),("Jet_m_"+std::to_string(i)+"_1l_ge6j_ge1b").c_str(), 20, 0, 200 ));
+    char hname[1000] ;
 
-        my_2d_histos.emplace("Jet_cm_pt_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b", std::make_shared<TH2D>(("Jet_cm_pt_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(),("Jet_cm_pt_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(), fB, 0.0, 1.0, 150, 0, 1500));
-        my_2d_histos.emplace("Jet_cm_eta_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b", std::make_shared<TH2D>(("Jet_cm_eta_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(),("Jet_cm_eta_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(), fB, 0.0, 1.0, 100, -6, 6));
-        my_2d_histos.emplace("Jet_cm_phi_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b", std::make_shared<TH2D>(("Jet_cm_phi_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(),("Jet_cm_phi_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(), fB, 0.0, 1.0, 80, -4, 4));
-        my_2d_histos.emplace("Jet_cm_m_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b", std::make_shared<TH2D>(("Jet_cm_m_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(),("Jet_cm_m_"+std::to_string(i)+"_deepESM_1l_ge6j_ge1b").c_str(), fB, 0.0, 1.0, 20, 0, 200));
-    }
+    sprintf( hname, "h_mct__cvs_nontop" ) ;
+    my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 60, -0.1, 1.1 ) ) ;
+
+    sprintf( hname, "h_mct__cvs_topb" ) ;
+    my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 60, -0.1, 1.1 ) ) ;
+
+    sprintf( hname, "h_mct__cvs_all" ) ;
+    my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 60, -0.1, 1.1 ) ) ;
+
+
+
+    for ( int nj=7; nj<=15; nj++ ) {
+
+       sprintf( hname, "h_mct_njet%02d__mjj_nontop_smallest_mjj", nj ) ;
+       my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 80, 0., 400. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__drjj_nontop_smallest_mjj", nj ) ;
+       my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 80, 0., 6. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__drjj_vs_mjj_nontop_smallest_mjj", nj ) ;
+       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname,  40, 0., 400., 40, 0., 6. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__jjsum_smallest_dr_with_another_jet", nj ) ;
+       my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 80, 0., 6. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__jjsum_pt", nj ) ;
+       my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 80, 0., 600. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__jjsum_eta", nj ) ;
+       my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 80, -5., 5. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__pt2_over_pt1_nontop_smallest_mjj", nj ) ;
+       my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 80, -0.1, 1.1 ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__j1_pt", nj ) ;
+       my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 80, 0., 400. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__j2_pt", nj ) ;
+       my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 80, 0., 400. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__j1_m", nj ) ;
+       my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 80, 0., 200. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__j2_m", nj ) ;
+       my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 80, 0., 200. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__j1_m_vs_pt", nj ) ;
+       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname,  40, 0., 400., 40, 0., 100. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__j2_m_vs_pt", nj ) ;
+       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname,  40, 0., 400., 40, 0., 100. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__j1_m_over_pt", nj ) ;
+       my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 80, 0., 0.4 ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__j2_m_over_pt", nj ) ;
+       my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 80, 0., 0.4 ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__j2pt_vs_j1pt", nj ) ;
+       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname,  40, 0., 400., 40, 0., 400. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__j2eta_vs_j1eta", nj ) ;
+       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname,  40, -3., 3., 40, -3., 3. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__j2phi_vs_j1phi", nj ) ;
+       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname,  40, -3.2, 3.2, 40, -3.2, 3.2 ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__deta_vs_dphi", nj ) ;
+       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname,  40, -2., 2., 40, -2., 2. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__deta_vs_dphi_b2", nj ) ;
+       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname,  80, -2., 2., 80, -2., 2. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__deta_vs_dphi_b3", nj ) ;
+       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname,  80, -4., 4., 80, -4., 4. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__deta_vs_dphi_b4", nj ) ;
+       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname,  80, -8., 8., 80, -8., 8. ) ) ;
+
+
+       sprintf( hname, "h_mct_njet%02d__ptrank_nontop", nj ) ;
+       my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 21, -0.5, 20.5 ) ) ;
+       
+       sprintf( hname, "h_mct_njet%02d__ptrank_topdau", nj ) ;
+       my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 21, -0.5, 20.5 ) ) ;
+       
+       sprintf( hname, "h_mct_njet%02d__ptrank_smallest_mjj_sum", nj ) ;
+       my_histos.emplace( hname, std::make_shared<TH1D>( hname, hname, 21, -0.5, 20.5 ) ) ;
+
+
+
+       sprintf( hname, "h_mct_njet%02d__pt1ratio_vs_pt0", nj ) ;
+       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname,  160, 0., 400.,   160, -0.2, 4.0 ) ) ;
+       
+       sprintf( hname, "h_mct_njet%02d__pt1_vs_pt0", nj ) ;
+       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname,  160, 0., 200.,   160, 0., 200. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__pt2_vs_pt1", nj ) ;
+       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname,  160, 0., 200.,   160, 0., 200. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__drjj_vs_pt0", nj ) ;
+       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname,  160, 0., 400.,   160, 0., 6. ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__pt1ratio_vs_drjj", nj ) ;
+       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname,  160, 0., 6., 160, -0.2, 4.0 ) ) ;
+
+       sprintf( hname, "h_mct_njet%02d__pt1ratio_vs_drjj_pt0gt100", nj ) ;
+       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname,  160, 0., 6., 160, -0.2, 4.0 ) ) ;
+
+
+       
+
+    
+
+    } // nj
+
 } // InitHistos
 
-void AnalyzeNjetsMinusOneCS::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+//===========================================================================================================================
+
+void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
 {
 
+    char hname[1000] ;
+
     if ( !isQuiet ) {
-       printf("\n\n AnalyzeNjetsMinusOneCS::Loop :  Starting loop over events.\n\n") ;
+       printf("\n\n AnalyzeNjetsMinusOneCSFillDijetHists::Loop :  Starting loop over events.\n\n") ;
     }
 
     while( tr.getNextEvent() )
     {
+
+        // Initialize Histograms
+        if(!initHistos)
+        {
+            InitHistos();
+            initHistos = true;
+        }
+
         const auto& MET                  = tr.getVar<double>("MET");
         const auto& runtype              = tr.getVar<std::string>("runtype");     
         const auto& filetag              = tr.getVar<std::string>("filetag");
@@ -118,6 +231,29 @@ void AnalyzeNjetsMinusOneCS::Loop(NTupleReader& tr, double weight, int maxevents
 
         const auto& GoodJets_pt30 = tr.getVec<bool>("GoodJets_pt30") ;
         const auto& Jets = tr.getVec<TLorentzVector>("Jets") ;
+        const auto& Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV") ;
+
+        // ------------------------
+        // -- Print event number
+        // -----------------------        
+        if(maxevents != -1 && tr.getEvtNum() >= maxevents) break;        
+        if ( tr.getEvtNum() % 1000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;
+
+
+        if ( !isQuiet ) {
+           printf("\n\n\n\n =========== Count %9lld : Run %9u , Lumi %9u , Event %9llu  ==========================================\n",
+             tr.getEvtNum(),
+             tr.getVar<unsigned int>("RunNum"),
+             tr.getVar<unsigned int>("LumiBlockNum"),
+             tr.getVar<long int>("EvtNum")
+             ) ;
+        }
+
+
+
+
+        // Global cuts
+        if ( !(passTrigger && passMadHT) ) continue;
 
 
       //----- baseline selection
@@ -128,21 +264,7 @@ void AnalyzeNjetsMinusOneCS::Loop(NTupleReader& tr, double weight, int maxevents
         if ( Mbl < 30 || Mbl > 180 ) continue ;
 
 
-
-        // ------------------------
-        // -- Print event number
-        // -----------------------        
-        if(maxevents != -1 && tr.getEvtNum() >= maxevents) break;        
-        if ( tr.getEvtNum() % 1000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;
-
-        if ( !isQuiet ) {
-           printf("\n\n\n\n =========== Count %9lld : Run %9u , Lumi %9u , Event %9llu  ==========================================\n",
-             tr.getEvtNum(),
-             tr.getVar<unsigned int>("RunNum"),
-             tr.getVar<unsigned int>("LumiBlockNum"),
-             tr.getVar<long int>("EvtNum")
-             ) ;
-        }
+        if ( NGoodJets_pt30 > 15 ) continue ; // don't have histograms for > 15 jets.
 
 
 
@@ -162,6 +284,10 @@ void AnalyzeNjetsMinusOneCS::Loop(NTupleReader& tr, double weight, int maxevents
         }
 
 
+
+
+
+      //--- Collect relevant GenParticle indices.
 
         int top1_gpi(-1) ;
         int top2_gpi(-1) ;
@@ -274,6 +400,9 @@ void AnalyzeNjetsMinusOneCS::Loop(NTupleReader& tr, double weight, int maxevents
             printf( "   top1 = %3d ,  w1 = %3d \n", top1_gpi, w1_gpi ) ;
             printf( "   top2 = %3d ,  w2 = %3d \n", top2_gpi, w2_gpi ) ;
          }
+
+
+
 
 
 
@@ -424,9 +553,14 @@ void AnalyzeNjetsMinusOneCS::Loop(NTupleReader& tr, double weight, int maxevents
             printf("     vector sum of jet pair:  Pt = %7.1f,  Eta = %7.3f\n", smallest_mjj_tlv.Pt(), smallest_mjj_tlv.Eta() ) ;
          }
 
-         //h_mjj_nontop_smallest_mjj -> Fill( smallest_mjj_val ) ;
-         //h_drjj_nontop_smallest_mjj -> Fill( smallest_mjj_dr ) ;
-         //h_drjj_vs_mjj_nontop_smallest_mjj -> Fill( smallest_mjj_val, smallest_mjj_dr ) ;
+         sprintf( hname, "h_mct_njet%02d__mjj_nontop_smallest_mjj", NGoodJets_pt30 ) ;
+         my_histos[ hname ] -> Fill( smallest_mjj_val, eventweight ) ;
+
+         sprintf( hname, "h_mct_njet%02d__drjj_nontop_smallest_mjj", NGoodJets_pt30 ) ;
+         my_histos[ hname ] -> Fill( smallest_mjj_dr, eventweight ) ;
+
+         sprintf( hname, "h_mct_njet%02d__drjj_vs_mjj_nontop_smallest_mjj", NGoodJets_pt30 ) ;
+         my_2d_histos[ hname ] -> Fill( smallest_mjj_val, smallest_mjj_dr, eventweight ) ;
 
 
          //------- how close is the sum of the two jets to other jets?
@@ -450,9 +584,15 @@ void AnalyzeNjetsMinusOneCS::Loop(NTupleReader& tr, double weight, int maxevents
          if ( !isQuiet ) {
             printf("     smallest DR of jet pair vector sum with another jet:  DR = %7.3f\n\n", smallest_dr_wrt_jj_pair ) ;
          }
-         //h_jjsum_smallest_dr_with_another_jet -> Fill( smallest_dr_wrt_jj_pair ) ;
-         //h_jjsum_pt -> Fill( smallest_mjj_tlv.Pt() ) ;
-         //h_jjsum_eta -> Fill( smallest_mjj_tlv.Eta() ) ;
+
+         sprintf( hname, "h_mct_njet%02d__jjsum_smallest_dr_with_another_jet", NGoodJets_pt30 ) ;
+         my_histos[ hname ] -> Fill( smallest_dr_wrt_jj_pair, eventweight ) ;
+
+         sprintf( hname, "h_mct_njet%02d__jjsum_pt", NGoodJets_pt30 ) ;
+         my_histos[ hname ] -> Fill( smallest_mjj_tlv.Pt(), eventweight ) ;
+
+         sprintf( hname, "h_mct_njet%02d__jjsum_eta", NGoodJets_pt30 ) ;
+         my_histos[ hname ] -> Fill( smallest_mjj_tlv.Eta(), eventweight ) ;
 
 
       } // more than 1 nontop jet?
@@ -471,36 +611,89 @@ void AnalyzeNjetsMinusOneCS::Loop(NTupleReader& tr, double weight, int maxevents
       TLorentzVector j2_tlv( Jets[ smallest_mjj_j2 ] ) ;
 
 
+      sprintf( hname, "h_mct_njet%02d__pt2_over_pt1_nontop_smallest_mjj", NGoodJets_pt30 ) ;
+      my_histos[ hname ] -> Fill( (j2_tlv.Pt()) / (j1_tlv.Pt()), eventweight ) ;
 
-  /// h_pt2_over_pt1_nontop_smallest_mjj -> Fill(  (j2_tlv.Pt()) / (j1_tlv.Pt()) ) ;
-  /// h_pt2_over_pt1_vs_drjj_nontop_smallest_mjj -> Fill( smallest_mjj_dr , (j2_tlv.Pt()) / (j1_tlv.Pt()) ) ;
+      sprintf( hname, "h_mct_njet%02d__j1_pt", NGoodJets_pt30 ) ;
+      my_histos[ hname ] -> Fill( j1_tlv.Pt() , eventweight ) ;
 
-  /// h_j1_pt -> Fill( j1_tlv.Pt() ) ;
-  /// h_j2_pt -> Fill( j2_tlv.Pt() ) ;
+      sprintf( hname, "h_mct_njet%02d__j2_pt", NGoodJets_pt30 ) ;
+      my_histos[ hname ] -> Fill( j2_tlv.Pt() , eventweight ) ;
 
-  /// h_j1_m -> Fill( j1_tlv.M() ) ;
-  /// h_j2_m -> Fill( j2_tlv.M() ) ;
+      sprintf( hname, "h_mct_njet%02d__j1_m", NGoodJets_pt30 ) ;
+      my_histos[ hname ] -> Fill( j1_tlv.M() , eventweight ) ;
 
-  /// h_j1_m_vs_pt -> Fill( j1_tlv.Pt(), j1_tlv.M() ) ;
-  /// h_j2_m_vs_pt -> Fill( j2_tlv.Pt(), j2_tlv.M() ) ;
+      sprintf( hname, "h_mct_njet%02d__j2_m", NGoodJets_pt30 ) ;
+      my_histos[ hname ] -> Fill( j2_tlv.M() , eventweight ) ;
 
-  /// h_j1_m_over_pt -> Fill( j1_tlv.M() / j1_tlv.Pt() ) ;
-  /// h_j2_m_over_pt -> Fill( j2_tlv.M() / j2_tlv.Pt() ) ;
+      sprintf( hname, "h_mct_njet%02d__j1_m_vs_pt", NGoodJets_pt30 ) ;
+      my_2d_histos[ hname ] -> Fill( j1_tlv.Pt(), j1_tlv.M(), eventweight ) ;
 
-  /// h_j2pt_vs_j1pt -> Fill( j1_tlv.Pt(), j2_tlv.Pt() ) ;
-  /// h_j2eta_vs_j1eta -> Fill( j1_tlv.Eta(), j2_tlv.Eta() ) ;
-  /// h_j2phi_vs_j1phi -> Fill( j1_tlv.Phi(), j2_tlv.Phi() ) ;
+      sprintf( hname, "h_mct_njet%02d__j2_m_vs_pt", NGoodJets_pt30 ) ;
+      my_2d_histos[ hname ] -> Fill( j2_tlv.Pt(), j2_tlv.M(), eventweight ) ;
+
+      sprintf( hname, "h_mct_njet%02d__j1_m_over_pt", NGoodJets_pt30 ) ;
+      my_histos[ hname ] -> Fill( j1_tlv.M() / j1_tlv.Pt() , eventweight ) ;
+
+      sprintf( hname, "h_mct_njet%02d__j2_m_over_pt", NGoodJets_pt30 ) ;
+      my_histos[ hname ] -> Fill( j2_tlv.M() / j2_tlv.Pt() , eventweight ) ;
+
+      sprintf( hname, "h_mct_njet%02d__j2pt_vs_j1pt", NGoodJets_pt30 ) ;
+      my_2d_histos[ hname ] -> Fill( j1_tlv.Pt(), j2_tlv.Pt(), eventweight ) ;
+
+      sprintf( hname, "h_mct_njet%02d__j2eta_vs_j1eta", NGoodJets_pt30 ) ;
+      my_2d_histos[ hname ] -> Fill( j1_tlv.Eta(), j2_tlv.Eta(), eventweight ) ;
+
+      sprintf( hname, "h_mct_njet%02d__j2phi_vs_j1phi", NGoodJets_pt30 ) ;
+      my_2d_histos[ hname ] -> Fill( j1_tlv.Phi(), j2_tlv.Phi(), eventweight ) ;
+
 
       double dphi = j1_tlv.Phi() - j2_tlv.Phi() ;
       if ( dphi > 3.1415926 ) dphi = dphi - 2*3.1415926 ;
       if ( dphi <-3.1415926 ) dphi = dphi + 2*3.1415926 ;
 
-  /// h_j1j2_deta_vs_dphi    -> Fill( dphi, j1_tlv.Eta() - j2_tlv.Eta() ) ;
-  /// h_j1j2_deta_vs_dphi_b2 -> Fill( dphi, j1_tlv.Eta() - j2_tlv.Eta() ) ;
-  /// h_j1j2_deta_vs_dphi_b3 -> Fill( dphi, j1_tlv.Eta() - j2_tlv.Eta() ) ;
-  /// h_j1j2_deta_vs_dphi_b4 -> Fill( dphi, j1_tlv.Eta() - j2_tlv.Eta() ) ;
+      sprintf( hname, "h_mct_njet%02d__deta_vs_dphi", NGoodJets_pt30 ) ;
+      my_2d_histos[ hname ] -> Fill( dphi, j1_tlv.Eta() - j2_tlv.Eta(), eventweight ) ;
 
 
+      sprintf( hname, "h_mct_njet%02d__deta_vs_dphi_b2", NGoodJets_pt30 ) ;
+      my_2d_histos[ hname ] -> Fill( dphi, j1_tlv.Eta() - j2_tlv.Eta(), eventweight ) ;
+
+      sprintf( hname, "h_mct_njet%02d__deta_vs_dphi_b3", NGoodJets_pt30 ) ;
+      my_2d_histos[ hname ] -> Fill( dphi, j1_tlv.Eta() - j2_tlv.Eta(), eventweight ) ;
+
+      sprintf( hname, "h_mct_njet%02d__deta_vs_dphi_b4", NGoodJets_pt30 ) ;
+      my_2d_histos[ hname ] -> Fill( dphi, j1_tlv.Eta() - j2_tlv.Eta(), eventweight ) ;
+
+
+      double pt0 = smallest_mjj_tlv.Pt() ;
+      double pt1 = j1_tlv.Pt() ;
+      double pt2 = j2_tlv.Pt() ;
+      double pt1ratio = -9. ;
+      if ( (pt0 - 30.) > pt0/2. ) {
+         pt1ratio = ( pt1 - pt0/2. ) / ( pt0 - 30. - pt0/2. ) ;
+      }
+
+      sprintf( hname, "h_mct_njet%02d__pt1ratio_vs_pt0", NGoodJets_pt30 ) ;
+      my_2d_histos[ hname ] -> Fill( pt0, pt1ratio, eventweight ) ;
+      
+      sprintf( hname, "h_mct_njet%02d__pt1_vs_pt0", NGoodJets_pt30 ) ;
+      my_2d_histos[ hname ] -> Fill( pt0, pt1, eventweight ) ;
+      
+      sprintf( hname, "h_mct_njet%02d__pt2_vs_pt1", NGoodJets_pt30 ) ;
+      my_2d_histos[ hname ] -> Fill( pt1, pt2, eventweight ) ;
+      
+      sprintf( hname, "h_mct_njet%02d__drjj_vs_pt0", NGoodJets_pt30 ) ;
+      my_2d_histos[ hname ] -> Fill( pt0, smallest_mjj_dr , eventweight ) ;
+      
+      sprintf( hname, "h_mct_njet%02d__pt1ratio_vs_drjj", NGoodJets_pt30 ) ;
+      my_2d_histos[ hname ] -> Fill( smallest_mjj_dr, pt1ratio, eventweight ) ;
+      
+      if ( pt0 > 100 ) {
+         sprintf( hname, "h_mct_njet%02d__pt1ratio_vs_drjj_pt0gt100", NGoodJets_pt30 ) ;
+         my_2d_histos[ hname ] -> Fill( smallest_mjj_dr, pt1ratio, eventweight ) ;
+      }
+      
 
 
 
@@ -552,20 +745,25 @@ void AnalyzeNjetsMinusOneCS::Loop(NTupleReader& tr, double weight, int maxevents
 
          if ( !GoodJets_pt30[rji] ) continue ;
 
-         //h_csv_all -> Fill( Jets_bDiscriminatorCSV[ rji ] ) ;
+         sprintf( hname, "h_mct__cvs_all" ) ;
+         my_histos[ hname ] -> Fill( Jets_bDiscriminatorCSV[ rji ], eventweight ) ;
 
       } // rji
 
 
       if ( b1_rji >= 0 ) {
-         //h_csv_topb -> Fill( Jets_bDiscriminatorCSV[ b1_rji ] ) ;
+         sprintf( hname, "h_mct__cvs_topb" ) ;
+         my_histos[ hname ] -> Fill( Jets_bDiscriminatorCSV[ b1_rji ], eventweight ) ;
+
       }
       if ( b2_rji >= 0 ) {
-         //h_csv_topb -> Fill( Jets_bDiscriminatorCSV[ b2_rji ] ) ;
+         sprintf( hname, "h_mct__cvs_topb" ) ;
+         my_histos[ hname ] -> Fill( Jets_bDiscriminatorCSV[ b2_rji ], eventweight ) ;
       }
 
       for ( int ntji=0; ntji<nontop_rji.size(); ntji++ ) {
-         //h_csv_nontop -> Fill( Jets_bDiscriminatorCSV[ nontop_rji[ntji] ] ) ;
+         sprintf( hname, "h_mct__cvs_nontop" ) ;
+         my_histos[ hname ] -> Fill( Jets_bDiscriminatorCSV[ nontop_rji[ntji] ], eventweight ) ;
       } // ntji
 
 
@@ -638,16 +836,19 @@ void AnalyzeNjetsMinusOneCS::Loop(NTupleReader& tr, double weight, int maxevents
          if ( rji >= 0 ) {
             for ( int tdmi=0; tdmi<topdau_rji.size(); tdmi++ ) {
                if ( topdau_rji[tdmi] == rji ) {
-                  ////h_ptrank_topdau -> Fill( i ) ;
+                  sprintf( hname, "h_mct_njet%02d__ptrank_topdau", NGoodJets_pt30 ) ;
+                  my_histos[ hname ] -> Fill( i, eventweight ) ;
                }
             } //tdmi
             for ( int ntji=0; ntji<nontop_rji.size(); ntji++ ) {
                if ( nontop_rji[ntji] == rji ) {
-                  ////h_ptrank_nontop -> Fill( i ) ;
+                  sprintf( hname, "h_mct_njet%02d__ptrank_nontop", NGoodJets_pt30 ) ;
+                  my_histos[ hname ] -> Fill( i, eventweight ) ;
                }
             } // ntji
          } else if ( rji == -2 ) {
-            ////h_ptrank_smallest_mjj_sum -> Fill( i ) ;
+            sprintf( hname, "h_mct_njet%02d__ptrank_smallest_mjj_sum", NGoodJets_pt30 ) ;
+            my_histos[ hname ] -> Fill( i, eventweight ) ;
          }
          if ( !isQuiet ) printf("  Rank = %d , rji = %2d : Pt = %7.1f\n", i, rji, jtlv.Pt() ) ;
       } // i
@@ -659,202 +860,22 @@ void AnalyzeNjetsMinusOneCS::Loop(NTupleReader& tr, double weight, int maxevents
 
 
 
-
-     //--- Try the code for using an alternative jet collection.
-
-      //--------------------------------------------------------------------------
-      // Chris commented this out
-      //std::string alt_jet_postfix("_alt1") ;
-      //
-      //auto* alt_Jets = new std::vector<TLorentzVector>(); 
-      //auto* alt_GoodJets = new std::vector<bool>() ;
-      //int alt_NGoodJets(0) ; 
-      //
-      //for ( unsigned int rji=0; rji<Jets.size(); rji++ ) {
-      //   if ( !GoodJets_pt30[rji] ) continue ;
-      //   alt_Jets->push_back( Jets.at(rji) ) ;
-      //   alt_GoodJets->push_back( true ) ;
-      //   alt_NGoodJets ++ ;
-      //} // rji
-      //TLorentzVector test_fakejet_tlv ;
-      //test_fakejet_tlv.SetPtEtaPhiM( 100., 0.5, 2.0, 5.0 ) ;
-      //alt_Jets->push_back( test_fakejet_tlv ) ;
-      //alt_GoodJets->push_back( true ) ;
-      //alt_NGoodJets ++ ;
-      //
-      //if ( !isQuiet ) {
-      //   printf( "\n\n About to test registering alternative Jet collection vars.\n\n" ) ;
-      //}
-      //tr.registerDerivedVec( "Jets"+alt_jet_postfix, alt_Jets ) ;
-      //tr.registerDerivedVec( "GoodJets"+alt_jet_postfix, alt_GoodJets ) ;
-      //tr.registerDerivedVar( "NGoodJets"+alt_jet_postfix, alt_NGoodJets ) ;
-      //if ( !isQuiet ) {
-      //   printf( "\n\n Done registering alternative Jet collection vars.\n\n" ) ;
-      //   printf( "  Calling MakeMVAVariables for this alternative jet collection.\n\n") ;
-      //}
-      //
-      //MakeMVAVariables mmv( true, alt_jet_postfix, alt_jet_postfix ) ;
-      //mmv(tr) ;
-      //
-      //if ( !isQuiet ) {
-      //   printf( "  back from MakeMVAVariables for this alternative jet collection.\n\n") ;
-      //   printf( "  trying DeepEventShape calculator with this alternative jet collection.\n\n") ;
-      //}
-      //(*des_)(tr) ;
-      //
-      //
-      //const auto& deepESM_val_alt1 = tr.getVar<double>("deepESM_val_alt1") ;
-      //if ( !isQuiet ) {
-      //   printf( "     deepESM_val_alt1 = %7.3f\n", deepESM_val_alt1 ) ;
-      //}
-      
-      //-------------------------------------------------------------------------------------
-      // Owen try something like this instead
-      //const auto& Jets = tr.getVec<TLorentzVector>("Jets");
-      //const auto& GoodJets = tr.getVec<bool>("GoodJets");
-      //const auto& NGoodJets = tr.getVar<int>("NGoodJets");
-      //const auto& GoodLeptons = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
-      //const auto& NGoodLeptons = tr.getVar<int>("NGoodLeptons");
-      //const auto& MET = tr.getVar<double>("MET"); 
-      //const auto& METPhi = tr.getVar<double>("METPhi");
-      //const auto& runtype = tr.getVar<std::string>("runtype");
-      //
-      //int index = -1;
-      //for(auto jet : Jets)
-      //{
-      //    index++;           
-      //    if(!GoodJets[index]) continue;
-      //    auto* newJets = new std::vector<TLorentzVector>(Jets);
-      //    auto* newGoodJets = new std::vector<bool>(GoodJets);
-      //    auto* GoodLeptons_ = new std::vector<std::pair<std::string, TLorentzVector>>(GoodLeptons);
-      //      
-      //    newJets->push_back(jet);
-      //    newGoodJets->push_back(true);
-      //    int newNGoodJets = NGoodJets + 1;
-      //      
-      //    NTupleReader newtr;
-      //    newtr.registerDerivedVec("Jets", newJets);
-      //    newtr.registerDerivedVec("GoodJets", newGoodJets);
-      //    newtr.registerDerivedVar("NGoodJets", newNGoodJets);
-      //    newtr.registerDerivedVec("GoodLeptons", GoodLeptons_);
-      //    newtr.registerDerivedVar("NGoodLeptons", NGoodLeptons);
-      //    newtr.registerDerivedVar("MET", MET);
-      //    newtr.registerDerivedVar("METPhi", METPhi);
-      //
-      //    MakeMVAVariables makeMVAVariables;
-      //    makeMVAVariables(newtr);
-      //    DeepEventShape deepEventShape;
-      //    deepEventShape(newtr);
-      //    const auto& deepESM_val = newtr.getVar<double>("deepESM_val");
-      //    std::cout<<index<<" "<<newNGoodJets<<" "<<deepESM_val<<std::endl;
-      //}
-
-
-
-
-
-
-        // -------------------------------
-        // -- Define cuts
-        // -------------------------------
-
-        bool pass_0l              = NGoodLeptons == 0;
-        bool pass_1l              = NGoodLeptons == 1;
-        bool pass_njet_pt45       = NGoodJets_pt45 >= 7;
-        bool pass_njet_pt45_1btag = NGoodBJets_pt45 >= 1;
-        bool pass_njet_pt45_2btag = NGoodBJets_pt45 >= 2;
-
-
-
-
-        // -------------------
-        // --- Fill Histos ---
-        // -------------------                        
-        const std::map<std::string, bool> cut_map_1l 
-        {
-            {"1l"                             , pass_1l                                                                  },
-            {"1l_ge6j"                        , pass_1l && pass_njet_pt45                                                },
-            {"1l_ge2b"                        , pass_1l && pass_njet_pt45_2btag                                          },
-            {"1l_ge6j_ge2b"                   , pass_1l && pass_njet_pt45 && pass_njet_pt45_2btag                        },
-            {"1l_ge6j_ge1b"                   , passBaseline1l_Good                                                      },                         
-            {"1l_ge6j_ge1b_ge5esm"            , passBaseline1l_Good && deepESM_val >= 0.5                                },                         
-            {"1l_ge6j_ge1b_ge5-6esm"          , passBaseline1l_Good && deepESM_val >= 0.5 && deepESM_val < 0.6           },                         
-            {"1l_ge6j_ge1b_ge6-7esm"          , passBaseline1l_Good && deepESM_val >= 0.6 && deepESM_val < 0.7           },                         
-            {"1l_ge6j_ge1b_ge7-8esm"          , passBaseline1l_Good && deepESM_val >= 0.7 && deepESM_val < 0.8           },                         
-            {"1l_ge6j_ge1b_ge8-95esm"         , passBaseline1l_Good && deepESM_val >= 0.8 && deepESM_val < 0.95          },                         
-            {"1l_ge6j_ge1b_ge8esm"            , passBaseline1l_Good && deepESM_val >= 0.8                                },                         
-            {"1l_ge6j_ge1b_ge95esm"           , passBaseline1l_Good && deepESM_val >= 0.95                               },                         
-            {"1l_ge6j_ge1b_l8esm"             , passBaseline1l_Good && deepESM_val <  0.8                                },                         
-            {"1l_ge6j_ge1b_d1"                , passBaseline1l_Good && deepESM_bin1                                      },                         
-            {"1l_ge6j_ge1b_d2"                , passBaseline1l_Good && deepESM_bin2                                      },                         
-            {"1l_ge6j_ge1b_d3"                , passBaseline1l_Good && deepESM_bin3                                      },                         
-            {"1l_ge6j_ge1b_d4"                , passBaseline1l_Good && deepESM_bin4                                      },                         
-        };
-
-        // Initialize Histograms
-        if(!initHistos)
-        {
-            InitHistos(cut_map_1l);
-            initHistos = true;
-        }
-
-        // Global cuts
-        if ( !(passTrigger && passMadHT) ) continue;
-
-    /// for(auto& kv : cut_map_1l)
-    /// {
-    ///     if(kv.second)
-    ///     {
-    ///         my_histos["h_njets_"   +kv.first]->Fill(NGoodJets_pt30, eventweight);
-    ///         my_histos["h_ntops_"   +kv.first]->Fill(ntops, eventweight);
-    ///         my_histos["h_nb_"      +kv.first]->Fill(NGoodBJets, eventweight);
-    ///         my_histos["h_bdt_"     +kv.first]->Fill(eventshape_bdt_val, eventweight);
-    ///         my_histos["h_fisher_"  +kv.first]->Fill(fisher_val, eventweight);
-    ///         my_histos["h_deepESM_" +kv.first]->Fill(deepESM_val, eventweight);
-    ///     }
-    /// }
-
-        
-        // No local cuts applied here
-        my_histos["h_met"     ]->Fill(MET, eventweight);
-        my_histos["h_bdt"     ]->Fill(eventshape_bdt_val, eventweight);
-        my_histos["h_fisher"  ]->Fill(fisher_val, eventweight);
-        my_histos["h_deepESM" ]->Fill(deepESM_val, eventweight);
-        my_histos["h_njets"   ]->Fill(NGoodJets_pt30, eventweight);
-        my_histos["h_nb"      ]->Fill(NGoodBJets, eventweight);
-
-
-        // Fill histos for deepESM and Fisher training
-        if(passBaseline1l_Good)
-        {
-            for(unsigned int i = 0; i < Jets_cm_top6.size(); i++)
-            {
-                my_histos["Jet_cm_pt_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).Pt()), eventweight);
-                my_histos["Jet_cm_eta_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).Eta()), eventweight);
-                my_histos["Jet_cm_phi_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).Phi()), eventweight);
-                my_histos["Jet_cm_m_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).M()), eventweight);
-
-                my_histos["Jet_pt_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_top6.at(i).Pt()), eventweight);
-                my_histos["Jet_eta_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_top6.at(i).Eta()), eventweight);
-                my_histos["Jet_phi_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_top6.at(i).Phi()), eventweight);
-                my_histos["Jet_m_"+std::to_string(i+1)+"_1l_ge6j_ge1b"]->Fill(static_cast<double>(Jets_top6.at(i).M()), eventweight);
-
-                my_2d_histos["Jet_cm_pt_"+std::to_string(i+1)+"_deepESM_1l_ge6j_ge1b"]->Fill(static_cast<double>(deepESM_val, Jets_cm_top6.at(i).Pt()), eventweight);
-                my_2d_histos["Jet_cm_eta_"+std::to_string(i+1)+"_deepESM_1l_ge6j_ge1b"]->Fill(static_cast<double>(deepESM_val, Jets_cm_top6.at(i).Eta()), eventweight);
-                my_2d_histos["Jet_cm_phi_"+std::to_string(i+1)+"_deepESM_1l_ge6j_ge1b"]->Fill(static_cast<double>(deepESM_val, Jets_cm_top6.at(i).Phi()), eventweight);
-                my_2d_histos["Jet_cm_m_"+std::to_string(i+1)+"_deepESM_1l_ge6j_ge1b"]->Fill(static_cast<double>(deepESM_val, Jets_cm_top6.at(i).M()), eventweight);
-            }
-        }
-
         if (!isQuiet) {
            printf("\n\n =============== End of processing for event ==========================\n\n") ;
         }
 
     } // end of event loop
 
+
+
+
+
 } // Loop
 
-void AnalyzeNjetsMinusOneCS::WriteHistos(TFile* outfile)
+//===========================================================================================================================
+
+
+void AnalyzeNjetsMinusOneCSFillDijetHists::WriteHistos(TFile* outfile)
 {
     outfile->cd();
     
@@ -868,19 +889,11 @@ void AnalyzeNjetsMinusOneCS::WriteHistos(TFile* outfile)
         p.second->Write();
     }
 
-    for(const auto& p : my_tp_histos) 
-    {
-        p.second->Write();
-    }
-    
-    for(const auto& p : my_efficiencies) 
-    {
-        p.second->Write();
-    }    
-}
+} // WriteHistos
+
+//===========================================================================================================================
 
 
-//---------------------
 
 const char* mcname( int pdgid ) {
 
