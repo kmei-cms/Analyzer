@@ -596,9 +596,9 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
   //////       newtr.registerDerivedVar("MET", MET);
   //////       newtr.registerDerivedVar("METPhi", METPhi);
   //////   
-  //////       MakeMVAVariables makeMVAVariables;
+  //////       MakeMVAVariables makeMVAVariables(false,"",false,false);
   //////       makeMVAVariables(newtr);
-  //////       DeepEventShape deepEventShape;
+  //////       DeepEventShape deepEventShape("DeepEventShape.cfg", "Info", false);
   //////       deepEventShape(newtr);
   //////       const auto& alt_deepESM_val = newtr.getVar<double>("deepESM_val");
   //////       if ( !isQuiet ) {
@@ -661,9 +661,9 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
 //        newtr.registerDerivedVar("MET", MET);
 //        newtr.registerDerivedVar("METPhi", METPhi);
 //    
-//        MakeMVAVariables makeMVAVariables;
+//        MakeMVAVariables makeMVAVariables(false,"",false,false);
 //        makeMVAVariables(newtr);
-//        DeepEventShape deepEventShape;
+//        DeepEventShape deepEventShape("DeepEventShape.cfg", "Info", false);
 //        deepEventShape(newtr);
 //        const auto& deepESM_val = newtr.getVar<double>("deepESM_val");
 //        ////////////std::cout<<index<<" "<<newNGoodJets<<" "<<deepESM_val<<std::endl;
