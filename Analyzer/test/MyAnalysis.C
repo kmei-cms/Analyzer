@@ -100,7 +100,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         if ( !isSkim ) 
         {
             RunTopTagger rtt;
-            tr.registerFunction( std::move(rtt) );
+            tr.registerFunction(rtt);
         }
         
         Muon muon;
@@ -115,16 +115,16 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         DeepEventShape deepEventShape;
 
         // Register classes/functions that add variables on the fly
-        tr.registerFunction( std::move(muon) );
-        tr.registerFunction( std::move(electron) );
-        tr.registerFunction( std::move(jet) );
-        tr.registerFunction( std::move(bjet) );
-        tr.registerFunction( std::move(photon) );
-        tr.registerFunction( std::move(runFisher) );
-        tr.registerFunction( std::move(commonVariables) );
-        tr.registerFunction( std::move(makeMVAVariables) );
-        tr.registerFunction( std::move(baseline) );
-        tr.registerFunction( std::move(deepEventShape) );
+        tr.registerFunction(muon);
+        tr.registerFunction(electron);
+        tr.registerFunction(jet);
+        tr.registerFunction(bjet);
+        tr.registerFunction(photon);
+        tr.registerFunction(runFisher);
+        tr.registerFunction(commonVariables);
+        tr.registerFunction(makeMVAVariables);
+        tr.registerFunction(baseline);
+        tr.registerFunction(deepEventShape);
 
         if( runtype == "MC" ) 
         {
