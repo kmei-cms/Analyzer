@@ -9,7 +9,8 @@
 #include "Analyzer/Analyzer/include/AnalyzeEventShape.h"
 #include "Analyzer/Analyzer/include/Analyze0Lep.h"
 #include "Analyzer/Analyzer/include/Analyze1Lep.h"
-#include "Analyzer/Analyzer/include/AnalyzeNjetsMinusOneCS.h"
+#include "Analyzer/Analyzer/include/AnalyzeNjetsMinusOneCSFillDijetHists.h"
+#include "Analyzer/Analyzer/include/AnalyzeNjetsMinusOneCSJetReplacement.h"
 #include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
@@ -100,7 +101,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         if ( !isSkim ) 
         {
             RunTopTagger rtt;
-            tr.registerFunction( std::move(rtt) );
+            tr.registerFunction(rtt);
         }
         
         Muon muon;
@@ -115,16 +116,16 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         DeepEventShape deepEventShape;
 
         // Register classes/functions that add variables on the fly
-        tr.registerFunction( std::move(muon) );
-        tr.registerFunction( std::move(electron) );
-        tr.registerFunction( std::move(jet) );
-        tr.registerFunction( std::move(bjet) );
-        tr.registerFunction( std::move(photon) );
-        tr.registerFunction( std::move(runFisher) );
-        tr.registerFunction( std::move(commonVariables) );
-        tr.registerFunction( std::move(makeMVAVariables) );
-        tr.registerFunction( std::move(baseline) );
-        tr.registerFunction( std::move(deepEventShape) );
+        tr.registerFunction(muon);
+        tr.registerFunction(electron);
+        tr.registerFunction(jet);
+        tr.registerFunction(bjet);
+        tr.registerFunction(photon);
+        tr.registerFunction(runFisher);
+        tr.registerFunction(commonVariables);
+        tr.registerFunction(makeMVAVariables);
+        tr.registerFunction(baseline);
+        tr.registerFunction(deepEventShape);
 
         if( runtype == "MC" ) 
         {
@@ -183,7 +184,8 @@ int main(int argc, char *argv[])
          doEventShape = false, do0Lep = false, do1Lep = false, doStealthTT = false,
          doBTagSF = false, calcBTagSF = false, doWControlRegion = false, 
          validateTTJet = false, makeMiniTree = false, makeNJetDists = false,
-         doNjetsMinusOneCS = false, isQuiet = false;
+         doNjetsMinusOneCSFillDijetHists = false, doNjetsMinusOneCSJetReplacement = false, isQuiet = true ;
+
     bool runOnCondor = false;
     bool isSkim = false;
     std::string histFile = "", dataSets = "";
@@ -197,7 +199,8 @@ int main(int argc, char *argv[])
         {"doEventShape",       no_argument, 0, 'p'},
         {"do0Lep",             no_argument, 0, 'z'},
         {"do1Lep",             no_argument, 0, 'o'},
-        {"doNjetsMinusOneCS",  no_argument, 0, 'q'},
+        {"doNjetsMinusOneCSFillDijetHists",  no_argument, 0, 'q'},
+        {"doNjetsMinusOneCSJetReplacement",  no_argument, 0, 'r'},
         {"doStealthTT",        no_argument, 0, 'x'},
         {"calcBTagSF",         no_argument, 0, 'f'},
         {"doBTagSF",           no_argument, 0, 'g'},
@@ -213,7 +216,7 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-    while((opt = getopt_long(argc, argv, "bwtspzoqxfgmnvcH:D:N:M:E:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "bwtspzoqrxfgmnvcH:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
@@ -224,7 +227,8 @@ int main(int argc, char *argv[])
             case 'p': doEventShape      = true;              break;
             case 'z': do0Lep            = true;              break;
             case 'o': do1Lep            = true;              break;
-            case 'q': doNjetsMinusOneCS = true;              break;
+            case 'q': doNjetsMinusOneCSFillDijetHists = true;              break;
+            case 'r': doNjetsMinusOneCSJetReplacement = true;              break;
             case 'x': doStealthTT       = true;              break;
             case 'f': calcBTagSF        = true;              break;
             case 'g': doBTagSF          = true;              break;
@@ -260,8 +264,9 @@ int main(int argc, char *argv[])
         {doEventShape,      run<AnalyzeEventShape>},
         {do0Lep,            run<Analyze0Lep>},
         {do1Lep,            run<Analyze1Lep>},
+        {doNjetsMinusOneCSFillDijetHists, run<AnalyzeNjetsMinusOneCSFillDijetHists>},
+        {doNjetsMinusOneCSJetReplacement, run<AnalyzeNjetsMinusOneCSJetReplacement>},
         {doStealthTT,       run<AnalyzeStealthTopTagger>},
-        {doNjetsMinusOneCS, run<AnalyzeNjetsMinusOneCS>},
         {doBTagSF,          run<AnalyzeBTagSF>},
         {calcBTagSF,        run<CalculateBTagSF>},
         {makeMiniTree,      run<MakeMiniTree>},

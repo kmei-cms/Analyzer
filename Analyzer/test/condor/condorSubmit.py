@@ -30,7 +30,7 @@ with file(environ["CMSSW_BASE"] + "/src/%s/test/TopTagger.cfg" % repo) as meowtt
         if "modelFile" in line:
             mvaFileName = line.split("=")[1].strip().strip("\"")
             print "------------------------------------------------"            
-            print "TopTagger trainig:", mvaFileName
+            print "TopTagger training:", mvaFileName
             print "------------------------------------------------"
             break
 
@@ -57,6 +57,11 @@ filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MyAnalysis" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/CSVv2_Moriond17_B_H.csv" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,ESMVAFileName),
                    ]
+
+print "--------------Files to Transfer-----------------"
+for i in filestoTransfer:    
+    print i
+print "------------------------------------------------"
 
 def makeExeAndFriendsTarball(filestoTransfer, fname):
     system("mkdir -p %s" % fname)
