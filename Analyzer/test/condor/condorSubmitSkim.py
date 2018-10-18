@@ -107,8 +107,8 @@ for ds in datasets:
     ds = ds.strip()
     print ds
     # create the directory
-    if not os.path.isdir("skim-output-files/%s" % ds):
-        os.makedirs("skim-output-files/%s" % ds)
+    #if not os.path.isdir("skim-output-files/%s" % ds):
+    #    os.makedirs("skim-output-files/%s" % ds)
 
     for s, n in sc.sampleList(ds):
         print "s:", s, ", n:", n
@@ -120,7 +120,7 @@ for ds in datasets:
                 if '.root' in l:
                     count = count + 1
             for startFileNum in xrange(0, count, nFilesPerJob):
-                fileParts.append("transfer_output_remaps = \"MySkimAnalysis_%s_%s.root = skim-output-files/%s/MySkimAnalysis_%s_%s.root\"\n" % (n, startFileNum, ds, n, startFileNum))
+     #           fileParts.append("transfer_output_remaps = \"MySkimAnalysis_%s_%s.root = skim-output-files/%s/MySkimAnalysis_%s_%s.root\"\n" % (n, startFileNum, ds, n, startFileNum))
                 fileParts.append("Arguments = %s %i %i %s\n"%(n, nFilesPerJob, startFileNum, s))
                 fileParts.append("Output = skim-log-files/MySkimAnalysis_%s_%i.stdout\n"%(n, startFileNum))
                 fileParts.append("Error = skim-log-files/MySkimAnalysis_%s_%i.stderr\n"%(n, startFileNum))

@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
     Photon photon;
     RunFisher runFisher("v3",myVarSuffix);
     CommonVariables commonVariables;
-    MakeMVAVariables makeMVAVariables(false, myVarSuffix);
+    MakeMVAVariables makeMVAVariables(false, myVarSuffix, false);
     Baseline baseline;
     DeepEventShape deepEventShape;
     
@@ -192,15 +192,14 @@ int main(int argc, char *argv[])
         tr.registerFunction( std::move(scaleFactors) );
     }
 
-    double                  deepESM_val;
-    TBranch *b_deepESM_val = mySkimTree->Branch( "deepESM_val", &deepESM_val, "deepESM_val/D");
-    
-
+    //double                  deepESM_val;
+    //TBranch *b_deepESM_val = mySkimTree->Branch( "deepESM_val", &deepESM_val, "deepESM_val/D");
+   
     while( tr.getNextEvent() ) 
     {
         const auto& NGoodJets_pt30  = tr.getVar<int>("NGoodJets_pt30");
         const auto& NGoodLeptons    = tr.getVar<int>("NGoodLeptons");
-        const auto& passTrigger     = tr.getVar<bool>("passTrigger");
+        const auto& passTrigger     = tr.getVar<bool>("passTriggerMC");
         const auto& deepESMValue    = tr.getVar<double>("deepESM_val");
 
         if( maxEvts != -1 && tr.getEvtNum() >= maxEvts ) break;
@@ -210,9 +209,12 @@ int main(int argc, char *argv[])
             if( !passMadHT ) continue;
         }
 
-        deepESM_val = deepESMValue;
+        //deepESM_val = deepESMValue;
 
-        if( NGoodJets_pt30 > 4 && NGoodLeptons > 0 && passTrigger ) mySkimTree->Fill();
+        if( !passTrigger && NGoodLeptons > 0 && NGoodJets_pt30 > 4 ) std::cout<<NGoodLeptons<<std::endl;
+
+        if( NGoodJets_pt30 > 4 && NGoodLeptons > 0 ) mySkimTree->Fill();
+
     }
     
     outfile->cd();

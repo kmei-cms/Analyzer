@@ -149,7 +149,7 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
         //-- Fill Histograms Below
         //-----------------------------------
         
-        if( passBaseline1l && passTriggerMC ) {
+        if( passBaseline1l ) {
 
             myMiniTuple->fill();
         }

@@ -59,7 +59,7 @@ std::string color(const std::string& text, const std::string& color)
 
 template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
                                     int startFile, int nFiles, int maxEvts, 
-                                    bool isSkim, TFile* outfile, bool isQuiet = false)
+                                    bool isSkim, TFile* outfile, bool isQuiet)
 {
     std::cout << "Initializing..." << std::endl;
     const int jecOn = 0, jerOn = 0; 
@@ -183,7 +183,7 @@ int main(int argc, char *argv[])
          doEventShape = false, do0Lep = false, do1Lep = false, doStealthTT = false,
          doBTagSF = false, calcBTagSF = false, doWControlRegion = false, 
          validateTTJet = false, makeMiniTree = false, makeNJetDists = false,
-         doNjetsMinusOneCS = false;
+         doNjetsMinusOneCS = false, isQuiet = false;
     bool runOnCondor = false;
     bool isSkim = false;
     std::string histFile = "", dataSets = "";
@@ -252,7 +252,7 @@ int main(int argc, char *argv[])
     std::set<AnaSamples::FileSummary> vvf = setFS(dataSets, runOnCondor); 
     TFile* outfile = TFile::Open(histFile.c_str(), "RECREATE");
 
-    std::vector<std::pair<bool, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,bool,TFile*)>>> AnalyzerPairVec = {
+    std::vector<std::pair<bool, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,bool,TFile*,bool)>>> AnalyzerPairVec = {
         {doBackground,      run<AnalyzeBackground>},
         {doWControlRegion,  run<AnalyzeWControlRegion>},
         {doTopTagger,       run<AnalyzeTopTagger>},
@@ -273,7 +273,7 @@ int main(int argc, char *argv[])
     {
         for(auto& pair : AnalyzerPairVec)
         {
-            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
+            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,isSkim,outfile,isQuiet);
         }
         outfile->Close();
     }
