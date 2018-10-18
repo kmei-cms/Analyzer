@@ -247,6 +247,11 @@ AnalyzeNjetsMinusOneCSJetReplacement::AnalyzeNjetsMinusOneCSJetReplacement() : i
 
    printf("   done reading input histograms.\n" ) ;
    ////gDirectory -> ls() ;
+
+   printf("   pwd : " ) ;
+   gDirectory -> pwd() ;
+   printf("\n") ;
+
    printf("\n\n") ;
 }
 
@@ -297,6 +302,9 @@ void AnalyzeNjetsMinusOneCSJetReplacement::InitHistos()
       sprintf( hname, "h_cs_for_njet%02d__alt_mva_val_vs_true_njm1_mva_val", nj ) ;
       my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname, 80, -0.1, 1.1,  80, -0.1, 1.1 ) ) ;
 
+      sprintf( hname, "h_cs_for_njet%02d__alt_mva_vs_ptrank_goodjetpt30", nj ) ;
+      my_2d_histos.emplace( hname, std::make_shared<TH2D>( hname, hname, 21, -0.5, 20.5,  80, -0.1, 1.1 ) ) ;
+
    } // nj
 
 
@@ -346,7 +354,7 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
         // -- Print event number
         // -----------------------        
         if(maxevents != -1 && tr.getEvtNum() >= maxevents) break;        
-        if ( tr.getEvtNum() % 1000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;
+        if ( tr.getEvtNum() % 100 == 0 ) { printf("  Event %i\n", tr.getEvtNum() ) ; fflush(stdout) ; }
 
 
         if ( !isQuiet ) {
@@ -384,7 +392,7 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
         if ( Mbl < 30 || Mbl > 180 ) continue ;
 
 
-        if ( NGoodJets_pt30 > 15 ) continue ; // don't have histograms for > 15 jets.
+        if ( NGoodJets_pt30 > 14 ) continue ; // don't have histograms for > 15 jets.  Histograms are from NGoodJets_pt30+1
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -402,6 +410,8 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
 
      //------- Loop over jets.
 
+      int ptrank_goodjets_pt30(0) ;
+
       for ( int rji=0; rji<Jets.size(); rji++ ) {
 
          TLorentzVector j0tlv( Jets.at(rji) ) ;
@@ -410,6 +420,7 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
             if ( !isQuiet ) printf("   jet %2d is not good.  Pt=%7.1f , Eta = %7.3f\n", rji, j0tlv.Pt(), j0tlv.Eta() ) ;
             continue ;
          }
+         ptrank_goodjets_pt30++ ;
 
          if ( Jets_bDiscriminatorCSV.at(rji) > 0.7 ) {
             if ( !isQuiet ) printf("   jet %2d is b tagged.  CSV = %7.3f\n", rji, Jets_bDiscriminatorCSV.at(rji) ) ;
@@ -547,11 +558,26 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
 
 
                const auto& deepESM_val = tr.getVar<double>("deepESM_val");
+               const auto& event_beta_z = tr.getVar<double>("event_beta_z") ;
+               const auto& Jets_cm = tr.getVec<TLorentzVector>("Jets_cm") ;
+               const auto& Jets_cm_top6 = tr.getVec<TLorentzVector>("Jets_cm_top6") ;
                if ( !isQuiet ) {
-                  printf("\n\n  deepESM_val with nominal set of jets:  %7.3f\n", deepESM_val ) ;
+                  printf("\n\n ======= deepESM_val with nominal set of jets:  %7.3f\n", deepESM_val ) ;
+                  printf(" Jets collection:\n") ;
                   for ( unsigned int ji=0; ji<Jets.size(); ji++ ) {
                      printf("   jet %2d : Pt = %7.1f  Eta = %7.3f  Phi = %7.3f   %s\n",
                       ji, Jets.at(ji).Pt(), Jets.at(ji).Eta(), Jets.at(ji).Phi(), (GoodJets.at(ji)?"good":"BAD") ) ;
+                  } // ji
+                  printf("  event beta z for boost to CM: %7.3f\n", event_beta_z ) ;
+                  printf(" Jets_cm collection:\n") ;
+                  for ( unsigned int ji=0; ji<Jets_cm.size(); ji++ ) {
+                     printf("   jet %2d : Pt = %7.1f  Eta = %7.3f  Phi = %7.3f  \n",
+                      ji, Jets_cm.at(ji).Pt(), Jets_cm.at(ji).Eta(), Jets_cm.at(ji).Phi() ) ;
+                  } // ji
+                  printf(" Jets_cm_topN collection:\n") ;
+                  for ( unsigned int ji=0; ji<Jets_cm_top6.size(); ji++ ) {
+                     printf("   jet %2d : Pt = %7.1f  Eta = %7.3f  Phi = %7.3f  \n",
+                      ji, Jets_cm_top6.at(ji).Pt(), Jets_cm_top6.at(ji).Eta(), Jets_cm_top6.at(ji).Phi() ) ;
                   } // ji
                }
 
@@ -562,64 +588,88 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
 
              //--- Recompute the MVA with these jets.
 
-  //////       auto* altJets = new std::vector<TLorentzVector> ;
-  //////       auto* altGoodJets = new std::vector<bool> ;
-  //////       auto* altGoodLeptons = new std::vector<std::pair<std::string, TLorentzVector>>(GoodLeptons); // is this necessary???
-  //////       int   altNGoodJets(0) ;
+               auto* altJets = new std::vector<TLorentzVector> ;
+               auto* altGoodJets = new std::vector<bool> ;
+               auto* altGoodJets_pt30 = new std::vector<bool> ;
+               auto* altGoodLeptons = new std::vector<std::pair<std::string, TLorentzVector>>(GoodLeptons); // is this necessary???
+               int   altNGoodJets(0) ;
+               int   altNGoodJets_pt30(0) ;
 
-  //////       for ( int oji=0; oji<Jets.size(); oji++ ) {
+               for ( int oji=0; oji<Jets.size(); oji++ ) {
 
-  //////          if ( !GoodJets[oji] ) continue ;
-  //////          if ( oji == rji ) continue ;
+                  //////////////if ( !GoodJets[oji] ) continue ; ////------- Don't do this!
+                  if ( oji == rji ) continue ;
 
-  //////          altJets->push_back( Jets[oji] ) ;
-  //////          altGoodJets->push_back( GoodJets[oji] ) ;
-  //////          altNGoodJets ++ ;
+                  altJets->push_back( Jets[oji] ) ;
+                  altGoodJets->push_back( GoodJets[oji] ) ;
+                  altGoodJets_pt30->push_back( GoodJets_pt30[oji] ) ;
+                  if ( GoodJets[oji] ) altNGoodJets ++ ;
+                  if ( GoodJets_pt30[oji] ) altNGoodJets_pt30 ++ ;
 
-  //////       } // oji
+               } // oji
 
-  //////       altJets->push_back( j1tlv ) ;
-  //////       altGoodJets->push_back( true ) ;
-  //////       altNGoodJets ++ ;
+               altJets->push_back( j1tlv ) ;
+               altGoodJets->push_back( true ) ;
+               altGoodJets_pt30->push_back( true ) ;
+               altNGoodJets ++ ;
+               altNGoodJets_pt30 ++ ;
 
-  //////       altJets->push_back( j2tlv ) ;
-  //////       altGoodJets->push_back( true ) ;
-  //////       altNGoodJets ++ ;
-
-
-  //////       NTupleReader newtr;
-  //////       newtr.registerDerivedVec("Jets", altJets);
-  //////       newtr.registerDerivedVec("GoodJets", altGoodJets);
-  //////       newtr.registerDerivedVar("NGoodJets", altNGoodJets);
-  //////       newtr.registerDerivedVec("GoodLeptons", altGoodLeptons);
-  //////       newtr.registerDerivedVar("NGoodLeptons", NGoodLeptons);
-  //////       newtr.registerDerivedVar("MET", MET);
-  //////       newtr.registerDerivedVar("METPhi", METPhi);
-  //////   
-  //////       MakeMVAVariables makeMVAVariables(false,"",false,false);
-  //////       makeMVAVariables(newtr);
-  //////       DeepEventShape deepEventShape("DeepEventShape.cfg", "Info", false);
-  //////       deepEventShape(newtr);
-  //////       const auto& alt_deepESM_val = newtr.getVar<double>("deepESM_val");
-  //////       if ( !isQuiet ) {
-  //////          printf("\n\n   Alternate MVA evaluation: altNGoodJets = %2d  , deepESM_val = %7.3f\n", altNGoodJets, alt_deepESM_val ) ;
-  //////          for ( unsigned int ji=0; ji<altJets->size(); ji++ ) {
-  //////             printf("   jet %2d : Pt = %7.1f  Eta = %7.3f  Phi = %7.3f   %s\n",
-  //////                 ji, altJets->at(ji).Pt(), altJets->at(ji).Eta(), altJets->at(ji).Phi(), (altGoodJets->at(ji)?"good":"BAD") ) ;
-  //////          } // ji
-  //////          printf("\n\n") ;
-  //////       }
+               altJets->push_back( j2tlv ) ;
+               altGoodJets->push_back( true ) ;
+               altGoodJets_pt30->push_back( true ) ;
+               altNGoodJets ++ ;
+               altNGoodJets_pt30 ++ ;
 
 
-  //////       sprintf( hname, "h_cs_for_njet%02d__alt_mva_val", NGoodJets_pt30+1 ) ;
-  //////       my_histos[ hname ] -> Fill( alt_deepESM_val , eventweight ) ;
+               NTupleReader newtr;
+               newtr.registerDerivedVec("Jets", altJets);
+               newtr.registerDerivedVec("GoodJets", altGoodJets);
+               newtr.registerDerivedVar("NGoodJets", altNGoodJets);
+               newtr.registerDerivedVec("GoodJets_pt30", altGoodJets_pt30);
+               newtr.registerDerivedVar("NGoodJets_pt30", altNGoodJets_pt30);
+               newtr.registerDerivedVec("GoodLeptons", altGoodLeptons);
+               newtr.registerDerivedVar("NGoodLeptons", NGoodLeptons);
+               newtr.registerDerivedVar("MET", MET);
+               newtr.registerDerivedVar("METPhi", METPhi);
+           
+               MakeMVAVariables makeMVAVariables(false,"",false,false);
+               makeMVAVariables(newtr);
+               DeepEventShape deepEventShape("DeepEventShape.cfg", "Info", false);
+               deepEventShape(newtr);
+               const auto& alt_deepESM_val = newtr.getVar<double>("deepESM_val");
+               const auto& alt_event_beta_z = newtr.getVar<double>("event_beta_z") ;
+               const auto& alt_Jets_cm = newtr.getVec<TLorentzVector>("Jets_cm") ;
+               const auto& alt_Jets_cm_top6 = newtr.getVec<TLorentzVector>("Jets_cm_top6") ;
+               if ( !isQuiet ) {
+                  printf("\n\n  ======= Alternate MVA evaluation: altNGoodJets = %2d  , deepESM_val = %7.3f\n", altNGoodJets, alt_deepESM_val ) ;
+                  printf(" Jets collection:\n") ;
+                  for ( unsigned int ji=0; ji<altJets->size(); ji++ ) {
+                     printf("   jet %2d : Pt = %7.1f  Eta = %7.3f  Phi = %7.3f   %s\n",
+                         ji, altJets->at(ji).Pt(), altJets->at(ji).Eta(), altJets->at(ji).Phi(), (altGoodJets->at(ji)?"good":"BAD") ) ;
+                  } // ji
+                  printf("  event beta z for boost to CM: %7.3f\n", alt_event_beta_z ) ;
+                  printf(" Jets_cm collection:\n") ;
+                  for ( unsigned int ji=0; ji<alt_Jets_cm.size(); ji++ ) {
+                     printf("   jet %2d : Pt = %7.1f  Eta = %7.3f  Phi = %7.3f  \n",
+                      ji, alt_Jets_cm.at(ji).Pt(), alt_Jets_cm.at(ji).Eta(), alt_Jets_cm.at(ji).Phi() ) ;
+                  } // ji
+                  printf(" Jets_cm_topN collection:\n") ;
+                  for ( unsigned int ji=0; ji<alt_Jets_cm_top6.size(); ji++ ) {
+                     printf("   jet %2d : Pt = %7.1f  Eta = %7.3f  Phi = %7.3f  \n",
+                      ji, alt_Jets_cm_top6.at(ji).Pt(), alt_Jets_cm_top6.at(ji).Eta(), alt_Jets_cm_top6.at(ji).Phi() ) ;
+                  } // ji
+                  printf("\n\n") ;
+               }
 
-  //////       sprintf( hname, "h_cs_for_njet%02d__alt_mva_val_vs_true_njm1_mva_val", NGoodJets_pt30+1 ) ;
-  //////       my_2d_histos[ hname ] -> Fill( deepESM_val, alt_deepESM_val , eventweight ) ;
 
-  //////       delete altJets ;
-  //////       delete altGoodJets ;
-  //////       //delete altGoodLeptons ;
+               sprintf( hname, "h_cs_for_njet%02d__alt_mva_val", NGoodJets_pt30+1 ) ;
+               my_histos[ hname ] -> Fill( alt_deepESM_val , eventweight ) ;
+
+               sprintf( hname, "h_cs_for_njet%02d__alt_mva_val_vs_true_njm1_mva_val", NGoodJets_pt30+1 ) ;
+               my_2d_histos[ hname ] -> Fill( deepESM_val, alt_deepESM_val , eventweight ) ;
+
+               sprintf( hname, "h_cs_for_njet%02d__alt_mva_vs_ptrank_goodjetpt30", NGoodJets_pt30+1 ) ;
+               my_2d_histos[ hname ] -> Fill( ptrank_goodjets_pt30 , alt_deepESM_val , eventweight ) ;
 
 
                keep_going = false ;
@@ -633,53 +683,6 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
-
-
-//    //-------------------------------------------------------------------------------------
-//    ///// Owen try something like this instead
-//    
-//    int index = -1;
-//    for(auto jet : Jets)
-//    {
-//        index++;           
-//        if(!GoodJets[index]) continue;
-//        auto* newJets = new std::vector<TLorentzVector>(Jets);
-//        auto* newGoodJets = new std::vector<bool>(GoodJets);
-//        auto* GoodLeptons_ = new std::vector<std::pair<std::string, TLorentzVector>>(GoodLeptons);
-//          
-//        newJets->push_back(jet);
-//        newGoodJets->push_back(true);
-//        int newNGoodJets = NGoodJets + 1;
-//          
-//        NTupleReader newtr;
-//        newtr.registerDerivedVec("Jets", newJets);
-//        newtr.registerDerivedVec("GoodJets", newGoodJets);
-//        newtr.registerDerivedVar("NGoodJets", newNGoodJets);
-//        newtr.registerDerivedVec("GoodLeptons", GoodLeptons_);
-//        newtr.registerDerivedVar("NGoodLeptons", NGoodLeptons);
-//        newtr.registerDerivedVar("MET", MET);
-//        newtr.registerDerivedVar("METPhi", METPhi);
-//    
-//        MakeMVAVariables makeMVAVariables(false,"",false,false);
-//        makeMVAVariables(newtr);
-//        DeepEventShape deepEventShape("DeepEventShape.cfg", "Info", false);
-//        deepEventShape(newtr);
-//        const auto& deepESM_val = newtr.getVar<double>("deepESM_val");
-//        ////////////std::cout<<index<<" "<<newNGoodJets<<" "<<deepESM_val<<std::endl;
-//        printf("   Testing new MVA evaluation: index = %2d : newNGoodJets  %2d , deepESM_val = %7.3f\n", index, newNGoodJets, deepESM_val ) ;
-//        for ( unsigned int ji=0; ji<newJets->size(); ji++ ) {
-//           printf("   jet %2d : Pt = %7.1f  Eta = %7.3f  Phi = %7.3f   %s\n",
-//               ji, newJets->at(ji).Pt(), newJets->at(ji).Eta(), newJets->at(ji).Phi(), (newGoodJets->at(ji)?"good":"BAD") ) ;
-//        } // ji
-//        printf("\n\n") ;
-//    }
-
-
-
-
-
-      
 
 
         if (!isQuiet) {
