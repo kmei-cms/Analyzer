@@ -1,6 +1,5 @@
 #define MakeNJetDists_cxx
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
-#include "Framework/Framework/include/Utility.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
 
 #include <TH1D.h>
@@ -10,18 +9,6 @@
 #include <TEfficiency.h>
 #include <TRandom3.h>
 #include <iostream>
-
-//mandatory includes to use top tagger
-#include "TopTagger/TopTagger/include/TopTagger.h"
-#include "TopTagger/TopTagger/include/TopTaggerResults.h"
-#include "TopTagger/TopTagger/include/TopTaggerUtilities.h"
-#include "TopTagger/CfgParser/include/TTException.h"
-#include "Framework/Framework/include/SetUpTopTagger.h"
-
-#include "SusyAnaTools/Tools/MiniTupleMaker.h"
-#include "SusyAnaTools/Tools/PileupWeights.h"
-#include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
-#include "SusyAnaTools/Tools/BTagCorrector.h"
 
 MakeNJetDists::MakeNJetDists()
 {
@@ -34,7 +21,6 @@ void MakeNJetDists::InitHistos()
     TH2::SetDefaultSumw2();
 
     // Declare all your histograms here, that way we can fill them for multiple chains
-
     std::vector<std::string> ptTags      { "pt30", "pt45" };
     std::vector<std::string> nlepTags    { "0l", "1l" };
     std::vector<std::string> deepESMTags { "0", "1", "2" , "3", "4" };
@@ -42,8 +28,7 @@ void MakeNJetDists::InitHistos()
     std::vector<std::string> uncertTags  { "central", "up", "down" };
 
     //Histogram with no scale factors applied
-    
-    for( auto& ptTag : ptTags ) 
+        for( auto& ptTag : ptTags ) 
     {
         for( auto& nlepTag : nlepTags ) 
         {

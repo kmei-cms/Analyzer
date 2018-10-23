@@ -10,7 +10,6 @@
 #include <string>
 
 class NTupleReader;
-class MiniTupleMaker;
 
 class MakeNJetDists
 {
@@ -25,9 +24,6 @@ public :
    void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false);
    void InitHistos();
    void WriteHistos(TFile* outfile); 
-
-   MiniTupleMaker *myMiniTuple;
-   TTree          *myTree;
 };
 
 #endif
