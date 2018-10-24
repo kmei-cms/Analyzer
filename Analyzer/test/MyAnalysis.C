@@ -108,8 +108,8 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         Jet jet(myVarSuffix);
         BJet bjet(myVarSuffix);
         Photon photon;
-        RunFisher runFisher("v3",myVarSuffix);
-        CommonVariables commonVariables;
+        //RunFisher runFisher("v3",myVarSuffix);
+        CommonVariables commonVariables(myVarSuffix);
         MakeMVAVariables makeMVAVariables(false, myVarSuffix, true);
         Baseline baseline;
         DeepEventShape deepEventShape;
@@ -120,7 +120,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerFunction(jet);
         tr.registerFunction(bjet);
         tr.registerFunction(photon);
-        tr.registerFunction(runFisher);
+        //tr.registerFunction(runFisher);
         tr.registerFunction(commonVariables);
         tr.registerFunction(makeMVAVariables);
         tr.registerFunction(baseline);
