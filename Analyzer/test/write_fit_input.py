@@ -92,32 +92,34 @@ class MakeDataCard:
             histos.append(h)
         return histos
 
-    def printDataCard(self):
-        print "Signal Region 1 Datacard -- signal category"
-        print ""
-        print "imax * number of bins"
-        print "jmax * number of processes minus 1"
-        print "kmax * number of nuisance parameters"
-        print ""
-        print "-------------------------------------------------------------------------------------------------------------------------------------------"
-        print ""
+    def writeDataCard(self, name):
+        f = open(name, 'w')
+
+        f.write( "Signal Region 1 Datacard -- signal category" )
+        f.write( "\n" )
+        f.write( "imax * number of bins\n" )
+        f.write( "jmax * number of processes minus 1\n" )
+        f.write( "kmax * number of nuisance parameters\n" )
+        f.write( "\n" )
+        f.write( "-------------------------------------------------------------------------------------------------------------------------------------------\n" )
+        f.write( "\n" )
         for i in range(self.nMVABins):
-            print "shapes data_obs    sigD{0}    {1} wspace:data_obs_D{0}".format(i+1, self.outFile)
-            print "shapes bkg_tt      sigD{0}    {1} wspace:background_tt_D{0}".format(i+1, self.outFile)
-            print "shapes bkg_other   sigD{0}    {1} wspace:background_other_D{0}".format(i+1, self.outFile)
-            print "shapes signal      sigD{0}    {1} wspace:signal_D{0}".format(i+1, self.outFile)
-            print ""
-        print ""
-        print "-------------------------------------------------------------------------------------------------------------------------------------------"
+            f.write( "shapes data_obs    sigD{0}    {1} wspace:data_obs_D{0}\n".format(i+1, self.outFile) )
+            f.write( "shapes bkg_tt      sigD{0}    {1} wspace:background_tt_D{0}\n".format(i+1, self.outFile) )
+            f.write( "shapes bkg_other   sigD{0}    {1} wspace:background_other_D{0}\n".format(i+1, self.outFile) )
+            f.write( "shapes signal      sigD{0}    {1} wspace:signal_D{0}\n".format(i+1, self.outFile) )
+            f.write( "\n" )
+        f.write( "\n" )
+        f.write( "-------------------------------------------------------------------------------------------------------------------------------------------\n" )
         bins        = "bin         "
         observation = "observation "
         for i in range(self.nMVABins):
             bins        += " sigD{0} ".format(i+1)
             observation += "  -1   "
-        print bins
-        print observation
-        print "-------------------------------------------------------------------------------------------------------------------------------------------"
-        print "# background rate must be taken from _norm param x 1"
+        f.write( bins+"\n" )
+        f.write( observation+"\n" )
+        f.write( "-------------------------------------------------------------------------------------------------------------------------------------------\n" )
+        f.write( "# background rate must be taken from _norm param x 1\n" )
         bin      = "bin              "
         process1 = "process          "
         process2 = "process          "
@@ -131,23 +133,23 @@ class MakeDataCard:
                 process1 += "{0: <16} ".format(d[1].processName)
                 process2 += "{0: <16} ".format(d[1].process)
                 rate     += "{0: <16} ".format(r)
-        print bin
-        print process1
-        print process2
-        print rate
-        print "-------------------------------------------------------------------------------------------------------------------------------------------"
-        print "# Normal uncertainties in the signal region"
+        f.write( bin+"\n" )
+        f.write( process1+"\n" )
+        f.write( process2+"\n" )
+        f.write( rate+"\n" )
+        f.write( "-------------------------------------------------------------------------------------------------------------------------------------------\n" )
+        f.write( "# Normal uncertainties in the signal region\n" )
         lumiSys = "lumi_13TeV      lnN  "
         for i in range(self.nMVABins):
             for d in self.dataSets:
                 lumiSys += "{0: <5} ".format(d[1].lumiSys)
-        print lumiSys
-        print "-------------------------------------------------------------------------------------------------------------------------------------------"
+        f.write( lumiSys+"\n" )
+        f.write( "-------------------------------------------------------------------------------------------------------------------------------------------\n" )
         for i in range(self.nMVABins):
-            print "ttBkgRateD{0} rateParam sigD{0} bkg_tt {1}:wspace".format(i+1, self.outFile)
+            f.write( "ttBkgRateD{0} rateParam sigD{0} bkg_tt {1}:wspace\n".format(i+1, self.outFile) )
         for i in range(self.nMVABins):
-            print "np_tt_D{0} param 1.0 1.0".format(i+1)
-        print "#np_tt   param 1.0 1.0"
+            f.write( "np_tt_D{0} param 1.0 1.0\n".format(i+1) )
+        f.write( "#np_tt   param 1.0 1.0\n" )
 
 if __name__ == "__main__":
     # Where the root files are stored
@@ -155,6 +157,7 @@ if __name__ == "__main__":
     cutlevels = [ "1l_deepESMbin1", "1l_deepESMbin2","1l_deepESMbin3","1l_deepESMbin4"]
     jettypes = ["pt30"]#, "pt45"]
     outputfile = ROOT.TFile.Open("njets_for_Aron.root","RECREATE")
+    outputDataCard = "dataCard.txt"
 
     # I hadd my ttbar files into TT.root, and I hadd all other backgrounds into BG_noTT.root
     bgData = {
@@ -192,4 +195,7 @@ if __name__ == "__main__":
     
     #Make data card
     md = MakeDataCard(outFile="multiF_ESM_ws.root", bgData=bgData["TT"], otData=bgData["other"], sgData=sgData["RPV_550"], basename="h_njets_pt30", cutlevels=cutlevels)
-    md.printDataCard()
+    md.writeDataCard(outputDataCard)
+
+    import os
+    os.system("cat "+outputDataCard)
