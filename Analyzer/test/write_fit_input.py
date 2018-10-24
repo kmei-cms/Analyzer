@@ -4,15 +4,16 @@ from math import sqrt
 import random
 
 class MakeNJetPlots:
-    colors = [ROOT.kCyan+1, ROOT.kMagenta+1, ROOT.kYellow+1,
-              ROOT.kRed+1, ROOT.kGreen+1, ROOT.kBlue+1,
-              ROOT.kBlack]
-    signalcolors = [ROOT.kViolet-6, ROOT.kTeal-6, ROOT.kPink-6, ROOT.kAzure-6]
+    def __init__(self):    
+        self.colors = [ROOT.kCyan+1, ROOT.kMagenta+1, ROOT.kYellow+1,
+                       ROOT.kRed+1, ROOT.kGreen+1, ROOT.kBlue+1,
+                       ROOT.kBlack]
+        self.signalcolors = [ROOT.kViolet-6, ROOT.kTeal-6, ROOT.kPink-6, ROOT.kAzure-6]
         
-    def calcUnc(a,unc_a,b,unc_b):
+    def calcUnc(self,a,unc_a,b,unc_b):
         return  a/b * sqrt( (unc_a/a)**2+(unc_b/b)**2)
     
-    def makeNJplot(inputfiles, labels, signalfiles, signallabels, jettype, cut, outputfile):
+    def makeNJplot(self,inputfiles, labels, signalfiles, signallabels, jettype, cut, outputfile):
         basename = "h_njets_" + jettype
         histos = [inputfile.Get(basename+"_"+cut) for inputfile in inputfiles]
         # scale histos
@@ -59,9 +60,7 @@ class MakeNJetPlots:
         for h in pseudodataS_histos:
             h.Write()
 
-
 if __name__ == "__main__":
-
     # Where the root files are stored
     basedir = "condor/rootfiles/"
     # I hadd my ttbar files into TT.root, and I hadd all other backgrounds into BG_noTT.root
