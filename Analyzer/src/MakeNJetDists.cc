@@ -69,7 +69,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         //-- Print Event Number
         //------------------------------------
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
-        if( tr.getEvtNum() % 10000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
+        if( tr.getEvtNum() % 1000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
 
         const auto& runtype             = tr.getVar<std::string>("runtype");
         const auto& filetag             = tr.getVar<std::string>("filetag");

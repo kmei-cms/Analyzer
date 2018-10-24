@@ -1,6 +1,5 @@
 #define CalculateBTagSF_cxx
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
-#include "Framework/Framework/include/Utility.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
 
 #include <TH1D.h>
@@ -10,16 +9,6 @@
 #include <TEfficiency.h>
 #include <TRandom3.h>
 #include <iostream>
-
-//mandatory includes to use top tagger
-#include "TopTagger/TopTagger/include/TopTagger.h"
-#include "TopTagger/TopTagger/include/TopTaggerResults.h"
-#include "TopTagger/TopTagger/include/TopTaggerUtilities.h"
-#include "TopTagger/CfgParser/include/TTException.h"
-#include "Framework/Framework/include/SetUpTopTagger.h"
-
-#include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
-#include "SusyAnaTools/Tools/BTagCorrector.h"
 
 CalculateBTagSF::CalculateBTagSF() : initHistos(false)
 {
