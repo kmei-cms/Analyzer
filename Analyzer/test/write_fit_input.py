@@ -60,6 +60,51 @@ class MakeNJetPlots:
         for h in pseudodataS_histos:
             h.Write()
 
+class MakeDataCard:
+    def __init__(self, nMVABins, outFile):
+        self.nMVABins = nMVABins
+        self.outFile = outFile
+
+    def printDataCard(self):
+        print "Signal Region 1 Datacard -- signal category"
+        print ""
+        print "imax * number of bins"
+        print "jmax * number of processes minus 1"
+        print "kmax * number of nuisance parameters"
+        print ""
+        print "-------------------------------------------------------------------------------------------------------------------------------------------"
+        print ""
+        for i in range(self.nMVABins):
+            print "shapes data_obs    sigD{0}    {1} wspace:data_obs_D{0}".format(i+1, self.outFile)
+            print "shapes bkg_tt      sigD{0}    {1} wspace:background_tt_D{0}".format(i+1, self.outFile)
+            print "shapes bkg_other   sigD{0}    {1} wspace:background_other_D{0}".format(i+1, self.outFile)
+            print "shapes signal      sigD{0}    {1} wspace:signal_D{0}".format(i+1, self.outFile)
+            print ""
+        print ""
+        print "-------------------------------------------------------------------------------------------------------------------------------------------"
+        bins        = "bin         "
+        observation = "observation "
+        for i in range(self.nMVABins):
+            bins        += " sigD{0} ".format(i+1)
+            observation += "  -1   "
+        print bins
+        print observation
+        print "-------------------------------------------------------------------------------------------------------------------------------------------"
+        print "# background rate must be taken from _norm param x 1"
+        print "bin                 sigD1       sigD1       sigD1        sigD2       sigD2       sigD2        sigD3       sigD3       sigD3        sigD4       sigD4       sigD4"
+        print "process             signal      bkg_tt      bkg_other    signal      bkg_tt      bkg_other    signal      bkg_tt      bkg_other    signal      bkg_tt      bkg_other"
+        print "process             0           1           2            0           1           2            0           1           2            0           1           2"
+        print "rate                46.6614     1           7289.53      133.046     1           5997.22      289.856     1           6255.23      986.308     1           5385.85"
+        print "-------------------------------------------------------------------------------------------------------------------------------------------"
+        print "# Normal uncertainties in the signal region"
+        print "lumi_13TeV         lnN    1.05     -    -    1.05     -    -    1.05     -    -    1.05     -    -"
+        print "-------------------------------------------------------------------------------------------------------------------------------------------"
+        for i in range(self.nMVABins):
+            print "ttBkgRateD{0} rateParam sigD{0} bkg_tt {1}:wspace".format(i+1, self.outFile)
+        for i in range(self.nMVABins):
+            print "np_tt_D{0} param 1.0 1.0".format(i+1)
+        print "#np_tt   param 1.0 1.0"
+
 if __name__ == "__main__":
     # Where the root files are stored
     basedir = "condor/rootfiles/"
@@ -100,3 +145,7 @@ if __name__ == "__main__":
     outputfile.Close()
     for inputfile in inputfiles:
         inputfile.Close()
+
+    #Make data card
+    md = MakeDataCard(nMVABins = 4, outFile = "multiF_ESM_ws.root")
+    md.printDataCard()
