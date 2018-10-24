@@ -4,11 +4,18 @@ from math import sqrt
 import random
 
 class DataSetInfo:
-    def __init__(self, basedir, fileName, label):
+    def __init__(self, basedir, fileName, label, processName, process, rate, lumiSys):
         self.basedir = basedir
         self.fileName = fileName
         self.label = label
         self.file = ROOT.TFile.Open(basedir+fileName)
+        self.processName = processName
+        self.process = process
+        self.rate = rate
+        self.lumiSys = lumiSys
+
+    def getHisto(self, name):
+        return self.file.Get(name)
 
     def __del__(self):
         self.file.Close()
@@ -23,24 +30,24 @@ class WriteNJetPlots:
     def calcUnc(self,a,unc_a,b,unc_b):
         return  a/b * sqrt( (unc_a/a)**2+(unc_b/b)**2)
     
-    def writeHistos(self, dataList, basename, cut):
+    def writeHistos(self, data, basename, cut):
         histos = []
-        for dsi in dataList:
-            h = dsi.file.Get(basename+"_"+cut)
+        for key, dsi in data.iteritems():
+            h = dsi.getHisto(basename+"_"+cut)
             h.SetName(h.GetName()+"_"+dsi.label)
             h.SetTitle(h.GetTitle()+"_"+dsi.label)
             h.Write()
             histos.append(h)
         return histos
 
-    def makePseudoData(self, histos, signalhistos, sgDataList, jettype, cut):
+    def makePseudoData(self, histos, signalhistos, sgData, jettype, cut):
         #make some pseudo_data
         mynewh = ROOT.TH1D(basename+"_"+cut+"_pseudodata", basename+"_"+cut+"_pseudodata",
                            histos[0].GetNbinsX(), histos[0].GetBinLowEdge(1), histos[0].GetBinLowEdge(1)+histos[0].GetNbinsX())
         
         #make some pseudo_data with signal
         pseudodataS_histos = []
-        for dsi in sgDataList:
+        for key, dsi in sgData.iteritems():
             sig = dsi.label
             pseudodataS_histos.append( ROOT.TH1D(basename+"_"+cut+"_pseudodataS_"+sig, basename+"_"+cut+"_pseudodataS_"+sig,
                                                  histos[0].GetNbinsX(), histos[0].GetBinLowEdge(1), histos[0].GetBinLowEdge(1)+histos[0].GetNbinsX())
@@ -65,11 +72,25 @@ class WriteNJetPlots:
             h.Write()
 
 class MakeDataCard:
-    def __init__(self, nMVABins, outFile, bgDataList, sgDataList):
-        self.nMVABins = nMVABins
+    def __init__(self, outFile, bgData, otData, sgData, basename, cutlevels):
+        self.nMVABins = len(cutlevels)
         self.outFile = outFile
-        self.bgDataList = bgDataList
-        self.sgDataList = sgDataList
+        self.bgData = bgData
+        self.otData = otData
+        self.sgData = sgData
+        self.basename = basename
+        self.cutlevels = cutlevels
+        bgMVAHistos = self.getMVAHists(bgData, cutlevels, basename)
+        otMVAHistos = self.getMVAHists(otData, cutlevels, basename)
+        sgMVAHistos = self.getMVAHists(sgData, cutlevels, basename)        
+        self.dataSets = [(sgMVAHistos, sgData), (bgMVAHistos, bgData), (otMVAHistos, otData)]
+
+    def getMVAHists(self, data, cutlevels, basename):
+        histos = []
+        for cut in self.cutlevels:
+            h = data.getHisto(self.basename+"_"+cut)
+            histos.append(h)
+        return histos
 
     def printDataCard(self):
         print "Signal Region 1 Datacard -- signal category"
@@ -97,13 +118,30 @@ class MakeDataCard:
         print observation
         print "-------------------------------------------------------------------------------------------------------------------------------------------"
         print "# background rate must be taken from _norm param x 1"
-        print "bin                 sigD1       sigD1       sigD1        sigD2       sigD2       sigD2        sigD3       sigD3       sigD3        sigD4       sigD4       sigD4"
-        print "process             signal      bkg_tt      bkg_other    signal      bkg_tt      bkg_other    signal      bkg_tt      bkg_other    signal      bkg_tt      bkg_other"
-        print "process             0           1           2            0           1           2            0           1           2            0           1           2"
-        print "rate                46.6614     1           7289.53      133.046     1           5997.22      289.856     1           6255.23      986.308     1           5385.85"
+        bin      = "bin              "
+        process1 = "process          "
+        process2 = "process          "
+        rate     = "rate             "
+        for i in range(self.nMVABins):
+            for d in self.dataSets:
+                r = 1
+                if(d[1].rate):
+                    r = d[0][i].Integral()
+                bin      += "{0: <16} ".format("sigD"+str(i+1))
+                process1 += "{0: <16} ".format(d[1].processName)
+                process2 += "{0: <16} ".format(d[1].process)
+                rate     += "{0: <16} ".format(r)
+        print bin
+        print process1
+        print process2
+        print rate
         print "-------------------------------------------------------------------------------------------------------------------------------------------"
         print "# Normal uncertainties in the signal region"
-        print "lumi_13TeV         lnN    1.05     -    -    1.05     -    -    1.05     -    -    1.05     -    -"
+        lumiSys = "lumi_13TeV      lnN  "
+        for i in range(self.nMVABins):
+            for d in self.dataSets:
+                lumiSys += "{0: <5} ".format(d[1].lumiSys)
+        print lumiSys
         print "-------------------------------------------------------------------------------------------------------------------------------------------"
         for i in range(self.nMVABins):
             print "ttBkgRateD{0} rateParam sigD{0} bkg_tt {1}:wspace".format(i+1, self.outFile)
@@ -119,25 +157,25 @@ if __name__ == "__main__":
     outputfile = ROOT.TFile.Open("njets_for_Aron.root","RECREATE")
 
     # I hadd my ttbar files into TT.root, and I hadd all other backgrounds into BG_noTT.root
-    bgDataList = [
-        DataSetInfo(basedir, "TT.root",      "TT"),
-        DataSetInfo(basedir, "BG_noTT.root", "other"),
-    ]
+    bgData = {
+        "TT"    : DataSetInfo(basedir=basedir, fileName="TT.root",      label="TT",    processName="bkg_tt",    process="1", rate=False, lumiSys="-"),
+        "other" : DataSetInfo(basedir=basedir, fileName="BG_noTT.root", label="other", processName="bkg_other", process="2", rate=True,  lumiSys="-"),
+    }
 
-    sgDataList = [
-        DataSetInfo(basedir, "stealth_stop_350_SYY.root", "SYY_350"),
-        DataSetInfo(basedir, "stealth_stop_450_SYY.root", "SYY_450"),
-        DataSetInfo(basedir, "stealth_stop_550_SYY.root", "SYY_550"),
-        DataSetInfo(basedir, "stealth_stop_650_SYY.root", "SYY_650"),
-        DataSetInfo(basedir, "stealth_stop_750_SYY.root", "SYY_750"),
-        DataSetInfo(basedir, "stealth_stop_850_SYY.root", "SYY_850"),
-        DataSetInfo(basedir, "rpv_stop_350.root",         "RPV_350"),
-        DataSetInfo(basedir, "rpv_stop_450.root",         "RPV_450"),
-        DataSetInfo(basedir, "rpv_stop_550.root",         "RPV_550"),
-        DataSetInfo(basedir, "rpv_stop_650.root",         "RPV_650"),
-        DataSetInfo(basedir, "rpv_stop_750.root",         "RPV_750"),
-        DataSetInfo(basedir, "rpv_stop_850.root",         "RPV_850"),
-    ]
+    sgData = {
+        "SYY_350" : DataSetInfo(basedir=basedir, fileName="stealth_stop_350_SYY.root", label="SYY_350", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "SYY_450" : DataSetInfo(basedir=basedir, fileName="stealth_stop_450_SYY.root", label="SYY_450", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "SYY_550" : DataSetInfo(basedir=basedir, fileName="stealth_stop_550_SYY.root", label="SYY_550", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "SYY_650" : DataSetInfo(basedir=basedir, fileName="stealth_stop_650_SYY.root", label="SYY_650", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "SYY_750" : DataSetInfo(basedir=basedir, fileName="stealth_stop_750_SYY.root", label="SYY_750", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "SYY_850" : DataSetInfo(basedir=basedir, fileName="stealth_stop_850_SYY.root", label="SYY_850", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "RPV_350" : DataSetInfo(basedir=basedir, fileName="rpv_stop_350.root",         label="RPV_350", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "RPV_450" : DataSetInfo(basedir=basedir, fileName="rpv_stop_450.root",         label="RPV_450", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "RPV_550" : DataSetInfo(basedir=basedir, fileName="rpv_stop_550.root",         label="RPV_550", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "RPV_650" : DataSetInfo(basedir=basedir, fileName="rpv_stop_650.root",         label="RPV_650", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "RPV_750" : DataSetInfo(basedir=basedir, fileName="rpv_stop_750.root",         label="RPV_750", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "RPV_850" : DataSetInfo(basedir=basedir, fileName="rpv_stop_850.root",         label="RPV_850", processName="signal", process="0", rate=True, lumiSys="1.05"),
+    }
 
     #Write all histos to outputfile
     outputfile.cd()
@@ -145,13 +183,13 @@ if __name__ == "__main__":
     for jettype in jettypes:
         basename = "h_njets_" + jettype
         for cut in cutlevels:
-            histos = wp.writeHistos(bgDataList, basename, cut)
-            signalhistos = wp.writeHistos(sgDataList, basename, cut)
-            wp.makePseudoData(histos, signalhistos, sgDataList, jettype, cut)
+            histos = wp.writeHistos(bgData, basename, cut)
+            signalhistos = wp.writeHistos(sgData, basename, cut)
+            wp.makePseudoData(histos, signalhistos, sgData, jettype, cut)
     
     #Close outfile
     outputfile.Close()
     
     #Make data card
-    md = MakeDataCard(nMVABins=4, outFile="multiF_ESM_ws.root", bgDataList=bgDataList, sgDataList=sgDataList)
+    md = MakeDataCard(outFile="multiF_ESM_ws.root", bgData=bgData["TT"], otData=bgData["other"], sgData=sgData["RPV_550"], basename="h_njets_pt30", cutlevels=cutlevels)
     md.printDataCard()
