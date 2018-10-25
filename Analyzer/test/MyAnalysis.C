@@ -1,5 +1,10 @@
 #include "SusyAnaTools/Tools/samples.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
+#include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
+#include "SusyAnaTools/Tools/BTagCorrector.h"
+#include "SusyAnaTools/Tools/PileupWeights.h"
+#include "SusyAnaTools/Tools/MiniTupleMaker.h"
+
 #include "TopTagger/CfgParser/include/TTException.h"
 
 #include "Analyzer/Analyzer/include/AnalyzeBackground.h"
@@ -13,27 +18,22 @@
 #include "Analyzer/Analyzer/include/AnalyzeNjetsMinusOneCSJetReplacement.h"
 #include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
-#include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
 #include "Analyzer/Analyzer/include/MakeMiniTree.h"
-
-#include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
-#include "SusyAnaTools/Tools/BTagCorrector.h"
-#include "SusyAnaTools/Tools/PileupWeights.h"
-#include "SusyAnaTools/Tools/MiniTupleMaker.h"
+#include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 
 #include "Framework/Framework/include/RunTopTagger.h"
-#include "Framework/Framework/include/RunFisher.h"
-#include "Framework/Framework/include/DeepEventShape.h"
-#include "Framework/Framework/include/MakeMVAVariables.h"
 #include "Framework/Framework/include/Muon.h"
 #include "Framework/Framework/include/Electron.h"
+#include "Framework/Framework/include/Photon.h"
 #include "Framework/Framework/include/Jet.h"
 #include "Framework/Framework/include/BJet.h"
-#include "Framework/Framework/include/Photon.h"
-#include "Framework/Framework/include/ScaleFactors.h"
+#include "Framework/Framework/include/RunFisher.h"
 #include "Framework/Framework/include/CommonVariables.h"
+#include "Framework/Framework/include/MakeMVAVariables.h"
 #include "Framework/Framework/include/Baseline.h"
+#include "Framework/Framework/include/DeepEventShape.h"
+#include "Framework/Framework/include/ScaleFactors.h"
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -62,23 +62,24 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
                                     bool isSkim, TFile* outfile, bool isQuiet)
 {
     std::cout << "Initializing..." << std::endl;
-    const int jecOn = 0, jerOn = 0; 
-    
-    if( jecOn * jerOn != 0 || std::fabs(jecOn) > 1 || std::fabs(jerOn) > 1) 
-    {
-        std::cerr<<color("Error: ", "red")
-                 <<"Invalid values of jecOn and jerOn. "
-                 <<"They should be either -1, 0, or 1. "
-                 <<"you cannot have both jet energy corrections and jet energy resolutions on at the same time"<<std::endl;
-        return;
-    }
+    //const int jecOn = 0, jerOn = 0; 
+    //
+    //if( jecOn * jerOn != 0 || std::fabs(jecOn) > 1 || std::fabs(jerOn) > 1) 
+    //{
+    //    std::cerr<<color("Error: ", "red")
+    //             <<"Invalid values of jecOn and jerOn. "
+    //             <<"They should be either -1, 0, or 1. "
+    //             <<"you cannot have both jet energy corrections and jet energy resolutions on at the same time"<<std::endl;
+    //    return;
+    //}
+    //
+    //std::string             myVarSuffix = "";
+    //if      ( jecOn == 1 )  myVarSuffix = "JECup";
+    //else if ( jecOn == -1 ) myVarSuffix = "JECdown";
+    //else if ( jerOn == 1 )  myVarSuffix = "JERup";
+    //else if ( jerOn == -1 ) myVarSuffix = "JERdown";
+    //std::cout<<"myVarSuffix: "<<myVarSuffix<<std::endl;
 
-    std::string                 myVarSuffix = "";
-    if      ( jecOn == 1 )      myVarSuffix = "JECup";
-    else if ( jecOn == -1 )     myVarSuffix = "JECdown";
-    else if ( jerOn == 1 )      myVarSuffix = "JERup";
-    else if ( jerOn == -1 )     myVarSuffix = "JERdown";
-    
     Analyze a;
     for(const AnaSamples::FileSummary& file : vvf)
     {
@@ -102,12 +103,14 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
             RunTopTagger rtt;
             tr.registerFunction(rtt);
         }
+
+        std::string myVarSuffix = "";
         
         Muon muon;
         Electron electron;
+        Photon photon;
         Jet jet(myVarSuffix);
         BJet bjet(myVarSuffix);
-        Photon photon;
         //RunFisher runFisher("v3",myVarSuffix);
         CommonVariables commonVariables(myVarSuffix);
         MakeMVAVariables makeMVAVariables(false, myVarSuffix, true);
@@ -117,9 +120,9 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         // Register classes/functions that add variables on the fly
         tr.registerFunction(muon);
         tr.registerFunction(electron);
+        tr.registerFunction(photon);
         tr.registerFunction(jet);
         tr.registerFunction(bjet);
-        tr.registerFunction(photon);
         //tr.registerFunction(runFisher);
         tr.registerFunction(commonVariables);
         tr.registerFunction(makeMVAVariables);

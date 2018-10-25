@@ -2,6 +2,13 @@
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
 
+#include "Framework/Framework/include/Jet.h"
+#include "Framework/Framework/include/BJet.h"
+#include "Framework/Framework/include/CommonVariables.h"
+#include "Framework/Framework/include/MakeMVAVariables.h"
+#include "Framework/Framework/include/Baseline.h"
+#include "Framework/Framework/include/DeepEventShape.h"
+
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TStyle.h>
@@ -28,7 +35,7 @@ void MakeNJetDists::InitHistos()
     std::vector<std::string> uncertTags  { "central", "up", "down" };
 
     //Histogram with no scale factors applied
-        for( auto& ptTag : ptTags ) 
+    for( auto& ptTag : ptTags ) 
     {
         for( auto& nlepTag : nlepTags ) 
         {
@@ -63,6 +70,24 @@ void MakeNJetDists::InitHistos()
 
 void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
 {
+    std::vector<std::string> myVarSuffixs = {"JECup", "JECdown", "JERup", "JERdown"};
+    for(const auto& myVarSuffix : myVarSuffixs)
+    {
+        Jet jet(myVarSuffix);
+        BJet bjet(myVarSuffix);
+        CommonVariables commonVariables(myVarSuffix);
+        MakeMVAVariables makeMVAVariables(false, myVarSuffix, true);
+        Baseline baseline(myVarSuffix);
+        DeepEventShape deepEventShape("DeepEventShape.cfg", "Info", true, myVarSuffix);
+    
+        tr.registerFunction(jet);
+        tr.registerFunction(bjet);
+        tr.registerFunction(commonVariables);
+        tr.registerFunction(makeMVAVariables);
+        tr.registerFunction(baseline);
+        tr.registerFunction(deepEventShape);
+    }
+
     while( tr.getNextEvent() )
     {
         //------------------------------------
@@ -106,7 +131,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         const auto& deepESMbin3         = tr.getVar<bool>("deepESM_bin3");
         const auto& deepESMbin4         = tr.getVar<bool>("deepESM_bin4");
         std::vector<bool> deepESMbins   = {deepESMbin1, deepESMbin2, deepESMbin3, deepESMbin4};
-
+        
         //-----------------------------------
         //-- Make sure you are running over MC
         //-- Doesn't really make sense to run 
@@ -131,7 +156,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         double Lumi = 35900;
         const auto& Weight = tr.getVar<double>("Weight");
         eventweight        = Lumi*Weight;
-
+        
         //-----------------------------------
         //-- Fill Histograms Below
         //-----------------------------------
@@ -144,11 +169,11 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
             my_histos["h_njets_pt45_0l_qcd_up"]->Fill( NJets_pt45, eventweight*scaleWeightUp );
             my_histos["h_njets_pt45_0l_pdf_up"]->Fill( NJets_pt45, eventweight*PDFWeightUp );
             my_histos["h_njets_pt45_0l_pup_up"]->Fill( NJets_pt45, eventweight*PileupWeightUp );
-
+        
             my_histos["h_njets_pt45_0l_qcd_down"]->Fill( NJets_pt45, eventweight*scaleWeightDown );
             my_histos["h_njets_pt45_0l_pdf_down"]->Fill( NJets_pt45, eventweight*PDFWeightDown );
             my_histos["h_njets_pt45_0l_pup_down"]->Fill( NJets_pt45, eventweight*PileupWeightDown );
-
+        
             for(int index = 0; index < deepESMbins.size(); index++)
             {
                 if( deepESMbins.at(index) ) 
@@ -161,14 +186,14 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
                     my_histos["h_njets_pt45_0l_deepESMbin"+std::to_string(index+1)+"_qcd_up"]->Fill( NJets_pt45, eventweight*scaleWeightUp );
                     my_histos["h_njets_pt45_0l_deepESMbin"+std::to_string(index+1)+"_pdf_up"]->Fill( NJets_pt45, eventweight*PDFWeightUp );
                     my_histos["h_njets_pt45_0l_deepESMbin"+std::to_string(index+1)+"_pup_up"]->Fill( NJets_pt45, eventweight*PileupWeightUp );
-    
+        
                     my_histos["h_njets_pt45_0l_deepESMbin"+std::to_string(index+1)+"_qcd_down"]->Fill( NJets_pt45, eventweight*scaleWeightDown );
                     my_histos["h_njets_pt45_0l_deepESMbin"+std::to_string(index+1)+"_pdf_down"]->Fill( NJets_pt45, eventweight*PDFWeightDown );
                     my_histos["h_njets_pt45_0l_deepESMbin"+std::to_string(index+1)+"_pup_down"]->Fill( NJets_pt45, eventweight*PileupWeightDown );
                 }
             }
         }
-
+        
         double lepWeight, lepWeightUp, lepWeightDown = 0.0;
         if( NGoodElectrons == 1 ) 
         {
@@ -182,7 +207,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
             lepWeightUp     = muLepWeightUp;
             lepWeightDown   = muLepWeightDown;
         }
-
+        
         if( passBaseline1l ) 
         {            
             my_histos["h_njets_pt30_1l"]->Fill( NJets_pt30, eventweight );
@@ -202,7 +227,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
             my_histos["h_njets_pt30_1l_pdf_down"]->Fill( NJets_pt30, eventweight*PDFWeightDown );
             my_histos["h_njets_pt30_1l_pup_down"]->Fill( NJets_pt30, eventweight*PileupWeightDown );
             my_histos["h_njets_pt30_1l_lep_down"]->Fill( NJets_pt30, eventweight*lepWeightDown );
-
+        
             for(int index = 0; index < deepESMbins.size(); index++)
             {
                 if( deepESMbins.at(index) )
