@@ -2,6 +2,13 @@
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
 
+#include "Framework/Framework/include/Jet.h"
+#include "Framework/Framework/include/BJet.h"
+#include "Framework/Framework/include/CommonVariables.h"
+#include "Framework/Framework/include/MakeMVAVariables.h"
+#include "Framework/Framework/include/Baseline.h"
+#include "Framework/Framework/include/DeepEventShape.h"
+
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TStyle.h>
@@ -63,6 +70,22 @@ void MakeNJetDists::InitHistos()
 
 void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
 {
+    std::string myVarSuffix = "JECup";
+
+    //Jet jet(myVarSuffix);
+    //BJet bjet(myVarSuffix);
+    //CommonVariables commonVariables(myVarSuffix);
+    //MakeMVAVariables makeMVAVariables(false, myVarSuffix, true);
+    ////Baseline baseline(myVarSuffix);
+    //DeepEventShape deepEventShape(myVarSuffix);
+    //
+    //tr.registerFunction(jet);
+    //tr.registerFunction(bjet);
+    //tr.registerFunction(commonVariables);
+    //tr.registerFunction(makeMVAVariables);
+    ////tr.registerFunction(baseline);
+    //tr.registerFunction(deepEventShape);
+
     while( tr.getNextEvent() )
     {
         //------------------------------------
