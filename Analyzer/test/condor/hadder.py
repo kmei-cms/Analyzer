@@ -44,7 +44,6 @@ for sampleCollection in scl:
     sl = sc.sampleList(sampleCollection)
     if sampleCollection in datasets:
         directory = sampleCollection
-        rootName = sampleCollection
         files = ""
         print "-----------------------------------------------------------"
         print sampleCollection
@@ -66,5 +65,16 @@ for sampleCollection in scl:
             system(command)
 
 ## Hack to make the BG_noTT.root file
-#print outDir
-#print overwrite
+notTTBar = ["AllSignal", "TT", "TTJets"]
+files = ""
+for sampleCollection in scl:
+    sl = sc.sampleList(sampleCollection)
+    if sampleCollection in datasets:
+        if sampleCollection not in notTTBar: 
+            directory = sampleCollection
+            files += " %s/%s.root " % (outDir, directory)
+command = "hadd %s/BG_noTT.root %s" % (outDir, files)
+print "-----------------------------------------------------------"
+print command
+print "-----------------------------------------------------------"
+system(command)
