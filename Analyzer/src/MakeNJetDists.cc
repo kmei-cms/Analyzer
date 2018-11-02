@@ -100,7 +100,9 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         const auto& filetag             = tr.getVar<std::string>("filetag");
         const auto& passMadHT           = tr.getVar<bool>("passMadHT");
         const auto& passBaseline0l      = tr.getVar<bool>("passBaseline0l_Good");
-        const auto& passBaseline1l      = tr.getVar<bool>("passBaseline1l_Good");
+              auto  passBaseline1l      = tr.getVar<bool>("passBaseline1l_Good");
+        const auto& Mbl                 = tr.getVar<double>("Mbl");
+                    passBaseline1l      = passBaseline1l && 30<Mbl && Mbl<180;
         const auto& NJets_pt30          = tr.getVar<int>("NGoodJets_pt30");
         const auto& NJets_pt45          = tr.getVar<int>("NGoodJets_pt45");
         const auto& NGoodElectrons      = tr.getVar<int>("NGoodElectrons");
