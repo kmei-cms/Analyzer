@@ -69,24 +69,6 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
                                     bool isSkim, TFile* outfile, bool isQuiet)
 {
     std::cout << "Initializing..." << std::endl;
-    //const int jecOn = 0, jerOn = 0; 
-    //
-    //if( jecOn * jerOn != 0 || std::fabs(jecOn) > 1 || std::fabs(jerOn) > 1) 
-    //{
-    //    std::cerr<<color("Error: ", "red")
-    //             <<"Invalid values of jecOn and jerOn. "
-    //             <<"They should be either -1, 0, or 1. "
-    //             <<"you cannot have both jet energy corrections and jet energy resolutions on at the same time"<<std::endl;
-    //    return;
-    //}
-    //
-    //std::string             myVarSuffix = "";
-    //if      ( jecOn == 1 )  myVarSuffix = "JECup";
-    //else if ( jecOn == -1 ) myVarSuffix = "JECdown";
-    //else if ( jerOn == 1 )  myVarSuffix = "JERup";
-    //else if ( jerOn == -1 ) myVarSuffix = "JERdown";
-    //std::cout<<"myVarSuffix: "<<myVarSuffix<<std::endl;
-
     Analyze a;
     for(const AnaSamples::FileSummary& file : vvf)
     {
@@ -110,17 +92,14 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
             RunTopTagger rtt;
             tr.registerFunction(rtt);
         }
-
-        std::string myVarSuffix = "";
-        
         Muon muon;
         Electron electron;
         Photon photon;
-        Jet jet(myVarSuffix);
-        BJet bjet(myVarSuffix);
-        //RunFisher runFisher("v3",myVarSuffix);
-        CommonVariables commonVariables(myVarSuffix);
-        MakeMVAVariables makeMVAVariables(false, myVarSuffix, true);
+        Jet jet;
+        BJet bjet;
+        RunFisher runFisher("v3");
+        CommonVariables commonVariables;
+        MakeMVAVariables makeMVAVariables;
         Baseline baseline;
         DeepEventShape deepEventShape;
 
@@ -130,7 +109,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerFunction(photon);
         tr.registerFunction(jet);
         tr.registerFunction(bjet);
-        //tr.registerFunction(runFisher);
+        tr.registerFunction(runFisher);
         tr.registerFunction(commonVariables);
         tr.registerFunction(makeMVAVariables);
         tr.registerFunction(baseline);
