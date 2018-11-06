@@ -89,8 +89,6 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
         my_2d_histos.emplace("h_njets_fisher_"+mycut.first, std::make_shared<TH2D>(("h_njets_fisher_"+mycut.first).c_str(),("h_njets_fisher_"+mycut.first).c_str(), 15, 0, 15, fB, -0.5, 0.5));
         my_2d_histos.emplace("h_njets_deepESM_"+mycut.first, std::make_shared<TH2D>(("h_njets_deepESM_"+mycut.first).c_str(),("h_njets_deepESM_"+mycut.first).c_str(), 15, 0, 15, fB, 0.0, 1.0));
         my_2d_histos.emplace("h_ht_deepESM_"+mycut.first, std::make_shared<TH2D>(("h_ht_deepESM_"+mycut.first).c_str(),("h_ht_deepESM_"+mycut.first).c_str(), 300, 0, 3000, fB, 0.0, 1.0));
-        my_tp_histos.emplace("hTp_njets_fisher_"+mycut.first, std::make_shared<TProfile>(("hTp_njets_fisher_"+mycut.first).c_str(),("hTp_njets_fisher_"+mycut.first).c_str(), 15, 0, 15, -0.5, 0.5));
-        my_tp_histos.emplace("hTp_njets_deepESM_"+mycut.first, std::make_shared<TProfile>(("hTp_njets_deepESM_"+mycut.first).c_str(),("hTp_njets_deepESM_"+mycut.first).c_str(), 15, 0, 15, 0.0, 1.0));
 
         my_histos.emplace("blind_njets_"+mycut.first, std::make_shared<TH1D>(("blind_njets_"+mycut.first).c_str(),("blind_njets_"+mycut.first).c_str(), 20, 0, 20));
         my_histos.emplace("blind_ntops_"+mycut.first, std::make_shared<TH1D>(("blind_ntops_"+mycut.first).c_str(),("blind_ntops_"+mycut.first).c_str(), 10, 0, 10));
@@ -105,8 +103,6 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
         my_2d_histos.emplace("blind_njets_fisher_"+mycut.first, std::make_shared<TH2D>(("blind_njets_fisher_"+mycut.first).c_str(),("blind_njets_fisher_"+mycut.first).c_str(), 15, 0, 15, fB, -0.5, 0.5));
         my_2d_histos.emplace("blind_njets_deepESM_"+mycut.first, std::make_shared<TH2D>(("blind_njets_deepESM_"+mycut.first).c_str(),("blind_njets_deepESM_"+mycut.first).c_str(), 15, 0, 15, fB, 0.0, 1.0));
         my_2d_histos.emplace("blind_ht_deepESM_"+mycut.first, std::make_shared<TH2D>(("blind_ht_deepESM_"+mycut.first).c_str(),("blind_ht_deepESM_"+mycut.first).c_str(), 300, 0, 3000, fB, 0.0, 1.0));
-        my_tp_histos.emplace("blindTp_njets_fisher_"+mycut.first, std::make_shared<TProfile>(("blindTp_njets_fisher_"+mycut.first).c_str(),("blindTp_njets_fisher_"+mycut.first).c_str(), 15, 0, 15, -0.5, 0.5));
-        my_tp_histos.emplace("blindTp_njets_deepESM_"+mycut.first, std::make_shared<TProfile>(("blindTp_njets_deepESM_"+mycut.first).c_str(),("blindTp_njets_deepESM_"+mycut.first).c_str(), 15, 0, 15, 0.0, 1.0));
     }
 }
 
@@ -460,8 +456,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_2d_histos["h_njets_fisher_"+kv.first]->Fill(NGoodJets_pt30, fisher_val, weight);
                 my_2d_histos["h_njets_deepESM_"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, weight);
                 my_2d_histos["h_ht_deepESM_"+kv.first]->Fill(HT_trigger, deepESM_val, weight);
-                my_tp_histos["hTp_njets_fisher_"+kv.first]->Fill(NGoodJets_pt30, fisher_val, weight);
-                my_tp_histos["hTp_njets_deepESM_"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, weight);
 
                 if ( NGoodJets_pt30 <= 7 )
                 {
@@ -476,8 +470,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                     my_2d_histos["blind_njets_fisher_"+kv.first]->Fill(NGoodJets_pt30, fisher_val, weight);
                     my_2d_histos["blind_njets_deepESM_"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, weight);
                     my_2d_histos["blind_ht_deepESM_"+kv.first]->Fill(HT_trigger, deepESM_val, weight);
-                    my_tp_histos["blindTp_njets_fisher_"+kv.first]->Fill(NGoodJets_pt30, fisher_val, weight);
-                    my_tp_histos["blindTp_njets_deepESM_"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, weight);
                 }
             }
         }
