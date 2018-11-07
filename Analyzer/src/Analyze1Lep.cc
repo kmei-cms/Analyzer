@@ -84,10 +84,13 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
         my_histos.emplace("h_deepESM_"+mycut.first,std::make_shared<TH1D>(("h_deepESM_"+mycut.first).c_str(),("h_deepESM_"+mycut.first).c_str(), fB, 0.0, 1.0));
         my_histos.emplace("h_ht_"+mycut.first,std::make_shared<TH1D>(("h_ht_"+mycut.first).c_str(),("h_ht_"+mycut.first).c_str(), 300, 0.0, 3000));
         my_histos.emplace("h_mbl_"+mycut.first,std::make_shared<TH1D>(("h_mbl_"+mycut.first).c_str(),("h_mbl_"+mycut.first).c_str(), 300, 0.0, 300));
+        my_histos.emplace("h_lPt_"+mycut.first,std::make_shared<TH1D>(("h_lPt_"+mycut.first).c_str(),("h_lPt_"+mycut.first).c_str(), 200, 0.0, 2000));
+        my_histos.emplace("h_lEta_"+mycut.first,std::make_shared<TH1D>(("h_lEta_"+mycut.first).c_str(),("h_lEta_"+mycut.first).c_str(), 100, -6.0, 6.0));
 
         my_2d_histos.emplace("h_njets_bdt_"+mycut.first, std::make_shared<TH2D>(("h_njets_bdt_"+mycut.first).c_str(),("h_njets_bdt_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
         my_2d_histos.emplace("h_njets_fisher_"+mycut.first, std::make_shared<TH2D>(("h_njets_fisher_"+mycut.first).c_str(),("h_njets_fisher_"+mycut.first).c_str(), 15, 0, 15, fB, -0.5, 0.5));
         my_2d_histos.emplace("h_njets_deepESM_"+mycut.first, std::make_shared<TH2D>(("h_njets_deepESM_"+mycut.first).c_str(),("h_njets_deepESM_"+mycut.first).c_str(), 15, 0, 15, fB, 0.0, 1.0));
+        my_2d_histos.emplace("h_njets_mbl_"+mycut.first, std::make_shared<TH2D>(("h_njets_mbl_"+mycut.first).c_str(),("h_njets_mbl_"+mycut.first).c_str(), 15, 0, 15, 300, 0, 300));
         my_2d_histos.emplace("h_ht_deepESM_"+mycut.first, std::make_shared<TH2D>(("h_ht_deepESM_"+mycut.first).c_str(),("h_ht_deepESM_"+mycut.first).c_str(), 300, 0, 3000, fB, 0.0, 1.0));
 
         my_histos.emplace("blind_njets_"+mycut.first, std::make_shared<TH1D>(("blind_njets_"+mycut.first).c_str(),("blind_njets_"+mycut.first).c_str(), 20, 0, 20));
@@ -98,10 +101,13 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap)
         my_histos.emplace("blind_deepESM_"+mycut.first,std::make_shared<TH1D>(("blind_deepESM_"+mycut.first).c_str(),("blind_deepESM_"+mycut.first).c_str(), fB, 0.0, 1.0));
         my_histos.emplace("blind_ht_"+mycut.first,std::make_shared<TH1D>(("blind_ht_"+mycut.first).c_str(),("blind_ht_"+mycut.first).c_str(), 300, 0.0, 3000));
         my_histos.emplace("blind_mbl_"+mycut.first,std::make_shared<TH1D>(("blind_mbl_"+mycut.first).c_str(),("blind_mbl_"+mycut.first).c_str(), 300, 0.0, 300));
+        my_histos.emplace("blind_lPt_"+mycut.first,std::make_shared<TH1D>(("blind_lPt_"+mycut.first).c_str(),("blind_lPt_"+mycut.first).c_str(), 200, 0.0, 2000));
+        my_histos.emplace("blind_lEta_"+mycut.first,std::make_shared<TH1D>(("blind_lEta_"+mycut.first).c_str(),("blind_lEta_"+mycut.first).c_str(), 100, -6.0, 6.0));
     
         my_2d_histos.emplace("blind_njets_bdt_"+mycut.first, std::make_shared<TH2D>(("blind_njets_bdt_"+mycut.first).c_str(),("blind_njets_bdt_"+mycut.first).c_str(), 15, 0, 15, 40, -0.5, 0.5));
         my_2d_histos.emplace("blind_njets_fisher_"+mycut.first, std::make_shared<TH2D>(("blind_njets_fisher_"+mycut.first).c_str(),("blind_njets_fisher_"+mycut.first).c_str(), 15, 0, 15, fB, -0.5, 0.5));
         my_2d_histos.emplace("blind_njets_deepESM_"+mycut.first, std::make_shared<TH2D>(("blind_njets_deepESM_"+mycut.first).c_str(),("blind_njets_deepESM_"+mycut.first).c_str(), 15, 0, 15, fB, 0.0, 1.0));
+        my_2d_histos.emplace("blind_njets_mbl_"+mycut.first, std::make_shared<TH2D>(("blind_njets_mbl_"+mycut.first).c_str(),("blind_njets_mbl_"+mycut.first).c_str(), 15, 0, 15, 300, 0, 300));
         my_2d_histos.emplace("blind_ht_deepESM_"+mycut.first, std::make_shared<TH2D>(("blind_ht_deepESM_"+mycut.first).c_str(),("blind_ht_deepESM_"+mycut.first).c_str(), 300, 0, 3000, fB, 0.0, 1.0));
     }
 }
@@ -178,12 +184,10 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 leptonweight = (GoodLeptons[0].first == "e") ? eleLepWeight : muLepWeight;
             }
 
-            const auto& scaleWeight          = tr.getVar<double>("scaleWeightNom");
-            const auto& PDFWeight            = tr.getVar<double>("PDFweightNom");
             const auto& PileupWeight         = tr.getVar<double>("_PUweightFactor");
             const auto& bTagWeight           = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
 
-            weight *= eventweight*leptonweight*scaleWeight*PDFWeight*PileupWeight*bTagWeight;
+            weight *= eventweight*leptonweight*PileupWeight*bTagWeight;
         }
 
         // -------------------------------
@@ -194,6 +198,13 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         bool pass_njet_pt30       = NGoodJets_pt30 >= 7;
         bool pass_njet_pt30_1btag = NGoodBJets_pt30 >= 1;
         bool pass_njet_pt30_2btag = NGoodBJets_pt30 >= 2;
+        bool pass_1e              = false;
+        bool pass_1m              = false;
+        if(pass_1l)
+        { 
+            if(GoodLeptons[0].first == "e") pass_1e = true;
+            if(GoodLeptons[0].first == "m") pass_1m = true;
+        }
 
         // ---------------------------
         // --    1 Top selection
@@ -286,6 +297,8 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"1l_ge7j_ge2b"                   , pass_1l && pass_njet_pt30 && pass_njet_pt30_2btag && JetID               },
             {"1l_ge7j_ge1b_noMbl"             , pass_1l && pass_njet_pt30 && pass_njet_pt30_1btag && JetID               },
             {"1l_ge7j_ge1b"                   , passBaseline1l_Good                                                      },                         
+            {"1e_ge7j_ge1b"                   , passBaseline1l_Good && pass_1e                                           },                         
+            {"1m_ge7j_ge1b"                   , passBaseline1l_Good && pass_1m                                           },                         
             {"1l_ge7j_ge1b_d1"                , passBaseline1l_Good && deepESM_bin1                                      },                         
             {"1l_ge7j_ge1b_d2"                , passBaseline1l_Good && deepESM_bin2                                      },                         
             {"1l_ge7j_ge1b_d3"                , passBaseline1l_Good && deepESM_bin3                                      },                         
@@ -452,9 +465,15 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_histos["h_deepESM_" +kv.first]->Fill(deepESM_val, weight);
                 my_histos["h_ht_"      +kv.first]->Fill(HT_trigger, weight);
                 my_histos["h_mbl_"     +kv.first]->Fill(Mbl, weight);
+                for(const auto l : GoodLeptons)
+                {
+                    my_histos["h_lPt_"+kv.first]->Fill(l.second.Pt(), weight);
+                    my_histos["h_lEta_"+kv.first]->Fill(l.second.Eta(), weight);
+                }
 
                 my_2d_histos["h_njets_fisher_"+kv.first]->Fill(NGoodJets_pt30, fisher_val, weight);
                 my_2d_histos["h_njets_deepESM_"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, weight);
+                my_2d_histos["h_njets_mbl_"+kv.first]->Fill(NGoodJets_pt30, Mbl, weight);
                 my_2d_histos["h_ht_deepESM_"+kv.first]->Fill(HT_trigger, deepESM_val, weight);
 
                 if ( NGoodJets_pt30 <= 7 )
@@ -466,9 +485,15 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                     my_histos["blind_deepESM_" +kv.first]->Fill(deepESM_val, weight);
                     my_histos["blind_ht_"      +kv.first]->Fill(HT_trigger, weight);
                     my_histos["blind_mbl_"     +kv.first]->Fill(Mbl, weight);
+                    for(const auto l : GoodLeptons)
+                    {
+                        my_histos["blind_lPt_"+kv.first]->Fill(l.second.Pt(), weight);
+                        my_histos["blind_lEta_"+kv.first]->Fill(l.second.Eta(), weight);
+                    }
                 
                     my_2d_histos["blind_njets_fisher_"+kv.first]->Fill(NGoodJets_pt30, fisher_val, weight);
                     my_2d_histos["blind_njets_deepESM_"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, weight);
+                    my_2d_histos["blind_njets_mbl_"+kv.first]->Fill(NGoodJets_pt30, Mbl, weight);
                     my_2d_histos["blind_ht_deepESM_"+kv.first]->Fill(HT_trigger, deepESM_val, weight);
                 }
             }
