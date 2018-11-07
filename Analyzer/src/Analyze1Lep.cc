@@ -407,24 +407,32 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         };
 
         std::vector<TH1DInfo> histInfos = {
-            {    "h_njets",    20,   0.0,   20.0},
-            {"blind_njets",    20,   0.0,   20.0},
-            {    "h_ntops",    10,   0.0,   10.0},
-            {"blind_ntops",    10,   0.0,   10.0},
-            {    "h_nb",       10,   0.0,   10.0},
-            {"blind_nb",       10,   0.0,   10.0},
-            {    "h_fisher",  200,  -0.5,    0.5},
-            {"blind_fisher",  200,  -0.5,    0.5},
-            {    "h_deepESM", 200,   0.0,    1.0},
-            {"blind_deepESM", 200,   0.0,    1.0},
-            {    "h_ht",      300,   0.0, 3000.0},
-            {"blind_ht",      300,   0.0, 3000.0},
-            {    "h_mbl",     300,   0.0,  300.0},
-            {"blind_mbl",     300,   0.0,  300.0},
-            {    "h_lPt",     200,   0.0, 2000.0},
-            {"blind_lPt",     200,   0.0, 2000.0},
-            {    "h_lEta",    100,  -6.0,    6.0},
-            {"blind_lEta",    100,  -6.0,    6.0},
+            {    "h_njets",         20,   0.0,   20.0},
+            {"blind_njets",         20,   0.0,   20.0},
+            {    "h_ntops",         10,   0.0,   10.0},
+            {"blind_ntops",         10,   0.0,   10.0},
+            {    "h_nb",            10,   0.0,   10.0},
+            {"blind_nb",            10,   0.0,   10.0},
+            {    "h_fisher",       200,  -0.5,    0.5},
+            {"blind_fisher",       200,  -0.5,    0.5},
+            {    "h_deepESM",      200,   0.0,    1.0},
+            {"blind_deepESM",      200,   0.0,    1.0},
+            {    "h_ht",           300,   0.0, 3000.0},
+            {"blind_ht",           300,   0.0, 3000.0},
+            {    "h_mbl",          300,   0.0,  300.0},
+            {"blind_mbl",          300,   0.0,  300.0},
+            {    "h_lPt",          200,   0.0, 2000.0},
+            {"blind_lPt",          200,   0.0, 2000.0},
+            {    "h_lEta",         100,  -6.0,    6.0},
+            {"blind_lEta",         100,  -6.0,    6.0},
+            {    "h_weight",       100,  -5.0,    5.0},
+            {"blind_weight",       100,  -5.0,    5.0},
+            {    "h_leptonweight", 100,  -5.0,    5.0},
+            {"blind_leptonweight", 100,  -5.0,    5.0},
+            {    "h_PileupWeight", 100,  -5.0,    5.0},
+            {"blind_PileupWeight", 100,  -5.0,    5.0},
+            {    "h_bTagWeight",   100,  -5.0,    5.0},
+            {"blind_bTagWeight",   100,  -5.0,    5.0},
         };
 
         std::vector<TH2DInfo> hist2DInfos = {
@@ -452,13 +460,17 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         {
             if(kv.second)
             {
-                my_histos["h_njets"   +kv.first]->Fill(NGoodJets_pt30, weight);
-                my_histos["h_ntops"   +kv.first]->Fill(ntops, weight);
-                my_histos["h_nb"      +kv.first]->Fill(NGoodBJets_pt30, weight);
-                my_histos["h_fisher"  +kv.first]->Fill(fisher_val, weight);
-                my_histos["h_deepESM" +kv.first]->Fill(deepESM_val, weight);
-                my_histos["h_ht"      +kv.first]->Fill(HT_trigger, weight);
-                my_histos["h_mbl"     +kv.first]->Fill(Mbl, weight);
+                my_histos["h_njets"         +kv.first]->Fill(NGoodJets_pt30, weight);
+                my_histos["h_ntops"         +kv.first]->Fill(ntops, weight);
+                my_histos["h_nb"            +kv.first]->Fill(NGoodBJets_pt30, weight);
+                my_histos["h_fisher"        +kv.first]->Fill(fisher_val, weight);
+                my_histos["h_deepESM"       +kv.first]->Fill(deepESM_val, weight);
+                my_histos["h_ht"            +kv.first]->Fill(HT_trigger, weight);
+                my_histos["h_mbl"           +kv.first]->Fill(Mbl, weight);
+                my_histos["h_weight"        +kv.first]->Fill(weight, weight);
+                my_histos["h_leptonweight"  +kv.first]->Fill(leptonweight, weight);
+                my_histos["h_PileupWeight"  +kv.first]->Fill(PileupWeight, weight);
+                my_histos["h_bTagWeight"    +kv.first]->Fill(bTagWeight, weight);
                 for(const auto l : GoodLeptons)
                 {
                     my_histos["h_lPt"+kv.first]->Fill(l.second.Pt(), weight);
@@ -471,13 +483,17 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
 
                 if ( NGoodJets_pt30 <= 7 )
                 {
-                    my_histos["blind_njets"   +kv.first]->Fill(NGoodJets_pt30, weight);
-                    my_histos["blind_ntops"   +kv.first]->Fill(ntops, weight);
-                    my_histos["blind_nb"      +kv.first]->Fill(NGoodBJets_pt30, weight);
-                    my_histos["blind_fisher"  +kv.first]->Fill(fisher_val, weight);
-                    my_histos["blind_deepESM" +kv.first]->Fill(deepESM_val, weight);
-                    my_histos["blind_ht"      +kv.first]->Fill(HT_trigger, weight);
-                    my_histos["blind_mbl"     +kv.first]->Fill(Mbl, weight);
+                    my_histos["blind_njets"         +kv.first]->Fill(NGoodJets_pt30, weight);
+                    my_histos["blind_ntops"         +kv.first]->Fill(ntops, weight);
+                    my_histos["blind_nb"            +kv.first]->Fill(NGoodBJets_pt30, weight);
+                    my_histos["blind_fisher"        +kv.first]->Fill(fisher_val, weight);
+                    my_histos["blind_deepESM"       +kv.first]->Fill(deepESM_val, weight);
+                    my_histos["blind_ht"            +kv.first]->Fill(HT_trigger, weight);
+                    my_histos["blind_mbl"           +kv.first]->Fill(Mbl, weight);
+                    my_histos["blind_weight"        +kv.first]->Fill(weight, weight);
+                    my_histos["blind_leptonweight"  +kv.first]->Fill(leptonweight, weight);
+                    my_histos["blind_PileupWeight"  +kv.first]->Fill(PileupWeight, weight);
+                    my_histos["blind_bTagWeight"    +kv.first]->Fill(bTagWeight, weight);
                     for(const auto l : GoodLeptons)
                     {
                         my_histos["blind_lPt"+kv.first]->Fill(l.second.Pt(), weight);
