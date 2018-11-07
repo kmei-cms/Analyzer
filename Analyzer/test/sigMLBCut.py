@@ -20,9 +20,9 @@ def main():
     histoName = "h_mbl_1l_ge7j_ge1b_noMbl"
 
     bgData = {
-        "TT"              : DataSetInfo(path=path, filename="TT.root",              sys=0.1, dataType="Background"),
+        "TT"              : DataSetInfo(path=path, filename="TT.root",              sys=0.3, dataType="Background"),
         #"TTJets"          : DataSetInfo(path=path, filename="TTJets.root",          sys=0.3, dataType="Background"),
-        "QCD"             : DataSetInfo(path=path, filename="QCD.root",             sys=0.5, dataType="Background"),
+        "QCD"             : DataSetInfo(path=path, filename="QCD.root",             sys=1.0, dataType="Background"),
         #"DYJetsToLL_M-50" : DataSetInfo(path=path, filename="DYJetsToLL_M-50.root", sys=1.0, dataType="Background"),
         #"Rare"            : DataSetInfo(path=path, filename="Rare.root",            sys=1.0, dataType="Background"),
         #"Diboson"         : DataSetInfo(path=path, filename="Diboson.root",         sys=1.0, dataType="Background"),
@@ -68,7 +68,8 @@ def main():
                         sigma2 += n + sys
 
                     # Calculate and fill sig.
-                    sig = nSg/math.sqrt(sigma2)
+                    sig = 0.0
+                    if(sigma2 != 0): sig = nSg/math.sqrt(sigma2)
                     sig2DHisto.SetBinContent(lowBin, highBin, sig)
 
         # Make the plot nice
