@@ -35,11 +35,11 @@ def main():
 
     sgData = {
         "rpv_stop_350" : DataSetInfo(path=path, filename="rpv_stop_350.root", sys=-1.0, dataType="Signal"),
-        #"rpv_stop_450" : DataSetInfo(path=path, filename="rpv_stop_450.root", sys=-1.0, dataType="Signal"),
-        #"rpv_stop_550" : DataSetInfo(path=path, filename="rpv_stop_550.root", sys=-1.0, dataType="Signal"),
-        #"rpv_stop_650" : DataSetInfo(path=path, filename="rpv_stop_650.root", sys=-1.0, dataType="Signal"),
-        #"rpv_stop_750" : DataSetInfo(path=path, filename="rpv_stop_750.root", sys=-1.0, dataType="Signal"),
-        #"rpv_stop_850" : DataSetInfo(path=path, filename="rpv_stop_850.root", sys=-1.0, dataType="Signal"),
+        "rpv_stop_450" : DataSetInfo(path=path, filename="rpv_stop_450.root", sys=-1.0, dataType="Signal"),
+        "rpv_stop_550" : DataSetInfo(path=path, filename="rpv_stop_550.root", sys=-1.0, dataType="Signal"),
+        "rpv_stop_650" : DataSetInfo(path=path, filename="rpv_stop_650.root", sys=-1.0, dataType="Signal"),
+        "rpv_stop_750" : DataSetInfo(path=path, filename="rpv_stop_750.root", sys=-1.0, dataType="Signal"),
+        "rpv_stop_850" : DataSetInfo(path=path, filename="rpv_stop_850.root", sys=-1.0, dataType="Signal"),
     }
 
     # Loop over all background and get their histograms
@@ -60,20 +60,21 @@ def main():
         sigDic = {}
             
         # Find all possible MLB cut values
-        for nJetBin in range(6, hSg.GetNbinsX()+1):            
-            c2 = ROOT.TCanvas( "c", "c", 0, 0, 800, 800)
-            ROOT.gStyle.SetStatY(0.5)
-            ROOT.gStyle.SetStatX(0.85)
-            ROOT.gStyle.SetPalette(ROOT.kRainBow)
-            ROOT.gPad.SetLeftMargin(0.12)
-            ROOT.gPad.SetRightMargin(0.15)
-            ROOT.gPad.SetTopMargin(0.08)
-            ROOT.gPad.SetBottomMargin(0.12)
-            ROOT.gPad.SetTicks(1,1)
-            sig2DHisto = ROOT.TH2D(key+"hist"+str(nJetBin),key+"hist"+str(nJetBin), nBins, low, high, nBins, low, high)
-            for lowBin in range(1, nBins+1):       
-                for highBin in range(nBins+1):
-                    if(lowBin < highBin):
+        c1 = ROOT.TCanvas( "c", "c", 0, 0, 800, 800)
+        ROOT.gStyle.SetStatY(0.5)
+        ROOT.gStyle.SetStatX(0.85)
+        ROOT.gStyle.SetPalette(ROOT.kRainBow)
+        ROOT.gPad.SetLeftMargin(0.12)
+        ROOT.gPad.SetRightMargin(0.15)
+        ROOT.gPad.SetTopMargin(0.08)
+        ROOT.gPad.SetBottomMargin(0.12)
+        ROOT.gPad.SetTicks(1,1)
+        sig2DHisto = ROOT.TH2D(key+"hist",key+"hist", nBins, low, high, nBins, low, high)        
+        for lowBin in range(1, nBins+1):       
+            for highBin in range(nBins+1):
+                if(lowBin < highBin):
+                    sigTot2 = 0.0
+                    for nJetBin in range(6, hSg.GetNbinsX()+1):            
                         nSg = hSg.Integral(nJetBin, nJetBin, lowBin, highBin)
                         
                         # Loop over all background histos and calculate sigma
@@ -86,18 +87,17 @@ def main():
                         # Calculate and fill sig.
                         sig = 0.0
                         if(sigma2 != 0): sig = nSg/math.sqrt(sigma2)
-                        sig2DHisto.SetBinContent(lowBin, highBin, sig)
-                        #print lowBin, highBin, nJetBin
-                        #sigDic[lowBin] = {highBin : {nJetBin : sig}}
-                        #sigDic[lowBin,highBin,nJetBin] = sig
+                        sigTot2 += sig**2
 
-            # Make the plot nice
-            sig2DHisto.SetTitle(key+" nJetBin "+str(nJetBin)+" Significance")
-            sig2DHisto.GetXaxis().SetTitle("Lower Cut [GeV]")
-            sig2DHisto.GetYaxis().SetTitle("Higher Cut [GeV]")
-            sig2DHisto.Draw("colz")
-            c2.SaveAs(key+"_sig_nJetBin"+str(nJetBin)+".png")
-            del c2                
+                    sig2DHisto.SetBinContent(lowBin, highBin, math.sqrt(sigTot2))
+
+        # Make the plot nice
+        sig2DHisto.SetTitle(key+" Significance")
+        sig2DHisto.GetXaxis().SetTitle("Lower Cut [GeV]")
+        sig2DHisto.GetYaxis().SetTitle("Higher Cut [GeV]")
+        sig2DHisto.Draw("colz")
+        c1.SaveAs(key+"_sig.png")
+        del c1                
 
 if __name__ == '__main__':
     main()
