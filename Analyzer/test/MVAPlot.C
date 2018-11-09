@@ -72,7 +72,9 @@ void MVAPlot()
     //std::string path = "deepESM_GRtrue_1Layer_24Vars_v2";
     //std::string path = "deepESM_GRtrue_1Layer_24Vars_10inclusive";
     //std::string path = "deepESM_GRtrue_3Layer_28Vars";
-    std::string path = "deepESM_MyCodeTrue_3Layer_28Vars";
+    //std::string path = "deepESM_MyCodeTrue_3Layer_28Vars";
+    //std::string path = "owenCode_inputsvsNJet";
+    std::string path = "deepESM_perNJet_1Layer";
 
     std::vector<histInfo> bgEntries = {
         //{"DYJetsToLL_M-50", "condor/output-files/" + path + "/DYJetsToLL_M-50/DYJetsToLL_M-50.root", "hist", kBlack      },        
@@ -81,8 +83,9 @@ void MVAPlot()
         //{"WJetsToLNu",      "condor/output-files/" + path + "/WJetsToLNu/WJetsToLNu.root",           "hist", kYellow + 1 },
         //{"ST",              "condor/output-files/" + path + "/ST/ST.root",                           "hist", kRed + 1    },
         //{"QCD",             "condor/output-files/" + path + "/QCD/QCD.root",                         "hist", kGreen + 1  },
-        {"TT",        "condor/output-files/" + path + "/TT/TT.root",                           "hist", kBlue - 7   },
-        {"Data_SingleLepton" , "condor/output-files/" + path + "/Data_SingleLepton/Data_SingleLepton.root", "PEX0", kBlack},
+        //{"TT",        "condor/output-files/" + path + "/TT/TT.root",                           "hist", kBlue - 7   },
+        {"TT",        "condor/output-files/" + path + "/TTJets/TTJets.root",                           "hist", kBlue - 7   },
+        //{"Data_SingleLepton" , "condor/output-files/" + path + "/Data_SingleLepton/Data_SingleLepton.root", "PEX0", kBlack},
     };
 
     //vector summarizing signal histograms to include in the plot
@@ -158,62 +161,67 @@ void MVAPlot()
     //std::vector<std::string> variables = {"deepESM", "fisher", "BestComboMass"};
     //std::vector<std::string> variables = {"njets_deepESM", "njets_fisher"};
     //std::vector<std::string> variables = {
-    //    "Jet_cm_pt_1_deepESM", "Jet_cm_pt_2_deepESM", "Jet_cm_pt_3_deepESM", "Jet_cm_pt_4_deepESM", "Jet_cm_pt_5_deepESM", "Jet_cm_pt_6_deepESM", "Jet_cm_pt_7_deepESM",
-    //    "Jet_cm_eta_1_deepESM", "Jet_cm_eta_2_deepESM", "Jet_cm_eta_3_deepESM", "Jet_cm_eta_4_deepESM", "Jet_cm_eta_5_deepESM", "Jet_cm_eta_6_deepESM", "Jet_cm_eta_7_deepESM",
-    //    "Jet_cm_phi_1_deepESM", "Jet_cm_phi_2_deepESM", "Jet_cm_phi_3_deepESM", "Jet_cm_phi_4_deepESM", "Jet_cm_phi_5_deepESM", "Jet_cm_phi_6_deepESM", "Jet_cm_phi_7_deepESM",
-    //    "Jet_cm_m_1_deepESM", "Jet_cm_m_2_deepESM", "Jet_cm_m_3_deepESM", "Jet_cm_m_4_deepESM", "Jet_cm_m_5_deepESM", "Jet_cm_m_6_deepESM", "Jet_cm_m_7_deepESM",
+    //    //"Jet_cm_pt_1_deepESM", "Jet_cm_pt_2_deepESM", "Jet_cm_pt_3_deepESM", "Jet_cm_pt_4_deepESM", "Jet_cm_pt_5_deepESM", "Jet_cm_pt_6_deepESM", "Jet_cm_pt_7_deepESM",
+    //    //"Jet_cm_eta_1_deepESM", "Jet_cm_eta_2_deepESM", "Jet_cm_eta_3_deepESM", "Jet_cm_eta_4_deepESM", "Jet_cm_eta_5_deepESM", "Jet_cm_eta_6_deepESM", "Jet_cm_eta_7_deepESM",
+    //    //"Jet_cm_phi_1_deepESM", "Jet_cm_phi_2_deepESM", "Jet_cm_phi_3_deepESM", "Jet_cm_phi_4_deepESM", "Jet_cm_phi_5_deepESM", "Jet_cm_phi_6_deepESM", "Jet_cm_phi_7_deepESM",
+    //    //"Jet_cm_m_1_deepESM", "Jet_cm_m_2_deepESM", "Jet_cm_m_3_deepESM", "Jet_cm_m_4_deepESM", "Jet_cm_m_5_deepESM", "Jet_cm_m_6_deepESM", "Jet_cm_m_7_deepESM",
+    //
+    //    "Jet_cm_pt_1_njets", "Jet_cm_pt_2_njets", "Jet_cm_pt_3_njets", "Jet_cm_pt_4_njets", "Jet_cm_pt_5_njets", "Jet_cm_pt_6_njets", "Jet_cm_pt_7_njets",
+    //    "Jet_cm_eta_1_njets", "Jet_cm_eta_2_njets", "Jet_cm_eta_3_njets", "Jet_cm_eta_4_njets", "Jet_cm_eta_5_njets", "Jet_cm_eta_6_njets", "Jet_cm_eta_7_njets",
+    //    "Jet_cm_phi_1_njets", "Jet_cm_phi_2_njets", "Jet_cm_phi_3_njets", "Jet_cm_phi_4_njets", "Jet_cm_phi_5_njets", "Jet_cm_phi_6_njets", "Jet_cm_phi_7_njets",
+    //    "Jet_cm_m_1_njets", "Jet_cm_m_2_njets", "Jet_cm_m_3_njets", "Jet_cm_m_4_njets", "Jet_cm_m_5_njets", "Jet_cm_m_6_njets", "Jet_cm_m_7_njets",
     //};
-    std::vector<std::string> variables = {
-        "Jet_cm_pt_1", "Jet_cm_pt_2", "Jet_cm_pt_3", "Jet_cm_pt_4", "Jet_cm_pt_5", "Jet_cm_pt_6", "Jet_cm_pt_7",
-        "Jet_cm_eta_1", "Jet_cm_eta_2", "Jet_cm_eta_3", "Jet_cm_eta_4", "Jet_cm_eta_5", "Jet_cm_eta_6", "Jet_cm_eta_7",
-        "Jet_cm_phi_1", "Jet_cm_phi_2", "Jet_cm_phi_3", "Jet_cm_phi_4", "Jet_cm_phi_5", "Jet_cm_phi_6", "Jet_cm_phi_7",
-        "Jet_cm_m_1", "Jet_cm_m_2", "Jet_cm_m_3", "Jet_cm_m_4", "Jet_cm_m_5", "Jet_cm_m_6", "Jet_cm_m_7",
-    
-        "Jet_pt_1", "Jet_pt_2", "Jet_pt_3", "Jet_pt_4", "Jet_pt_5", "Jet_pt_6", "Jet_pt_7",
-        "Jet_eta_1", "Jet_eta_2", "Jet_eta_3", "Jet_eta_4", "Jet_eta_5", "Jet_eta_6", "Jet_eta_7",
-        "Jet_phi_1", "Jet_phi_2", "Jet_phi_3", "Jet_phi_4", "Jet_phi_5", "Jet_phi_6", "Jet_phi_7",
-        "Jet_m_1", "Jet_m_2", "Jet_m_3", "Jet_m_4", "Jet_m_5", "Jet_m_6", "Jet_m_7",
-    };
-    //std::vector<std::string> variables = {"deepESM"};
+    //std::vector<std::string> variables = {
+    //    "Jet_cm_pt_1", "Jet_cm_pt_2", "Jet_cm_pt_3", "Jet_cm_pt_4", "Jet_cm_pt_5", "Jet_cm_pt_6", "Jet_cm_pt_7",
+    //    "Jet_cm_eta_1", "Jet_cm_eta_2", "Jet_cm_eta_3", "Jet_cm_eta_4", "Jet_cm_eta_5", "Jet_cm_eta_6", "Jet_cm_eta_7",
+    //    "Jet_cm_phi_1", "Jet_cm_phi_2", "Jet_cm_phi_3", "Jet_cm_phi_4", "Jet_cm_phi_5", "Jet_cm_phi_6", "Jet_cm_phi_7",
+    //    "Jet_cm_m_1", "Jet_cm_m_2", "Jet_cm_m_3", "Jet_cm_m_4", "Jet_cm_m_5", "Jet_cm_m_6", "Jet_cm_m_7",
+    //
+    //    "Jet_pt_1", "Jet_pt_2", "Jet_pt_3", "Jet_pt_4", "Jet_pt_5", "Jet_pt_6", "Jet_pt_7",
+    //    "Jet_eta_1", "Jet_eta_2", "Jet_eta_3", "Jet_eta_4", "Jet_eta_5", "Jet_eta_6", "Jet_eta_7",
+    //    "Jet_phi_1", "Jet_phi_2", "Jet_phi_3", "Jet_phi_4", "Jet_phi_5", "Jet_phi_6", "Jet_phi_7",
+    //    "Jet_m_1", "Jet_m_2", "Jet_m_3", "Jet_m_4", "Jet_m_5", "Jet_m_6", "Jet_m_7",
+    //};
+    std::vector<std::string> variables = {"deepESM"};
     std::vector<histInfo> entries = sigEntries; 
     entries.push_back(bgEntries[0]);
     for(const auto& v : variables)
     {
-        //for(auto& entry : entries)
-        //{
-        //    //std::unique_ptr<TH1F> dummy(new TH1F("Dummy","dummy", 10, 0, 20));
-        //    //dummy->SetMaximum(1.1);
-        //    //dummy->SetMinimum(-0.1);
-        //    //dummy->Draw();
-        //    std::unique_ptr<TH2> h2d = GetHisto<TH2>(v+"_1l_ge6j_ge1b", entry);
-        //    h2d->GetYaxis()->SetRangeUser(-10, 10);
-        //    //h2d->GetXaxis()->SetLimits(0, 1);
-        //    h2d->Draw("COLZ");
-        //    h2d->RebinY(10);
-        //    h2d->RebinX(1);
-        //    h2d->GetYaxis()->SetTitle("DeepESM Discriminator");
-        //    h2d->GetXaxis()->SetTitle(v.c_str());
-        //    h2d->SetTitle( (entry.legEntry+": "+entry.histName).c_str() );
-        //    //std::unique_ptr<TProfile> hprofile = GetHisto<TProfile>("hTp_njets_"+v+"_1l_ge6j_ge1b", entry);
-        //    std::unique_ptr<TProfile> hprofile( h2d->ProfileX(("hTp_"+v+"_1l_ge6j_ge1b").c_str()) );
-        //    hprofile->Draw("same");
-        //    hprofile->SetLineColor(kRed);
-        //    hprofile->SetMarkerColor(kRed);
-        //
-        //    gStyle->SetPalette(kRainBow);
-        //    gStyle->SetStatY(0.89);
-        //    gStyle->SetStatX(0.85);
-        //    //gStyle->SetStatW(0.3);
-        //    //gStyle->SetStatH(0.2); 
-        //
-        //    gPad->SetLeftMargin(0.12);
-        //    gPad->SetRightMargin(0.15);
-        //    gPad->SetTopMargin(0.08);
-        //    gPad->SetBottomMargin(0.12);
-        //    gPad->SetTicks(1,1);
-        //    gPad->SetLogz();
-        //    c->Print((entry.legEntry+"_"+v+"_nJetDependance.png").c_str());            
-        //}
+        for(auto& entry : entries)
+        {
+            //std::unique_ptr<TH1F> dummy(new TH1F("Dummy","dummy", 10, 0, 20));
+            //dummy->SetMaximum(1.1);
+            //dummy->SetMinimum(-0.1);
+            //dummy->Draw();
+            std::unique_ptr<TH2> h2d = GetHisto<TH2>("h_njets_"+v+"_1l_ge7j_ge1b", entry);
+            //h2d->GetYaxis()->SetRangeUser(-10, 10);
+            //h2d->GetXaxis()->SetLimits(0, 1);
+            h2d->Draw("COLZ");
+            //h2d->RebinX(2);
+            h2d->RebinY(10);
+            h2d->GetYaxis()->SetTitle(v.c_str());
+            h2d->GetXaxis()->SetTitle("N_{J}");
+            h2d->SetTitle( (entry.legEntry+": "+entry.histName).c_str() );
+            //std::unique_ptr<TProfile> hprofile = GetHisto<TProfile>("hTp_njets_"+v+"_1l_ge6j_ge1b", entry);
+            std::unique_ptr<TProfile> hprofile( h2d->ProfileX(("hTp_"+v+"_1l_ge7j_ge1b").c_str()) );
+            hprofile->Draw("same");
+            hprofile->SetLineColor(kRed);
+            hprofile->SetMarkerColor(kRed);
+        
+            gStyle->SetPalette(kRainBow);
+            gStyle->SetStatY(0.89);
+            gStyle->SetStatX(0.35);
+            //gStyle->SetStatW(0.3);
+            //gStyle->SetStatH(0.2); 
+        
+            gPad->SetLeftMargin(0.12);
+            gPad->SetRightMargin(0.15);
+            gPad->SetTopMargin(0.08);
+            gPad->SetBottomMargin(0.12);
+            gPad->SetTicks(1,1);
+            gPad->SetLogz();
+            c->Print((entry.legEntry+"_"+v+"_nJetDependance.png").c_str());            
+        }
     
         for(auto& entry : sigEntries)
         {
@@ -225,34 +233,34 @@ void MVAPlot()
             leg->SetTextFont(42);
         
             double norm = 1.0;
-            std::unique_ptr<TH1> h1 = GetHisto<TH1>(v+"_1l_ge6j_ge1b", entry);
-            h1->Rebin(1);
+            std::unique_ptr<TH1> h1 = GetHisto<TH1>("h_"+v+"_1l_ge7j_ge1b", entry);
+            h1->Rebin(10);
             h1->SetStats(0);
             h1->GetXaxis()->SetTitle((v+" Discriminator").c_str());
-            h1->GetYaxis()->SetTitle("Events");            
+            h1->GetYaxis()->SetTitle("Norm Events");            
             h1->Scale(norm / h1->Integral() );
             double h1max = h1->GetBinContent(h1->GetMaximumBin()) * 1.3;
             h1->SetFillStyle(3005);
             h1->Draw("hist");
             leg->AddEntry(h1.get(), (entry.legEntry+"_"+v).c_str(), "F");
         
-            std::unique_ptr<TH1> h2 = GetHisto<TH1>(v+"_1l_ge6j_ge1b", bgEntries[0]);
-            h2->Rebin(1);
+            std::unique_ptr<TH1> h2 = GetHisto<TH1>("h_"+v+"_1l_ge7j_ge1b", bgEntries[0]);
+            h2->Rebin(10);
             h2->Scale(norm / h2->Integral() );
             double h2max = h2->GetBinContent(h2->GetMaximumBin()) * 1.3;
             h2->Draw("hist same");
             leg->AddEntry(h2.get(), ("TT_"+v).c_str(), "F");
-
-            std::unique_ptr<TH1> h3 = GetHisto<TH1>(v+"_1l_ge6j_ge1b", bgEntries[1]);
-            h3->Rebin(1);
-            h3->Scale(norm / h3->Integral() );
-            double h3max = h3->GetBinContent(h3->GetMaximumBin()) * 1.3;
-            h3->Draw("PEX0 same");
-            leg->AddEntry(h3.get(), ("Data_"+v).c_str(), "F");
-            leg->Draw();
-
-
-            h1->SetMaximum( std::max(std::max(h1max, h2max), h3max) );
+        
+            //std::unique_ptr<TH1> h3 = GetHisto<TH1>("h_"v+"_1l_ge6j_ge1b", bgEntries[1]);
+            //h3->Rebin(1);
+            //h3->Scale(norm / h3->Integral() );
+            //double h3max = h3->GetBinContent(h3->GetMaximumBin()) * 1.3;
+            //h3->Draw("PEX0 same");
+            //leg->AddEntry(h3.get(), ("Data_"+v).c_str(), "F");
+            //leg->Draw();
+            //h1->SetMaximum( std::max(std::max(h1max, h2max), h3max) );
+            
+            h1->SetMaximum( std::max(h1max, h2max) );
             h1->Draw("hist same");
             c->Print((entry.legEntry+"_"+v+"_.png").c_str());            
         }
