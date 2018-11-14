@@ -31,7 +31,7 @@ void MakeNJetDists::InitHistos()
     std::vector<std::string> ptTags      { "pt30", "pt45" };
     std::vector<std::string> nlepTags    { "0l", "1l" };
     std::vector<std::string> deepESMTags { "0", "1", "2" , "3", "4" };
-    std::vector<std::string> sfTags      { "std", "qcd", "pdf", "pup", "lep", "all"}; 
+    std::vector<std::string> sfTags      { "std", "qcd", "pdf", "pup", "lep", "btg", "all"}; 
     std::vector<std::string> uncertTags  { "central", "up", "down" };
 
     //Histogram with no scale factors applied
@@ -70,23 +70,23 @@ void MakeNJetDists::InitHistos()
 
 void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
 {
-    std::vector<std::string> myVarSuffixs = {"JECup", "JECdown", "JERup", "JERdown"};
-    for(const auto& myVarSuffix : myVarSuffixs)
-    {
-        Jet jet(myVarSuffix);
-        BJet bjet(myVarSuffix);
-        CommonVariables commonVariables(myVarSuffix);
-        MakeMVAVariables makeMVAVariables(false, myVarSuffix, true);
-        Baseline baseline(myVarSuffix);
-        DeepEventShape deepEventShape("DeepEventShape.cfg", "Info", true, myVarSuffix);
-    
-        tr.registerFunction(jet);
-        tr.registerFunction(bjet);
-        tr.registerFunction(commonVariables);
-        tr.registerFunction(makeMVAVariables);
-        tr.registerFunction(baseline);
-        tr.registerFunction(deepEventShape);
-    }
+    //std::vector<std::string> myVarSuffixs = {"JECup", "JECdown", "JERup", "JERdown"};
+    //for(const auto& myVarSuffix : myVarSuffixs)
+    //{
+    //    Jet jet(myVarSuffix);
+    //    BJet bjet(myVarSuffix);
+    //    CommonVariables commonVariables(myVarSuffix);
+    //    MakeMVAVariables makeMVAVariables(false, myVarSuffix, true);
+    //    Baseline baseline(myVarSuffix);
+    //    DeepEventShape deepEventShape("DeepEventShape.cfg", "Info", true, myVarSuffix);
+    //
+    //    tr.registerFunction(jet);
+    //    tr.registerFunction(bjet);
+    //    tr.registerFunction(commonVariables);
+    //    tr.registerFunction(makeMVAVariables);
+    //    tr.registerFunction(baseline);
+    //    tr.registerFunction(deepEventShape);
+    //}
 
     while( tr.getNextEvent() )
     {
@@ -100,9 +100,8 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         const auto& filetag             = tr.getVar<std::string>("filetag");
         const auto& passMadHT           = tr.getVar<bool>("passMadHT");
         const auto& passBaseline0l      = tr.getVar<bool>("passBaseline0l_Good");
-              auto  passBaseline1l      = tr.getVar<bool>("passBaseline1l_Good");
+        const auto& passBaseline1l      = tr.getVar<bool>("passBaseline1l_Good");
         const auto& Mbl                 = tr.getVar<double>("Mbl");
-                    passBaseline1l      = passBaseline1l && 30<Mbl && Mbl<180;
         const auto& NJets_pt30          = tr.getVar<int>("NGoodJets_pt30");
         const auto& NJets_pt45          = tr.getVar<int>("NGoodJets_pt45");
         const auto& NGoodElectrons      = tr.getVar<int>("NGoodElectrons");
@@ -124,9 +123,9 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         const auto& muLepWeight         = tr.getVar<double>("totGoodMuonSF");
         const auto& muLepWeightUp       = tr.getVar<double>("totGoodMuonSF_Up");
         const auto& muLepWeightDown     = tr.getVar<double>("totGoodMuonSF_Down");
-        //const auto& bTagWeight          = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
-        //const auto& bTagWeightUp        = tr.getVar<double>("bTagSF_EventWeightSimple_Up");
-        //const auto& bTagWeightDown      = tr.getVar<double>("bTagSF_EventWeightSimple_Down");
+        const auto& bTagWeight          = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
+        const auto& bTagWeightUp        = tr.getVar<double>("bTagSF_EventWeightSimple_Up");
+        const auto& bTagWeightDown      = tr.getVar<double>("bTagSF_EventWeightSimple_Down");
         const auto& deepESMValue        = tr.getVar<double>("deepESM_val");
         const auto& deepESMbin1         = tr.getVar<bool>("deepESM_bin1");
         const auto& deepESMbin2         = tr.getVar<bool>("deepESM_bin2");
@@ -212,43 +211,51 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         
         if( passBaseline1l ) 
         {            
-            my_histos["h_njets_pt30_1l"]->Fill( NJets_pt30, eventweight );
-            my_histos["h_ht_pt30_1l"]->Fill( HT, eventweight );
-            my_histos["h_madht_pt30_1l"]->Fill( MadHT, eventweight );
+            my_histos["h_njets_pt30_1l"]->Fill( NJets_pt30, eventweight*lepWeight*bTagWeight );
+            my_histos["h_ht_pt30_1l"]->Fill( HT, eventweight*lepWeight*bTagWeight );
+            my_histos["h_madht_pt30_1l"]->Fill( MadHT, eventweight*lepWeight*bTagWeight );
+
             my_histos["h_njets_pt30_1l_qcd"]->Fill( NJets_pt30, eventweight*scaleWeight );
             my_histos["h_njets_pt30_1l_pdf"]->Fill( NJets_pt30, eventweight*PDFWeight );
             my_histos["h_njets_pt30_1l_pup"]->Fill( NJets_pt30, eventweight*PileupWeight );
             my_histos["h_njets_pt30_1l_lep"]->Fill( NJets_pt30, eventweight*lepWeight );
+            my_histos["h_njets_pt30_1l_btg"]->Fill( NJets_pt30, eventweight*bTagWeight );
             
             my_histos["h_njets_pt30_1l_qcd_up"]->Fill( NJets_pt30, eventweight*scaleWeightUp );
             my_histos["h_njets_pt30_1l_pdf_up"]->Fill( NJets_pt30, eventweight*PDFWeightUp );
             my_histos["h_njets_pt30_1l_pup_up"]->Fill( NJets_pt30, eventweight*PileupWeightUp );
             my_histos["h_njets_pt30_1l_lep_up"]->Fill( NJets_pt30, eventweight*lepWeightUp );
+            my_histos["h_njets_pt30_1l_btg_up"]->Fill( NJets_pt30, eventweight*bTagWeightUp );
             
             my_histos["h_njets_pt30_1l_qcd_down"]->Fill( NJets_pt30, eventweight*scaleWeightDown );
             my_histos["h_njets_pt30_1l_pdf_down"]->Fill( NJets_pt30, eventweight*PDFWeightDown );
             my_histos["h_njets_pt30_1l_pup_down"]->Fill( NJets_pt30, eventweight*PileupWeightDown );
             my_histos["h_njets_pt30_1l_lep_down"]->Fill( NJets_pt30, eventweight*lepWeightDown );
+            my_histos["h_njets_pt30_1l_btg_down"]->Fill( NJets_pt30, eventweight*bTagWeightDown );
         
             for(int index = 0; index < deepESMbins.size(); index++)
             {
                 if( deepESMbins.at(index) )
                 {
-                    my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)       ]->Fill( NJets_pt30, eventweight );
+                    my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)       ]->Fill( NJets_pt30, eventweight*lepWeight*bTagWeight );
+
                     my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_qcd"]->Fill( NJets_pt30, eventweight*scaleWeight );
                     my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_pdf"]->Fill( NJets_pt30, eventweight*PDFWeight );
                     my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_pup"]->Fill( NJets_pt30, eventweight*PileupWeight );
                     my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_lep"]->Fill( NJets_pt30, eventweight*lepWeight );
+                    my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_btg"]->Fill( NJets_pt30, eventweight*bTagWeight );
                 
                     my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_qcd_up"]->Fill( NJets_pt30, eventweight*scaleWeightUp );
                     my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_pdf_up"]->Fill( NJets_pt30, eventweight*PDFWeightUp );
                     my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_pup_up"]->Fill( NJets_pt30, eventweight*PileupWeightUp );
                     my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_lep_up"]->Fill( NJets_pt30, eventweight*lepWeightUp );
+                    my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_btg_up"]->Fill( NJets_pt30, eventweight*bTagWeightUp );
                 
                     my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_qcd_down"]->Fill( NJets_pt30, eventweight*scaleWeightDown );
                     my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_pdf_down"]->Fill( NJets_pt30, eventweight*PDFWeightDown );
                     my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_pup_down"]->Fill( NJets_pt30, eventweight*PileupWeightDown );
                     my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_lep_down"]->Fill( NJets_pt30, eventweight*lepWeightDown );                
+                    my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_btg_down"]->Fill( NJets_pt30, eventweight*bTagWeightDown );                
                 }
             }
         }
