@@ -17,7 +17,10 @@ class DataSetInfo:
 
 def main():
     path = "condor/Analyze1Lep_Kerasv1.2.0/"
-    histoName = "h_mbl_1l_ge7j_ge1b_noMbl"
+    #path = "condor/Analyze1Lep_Kerasv1.2.0_noMCTrigger_PU_bTag_leptonWeight/"
+    #histoName = "h_mbl_1l_ge7j_ge1b_noMbl"
+    histoName = "h_njets_mbl_1l_ge7j_ge1b_noMbl"
+    rebinVal = 5
 
     bgData = {
         "TT"              : DataSetInfo(path=path, filename="TT.root",              sys=0.3, dataType="Background"),
@@ -42,37 +45,22 @@ def main():
     # Loop over all background and get their histograms
     bgHistos = {}
     for key in bgData:
-        bgHistos[key] = {"hist" : bgData[key].getHisto(histoName)}
+        h = bgData[key].getHisto(histoName)
+        h.RebinY(rebinVal)
+        bgHistos[key] = {"hist" : h}
 
     # Loop over all signal models and calculate sig. for each one 
     for key in sgData:
         hSg = sgData[key].getHisto(histoName)
-        nBins = hSg.GetNbinsX()
-        low = hSg.GetXaxis().GetXmin()
-        high = hSg.GetXaxis().GetXmax()
+        hSg.RebinY(rebinVal)
+        nBins = hSg.GetNbinsY()
+        low = hSg.GetYaxis().GetXmin()
+        high = hSg.GetYaxis().GetXmax()
         binToGeV = (high - low)/nBins
-        c = ROOT.TCanvas( "c", "c", 0, 0, 800, 800)
-        sig2DHisto = ROOT.TH2D(key+"hist",key+"hist", nBins, low, high, nBins, low, high)
-
+        sigDic = {}
+            
         # Find all possible MLB cut values
-        for lowBin in range(1, nBins+1):            
-            for highBin in range(nBins+1):
-                if(lowBin < highBin):
-                    nSg = hSg.Integral(lowBin, highBin)
-                    
-                    # Loop over all background histos and calculate sigma
-                    sigma2 = 0.0
-                    for k in bgHistos:
-                        n = bgHistos[k]["hist"].Integral(lowBin, highBin)
-                        sys = ((bgData[k].sys)*n)**2
-                        sigma2 += n + sys
-
-                    # Calculate and fill sig.
-                    sig = 0.0
-                    if(sigma2 != 0): sig = nSg/math.sqrt(sigma2)
-                    sig2DHisto.SetBinContent(lowBin, highBin, sig)
-
-        # Make the plot nice
+        c1 = ROOT.TCanvas( "c", "c", 0, 0, 800, 800)
         ROOT.gStyle.SetStatY(0.5)
         ROOT.gStyle.SetStatX(0.85)
         ROOT.gStyle.SetPalette(ROOT.kRainBow)
@@ -81,12 +69,35 @@ def main():
         ROOT.gPad.SetTopMargin(0.08)
         ROOT.gPad.SetBottomMargin(0.12)
         ROOT.gPad.SetTicks(1,1)
+        sig2DHisto = ROOT.TH2D(key+"hist",key+"hist", nBins, low, high, nBins, low, high)        
+        for lowBin in range(1, nBins+1):       
+            for highBin in range(nBins+1):
+                if(lowBin < highBin):
+                    sigTot2 = 0.0
+                    for nJetBin in range(6, hSg.GetNbinsX()+1):            
+                        nSg = hSg.Integral(nJetBin, nJetBin, lowBin, highBin)
+                        
+                        # Loop over all background histos and calculate sigma
+                        sigma2 = 0.0
+                        for k in bgHistos:
+                            n = bgHistos[k]["hist"].Integral(nJetBin, nJetBin, lowBin, highBin)
+                            sys = ((bgData[k].sys)*n)**2
+                            sigma2 += n + sys
+            
+                        # Calculate and fill sig.
+                        sig = 0.0
+                        if(sigma2 != 0): sig = nSg/math.sqrt(sigma2)
+                        sigTot2 += sig**2
+
+                    sig2DHisto.SetBinContent(lowBin, highBin, math.sqrt(sigTot2))
+
+        # Make the plot nice
         sig2DHisto.SetTitle(key+" Significance")
         sig2DHisto.GetXaxis().SetTitle("Lower Cut [GeV]")
         sig2DHisto.GetYaxis().SetTitle("Higher Cut [GeV]")
         sig2DHisto.Draw("colz")
-        c.SaveAs(key+"_sig.png")
-        del c
+        c1.SaveAs(key+"_sig.png")
+        del c1                
 
 if __name__ == '__main__':
     main()

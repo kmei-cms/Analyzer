@@ -42,7 +42,7 @@ public:
     //Plotter(std::vector<HistInfoCollection>&& chc) : chc_(chc) {}
     Plotter(std::map< std::string, HistInfoCollection >&& mhc) : mhc_(mhc) {}
 
-    void plotStack(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, int rebin = -1, const double xmin = 999.9, const double xmax = -999.9, double lumi = 36100)
+    void plotStack(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, int rebin = -1, const bool scale = false, const double xmin = 999.9, const double xmax = -999.9, double lumi = 36100)
     {
         //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
         TH1::AddDirectory(false);
@@ -52,7 +52,7 @@ public:
         //switch to the canvas to ensure it is the active object
         c->cd();
 
-        // Upper plot will be in pad1: TPad(x1, y1, x2, y2)
+        //// Upper plot will be in pad1: TPad(x1, y1, x2, y2)
         TPad *pad1 = new TPad("pad1", "pad1", 0.0, 0.31, 1.0, 1.0);
         pad1->SetBottomMargin(0); // Upper and lower plot are joined
         //pad1->SetGridy();         // Horizontal grid
@@ -60,7 +60,7 @@ public:
         pad1->cd();               // pad1 becomes the current pad
         
         //Create TLegend
-        TLegend *leg = new TLegend(0.20, 0.76, 0.89, 0.88);
+        TLegend *leg = new TLegend(0.22, 0.76, 0.89, 0.88);
         //TLegend *leg = new TLegend(0.50, 0.56, 0.89, 0.88);
         leg->SetFillStyle(0);
         leg->SetBorderSize(0);
@@ -72,15 +72,16 @@ public:
         // -  Setup plots
         // ------------------------
         THStack *bgStack = new THStack();
-        hc_.setUpBG(histName, rebin, bgStack, hbgSum_, true, false);
+        hc_.setUpBG(histName, rebin, bgStack, hbgSum_, true, scale);
         hc_.setUpSignal(histName, rebin);
         hc_.setUpData(histName, rebin);
 
         //create a dummy histogram to act as the axes
-        histInfo dummy(new TH1D("dummy", "dummy", 1000, hbgSum_->GetBinLowEdge(1), hbgSum_->GetBinLowEdge(hbgSum_->GetNbinsX()) + hbgSum_->GetBinWidth(hbgSum_->GetNbinsX())));
+        histInfo dummy(new TH1D("dummy", "dummy", 1000, hbgSum_->GetBinLowEdge(1), hbgSum_->GetBinLowEdge(hbgSum_->GetNbinsX()) + hbgSum_->GetBinWidth(hbgSum_->GetNbinsX())));        
 
         //draw dummy axes
-        dummy.setupAxes(1.2, 0.4, 0.15, 0.15, 0.13, 0.13);
+        //dummy.setupAxes(1.2, 0.4, 0.15, 0.15, 0.13, 0.13);
+        dummy.setupAxes(1.2, 1.4, 0.15, 0.15, 0.13, 0.13);
         dummy.draw();
 
         //Switch to logY if desired
@@ -134,6 +135,8 @@ public:
 
         //Draw dummy hist again to get axes on top of histograms
         setupDummy(dummy, leg, histName, xAxisLabel, yAxisLabel, isLogY, xmin, xmax, min, max, lmax);
+        //dummy.setupAxes(1.2, 2.25, 0.045, 0.045, 0.045, 0.045);
+        //dummy.setupPad(0.18, 0.06, 0.08, 0.12);
         //dummy.setupPad(0.12, 0.06, 0.08, 0.0);
         dummy.draw("AXIS");
                         
@@ -148,8 +151,8 @@ public:
         gPad->SetTicks(1,1);
         
         //make ratio dummy
-        histInfo ratioDummy(new TH1D("rdummy", "rdummy", 1000, hc_.dataVec_[0].h->GetBinLowEdge(1), 
-                                     hc_.dataVec_[0].h->GetBinLowEdge(hc_.dataVec_[0].h->GetNbinsX()) + hc_.dataVec_[0].h->GetBinWidth(hc_.dataVec_[0].h->GetNbinsX())));
+        histInfo ratioDummy(new TH1D("rdummy", "rdummy", 1000, hc_.bgVec_[0].h->GetBinLowEdge(1), 
+                                     hc_.bgVec_[0].h->GetBinLowEdge(hc_.bgVec_[0].h->GetNbinsX()) + hc_.bgVec_[0].h->GetBinWidth(hc_.bgVec_[0].h->GetNbinsX())));
         ratioDummy.h->GetXaxis()->SetTitle(xAxisLabel.c_str());
         //ratioDummy.h->GetYaxis()->SetTitle(yAxisLabel.c_str());
         ratioDummy.h->GetYaxis()->SetTitle("Data / BG");
@@ -162,7 +165,7 @@ public:
         ratioDummy.h->SetStats(0);
         //ratioDummy.h->SetMinimum(0.5);
         //ratioDummy.h->SetMaximum(1.5);
-
+        
         //Make ratio histogram for data / background.
         histInfo ratio((TH1*)hc_.dataVec_[0].h->Clone());
             
@@ -180,7 +183,7 @@ public:
         
         ratioDummy.draw();
         ratio.draw("same");
-
+        
         TF1* line = new TF1("1" ,"1" ,-2000,20000);
         line->SetLineColor(kRed);
         line->Draw("same");
@@ -194,7 +197,7 @@ public:
         delete c;
         delete leg;
         delete bgStack;
-        delete line;
+        //delete line;
     }
 
     void plotNormFisher(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, int rebin = -1, const double xmin = 999.9, const double xmax = -999.9, double lumi = 36100)
@@ -340,7 +343,7 @@ public:
             if(mhc.first == "fisher")
                 histName = "h_"+mhc.first+"_1l_"+histCut;
             else
-                histName = "h_deepESM_1l_"+histCut;
+                histName = "h_deepESM_"+histCut;
             std::cout<<histName<<std::endl;
             THStack *bgStack = new THStack();
             std::shared_ptr<TH1> hbgSum;

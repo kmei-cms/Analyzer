@@ -127,6 +127,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         double leptonweight = 1.0;
         double PileupWeight = 1.0;
         double bTagWeight = 1.0;
+        double htDerivedweight = 1.0;
         if(runtype == "MC")
         {
             // Define Lumi weight
@@ -145,6 +146,8 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
 
             PileupWeight = tr.getVar<double>("_PUweightFactor");
             bTagWeight   = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
+
+            htDerivedweight = 1.064 + -0.0001937*HT_trigger;
 
             weight *= eventweight*leptonweight*bTagWeight;
         }
@@ -256,16 +259,20 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"_1l_ge1t"                        , pass_1l && pass_ge1t                                                     },
             {"_1l_ge2t"                        , pass_1l && pass_ge2t                                                     },
             {"_1l_5to6j_ge1b"                  , pass_1l && pass_5to6njet_pt30 && pass_njet_pt30_1btag && JetID           },
+            {"_1l_5to6j_ge1b_htCorr"           , pass_1l && pass_5to6njet_pt30 && pass_njet_pt30_1btag && JetID           },
             {"_1l_ge7j_ge2b"                   , pass_1l && pass_njet_pt30 && pass_njet_pt30_2btag && JetID               },
             {"_1l_ge7j_ge1b_noMbl"             , pass_1l && pass_njet_pt30 && pass_njet_pt30_1btag && JetID               },
             {"_1l_ge7j_ge1b"                   , passBaseline1l_Good                                                      },                         
+            {"_1l_ge7j_ge1b_htCorr"            , passBaseline1l_Good                                                      },                         
             {"_1e_ge7j_ge1b"                   , passBaseline1l_Good && pass_1e                                           },                         
             {"_1m_ge7j_ge1b"                   , passBaseline1l_Good && pass_1m                                           },                         
             {"_1l_ge7j_ge1b_d1"                , passBaseline1l_Good && deepESM_bin1                                      },                         
             {"_1l_ge7j_ge1b_d2"                , passBaseline1l_Good && deepESM_bin2                                      },                         
             {"_1l_ge7j_ge1b_d3"                , passBaseline1l_Good && deepESM_bin3                                      },                         
             {"_1l_ge7j_ge1b_d4"                , passBaseline1l_Good && deepESM_bin4                                      },                         
-            {"_1l_6j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt30 == 6                               },
+            {"_1l_4j_ge1b"                     , pass_1l && NGoodJets_pt30 == 4 && pass_njet_pt30_1btag && JetID          },
+            {"_1l_5j_ge1b"                     , pass_1l && NGoodJets_pt30 == 5 && pass_njet_pt30_1btag && JetID          },
+            {"_1l_6j_ge1b"                     , pass_1l && NGoodJets_pt30 == 6 && pass_njet_pt30_1btag && JetID          },
             {"_1l_7j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt30 == 7                               },
             {"_1l_8j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt30 == 8                               },
             {"_1l_9j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt30 == 9                               },
@@ -275,7 +282,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"_1l_13j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt30 == 13                              },
             {"_1l_14j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt30 == 14                              },
             {"_1l_15j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt30 == 15                              },
-                                                 
             {"_1l_ge7j_ge1b_1t"                , passBaseline1l_Good && pass_1t                                           },
             {"_1l_ge7j_ge1b_1t_d1"             , passBaseline1l_Good && pass_1t_d1                                        },
             {"_1l_ge7j_ge1b_1t_d2"             , passBaseline1l_Good && pass_1t_d2                                        }, 
@@ -460,6 +466,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         {
             if(kv.second)
             {
+                if(kv.first == "_1l_5to6j_ge1b_htCorr" || kv.first == "_1l_ge7j_ge1b_htCorr") weight *= htDerivedweight;                
                 my_histos["h_njets"         +kv.first]->Fill(NGoodJets_pt30, weight);
                 my_histos["h_ntops"         +kv.first]->Fill(ntops, weight);
                 my_histos["h_nb"            +kv.first]->Fill(NGoodBJets_pt30, weight);
