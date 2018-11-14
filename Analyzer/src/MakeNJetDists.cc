@@ -102,7 +102,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         const auto& passBaseline0l      = tr.getVar<bool>("passBaseline0l_Good");
         const auto& passBaseline1l      = tr.getVar<bool>("passBaseline1l_Good");
         const auto& Mbl                 = tr.getVar<double>("Mbl");
-        const auto& NJets_pt30          = tr.getVar<int>("NGoodJets_pt30");
+              auto  NJets_pt30          = tr.getVar<int>("NGoodJets_pt30");
         const auto& NJets_pt45          = tr.getVar<int>("NGoodJets_pt45");
         const auto& NGoodElectrons      = tr.getVar<int>("NGoodElectrons");
         const auto& NGoodMuons          = tr.getVar<int>("NGoodMuons");
@@ -126,6 +126,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         const auto& bTagWeight          = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
         const auto& bTagWeightUp        = tr.getVar<double>("bTagSF_EventWeightSimple_Up");
         const auto& bTagWeightDown      = tr.getVar<double>("bTagSF_EventWeightSimple_Down");
+        const auto& htDerivedweight     = tr.getVar<double>("htDerivedweight");
         const auto& deepESMValue        = tr.getVar<double>("deepESM_val");
         const auto& deepESMbin1         = tr.getVar<bool>("deepESM_bin1");
         const auto& deepESMbin2         = tr.getVar<bool>("deepESM_bin2");
@@ -211,9 +212,12 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         
         if( passBaseline1l ) 
         {            
-            my_histos["h_njets_pt30_1l"]->Fill( NJets_pt30, eventweight*lepWeight*bTagWeight );
-            my_histos["h_ht_pt30_1l"]->Fill( HT, eventweight*lepWeight*bTagWeight );
-            my_histos["h_madht_pt30_1l"]->Fill( MadHT, eventweight*lepWeight*bTagWeight );
+            // Making the 14 nJet bin inclusive
+            if( NJets_pt30 > 14 ) NJets_pt30 = 14;
+
+            my_histos["h_njets_pt30_1l"]->Fill( NJets_pt30, eventweight*lepWeight*bTagWeight*htDerivedweight );
+            my_histos["h_ht_pt30_1l"]->Fill( HT, eventweight*lepWeight*bTagWeight*htDerivedweight );
+            my_histos["h_madht_pt30_1l"]->Fill( MadHT, eventweight*lepWeight*bTagWeight*htDerivedweight );
 
             my_histos["h_njets_pt30_1l_qcd"]->Fill( NJets_pt30, eventweight*scaleWeight );
             my_histos["h_njets_pt30_1l_pdf"]->Fill( NJets_pt30, eventweight*PDFWeight );
@@ -237,7 +241,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
             {
                 if( deepESMbins.at(index) )
                 {
-                    my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)       ]->Fill( NJets_pt30, eventweight*lepWeight*bTagWeight );
+                    my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)       ]->Fill( NJets_pt30, eventweight*lepWeight*bTagWeight*htDerivedweight );
 
                     my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_qcd"]->Fill( NJets_pt30, eventweight*scaleWeight );
                     my_histos["h_njets_pt30_1l_deepESMbin"+std::to_string(index+1)+"_pdf"]->Fill( NJets_pt30, eventweight*PDFWeight );
