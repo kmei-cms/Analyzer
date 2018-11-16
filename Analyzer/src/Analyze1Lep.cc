@@ -92,6 +92,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& passTriggerMC        = tr.getVar<bool>("passTriggerMC");
         const auto& passMadHT            = tr.getVar<bool>("passMadHT");
         const auto& passBaseline1l_Good  = tr.getVar<bool>("passBaseline1l_Good");
+        const auto& passBaseline1e1m     = tr.getVar<bool>("passBaseline1e1m_Good");
         const auto& Mbl                  = tr.getVar<double>("Mbl");
         const auto& MblVec               = tr.getVec<double>("MblVec");
         const auto& passBlind            = tr.getVar<bool>("passBlindLep_Good");            
@@ -257,7 +258,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"_1l_ge7j"                        , pass_1l && pass_njet_pt30 && JetID                                       },
             {"_1l_ge1b"                        , pass_1l && pass_njet_pt30_1btag && JetID                                 },
             {"_1l_ge2b"                        , pass_1l && pass_njet_pt30_2btag && JetID                                 },
-            {"_1e_1m_ge2b_le5j"                , pass_1e_1m && pass_njet_pt30_2btag && NGoodJets_pt30 <= 5 && JetID       },
+            {"_1e_1m_ge2b_le5j"                , passBaseline1e1m                                                         },
             {"_1l_1t"                          , pass_1l && pass_1t                                                       },
             {"_1l_2t"                          , pass_1l && pass_2t                                                       },
             {"_1l_ge1t"                        , pass_1l && pass_ge1t                                                     },
@@ -441,6 +442,8 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"blind_PileupWeight", 100,  -5.0,    5.0},
             {    "h_bTagWeight",   100,  -5.0,    5.0},
             {"blind_bTagWeight",   100,  -5.0,    5.0},
+            {    "h_htDerivedweight",   100,  -5.0,    5.0},
+            {"blind_htDerivedweight",   100,  -5.0,    5.0},
             {    "h_allMbl",       300,   0.0,  300.0},
             {"blind_allMbl",       300,   0.0,  300.0},
         };
@@ -482,6 +485,8 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_histos["h_leptonweight"  +kv.first]->Fill(leptonweight, w);
                 my_histos["h_PileupWeight"  +kv.first]->Fill(PileupWeight, w);
                 my_histos["h_bTagWeight"    +kv.first]->Fill(bTagWeight, w);
+                my_histos["h_htDerivedweight"+kv.first]->Fill(htDerivedweight, w);
+                
                 for(const auto& l : GoodLeptons)
                 {
                     my_histos["h_lPt"+kv.first]->Fill(l.second.Pt(), w);
@@ -509,6 +514,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                     my_histos["blind_leptonweight"  +kv.first]->Fill(leptonweight, w);
                     my_histos["blind_PileupWeight"  +kv.first]->Fill(PileupWeight, w);
                     my_histos["blind_bTagWeight"    +kv.first]->Fill(bTagWeight, w);
+                    my_histos["blind_htDerivedweight"+kv.first]->Fill(htDerivedweight, w);
                     for(const auto l : GoodLeptons)
                     {
                         my_histos["blind_lPt"+kv.first]->Fill(l.second.Pt(), w);

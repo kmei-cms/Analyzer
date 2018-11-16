@@ -16,16 +16,17 @@ class DataSetInfo:
         self.file.Close()
 
 def main():
-    path = "condor/Analyze1Lep_Kerasv1.2.0/"
+    path = "condor/Analyze1Lep_Kerasv1.2.0_MCTrigger_bTag_leptonWeight_ht300/"
+    #path = "condor/Analyze1Lep_Kerasv1.2.0_MCTrigger_bTag_leptonWeight/"
     #path = "condor/Analyze1Lep_Kerasv1.2.0_noMCTrigger_PU_bTag_leptonWeight/"
     #histoName = "h_mbl_1l_ge7j_ge1b_noMbl"
     histoName = "h_njets_mbl_1l_ge7j_ge1b_noMbl"
     rebinVal = 5
 
     bgData = {
-        "TT"              : DataSetInfo(path=path, filename="TT.root",              sys=0.3, dataType="Background"),
+        "TT"              : DataSetInfo(path=path, filename="TT.root",              sys=0.1, dataType="Background"),
         #"TTJets"          : DataSetInfo(path=path, filename="TTJets.root",          sys=0.3, dataType="Background"),
-        "QCD"             : DataSetInfo(path=path, filename="QCD.root",             sys=1.0, dataType="Background"),
+        "QCD"             : DataSetInfo(path=path, filename="QCD.root",             sys=0.5, dataType="Background"),
         #"DYJetsToLL_M-50" : DataSetInfo(path=path, filename="DYJetsToLL_M-50.root", sys=1.0, dataType="Background"),
         #"Rare"            : DataSetInfo(path=path, filename="Rare.root",            sys=1.0, dataType="Background"),
         #"Diboson"         : DataSetInfo(path=path, filename="Diboson.root",         sys=1.0, dataType="Background"),
@@ -40,6 +41,13 @@ def main():
         "rpv_stop_650" : DataSetInfo(path=path, filename="rpv_stop_650.root", sys=-1.0, dataType="Signal"),
         "rpv_stop_750" : DataSetInfo(path=path, filename="rpv_stop_750.root", sys=-1.0, dataType="Signal"),
         "rpv_stop_850" : DataSetInfo(path=path, filename="rpv_stop_850.root", sys=-1.0, dataType="Signal"),
+
+        "stealth_stop_350_SYY" : DataSetInfo(path=path, filename="stealth_stop_350_SYY.root", sys=-1.0, dataType="Signal"),
+        "stealth_stop_450_SYY" : DataSetInfo(path=path, filename="stealth_stop_450_SYY.root", sys=-1.0, dataType="Signal"),
+        "stealth_stop_550_SYY" : DataSetInfo(path=path, filename="stealth_stop_550_SYY.root", sys=-1.0, dataType="Signal"),
+        "stealth_stop_650_SYY" : DataSetInfo(path=path, filename="stealth_stop_650_SYY.root", sys=-1.0, dataType="Signal"),
+        "stealth_stop_750_SYY" : DataSetInfo(path=path, filename="stealth_stop_750_SYY.root", sys=-1.0, dataType="Signal"),
+        "stealth_stop_850_SYY" : DataSetInfo(path=path, filename="stealth_stop_850_SYY.root", sys=-1.0, dataType="Signal"),
     }
 
     # Loop over all background and get their histograms
