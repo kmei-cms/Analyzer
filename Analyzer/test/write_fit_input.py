@@ -151,10 +151,7 @@ class MakeDataCard:
         f.write( lumiSys+"\n" )
         f.write( "-------------------------------------------------------------------------------------------------------------------------------------------\n" )
         for i in range(self.nMVABins):
-            f.write( "ttBkgRateD{0} rateParam sigD{0} bkg_tt {1}:wspace\n".format(i+1, self.outFile) )
-        for i in range(self.nMVABins):
-            f.write( "np_tt_D{0} param 1.0 1.0\n".format(i+1) )
-        f.write( "#np_tt   param 1.0 1.0\n" )
+            f.write( "np_tt_D{0} param 0.0 1.0\n".format(i+1) )
 
 if __name__ == "__main__":
     # Where the root files are stored
@@ -199,7 +196,7 @@ if __name__ == "__main__":
     outputfile.Close()
     
     #Make data card
-    md = MakeDataCard(outFile="multiF_ESM_ws.root", bgData=bgData["TT"], otData=bgData["other"], sgData=sgData["RPV_550"], basename="h_njets_pt30", cutlevels=cutlevels)
+    md = MakeDataCard(outFile="MVA_ws.root", bgData=bgData["TT"], otData=bgData["other"], sgData=sgData["RPV_550"], basename="h_njets_pt30", cutlevels=cutlevels)
     md.writeDataCard(outputDataCard)
 
     import os
