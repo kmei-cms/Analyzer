@@ -1,19 +1,6 @@
 import ROOT
 import math
-
-class DataSetInfo:
-    def __init__(self, path, filename, sys, dataType):
-        self.path = path
-        self.filename = filename
-        self.sys = sys
-        self.dataType = dataType
-        self.file = ROOT.TFile.Open(path+filename)
-
-    def getHisto(self, name):
-        return self.file.Get(name)
-        
-    def __del__(self):
-        self.file.Close()
+import DataSetInfo as info
 
 def main():
     path = "condor/Analyze1Lep_Kerasv1.2.0_MCTrigger_bTag_leptonWeight_ht300/"
@@ -24,30 +11,30 @@ def main():
     rebinVal = 5
 
     bgData = {
-        "TT"              : DataSetInfo(path=path, filename="TT.root",              sys=0.1, dataType="Background"),
-        #"TTJets"          : DataSetInfo(path=path, filename="TTJets.root",          sys=0.3, dataType="Background"),
-        "QCD"             : DataSetInfo(path=path, filename="QCD.root",             sys=0.5, dataType="Background"),
-        #"DYJetsToLL_M-50" : DataSetInfo(path=path, filename="DYJetsToLL_M-50.root", sys=1.0, dataType="Background"),
-        #"Rare"            : DataSetInfo(path=path, filename="Rare.root",            sys=1.0, dataType="Background"),
-        #"Diboson"         : DataSetInfo(path=path, filename="Diboson.root",         sys=1.0, dataType="Background"),
-        #"ST"              : DataSetInfo(path=path, filename="ST.root",              sys=1.0, dataType="Background"),
-        #"WJetsToLNu"      : DataSetInfo(path=path, filename="WJetsToLNu.root",      sys=1.0, dataType="Background"),
+        "TT"              : info.DataSetInfo(basedir=path, fileName="TT.root",              sys=0.1, label="Background"),
+        #"TTJets"          : info.DataSetInfo(basedir=path, fileName="TTJets.root",          sys=0.3, label="Background"),
+        "QCD"             : info.DataSetInfo(basedir=path, fileName="QCD.root",             sys=0.5, label="Background"),
+        #"DYJetsToLL_M-50" : info.DataSetInfo(basedir=path, fileName="DYJetsToLL_M-50.root", sys=1.0, label="Background"),
+        #"Rare"            : info.DataSetInfo(basedir=path, fileName="Rare.root",            sys=1.0, label="Background"),
+        #"Diboson"         : info.DataSetInfo(basedir=path, fileName="Diboson.root",         sys=1.0, label="Background"),
+        #"ST"              : info.DataSetInfo(basedir=path, fileName="ST.root",              sys=1.0, label="Background"),
+        #"WJetsToLNu"      : info.DataSetInfo(basedir=path, fileName="WJetsToLNu.root",      sys=1.0, label="Background"),
     }
 
     sgData = {
-        "rpv_stop_350" : DataSetInfo(path=path, filename="rpv_stop_350.root", sys=-1.0, dataType="Signal"),
-        "rpv_stop_450" : DataSetInfo(path=path, filename="rpv_stop_450.root", sys=-1.0, dataType="Signal"),
-        "rpv_stop_550" : DataSetInfo(path=path, filename="rpv_stop_550.root", sys=-1.0, dataType="Signal"),
-        "rpv_stop_650" : DataSetInfo(path=path, filename="rpv_stop_650.root", sys=-1.0, dataType="Signal"),
-        "rpv_stop_750" : DataSetInfo(path=path, filename="rpv_stop_750.root", sys=-1.0, dataType="Signal"),
-        "rpv_stop_850" : DataSetInfo(path=path, filename="rpv_stop_850.root", sys=-1.0, dataType="Signal"),
+        "rpv_stop_350" : info.DataSetInfo(basedir=path, fileName="rpv_stop_350.root", sys=-1.0, label="Signal"),
+        "rpv_stop_450" : info.DataSetInfo(basedir=path, fileName="rpv_stop_450.root", sys=-1.0, label="Signal"),
+        "rpv_stop_550" : info.DataSetInfo(basedir=path, fileName="rpv_stop_550.root", sys=-1.0, label="Signal"),
+        "rpv_stop_650" : info.DataSetInfo(basedir=path, fileName="rpv_stop_650.root", sys=-1.0, label="Signal"),
+        "rpv_stop_750" : info.DataSetInfo(basedir=path, fileName="rpv_stop_750.root", sys=-1.0, label="Signal"),
+        "rpv_stop_850" : info.DataSetInfo(basedir=path, fileName="rpv_stop_850.root", sys=-1.0, label="Signal"),
 
-        "stealth_stop_350_SYY" : DataSetInfo(path=path, filename="stealth_stop_350_SYY.root", sys=-1.0, dataType="Signal"),
-        "stealth_stop_450_SYY" : DataSetInfo(path=path, filename="stealth_stop_450_SYY.root", sys=-1.0, dataType="Signal"),
-        "stealth_stop_550_SYY" : DataSetInfo(path=path, filename="stealth_stop_550_SYY.root", sys=-1.0, dataType="Signal"),
-        "stealth_stop_650_SYY" : DataSetInfo(path=path, filename="stealth_stop_650_SYY.root", sys=-1.0, dataType="Signal"),
-        "stealth_stop_750_SYY" : DataSetInfo(path=path, filename="stealth_stop_750_SYY.root", sys=-1.0, dataType="Signal"),
-        "stealth_stop_850_SYY" : DataSetInfo(path=path, filename="stealth_stop_850_SYY.root", sys=-1.0, dataType="Signal"),
+        "stealth_stop_350_SYY" : info.DataSetInfo(basedir=path, fileName="stealth_stop_350_SYY.root", sys=-1.0, label="Signal"),
+        "stealth_stop_450_SYY" : info.DataSetInfo(basedir=path, fileName="stealth_stop_450_SYY.root", sys=-1.0, label="Signal"),
+        "stealth_stop_550_SYY" : info.DataSetInfo(basedir=path, fileName="stealth_stop_550_SYY.root", sys=-1.0, label="Signal"),
+        "stealth_stop_650_SYY" : info.DataSetInfo(basedir=path, fileName="stealth_stop_650_SYY.root", sys=-1.0, label="Signal"),
+        "stealth_stop_750_SYY" : info.DataSetInfo(basedir=path, fileName="stealth_stop_750_SYY.root", sys=-1.0, label="Signal"),
+        "stealth_stop_850_SYY" : info.DataSetInfo(basedir=path, fileName="stealth_stop_850_SYY.root", sys=-1.0, label="Signal"),
     }
 
     # Loop over all background and get their histograms
