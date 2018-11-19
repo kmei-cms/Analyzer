@@ -42,6 +42,7 @@ def main():
     write(f, path+"blind_ht*.pdf",      "HT - stack plots")
     write(f, path+"blind_lPt*.pdf",     "Lepton PT - stack plots")
     write(f, path+"blind_lEta*.pdf",    "Lepton Eta - stack plots")
+    write(f, path+"blind_mbl*.pdf",     "mbl - stack plots")
 
     f.close()
 
