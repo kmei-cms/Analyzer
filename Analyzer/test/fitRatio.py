@@ -1,24 +1,11 @@
 import ROOT
 import math
 import numpy as np
-
-class DataSetInfo:
-    def __init__(self, path, filename, sys, dataType):
-        self.path = path
-        self.filename = filename
-        self.sys = sys
-        self.dataType = dataType
-        self.file = ROOT.TFile.Open(path+filename)
-
-    def getHisto(self, name):
-        return self.file.Get(name)
-        
-    def __del__(self):
-        self.file.Close()
+import DataSetInfo as info
 
 def main():
-    path = "condor/Analyze1Lep_Kerasv1.2.0/"
-    #path = "condor/Analyze1Lep_Kerasv1.2.0_MCTrigger_bTag_leptonWeight_ht300/"
+    #path = "condor/Analyze1Lep_Kerasv1.2.0/"
+    path = "condor/Analyze1Lep_Kerasv1.2.0_MCTrigger_bTag_leptonWeight_ht300/"
     histoNames = [
         "blind_ht_1l_4j_ge1b", "blind_ht_1l_5j_ge1b", "blind_ht_1l_6j_ge1b", "blind_ht_1l_ge7j_ge1b",
         #"blind_deepESM_1l_4j_ge1b", "blind_deepESM_1l_5j_ge1b", "blind_deepESM_1l_6j_ge1b", "blind_deepESM_1l_ge7j_ge1b",
@@ -38,14 +25,14 @@ def main():
         ROOT.TH1.SetDefaultSumw2()
         ROOT.gStyle.SetOptFit();
 
-        data = DataSetInfo(path=path, filename="Data.root",  sys=-1, dataType="Data")
-        bg   = DataSetInfo(path=path, filename="AllBG.root", sys=-1, dataType="Background")
+        data = info.DataSetInfo(basedir=path, fileName="Data.root",   label="Data")
+        bg   = info.DataSetInfo(basedir=path, fileName="AllBG.root",  label="Background")
         dHist = data.getHisto(histoName)
         bHist = bg.getHisto(histoName)
         dHist.Rebin(10)
         bHist.Rebin(10)
-        #dHist.Scale(1.0/dHist.Integral())
-        #bHist.Scale(1.0/bHist.Integral())
+        dHist.Scale(1.0/dHist.Integral())
+        bHist.Scale(1.0/bHist.Integral())
 
         ratio = dHist.Clone("Ratio")
         ratio.Divide(bHist)
