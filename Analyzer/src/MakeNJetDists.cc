@@ -1,13 +1,20 @@
 #define MakeNJetDists_cxx
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
+#include "SusyAnaTools/Tools/BTagCorrector.h"
+#include "SusyAnaTools/Tools/PileupWeights.h"
 
+#include "Framework/Framework/include/RunTopTagger.h"
+#include "Framework/Framework/include/Muon.h"
+#include "Framework/Framework/include/Electron.h"
+#include "Framework/Framework/include/Photon.h"
 #include "Framework/Framework/include/Jet.h"
 #include "Framework/Framework/include/BJet.h"
 #include "Framework/Framework/include/CommonVariables.h"
 #include "Framework/Framework/include/MakeMVAVariables.h"
 #include "Framework/Framework/include/Baseline.h"
 #include "Framework/Framework/include/DeepEventShape.h"
+#include "Framework/Framework/include/ScaleFactors.h"
 
 #include <TH1D.h>
 #include <TH2D.h>
@@ -70,23 +77,41 @@ void MakeNJetDists::InitHistos()
 
 void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
 {
-    //std::vector<std::string> myVarSuffixs = {"JECup", "JECdown", "JERup", "JERdown"};
-    //for(const auto& myVarSuffix : myVarSuffixs)
-    //{
-    //    Jet jet(myVarSuffix);
-    //    BJet bjet(myVarSuffix);
-    //    CommonVariables commonVariables(myVarSuffix);
-    //    MakeMVAVariables makeMVAVariables(false, myVarSuffix, true);
-    //    Baseline baseline(myVarSuffix);
-    //    DeepEventShape deepEventShape("DeepEventShape.cfg", "Info", true, myVarSuffix);
-    //
-    //    tr.registerFunction(jet);
-    //    tr.registerFunction(bjet);
-    //    tr.registerFunction(commonVariables);
-    //    tr.registerFunction(makeMVAVariables);
-    //    tr.registerFunction(baseline);
-    //    tr.registerFunction(deepEventShape);
-    //}
+    const auto& runtype = tr.getVar<std::string>("runtype");
+    const auto& filetag = tr.getVar<std::string>("filetag");
+
+    std::vector<std::string> myVarSuffixs = {"JECup", "JECdown", "JERup", "JERdown"};
+    for(const auto& myVarSuffix : myVarSuffixs)
+    {
+        RunTopTagger rtt("TopTagger.cfg", myVarSuffix);
+        Muon muon(myVarSuffix);
+        Electron electron(myVarSuffix);
+        Photon photon(myVarSuffix);
+        Jet jet(myVarSuffix);
+        BJet bjet(myVarSuffix);
+        CommonVariables commonVariables(myVarSuffix);
+        MakeMVAVariables makeMVAVariables(false, myVarSuffix);
+        Baseline baseline(myVarSuffix);
+        DeepEventShape deepEventShape("DeepEventShape.cfg", "Info", true, myVarSuffix);
+        BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, filetag);
+        bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets"+myVarSuffix, "Jets"+myVarSuffix+"_bDiscriminatorCSV", "Jets"+myVarSuffix+"_partonFlavor");
+        //Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
+        ScaleFactors scaleFactors("allInOne_leptonSF_Moriond17.root", myVarSuffix);
+        
+        tr.registerFunction(rtt);
+        tr.registerFunction(muon);
+        tr.registerFunction(electron);
+        tr.registerFunction(photon);
+        tr.registerFunction(jet);
+        tr.registerFunction(bjet);
+        tr.registerFunction(commonVariables);
+        tr.registerFunction(makeMVAVariables);
+        tr.registerFunction(baseline);
+        tr.registerFunction(deepEventShape);
+        tr.registerFunction(bTagCorrector);
+        //tr.registerFunction(pileup);
+        tr.registerFunction(scaleFactors);
+    }
 
     while( tr.getNextEvent() )
     {
@@ -96,8 +121,6 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
         if( tr.getEvtNum() % 1000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
 
-        const auto& runtype             = tr.getVar<std::string>("runtype");
-        const auto& filetag             = tr.getVar<std::string>("filetag");
         const auto& passMadHT           = tr.getVar<bool>("passMadHT");
         const auto& passBaseline0l      = tr.getVar<bool>("passBaseline0l_Good");
         const auto& passBaseline1l      = tr.getVar<bool>("passBaseline1l_Good");
