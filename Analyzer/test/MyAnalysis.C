@@ -77,6 +77,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerDerivedVar<std::string>("runtype",runtype);
         tr.registerDerivedVar<std::string>("filetag",file.tag);
         tr.registerDerivedVar<double>("etaCut",2.4); 
+        tr.registerDerivedVar<double>("Lumi",35900); 
         tr.registerDerivedVar<bool>("blind",true);
 
         // Define classes/functions that add variables on the fly
