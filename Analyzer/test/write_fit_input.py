@@ -134,9 +134,11 @@ class MakeDataCard:
 
 if __name__ == "__main__":
     # Where the root files are stored
-    basedir = "condor/rootfiles/"
-    cutlevels = [ "1l_deepESMbin1", "1l_deepESMbin2","1l_deepESMbin3","1l_deepESMbin4"]
+    #basedir = "condor/rootfiles/"
+    basedir = "condor/JECPlots/"
     jettypes = ["pt30"]#, "pt45"]
+    cutlevels = [ "1l_deepESMbin1", "1l_deepESMbin2","1l_deepESMbin3","1l_deepESMbin4"]
+    systypes = ["", "JECup", "JECdown", "JERup", "JERdown"]
     outputfile = ROOT.TFile.Open("njets_for_Aron.root","RECREATE")
     outputDataCard = "dataCard.txt"
 
@@ -167,9 +169,11 @@ if __name__ == "__main__":
     for jettype in jettypes:
         basename = "h_njets_" + jettype
         for cut in cutlevels:
-            histos = wp.writeHistos(bgData, basename, cut)
-            signalhistos = wp.writeHistos(sgData, basename, cut)
-            wp.makePseudoData(histos, signalhistos, sgData, jettype, cut)
+            for sys in systypes:
+                histos = wp.writeHistos(bgData, basename, cut+sys)
+                signalhistos = wp.writeHistos(sgData, basename, cut+sys)
+                if sys == "": 
+                    wp.makePseudoData(histos, signalhistos, sgData, jettype, cut+sys)
     
     #Close outfile
     outputfile.Close()
