@@ -1,5 +1,7 @@
 #define MakeNJetDists_cxx
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
+#include "Analyzer/Analyzer/include/Histo.h"
+
 #include "SusyAnaTools/Tools/NTupleReader.h"
 #include "SusyAnaTools/Tools/BTagCorrector.h"
 #include "SusyAnaTools/Tools/PileupWeights.h"
@@ -37,16 +39,17 @@ void MakeNJetDists::InitHistos()
     myVarSuffixs = {"", "JECup", "JECdown", "JERup", "JERdown"};
     for(const auto& s : myVarSuffixs)
     {
+        my_Histos.emplace_back(new Histo1D<int>("h_njets"+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s));
         std::vector<std::string> weightVec = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s, "htDerivedweight"+s};
 
-        my_Histos.push_back({"h_njets_pt30_1l"+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {"passBaseline1l_Good"+s}, weightVec});
+        my_Histos.emplace_back(new Histo1D<int>("h_njets_pt30_1l"+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {"passBaseline1l_Good"+s}, weightVec));
         for(int i = 0; i < 4; i++)
         {
             std::string index = std::to_string(i+1);
-            my_Histos.push_back({"h_njets_pt30_1l_deepESMbin"+index+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {"passBaseline1l_Good"+s,"deepESM_bin"+index+s}, weightVec});
+            my_Histos.emplace_back(new Histo1D<int>("h_njets_pt30_1l_deepESMbin"+index+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {"passBaseline1l_Good"+s,"deepESM_bin"+index+s}, weightVec));
         }        
     }
-
+    
 }//END of init histos
 
 void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
@@ -57,7 +60,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
     for(const auto& myVarSuffix : myVarSuffixs)
     {
         if(myVarSuffix == "") continue;
-        RunTopTagger rtt("TopTagger.cfg", myVarSuffix);
+        //RunTopTagger rtt("TopTagger.cfg", myVarSuffix);
         Muon muon(myVarSuffix);
         Electron electron(myVarSuffix);
         Photon photon(myVarSuffix);
@@ -72,7 +75,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         //Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
         ScaleFactors scaleFactors("allInOne_leptonSF_Moriond17.root", myVarSuffix);
         
-        tr.registerFunction(rtt);
+        //tr.registerFunction(rtt);
         tr.registerFunction(muon);
         tr.registerFunction(electron);
         tr.registerFunction(photon);
@@ -119,7 +122,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         //-----------------------------------
         for(auto& h : my_Histos)
         {
-            h.Fill(tr);
+            h->Fill(tr);
         }
     }//END of while tr.getNextEvent loop   
 }//END of function
@@ -130,6 +133,6 @@ void MakeNJetDists::WriteHistos( TFile* outfile )
     
     for(const auto& h : my_Histos)
     {
-        h.Write();
+        h->Write();
     }
 }
