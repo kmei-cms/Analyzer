@@ -2,28 +2,7 @@ import ROOT
 ROOT.gStyle.SetOptStat(0)
 from math import sqrt
 import random
-
-colors = [ROOT.kCyan+1, ROOT.kMagenta+1, ROOT.kYellow+1,
-          ROOT.kRed+1, ROOT.kGreen+1, ROOT.kBlue+1,
-          ROOT.kBlack]
-signalcolors = [ROOT.kViolet-6, ROOT.kTeal-6, ROOT.kPink-6, ROOT.kAzure-6]
-
-class DataSetInfo:
-    def __init__(self, basedir, fileName, label, processName, process, rate, lumiSys):
-        self.basedir = basedir
-        self.fileName = fileName
-        self.label = label
-        self.file = ROOT.TFile.Open(basedir+fileName)
-        self.processName = processName
-        self.process = process
-        self.rate = rate
-        self.lumiSys = lumiSys
-
-    def getHisto(self, name):
-        return self.file.Get(name)
-
-    def __del__(self):
-        self.file.Close()
+import DataSetInfo as info
 
 class WriteNJetPlots:
     def __init__(self):    
@@ -163,23 +142,23 @@ if __name__ == "__main__":
 
     # I hadd my ttbar files into TT.root, and I hadd all other backgrounds into BG_noTT.root
     bgData = {
-        "TT"    : DataSetInfo(basedir=basedir, fileName="TT.root",      label="TT",    processName="bkg_tt",    process="1", rate=False, lumiSys="-"),
-        "other" : DataSetInfo(basedir=basedir, fileName="BG_noTT.root", label="other", processName="bkg_other", process="2", rate=True,  lumiSys="-"),
+        "TT"    : info.DataSetInfo(basedir=basedir, fileName="TT.root",      label="TT",    processName="bkg_tt",    process="1", rate=False, lumiSys="-"),
+        "other" : info.DataSetInfo(basedir=basedir, fileName="BG_noTT.root", label="other", processName="bkg_other", process="2", rate=True,  lumiSys="-"),
     }
 
     sgData = {
-        "SYY_350" : DataSetInfo(basedir=basedir, fileName="stealth_stop_350_SYY.root", label="SYY_350", processName="signal", process="0", rate=True, lumiSys="1.05"),
-        "SYY_450" : DataSetInfo(basedir=basedir, fileName="stealth_stop_450_SYY.root", label="SYY_450", processName="signal", process="0", rate=True, lumiSys="1.05"),
-        "SYY_550" : DataSetInfo(basedir=basedir, fileName="stealth_stop_550_SYY.root", label="SYY_550", processName="signal", process="0", rate=True, lumiSys="1.05"),
-        "SYY_650" : DataSetInfo(basedir=basedir, fileName="stealth_stop_650_SYY.root", label="SYY_650", processName="signal", process="0", rate=True, lumiSys="1.05"),
-        "SYY_750" : DataSetInfo(basedir=basedir, fileName="stealth_stop_750_SYY.root", label="SYY_750", processName="signal", process="0", rate=True, lumiSys="1.05"),
-        "SYY_850" : DataSetInfo(basedir=basedir, fileName="stealth_stop_850_SYY.root", label="SYY_850", processName="signal", process="0", rate=True, lumiSys="1.05"),
-        "RPV_350" : DataSetInfo(basedir=basedir, fileName="rpv_stop_350.root",         label="RPV_350", processName="signal", process="0", rate=True, lumiSys="1.05"),
-        "RPV_450" : DataSetInfo(basedir=basedir, fileName="rpv_stop_450.root",         label="RPV_450", processName="signal", process="0", rate=True, lumiSys="1.05"),
-        "RPV_550" : DataSetInfo(basedir=basedir, fileName="rpv_stop_550.root",         label="RPV_550", processName="signal", process="0", rate=True, lumiSys="1.05"),
-        "RPV_650" : DataSetInfo(basedir=basedir, fileName="rpv_stop_650.root",         label="RPV_650", processName="signal", process="0", rate=True, lumiSys="1.05"),
-        "RPV_750" : DataSetInfo(basedir=basedir, fileName="rpv_stop_750.root",         label="RPV_750", processName="signal", process="0", rate=True, lumiSys="1.05"),
-        "RPV_850" : DataSetInfo(basedir=basedir, fileName="rpv_stop_850.root",         label="RPV_850", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "SYY_350" : info.DataSetInfo(basedir=basedir, fileName="stealth_stop_350_SYY.root", label="SYY_350", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "SYY_450" : info.DataSetInfo(basedir=basedir, fileName="stealth_stop_450_SYY.root", label="SYY_450", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "SYY_550" : info.DataSetInfo(basedir=basedir, fileName="stealth_stop_550_SYY.root", label="SYY_550", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "SYY_650" : info.DataSetInfo(basedir=basedir, fileName="stealth_stop_650_SYY.root", label="SYY_650", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "SYY_750" : info.DataSetInfo(basedir=basedir, fileName="stealth_stop_750_SYY.root", label="SYY_750", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "SYY_850" : info.DataSetInfo(basedir=basedir, fileName="stealth_stop_850_SYY.root", label="SYY_850", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "RPV_350" : info.DataSetInfo(basedir=basedir, fileName="rpv_stop_350.root",         label="RPV_350", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "RPV_450" : info.DataSetInfo(basedir=basedir, fileName="rpv_stop_450.root",         label="RPV_450", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "RPV_550" : info.DataSetInfo(basedir=basedir, fileName="rpv_stop_550.root",         label="RPV_550", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "RPV_650" : info.DataSetInfo(basedir=basedir, fileName="rpv_stop_650.root",         label="RPV_650", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "RPV_750" : info.DataSetInfo(basedir=basedir, fileName="rpv_stop_750.root",         label="RPV_750", processName="signal", process="0", rate=True, lumiSys="1.05"),
+        "RPV_850" : info.DataSetInfo(basedir=basedir, fileName="rpv_stop_850.root",         label="RPV_850", processName="signal", process="0", rate=True, lumiSys="1.05"),
     }
 
     #Write all histos to outputfile
