@@ -9,21 +9,21 @@
 #include <map>
 #include <string>
 
+#include "Analyzer/Analyzer/include/Histo.h"
 class NTupleReader;
 
 class MakeNJetDists
 {
-public :
-   std::map<std::string, std::shared_ptr<TH1D>>  my_histos;
-   std::map<std::string, std::shared_ptr<TH2D>>  my_2d_histos;
-   std::map<std::string, std::shared_ptr<TEfficiency>>  my_efficiencies;
-
-   MakeNJetDists();
-   ~MakeNJetDists(){};
-
-   void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false);
-   void InitHistos();
-   void WriteHistos(TFile* outfile); 
+public:
+    std::vector<std::unique_ptr<Histo_Base>> my_Histos;
+    std::vector<std::string> myVarSuffixs;
+    
+    MakeNJetDists();
+    ~MakeNJetDists(){};
+    
+    void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false);
+    void InitHistos();
+    void WriteHistos(TFile* outfile); 
 };
 
 #endif

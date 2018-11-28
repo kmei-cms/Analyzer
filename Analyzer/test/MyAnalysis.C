@@ -59,7 +59,7 @@ std::string color(const std::string& text, const std::string& color)
 
 template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
                                     int startFile, int nFiles, int maxEvts, 
-                                    bool isSkim, TFile* outfile, bool isQuiet)
+                                    TFile* outfile, bool isQuiet)
 {
     std::cout << "Initializing..." << std::endl;
     Analyze a;
@@ -77,14 +77,11 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerDerivedVar<std::string>("runtype",runtype);
         tr.registerDerivedVar<std::string>("filetag",file.tag);
         tr.registerDerivedVar<double>("etaCut",2.4); 
+        tr.registerDerivedVar<double>("Lumi",35900); 
         tr.registerDerivedVar<bool>("blind",true);
 
         // Define classes/functions that add variables on the fly
-        if ( !isSkim ) 
-        {
-            RunTopTagger rtt;
-            tr.registerFunction(rtt);
-        }
+        RunTopTagger rtt;
         Muon muon;
         Electron electron;
         Photon photon;
@@ -97,6 +94,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         DeepEventShape deepEventShape;
 
         // Register classes/functions that add variables on the fly
+        tr.registerFunction(rtt);
         tr.registerFunction(muon);
         tr.registerFunction(electron);
         tr.registerFunction(photon);
@@ -112,11 +110,12 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         {
             //std::string eosPath =   "root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/";
             BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
+            bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets", "Jets_bDiscriminatorCSV", "Jets_partonFlavor");
             Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
             ScaleFactors scaleFactors("allInOne_leptonSF_Moriond17.root");
-            tr.registerFunction( std::move(bTagCorrector) );
-            tr.registerFunction( std::move(pileup) );
-            tr.registerFunction( std::move(scaleFactors) );
+            tr.registerFunction(bTagCorrector);
+            tr.registerFunction(pileup);
+            tr.registerFunction(scaleFactors);
         }
         // Loop over all of the events and fill histos
         a.Loop(tr, weight, maxEvts, isQuiet);
@@ -165,10 +164,9 @@ int main(int argc, char *argv[])
          doEventShape = false, do0Lep = false, do1Lep = false, doStealthTT = false,
          doBTagSF = false, calcBTagSF = false, doWControlRegion = false, 
          makeMiniTree = false, makeNJetDists = false,
-         doNjetsMinusOneCSFillDijetHists = false, doNjetsMinusOneCSJetReplacement = false, isQuiet = true ;
+         doNjetsMinusOneCSFillDijetHists = false, doNjetsMinusOneCSJetReplacement = false, isQuiet = true;
 
     bool runOnCondor = false;
-    bool isSkim = false;
     std::string histFile = "", dataSets = "";
     int nFiles = -1, startFile = 0, maxEvts = -1;
 
@@ -224,8 +222,6 @@ int main(int argc, char *argv[])
         }
     }
 
-    if(dataSets.find("skim") != std::string::npos) isSkim = true;  
-
     if(runOnCondor)
     {
         char thistFile[128];
@@ -236,7 +232,7 @@ int main(int argc, char *argv[])
     std::set<AnaSamples::FileSummary> vvf = setFS(dataSets, runOnCondor); 
     TFile* outfile = TFile::Open(histFile.c_str(), "RECREATE");
 
-    std::vector<std::pair<bool, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,bool,TFile*,bool)>>> AnalyzerPairVec = {
+    std::vector<std::pair<bool, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,TFile*,bool)>>> AnalyzerPairVec = {
         {doBackground,      run<AnalyzeBackground>},
         {doWControlRegion,  run<AnalyzeWControlRegion>},
         {doTopTagger,       run<AnalyzeTopTagger>},
@@ -257,7 +253,7 @@ int main(int argc, char *argv[])
     {
         for(auto& pair : AnalyzerPairVec)
         {
-            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,isSkim,outfile,isQuiet); 
+            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,outfile,isQuiet); 
         }
 
         outfile->Close();
