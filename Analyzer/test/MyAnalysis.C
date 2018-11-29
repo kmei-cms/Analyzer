@@ -81,31 +81,31 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerDerivedVar<bool>("blind",true);
 
         // Define classes/functions that add variables on the fly
-        RunTopTagger rtt;
+        //RunTopTagger rtt;
         Muon muon;
         Electron electron;
-        Photon photon;
+        //Photon photon;
         Jet jet;
         BJet bjet;
-        RunFisher runFisher("v3");
+        //RunFisher runFisher("v3");
         CommonVariables commonVariables;
         MakeMVAVariables makeMVAVariables;
         Baseline baseline;
         DeepEventShape deepEventShape;
-
+        
         // Register classes/functions that add variables on the fly
-        tr.registerFunction(rtt);
+        //tr.registerFunction(rtt);
         tr.registerFunction(muon);
         tr.registerFunction(electron);
-        tr.registerFunction(photon);
+        //tr.registerFunction(photon);
         tr.registerFunction(jet);
         tr.registerFunction(bjet);
-        tr.registerFunction(runFisher);
+        //tr.registerFunction(runFisher);
         tr.registerFunction(commonVariables);
         tr.registerFunction(makeMVAVariables);
         tr.registerFunction(baseline);
         tr.registerFunction(deepEventShape);
-
+        
         if( runtype == "MC" ) 
         {
             //std::string eosPath =   "root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/";

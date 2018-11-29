@@ -37,11 +37,13 @@ void MakeNJetDists::InitHistos()
     TH2::SetDefaultSumw2();
 
     myVarSuffixs = {"", "JECup", "JECdown", "JERup", "JERdown"};
+    //myVarSuffixs = {""};
     for(const auto& s : myVarSuffixs)
     {
-        my_Histos.emplace_back(new Histo1D<int>("h_njets"+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s));
-        std::vector<std::string> weightVec = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s, "htDerivedweight"+s};
-
+        my_Histos.emplace_back(new Histo1D<int>("h_njets"+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {}, {"Lumi", "Weight"}));
+        //std::vector<std::string> weightVec = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s, "htDerivedweight"+s};
+        std::vector<std::string> weightVec = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s};
+    
         my_Histos.emplace_back(new Histo1D<int>("h_njets_pt30_1l"+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {"passBaseline1l_Good"+s}, weightVec));
         for(int i = 0; i < 4; i++)
         {
@@ -63,7 +65,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         //RunTopTagger rtt("TopTagger.cfg", myVarSuffix);
         Muon muon(myVarSuffix);
         Electron electron(myVarSuffix);
-        Photon photon(myVarSuffix);
+        //Photon photon(myVarSuffix);
         Jet jet(myVarSuffix);
         BJet bjet(myVarSuffix);
         CommonVariables commonVariables(myVarSuffix);
@@ -78,7 +80,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         //tr.registerFunction(rtt);
         tr.registerFunction(muon);
         tr.registerFunction(electron);
-        tr.registerFunction(photon);
+        //tr.registerFunction(photon);
         tr.registerFunction(jet);
         tr.registerFunction(bjet);
         tr.registerFunction(commonVariables);
@@ -98,13 +100,9 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
         if( tr.getEvtNum() % 1000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
 
-        const auto& passMadHT           = tr.getVar<bool>("passMadHT");
-        
         //-----------------------------------
         //-- Make sure you are running over MC
-        //-- Doesn't really make sense to run 
-        //--   on Data (also not all variables
-        //--   are there
+        //-- For now (soon will run on data)
         //-----------------------------------
         if( runtype != "MC" ) 
         {
@@ -112,11 +110,6 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
             break;
         }
                
-        //-------------------------------------
-        //-- Make sure we do not double DY events 
-        //------------------------------------
-        if( !passMadHT ) continue; 
-        
         //-----------------------------------
         //-- Fill Histograms Below
         //-----------------------------------
