@@ -3,6 +3,8 @@ ROOT.gStyle.SetOptStat(0)
 from math import sqrt
 import random
 import DataSetInfo as info
+import optparse
+import os
 
 class WriteNJetPlots:
     def __init__(self):    
@@ -133,14 +135,26 @@ class MakeDataCard:
             f.write( "np_tt_D{0} param 0.0 1.0\n".format(i+1) )
 
 if __name__ == "__main__":
+    parser = optparse.OptionParser("usage: %prog [options]\n")
+    parser.add_option('-d',         dest='basedir',  type='string', default='condor/JECPlots',     help="Path to input rootfiles")
+    parser.add_option('--rootFile', dest='rootFile', type='string', default='njets_for_Aron.root', help="Output root file")
+    parser.add_option('--dataCard', dest='dataCard', type='string', default='dataCard.txt',        help="Output data card file")
+    parser.add_option('-H',         dest='outDir',   type='string', default='',                    help="Can pass in the output directory name")
+    options, args = parser.parse_args()
+
     # Where the root files are stored
-    #basedir = "condor/rootfiles/"
-    basedir = "condor/JECPlots/"
+    basedir = options.basedir + "/"
+    outDir = options.outDir
+    if os.path.exists(outDir):
+        print "Failed: Output directory %s already exits" % ('"'+outDir+'"')
+        exit(0)        
+    else:
+        os.makedirs(outDir)    
     jettypes = ["pt30"]#, "pt45"]
     cutlevels = [ "1l_deepESMbin1", "1l_deepESMbin2","1l_deepESMbin3","1l_deepESMbin4"]
     systypes = ["", "JECup", "JECdown", "JERup", "JERdown"]
-    outputfile = ROOT.TFile.Open("njets_for_Aron.root","RECREATE")
-    outputDataCard = "dataCard.txt"
+    outputfile = ROOT.TFile.Open(outDir + "/" + options.rootFile,"RECREATE")
+    outputDataCard = options.dataCard
 
     # I hadd my ttbar files into TT.root, and I hadd all other backgrounds into BG_noTT.root
     bgData = {
@@ -179,8 +193,9 @@ if __name__ == "__main__":
     outputfile.Close()
     
     #Make data card
-    md = MakeDataCard(outFile="MVA_ws.root", bgData=bgData["TT"], otData=bgData["other"], sgData=sgData["RPV_550"], basename="h_njets_pt30", cutlevels=cutlevels)
-    md.writeDataCard(outputDataCard)
-
+    for key in sgData:
+            md = MakeDataCard(outFile="MVA_ws.root", bgData=bgData["TT"], otData=bgData["other"], sgData=sgData[key], basename="h_njets_pt30", cutlevels=cutlevels)
+            md.writeDataCard(outDir+"/"+key+"_"+outputDataCard)
+            
     import os
-    os.system("cat "+outputDataCard)
+    os.system("cat "+outDir+"/RPV_550_"+outputDataCard)
