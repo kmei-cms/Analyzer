@@ -68,7 +68,8 @@ for sampleCollection in scl:
                 files += " " + " ".join(glob("%s/%s/MyAnalysis_%s_*.root" % (inPath, directory, sample[1])))
             command = "hadd %s/%s.root %s" % (outDir, sampleCollection, files)
             try:
-                subprocess.Popen(command, shell=True)
+                process = subprocess.Popen(command, shell=True)
+                process.wait()
             except:
                 print "\033[91m Too many files to hadd: using the exception setup \033[0m"
                 command = "hadd %s/%s.root %s/%s/*" % (outDir, sampleCollection, inPath, sampleCollection)
