@@ -65,7 +65,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         //RunTopTagger rtt("TopTagger.cfg", myVarSuffix);
         Muon muon(myVarSuffix);
         Electron electron(myVarSuffix);
-        //Photon photon(myVarSuffix);
+        Photon photon(myVarSuffix);
         Jet jet(myVarSuffix);
         BJet bjet(myVarSuffix);
         CommonVariables commonVariables(myVarSuffix);
@@ -80,7 +80,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         //tr.registerFunction(rtt);
         tr.registerFunction(muon);
         tr.registerFunction(electron);
-        //tr.registerFunction(photon);
+        tr.registerFunction(photon);
         tr.registerFunction(jet);
         tr.registerFunction(bjet);
         tr.registerFunction(commonVariables);
