@@ -21,6 +21,7 @@
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
 #include "Analyzer/Analyzer/include/MakeMiniTree.h"
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
+#include "Analyzer/Analyzer/include/CalculateHtSF.h"
 
 #include "Framework/Framework/include/RunTopTagger.h"
 #include "Framework/Framework/include/Muon.h"
@@ -162,7 +163,7 @@ int main(int argc, char *argv[])
     int opt, option_index = 0;
     bool doBackground = false, doTopTagger = false, doEventSelection = false, 
          doEventShape = false, do0Lep = false, do1Lep = false, doStealthTT = false,
-         doBTagSF = false, calcBTagSF = false, doWControlRegion = false, 
+         doBTagSF = false, calcBTagSF = false, calcHtSF = false, doWControlRegion = false, 
          makeMiniTree = false, makeNJetDists = false,
          doNjetsMinusOneCSFillDijetHists = false, doNjetsMinusOneCSJetReplacement = false, isQuiet = true;
 
@@ -182,6 +183,7 @@ int main(int argc, char *argv[])
         {"doNjetsMinusOneCSJetReplacement",  no_argument, 0, 'r'},
         {"doStealthTT",        no_argument, 0, 'x'},
         {"calcBTagSF",         no_argument, 0, 'f'},
+        {"calcHtSF",           no_argument, 0, 'F'},
         {"doBTagSF",           no_argument, 0, 'g'},
         {"makeMiniTree",       no_argument, 0, 'm'},
         {"makeNJetDists",      no_argument, 0, 'n'},
@@ -194,7 +196,7 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-    while((opt = getopt_long(argc, argv, "bwtspzoqrxfgmncvH:D:N:M:E:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "bwtspzoqrxfFgmncvH:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
@@ -209,6 +211,7 @@ int main(int argc, char *argv[])
             case 'r': doNjetsMinusOneCSJetReplacement = true;              break;
             case 'x': doStealthTT       = true;              break;
             case 'f': calcBTagSF        = true;              break;
+            case 'F': calcHtSF          = true;              break;
             case 'g': doBTagSF          = true;              break;
             case 'm': makeMiniTree      = true;              break;
             case 'n': makeNJetDists     = true;              break;
@@ -245,6 +248,7 @@ int main(int argc, char *argv[])
         {doStealthTT,       run<AnalyzeStealthTopTagger>},
         {doBTagSF,          run<AnalyzeBTagSF>},
         {calcBTagSF,        run<CalculateBTagSF>},
+        {calcHtSF,          run<CalculateHtSF>},
         {makeMiniTree,      run<MakeMiniTree>},
         {makeNJetDists,     run<MakeNJetDists>},
     }; 
