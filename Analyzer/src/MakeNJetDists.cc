@@ -40,15 +40,15 @@ void MakeNJetDists::InitHistos()
     //myVarSuffixs = {""};
     for(const auto& s : myVarSuffixs)
     {
-        my_Histos.emplace_back(new Histo1D<int>("h_njets"+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {}, {"Lumi", "Weight"}));
+        my_Histos.emplace_back(new Histo1D("h_njets"+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {}, {"Lumi", "Weight"}));
         //std::vector<std::string> weightVec = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s, "htDerivedweight"+s};
         std::vector<std::string> weightVec = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s};
     
-        my_Histos.emplace_back(new Histo1D<int>("h_njets_pt30_1l"+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {"passBaseline1l_Good"+s}, weightVec));
+        my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l"+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {"passBaseline1l_Good"+s}, weightVec));
         for(int i = 0; i < 4; i++)
         {
             std::string index = std::to_string(i+1);
-            my_Histos.emplace_back(new Histo1D<int>("h_njets_pt30_1l_deepESMbin"+index+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {"passBaseline1l_Good"+s,"deepESM_bin"+index+s}, weightVec));
+            my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_deepESMbin"+index+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {"passBaseline1l_Good"+s,"deepESM_bin"+index+s}, weightVec));
         }        
     }
     

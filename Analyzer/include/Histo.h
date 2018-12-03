@@ -52,18 +52,32 @@ protected:
     }
 };
 
-template<typename T>
 class Histo1D : public Histo_FirstChild<TH1>
 {
+private:
+    void fillHisto(const std::string& varX, std::unique_ptr<TH1>& histo, const double weight, const NTupleReader& tr) const
+    {
+        std::string type;
+        tr.getType(varX, type);
+        
+        if(type.find("double")       != std::string::npos) histo->Fill( tr.getVar<double>(varX),       weight );
+        if(type.find("unsigned int") != std::string::npos) histo->Fill( tr.getVar<unsigned int>(varX), weight );
+        if(type.find("int")          != std::string::npos) histo->Fill( tr.getVar<int>(varX),          weight );
+        if(type.find("bool")         != std::string::npos) histo->Fill( tr.getVar<bool>(varX),         weight );
+        if(type.find("float")        != std::string::npos) histo->Fill( tr.getVar<float>(varX),        weight );
+        if(type.find("char")         != std::string::npos) histo->Fill( tr.getVar<char>(varX),         weight );
+        if(type.find("short")        != std::string::npos) histo->Fill( tr.getVar<short>(varX),        weight );
+        if(type.find("long")         != std::string::npos) histo->Fill( tr.getVar<long>(varX),         weight );        
+    } 
+
 public:
     void Fill(const NTupleReader& tr)
     {
         const bool pass = passCuts(tr);
         if(pass)
         {
-            T variable = tr.getVar<T>(varX_);
             const double weight = getWeight(tr);
-            histo_->Fill(variable, weight);
+            fillHisto(varX_, histo_, weight, tr);
         }
     }
 
