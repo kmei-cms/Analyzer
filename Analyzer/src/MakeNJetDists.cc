@@ -75,7 +75,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, filetag);
         bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets"+myVarSuffix, "Jets"+myVarSuffix+"_bDiscriminatorCSV", "Jets"+myVarSuffix+"_partonFlavor", myVarSuffix);
         //Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
-        ScaleFactors scaleFactors("allInOne_leptonSF_Moriond17.root", myVarSuffix);
+        ScaleFactors scaleFactors("allInOne_leptonSF_Moriond17.root", "allInONe_HtSFDist_2016.root", myVarSuffix);
         
         //tr.registerFunction(rtt);
         tr.registerFunction(muon);
