@@ -57,38 +57,38 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
     const auto& runtype = tr.getVar<std::string>("runtype");
     const auto& filetag = tr.getVar<std::string>("filetag");
 
-    for(const auto& myVarSuffix : myVarSuffixs)
-    {
-        if(myVarSuffix == "") continue;
-        //RunTopTagger rtt("TopTagger.cfg", myVarSuffix);
-        Muon muon(myVarSuffix);
-        Electron electron(myVarSuffix);
-        Photon photon(myVarSuffix);
-        Jet jet(myVarSuffix);
-        BJet bjet(myVarSuffix);
-        CommonVariables commonVariables(myVarSuffix);
-        MakeMVAVariables makeMVAVariables(false, myVarSuffix);
-        Baseline baseline(myVarSuffix);
-        DeepEventShape deepEventShape("DeepEventShape.cfg", "Info", true, myVarSuffix);
-        BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, filetag);
-        bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets"+myVarSuffix, "Jets"+myVarSuffix+"_bDiscriminatorCSV", "Jets"+myVarSuffix+"_partonFlavor", myVarSuffix);
-        //Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
-        ScaleFactors scaleFactors("allInOne_leptonSF_Moriond17.root", myVarSuffix);
-        
-        //tr.registerFunction(rtt);
-        tr.registerFunction(muon);
-        tr.registerFunction(electron);
-        tr.registerFunction(photon);
-        tr.registerFunction(jet);
-        tr.registerFunction(bjet);
-        tr.registerFunction(commonVariables);
-        tr.registerFunction(makeMVAVariables);
-        tr.registerFunction(baseline);
-        tr.registerFunction(deepEventShape);
-        tr.registerFunction(bTagCorrector);
-        //tr.registerFunction(pileup);
-        tr.registerFunction(scaleFactors);
-    }
+//    for(const auto& myVarSuffix : myVarSuffixs)
+//    {
+//        if(myVarSuffix == "") continue;
+//        //RunTopTagger rtt("TopTagger.cfg", myVarSuffix);
+//        Muon muon(myVarSuffix);
+//        Electron electron(myVarSuffix);
+//        Photon photon(myVarSuffix);
+//        Jet jet(myVarSuffix);
+//        BJet bjet(myVarSuffix);
+//        CommonVariables commonVariables(myVarSuffix);
+//        MakeMVAVariables makeMVAVariables(false, myVarSuffix);
+//        Baseline baseline(myVarSuffix);
+//        DeepEventShape deepEventShape("DeepEventShape.cfg", "Info", true, myVarSuffix);
+//        BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, filetag);
+//        bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets"+myVarSuffix, "Jets"+myVarSuffix+"_bDiscriminatorCSV", "Jets"+myVarSuffix+"_partonFlavor", myVarSuffix);
+//        //Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
+//        ScaleFactors scaleFactors("allInOne_leptonSF_Moriond17.root", myVarSuffix);
+//        
+//        //tr.registerFunction(rtt);
+//        tr.registerFunction(muon);
+//        tr.registerFunction(electron);
+//        tr.registerFunction(photon);
+//        tr.registerFunction(jet);
+//        tr.registerFunction(bjet);
+//        tr.registerFunction(commonVariables);
+//        tr.registerFunction(makeMVAVariables);
+//        tr.registerFunction(baseline);
+//        tr.registerFunction(deepEventShape);
+//        tr.registerFunction(bTagCorrector);
+//        //tr.registerFunction(pileup);
+//        tr.registerFunction(scaleFactors);
+//    }
 
     while( tr.getNextEvent() )
     {
