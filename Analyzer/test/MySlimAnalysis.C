@@ -7,21 +7,12 @@
 
 #include "TopTagger/CfgParser/include/TTException.h"
 
-#include "Analyzer/Analyzer/include/AnalyzeBackground.h"
-#include "Analyzer/Analyzer/include/AnalyzeWControlRegion.h"
-#include "Analyzer/Analyzer/include/AnalyzeTopTagger.h"
-#include "Analyzer/Analyzer/include/AnalyzeEventSelection.h"
-#include "Analyzer/Analyzer/include/AnalyzeEventShape.h"
-#include "Analyzer/Analyzer/include/Analyze0Lep.h"
-#include "Analyzer/Analyzer/include/Analyze1Lep.h"
+#include "Analyzer/Analyzer/include/MakeSmallChecks.h"
+#include "Analyzer/Analyzer/include/MakeSlimChecks.h"
+#include "Analyzer/Analyzer/include/MakeDataMCPlots.h"
+#include "Analyzer/Analyzer/include/AnalyzeHighNJetQCD.h"
 #include "Analyzer/Analyzer/include/AnalyzeLepTrigger.h"
-#include "Analyzer/Analyzer/include/AnalyzeNjetsMinusOneCSFillDijetHists.h"
-#include "Analyzer/Analyzer/include/AnalyzeNjetsMinusOneCSJetReplacement.h"
 #include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
-#include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
-#include "Analyzer/Analyzer/include/MakeNJetDists.h"
-#include "Analyzer/Analyzer/include/MakeMiniTree.h"
-#include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 
 #include "Framework/Framework/include/RunTopTagger.h"
 #include "Framework/Framework/include/Muon.h"
@@ -60,9 +51,26 @@ std::string color(const std::string& text, const std::string& color)
 
 template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
                                     int startFile, int nFiles, int maxEvts, 
-                                    TFile* outfile, bool isQuiet)
+                                    bool isSkim, TFile* outfile)
 {
     std::cout << "Initializing..." << std::endl;
+    const int jecOn = 0, jerOn = 0; 
+    
+    if( jecOn * jerOn != 0 || std::fabs(jecOn) > 1 || std::fabs(jerOn) > 1) 
+    {
+        std::cerr<<color("Error: ", "red")
+                 <<"Invalid values of jecOn and jerOn. "
+                 <<"They should be either -1, 0, or 1. "
+                 <<"you cannot have both jet energy corrections and jet energy resolutions on at the same time"<<std::endl;
+        return;
+    }
+
+    std::string                 myVarSuffix = "";
+    if      ( jecOn == 1 )      myVarSuffix = "JECup";
+    else if ( jecOn == -1 )     myVarSuffix = "JECdown";
+    else if ( jerOn == 1 )      myVarSuffix = "JERup";
+    else if ( jerOn == -1 )     myVarSuffix = "JERdown";
+    
     Analyze a;
     for(const AnaSamples::FileSummary& file : vvf)
     {
@@ -77,35 +85,36 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         printf( "runtype: %s fileWeight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts ); fflush( stdout );
         tr.registerDerivedVar<std::string>("runtype",runtype);
         tr.registerDerivedVar<std::string>("filetag",file.tag);
-        tr.registerDerivedVar<double>("etaCut",2.4); 
-        tr.registerDerivedVar<double>("Lumi",35900); 
+        tr.registerDerivedVar<double>("etaCut",2.4);
         tr.registerDerivedVar<bool>("blind",true);
 
         // Define classes/functions that add variables on the fly
-        RunTopTagger rtt;
+        if ( !isSkim ) 
+        {
+            RunTopTagger rtt;
+            tr.registerFunction(rtt);
+        }
+        
         Muon muon;
         Electron electron;
         Photon photon;
-        Jet jet;
-        BJet bjet;
-        RunFisher runFisher("v3");
-        CommonVariables commonVariables;
-        MakeMVAVariables makeMVAVariables;
+        Jet jet(myVarSuffix);
+        BJet bjet(myVarSuffix);
+        CommonVariables commonVariables( myVarSuffix );
+        MakeMVAVariables makeMVAVariables(false, myVarSuffix,false);
         Baseline baseline;
         DeepEventShape deepEventShape;
 
         // Register classes/functions that add variables on the fly
-        tr.registerFunction(rtt);
-        tr.registerFunction(muon);
-        tr.registerFunction(electron);
-        tr.registerFunction(photon);
-        tr.registerFunction(jet);
-        tr.registerFunction(bjet);
-        tr.registerFunction(runFisher);
-        tr.registerFunction(commonVariables);
-        tr.registerFunction(makeMVAVariables);
-        tr.registerFunction(baseline);
-        tr.registerFunction(deepEventShape);
+        tr.registerFunction( muon );
+        tr.registerFunction( electron );
+        tr.registerFunction( jet );
+        tr.registerFunction( bjet );
+        tr.registerFunction( photon );
+        tr.registerFunction( commonVariables );
+        tr.registerFunction( makeMVAVariables );
+        tr.registerFunction( baseline );
+        tr.registerFunction( deepEventShape );
 
         if( runtype == "MC" ) 
         {
@@ -119,7 +128,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
             tr.registerFunction(scaleFactors);
         }
         // Loop over all of the events and fill histos
-        a.Loop(tr, weight, maxEvts, isQuiet);
+        a.Loop(tr, weight, maxEvts);
 
         // Cleaning up dynamic memory
         delete ch;
@@ -161,34 +170,20 @@ std::set<AnaSamples::FileSummary> setFS(const std::string& dataSets, const bool&
 int main(int argc, char *argv[])
 {
     int opt, option_index = 0;
-    bool doBackground = false, doTopTagger = false, doEventSelection = false, 
-         doEventShape = false, do0Lep = false, do1Lep = false, doStealthTT = false,
-         doBTagSF = false, calcBTagSF = false, doWControlRegion = false, 
-         makeMiniTree = false, makeNJetDists = false, doLepTrig = false,
-         doNjetsMinusOneCSFillDijetHists = false, doNjetsMinusOneCSJetReplacement = false, isQuiet = true;
-
-    bool runOnCondor = false;
+    bool doStealthTT = false, makeSmallChecks = false, doLepTrig = false, doDataMC = false;
+    bool runOnCondor = false, doHighNJetQCD = false, makeSlimChecks  = false;
+    bool isSkim = false;
     std::string histFile = "", dataSets = "";
     int nFiles = -1, startFile = 0, maxEvts = -1;
 
     static struct option long_options[] = {
-        {"doBackground",       no_argument, 0, 'b'},
-        {"doWControlRegion",   no_argument, 0, 'w'},
-        {"doTopTagger",        no_argument, 0, 't'},
-        {"doEventSelection",   no_argument, 0, 's'},
-        {"doEventShape",       no_argument, 0, 'p'},
-        {"do0Lep",             no_argument, 0, 'z'},
-        {"do1Lep",             no_argument, 0, 'o'},
-        {"doLepTrig",          no_argument, 0, 'l'},
-        {"doNjetsMinusOneCSFillDijetHists",  no_argument, 0, 'q'},
-        {"doNjetsMinusOneCSJetReplacement",  no_argument, 0, 'r'},
         {"doStealthTT",        no_argument, 0, 'x'},
-        {"calcBTagSF",         no_argument, 0, 'f'},
-        {"doBTagSF",           no_argument, 0, 'g'},
-        {"makeMiniTree",       no_argument, 0, 'm'},
-        {"makeNJetDists",      no_argument, 0, 'n'},
+        {"doLepTrig",          no_argument, 0, 't'},
+        {"doDataMC",           no_argument, 0, 'd'},
+        {"doHighNJetQCD",      no_argument, 0, 'q'},
+        {"makeSmallChecks",    no_argument, 0, 'a'},
+        {"makeSlimChecks",     no_argument, 0, 'b'},
         {"condor",             no_argument, 0, 'c'},
-        {"verbose",            no_argument, 0, 'v'},
         {"histFile",     required_argument, 0, 'H'},
         {"dataSets",     required_argument, 0, 'D'},
         {"numFiles",     required_argument, 0, 'N'},
@@ -196,70 +191,52 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-    while((opt = getopt_long(argc, argv, "bwtsplzoqrxfgmncvH:D:N:M:E:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "xtdqabcH:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
-            case 'b': doBackground      = true;              break;
-            case 'w': doWControlRegion  = true;              break;
-            case 't': doTopTagger       = true;              break;
-            case 's': doEventSelection  = true;              break;
-            case 'p': doEventShape      = true;              break;
-            case 'z': do0Lep            = true;              break;
-            case 'o': do1Lep            = true;              break;
-            case 'l': doLepTrig         = true;              break;
-            case 'q': doNjetsMinusOneCSFillDijetHists = true;              break;
-            case 'r': doNjetsMinusOneCSJetReplacement = true;              break;
-            case 'x': doStealthTT       = true;              break;
-            case 'f': calcBTagSF        = true;              break;
-            case 'g': doBTagSF          = true;              break;
-            case 'm': makeMiniTree      = true;              break;
-            case 'n': makeNJetDists     = true;              break;
-            case 'c': runOnCondor       = true;              break;
-            case 'v': isQuiet           = false;             break;
-            case 'H': histFile          = optarg;            break;
-            case 'D': dataSets          = optarg;            break;
-            case 'N': nFiles            = int(atoi(optarg)); break;
-            case 'M': startFile         = int(atoi(optarg)); break;
-            case 'E': maxEvts           = int(atoi(optarg)); break;
+            case 'x': doStealthTT      = true;              break;
+            case 't': doLepTrig        = true;              break;
+            case 'd': doDataMC         = true;              break;
+            case 'a': makeSmallChecks  = true;              break;
+            case 'q': doHighNJetQCD    = true;              break;
+            case 'b': makeSlimChecks   = true;              break;
+            case 'c': runOnCondor      = true;              break;
+            case 'H': histFile         = optarg;            break;
+            case 'D': dataSets         = optarg;            break;
+            case 'N': nFiles           = int(atoi(optarg)); break;
+            case 'M': startFile        = int(atoi(optarg)); break;
+            case 'E': maxEvts          = int(atoi(optarg)); break;
         }
     }
+
+    if(dataSets.find("skim") != std::string::npos) isSkim = true;  
 
     if(runOnCondor)
     {
         char thistFile[128];
-        sprintf(thistFile, "MyAnalysis_%s_%d.root", dataSets.c_str(), startFile);
+        sprintf(thistFile, "MySlimAnalysis_%s_%d.root", dataSets.c_str(), startFile);
         histFile = thistFile;
     }
 
     std::set<AnaSamples::FileSummary> vvf = setFS(dataSets, runOnCondor); 
     TFile* outfile = TFile::Open(histFile.c_str(), "RECREATE");
 
-    std::vector<std::pair<bool, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,TFile*,bool)>>> AnalyzerPairVec = {
-        {doBackground,      run<AnalyzeBackground>},
-        {doWControlRegion,  run<AnalyzeWControlRegion>},
-        {doTopTagger,       run<AnalyzeTopTagger>},
-        {doEventSelection,  run<AnalyzeEventSelection>},
-        {doEventShape,      run<AnalyzeEventShape>},
-        {do0Lep,            run<Analyze0Lep>},
-        {do1Lep,            run<Analyze1Lep>},
-        {doLepTrig,         run<AnalyzeLepTrigger>},
-        {doNjetsMinusOneCSFillDijetHists, run<AnalyzeNjetsMinusOneCSFillDijetHists>},
-        {doNjetsMinusOneCSJetReplacement, run<AnalyzeNjetsMinusOneCSJetReplacement>},
-        {doStealthTT,       run<AnalyzeStealthTopTagger>},
-        {doBTagSF,          run<AnalyzeBTagSF>},
-        {calcBTagSF,        run<CalculateBTagSF>},
-        {makeMiniTree,      run<MakeMiniTree>},
-        {makeNJetDists,     run<MakeNJetDists>},
+    std::vector<std::pair<bool, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,bool,TFile*)>>> AnalyzerPairVec = {
+        {doStealthTT,      run<AnalyzeStealthTopTagger>},
+        {doDataMC,         run<MakeDataMCPlots>},
+        {doLepTrig,        run<AnalyzeLepTrigger>},
+        {makeSmallChecks,  run<MakeSmallChecks>},
+        {makeSlimChecks,   run<MakeSlimChecks>},
+        {doHighNJetQCD,    run<AnalyzeHighNJetQCD>},
     }; 
-
+    
     try
     {
         for(auto& pair : AnalyzerPairVec)
         {
-            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,outfile,isQuiet); 
+            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,isSkim,outfile);
         }
-
         outfile->Close();
     }
     catch(const std::string e)
