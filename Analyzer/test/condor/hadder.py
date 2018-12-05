@@ -1,5 +1,6 @@
 import sys, os
 from os import system, environ
+import subprocess
 sys.path = [environ["CMSSW_BASE"] + "/src/SusyAnaTools/Tools/condor/",] + sys.path
 
 from samples import SampleCollection
@@ -66,10 +67,16 @@ for sampleCollection in scl:
             for sample in sl:
                 files += " " + " ".join(glob("%s/%s/MyAnalysis_%s_*.root" % (inPath, directory, sample[1])))
             command = "hadd %s/%s.root %s" % (outDir, sampleCollection, files)
-            #print command
-            system(command)
+            try:
+                process = subprocess.Popen(command, shell=True)
+                process.wait()
+            except:
+                print "\033[91m Too many files to hadd: using the exception setup \033[0m"
+                command = "hadd %s/%s.root %s/%s/*" % (outDir, sampleCollection, inPath, sampleCollection)
+                system(command)
+                pass
 
-## Hack to make the BG_noTT.root file
+# Hack to make the BG_noTT.root file
 sigNttbar = ["AllSignal", "TT", "TTJets"]
 files = ""
 for sampleCollection in scl:

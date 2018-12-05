@@ -37,16 +37,18 @@ void MakeNJetDists::InitHistos()
     TH2::SetDefaultSumw2();
 
     myVarSuffixs = {"", "JECup", "JECdown", "JERup", "JERdown"};
+    //myVarSuffixs = {""};
     for(const auto& s : myVarSuffixs)
     {
-        my_Histos.emplace_back(new Histo1D<int>("h_njets"+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s));
-        std::vector<std::string> weightVec = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s, "htDerivedweight"+s};
-
-        my_Histos.emplace_back(new Histo1D<int>("h_njets_pt30_1l"+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {"passBaseline1l_Good"+s}, weightVec));
+        my_Histos.emplace_back(new Histo1D("h_njets"+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {}, {"Lumi", "Weight"}));
+        //std::vector<std::string> weightVec = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s, "htDerivedweight"+s};
+        std::vector<std::string> weightVec = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s};
+    
+        my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l"+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {"passBaseline1l_Good"+s}, weightVec));
         for(int i = 0; i < 4; i++)
         {
             std::string index = std::to_string(i+1);
-            my_Histos.emplace_back(new Histo1D<int>("h_njets_pt30_1l_deepESMbin"+index+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {"passBaseline1l_Good"+s,"deepESM_bin"+index+s}, weightVec));
+            my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_deepESMbin"+index+s, 8, 6.5, 14.5, "NGoodJets_pt30_inclusive"+s, {"passBaseline1l_Good"+s,"deepESM_bin"+index+s}, weightVec));
         }        
     }
     
@@ -73,7 +75,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
 //        BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, filetag);
 //        bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets"+myVarSuffix, "Jets"+myVarSuffix+"_bDiscriminatorCSV", "Jets"+myVarSuffix+"_partonFlavor", myVarSuffix);
 //        //Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
-//        ScaleFactors scaleFactors("allInOne_leptonSF_Moriond17.root", myVarSuffix);
+//        ScaleFactors scaleFactors("allInOne_leptonSF_Moriond17.root", "allInONe_HtSFDist_2016.root", myVarSuffix);
 //        
 //        //tr.registerFunction(rtt);
 //        tr.registerFunction(muon);
@@ -98,13 +100,9 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
         if( tr.getEvtNum() % 1000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
 
-        const auto& passMadHT           = tr.getVar<bool>("passMadHT");
-        
         //-----------------------------------
         //-- Make sure you are running over MC
-        //-- Doesn't really make sense to run 
-        //--   on Data (also not all variables
-        //--   are there
+        //-- For now (soon will run on data)
         //-----------------------------------
         if( runtype != "MC" ) 
         {
@@ -112,11 +110,6 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
             break;
         }
                
-        //-------------------------------------
-        //-- Make sure we do not double DY events 
-        //------------------------------------
-        if( !passMadHT ) continue; 
-        
         //-----------------------------------
         //-- Fill Histograms Below
         //-----------------------------------

@@ -55,6 +55,7 @@ filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MyAnalysis" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/allInOne_leptonSF_Moriond17.root" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/PileupHistograms_0121_69p2mb_pm4p6.root" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/CSVv2_Moriond17_B_H.csv" % repo,
+                   environ["CMSSW_BASE"] + "/src/%s/test/allInONe_HtSFDist_2016.root" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,ESMVAFileName),
                    ]
 
