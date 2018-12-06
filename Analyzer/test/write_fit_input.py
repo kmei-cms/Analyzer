@@ -20,8 +20,8 @@ class WriteNJetPlots:
         histos = []
         for key, dsi in data.iteritems():
             h = dsi.getHisto(basename+"_"+cut)
-            h.SetName(h.GetName()+"_"+dsi.label)
-            h.SetTitle(h.GetTitle()+"_"+dsi.label)
+            h.SetName(basename+"_"+dsi.label+"_"+cut)
+            h.SetTitle(basename+"_"+dsi.label+"_"+cut)
             h.Write()
             histos.append(h)
         return histos
