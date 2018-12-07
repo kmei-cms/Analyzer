@@ -19,6 +19,7 @@ parser.add_option ('-d',  dest='datasets', type='string', default = '', help="Li
 parser.add_option ('-l',  dest='dataCollections', action='store_true', default = False, help="List all datacollections")
 parser.add_option ('-L',  dest='dataCollectionslong', action='store_true', default = False, help="List all datacollections and sub collections")
 parser.add_option ('-c',  dest='noSubmit', action='store_true', default = False, help="Do not submit jobs.  Only create condor_submit.txt.")
+parser.add_option ('--output',   dest='outPath', type='string', default = '.', help="Name of directory where output of each condor job goes")
 parser.add_option ('--analyze',  dest='analyze', default = 'f', help="AnalyzeTopTagger (t), AnalyzeBackground (b), AnalyzeEventSelection (s), Analyze0Lep (z), AnalyzeStealthTopTagger (x), MakeNJetDists (n)")
 
 options, args = parser.parse_args()
@@ -114,8 +115,8 @@ for ds in datasets:
     ds = ds.strip()
     print ds
     # create the directory
-    if not os.path.isdir("output-files/%s" % ds):
-        os.makedirs("output-files/%s" % ds)
+    if not os.path.isdir("%s/output-files/%s" % (options.outPath, ds)):
+        os.makedirs("%s/output-files/%s" % (options.outPath, ds))
 
     for s, n in sc.sampleList(ds):
         print "s:", s, ", n:", n
@@ -127,11 +128,11 @@ for ds in datasets:
                 if '.root' in l:
                     count = count + 1
             for startFileNum in xrange(0, count, nFilesPerJob):
-                fileParts.append("transfer_output_remaps = \"MyAnalysis_%s_%s.root = output-files/%s/MyAnalysis_%s_%s.root\"\n" % (n, startFileNum, ds, n, startFileNum))
+                fileParts.append("transfer_output_remaps = \"MyAnalysis_%s_%s.root = %s/output-files/%s/MyAnalysis_%s_%s.root\"\n" % (n, startFileNum, options.outPath, ds, n, startFileNum))
                 fileParts.append("Arguments = %s %i %i %s %s\n"%(n, nFilesPerJob, startFileNum, s, options.analyze))
-                fileParts.append("Output = log-files/MyAnalysis_%s_%i.stdout\n"%(n, startFileNum))
-                fileParts.append("Error = log-files/MyAnalysis_%s_%i.stderr\n"%(n, startFileNum))
-                fileParts.append("Log = log-files/MyAnalysis_%s_%i.log\n"%(n, startFileNum))
+                fileParts.append("Output = %s/log-files/MyAnalysis_%s_%i.stdout\n"%(options.outPath, n, startFileNum))
+                fileParts.append("Error = %s/log-files/MyAnalysis_%s_%i.stderr\n"%(options.outPath, n, startFileNum))
+                fileParts.append("Log = %s/log-files/MyAnalysis_%s_%i.log\n"%(options.outPath, n, startFileNum))
                 fileParts.append("Queue\n\n")
 
             f.close()
@@ -141,7 +142,6 @@ fout.write(''.join(fileParts))
 fout.close()
 
 if not options.noSubmit: 
-    system('mkdir -p log-files')
+    system('mkdir -p %s/log-files' % options.outPath)
     system("echo 'condor_submit condor_submit.txt'")
     system('condor_submit condor_submit.txt')
-
