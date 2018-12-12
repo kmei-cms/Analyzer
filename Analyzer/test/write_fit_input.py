@@ -195,6 +195,10 @@ if __name__ == "__main__":
         "RPV_850" : info.DataSetInfo(basedir=basedir, fileName="rpv_stop_850.root",         label="RPV_850", processName="signal", process="0", rate=True, lumiSys="1.05"),
     }
 
+    Data = {
+        "data" : info.DataSetInfo(basedir=basedir, fileName="Data.root", label="data", processName="data", process="1", rate=False, lumiSys="-")
+    }
+
     #Write all histos to outputfile
     outputfile.cd()
     wp = WriteNJetPlots()
@@ -205,7 +209,8 @@ if __name__ == "__main__":
                 basenameOut = "h_njets_" + jettype                
                 histos = wp.writeHistos(bgData, basenameIn, basenameOut, bin, sys)
                 signalhistos = wp.writeHistos(sgData, basenameIn, basenameOut, bin, sys)
-                if sys == "": 
+                if sys == "":
+                    wp.writeHistos(Data, basenameIn, basenameOut, bin, sys)
                     wp.writeStatHistos({"OTHER" : bgData["OTHER"]}, basenameIn, basenameOut, bin, sys)
                     wp.writeStatHistos(sgData, basenameIn, basenameOut, bin, sys)
                     wp.makePseudoData(histos, signalhistos, sgData, basenameOut, bin, sys)
