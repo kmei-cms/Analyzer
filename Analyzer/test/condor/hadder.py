@@ -77,7 +77,7 @@ for sampleCollection in scl:
                 pass
 
 # Hack to make the BG_noTT.root file
-sigNttbar = ["AllSignal", "TT", "TTJets"]
+sigNttbar = ["AllSignal", "TT", "TTJets", "Data_SingleMuon", "Data_SingleElectron"]
 files = ""
 for sampleCollection in scl:
     sl = sc.sampleList(sampleCollection)
@@ -86,6 +86,16 @@ for sampleCollection in scl:
             directory = sampleCollection
             files += " %s/%s.root " % (outDir, directory)
 command = "hadd %s/BG_noTT.root %s" % (outDir, files)
+print "-----------------------------------------------------------"
+print command
+print "-----------------------------------------------------------"
+system(command)
+
+# Hack to make the Data.root file (hadd all the data together)
+dataFiles = ["Data_SingleMuon.root", "Data_SingleElectron.root"]
+command = "hadd %s/Data.root " % outDir
+for f in dataFiles:
+    command += " %s/%s" % (outDir, f)
 print "-----------------------------------------------------------"
 print command
 print "-----------------------------------------------------------"
