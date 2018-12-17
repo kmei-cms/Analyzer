@@ -64,34 +64,18 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
         }
 
         const auto& scaleWeight         = tr.getVar<double>("scaleWeightNom");
-        const auto& scaleWeightUp       = tr.getVar<double>("scaleWeightUp");
-        const auto& scaleWeightDown     = tr.getVar<double>("scaleWeightDown");
         
         const auto& PDFWeight           = tr.getVar<double>("PDFweightNom");
-        const auto& PDFWeightUp         = tr.getVar<double>("PDFweightUp");
-        const auto& PDFWeightDown       = tr.getVar<double>("PDFweightDown");
         
         const auto& PileupWeight        = tr.getVar<double>("_PUweightFactor");
-        const auto& PileupWeightUp      = tr.getVar<double>("_PUSysUp");
-        const auto& PileupWeightDown    = tr.getVar<double>("_PUSysDown");
 
         const auto& eleLepWeight        = tr.getVar<double>("totGoodElectronSF");
-        const auto& eleLepWeightUp      = tr.getVar<double>("totGoodElectronSF_Up");
-        const auto& eleLepWeightDown    = tr.getVar<double>("totGoodElectronSF_Down");
         
         const auto& muLepWeight         = tr.getVar<double>("totGoodMuonSF");
-        const auto& muLepWeightUp       = tr.getVar<double>("totGoodMuonSF_Up");
-        const auto& muLepWeightDown     = tr.getVar<double>("totGoodMuonSF_Down");
 
-        //const auto& bTagWeight          = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
-        //const auto& bTagWeightUp        = tr.getVar<double>("bTagSF_EventWeightSimple_Up");
-        //const auto& bTagWeightDown      = tr.getVar<double>("bTagSF_EventWeightSimple_Down");
-        
-        const auto& deepESMValue        = tr.getVar<double>("deepESM_val");
-        const auto& deepESMbin1         = tr.getVar<bool>("deepESM_bin1");
-        const auto& deepESMbin2         = tr.getVar<bool>("deepESM_bin2");
-        const auto& deepESMbin3         = tr.getVar<bool>("deepESM_bin3");
-        const auto& deepESMbin4         = tr.getVar<bool>("deepESM_bin4");
+        const auto& bTagWeight          = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
+
+        const auto& htWeight            = tr.getVar<double>("htDerivedweight");
         
         //-----------------------------------
         //  Initialize the tree
@@ -104,11 +88,9 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
             "NGoodBJets_pt30",
             "NGoodBJets_pt30_tight",
             "Mbl",
-            "ntops_1jet",
-            "ntops_2jet",
-            "ntops_3jet",
+            "totalEventWeight"
         };
-
+        
         if( tr.isFirstEvent() ) {
             std::string myTreeName = "myMiniTree";
             myTree = new TTree( (myTreeName).c_str() , (myTreeName).c_str() );
@@ -137,6 +119,8 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
         //-----------------------------------
         //-- Fill Histograms Below
         //-----------------------------------
+       
+
         
         if( passBaseline1l ) {
 

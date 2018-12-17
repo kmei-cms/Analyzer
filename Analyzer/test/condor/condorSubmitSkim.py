@@ -14,7 +14,7 @@ repo = "Analyzer/Analyzer"
 # Parse command line arguments
 parser = optparse.OptionParser("usage: %prog [options]\n")
 
-parser.add_option ('-n',  dest='numfile', type='int', default = 25, help="number of files per job")
+parser.add_option ('-n',  dest='numfile', type='int', default = 10, help="number of files per job")
 parser.add_option ('-d',  dest='datasets', type='string', default = '', help="List of datasets, comma separated")
 parser.add_option ('-l',  dest='dataCollections', action='store_true', default = False, help="List all datacollections")
 parser.add_option ('-L',  dest='dataCollectionslong', action='store_true', default = False, help="List all datacollections and sub collections")
@@ -54,6 +54,7 @@ filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MySkimAnalysis" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/allInOne_leptonSF_Moriond17.root" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/PileupHistograms_0121_69p2mb_pm4p6.root" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/CSVv2_Moriond17_B_H.csv" % repo,
+                   environ["CMSSW_BASE"] + "/src/%s/test/allInONe_HtSFDist_2016.root" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,ESMVAFileName),
                    ]
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dir=${CMSSW_BASE}/src/Analyzer/Analyzer/test/condor/output-files-slim
+dir=${CMSSW_BASE}/src/Analyzer/Analyzer/test/condor/output-files-slim-FULL
 
 function strip {
     local STRING=${1#$"$2"}

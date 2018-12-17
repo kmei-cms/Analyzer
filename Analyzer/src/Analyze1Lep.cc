@@ -51,7 +51,7 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap, const st
         my_2d_histos.emplace("Jet_cm_phi_"+std::to_string(i)+"_njets_1l_ge7j_ge1b", std::make_shared<TH2D>(("Jet_cm_phi_"+std::to_string(i)+"_njets_1l_ge7j_ge1b").c_str(),("Jet_cm_phi_"+std::to_string(i)+"_njets_1l_ge7j_ge1b").c_str(), 20, 0, 20, 80, -4, 4));
         my_2d_histos.emplace("Jet_cm_m_"+std::to_string(i)+"_njets_1l_ge7j_ge1b", std::make_shared<TH2D>(("Jet_cm_m_"+std::to_string(i)+"_njets_1l_ge7j_ge1b").c_str(),("Jet_cm_m_"+std::to_string(i)+"_njets_1l_ge7j_ge1b").c_str(), 20, 0, 20, 40, 0, 200));
     }
-    
+
     for(auto& mycut : cutMap)
     {
         for(const auto& hInfo : histInfos)
@@ -101,6 +101,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& deepESM_bin2         = tr.getVar<bool>("deepESM_bin2");
         const auto& deepESM_bin3         = tr.getVar<bool>("deepESM_bin3");
         const auto& deepESM_bin4         = tr.getVar<bool>("deepESM_bin4");
+        const auto& deepESM_binNum       = tr.getVar<int>("deepESM_binNum");
         const auto& fwm2_top6            = tr.getVar<double>("fwm2_top6");
         const auto& fwm3_top6            = tr.getVar<double>("fwm3_top6");
         const auto& fwm4_top6            = tr.getVar<double>("fwm4_top6");
@@ -129,6 +130,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         double PileupWeight = 1.0;
         double bTagWeight = 1.0;
         double htDerivedweight = 1.0;
+        double topPtScaleFactor = 1.0;
         if(runtype == "MC")
         {
             // Define Lumi weight
@@ -148,6 +150,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             PileupWeight = tr.getVar<double>("_PUweightFactor");
             bTagWeight   = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
             htDerivedweight = tr.getVar<double>("htDerivedweight");
+            topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
 
             weight *= eventweight*leptonweight*bTagWeight*htDerivedweight;
         }
@@ -200,53 +203,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         bool pass_ge1t1_d1 = pass_ge1t1 && deepESM_bin1, pass_ge1t1_d2 = pass_ge1t1 && deepESM_bin2, pass_ge1t1_d3 = pass_ge1t1 && deepESM_bin3, pass_ge1t1_d4 = pass_ge1t1 && deepESM_bin4;
         bool pass_ge1t2_d1 = pass_ge1t2 && deepESM_bin1, pass_ge1t2_d2 = pass_ge1t2 && deepESM_bin2, pass_ge1t2_d3 = pass_ge1t2 && deepESM_bin3, pass_ge1t2_d4 = pass_ge1t2 && deepESM_bin4;
         bool pass_ge1t3_d1 = pass_ge1t3 && deepESM_bin1, pass_ge1t3_d2 = pass_ge1t3 && deepESM_bin2, pass_ge1t3_d3 = pass_ge1t3 && deepESM_bin3, pass_ge1t3_d4 = pass_ge1t3 && deepESM_bin4;
-        // ---------------------------
-        // --    2 Top selection
-        // ---------------------------
-
-        // exactly selections
-        bool pass_2t    = ntops==2;
-        bool pass_2t_d1 = pass_2t && deepESM_bin1, pass_2t_d2 = pass_2t && deepESM_bin2, pass_2t_d3 = pass_2t && deepESM_bin3, pass_2t_d4 = pass_2t && deepESM_bin4;
-
-        bool pass_2t11 = pass_2t && ntops_1jet==2;
-        bool pass_2t12 = pass_2t && ntops_1jet==1 && ntops_2jet==1;
-        bool pass_2t13 = pass_2t && ntops_1jet==1 && ntops_3jet==1;
-        bool pass_2t22 = pass_2t && ntops_2jet==2;
-        bool pass_2t23 = pass_2t && ntops_2jet==1 && ntops_3jet==1;
-        bool pass_2t33 = pass_2t && ntops_3jet==2;
-
-        bool pass_2t11_d1 = pass_2t11 && deepESM_bin1, pass_2t11_d2 = pass_2t11 && deepESM_bin2, pass_2t11_d3 = pass_2t11 && deepESM_bin3, pass_2t11_d4 = pass_2t11 && deepESM_bin4;
-        bool pass_2t12_d1 = pass_2t12 && deepESM_bin1, pass_2t12_d2 = pass_2t12 && deepESM_bin2, pass_2t12_d3 = pass_2t12 && deepESM_bin3, pass_2t12_d4 = pass_2t12 && deepESM_bin4;
-        bool pass_2t13_d1 = pass_2t13 && deepESM_bin1, pass_2t13_d2 = pass_2t13 && deepESM_bin2, pass_2t13_d3 = pass_2t13 && deepESM_bin3, pass_2t13_d4 = pass_2t13 && deepESM_bin4;
-        bool pass_2t22_d1 = pass_2t22 && deepESM_bin1, pass_2t22_d2 = pass_2t22 && deepESM_bin2, pass_2t22_d3 = pass_2t22 && deepESM_bin3, pass_2t22_d4 = pass_2t22 && deepESM_bin4;
-        bool pass_2t23_d1 = pass_2t23 && deepESM_bin1, pass_2t23_d2 = pass_2t23 && deepESM_bin2, pass_2t23_d3 = pass_2t23 && deepESM_bin3, pass_2t23_d4 = pass_2t23 && deepESM_bin4;
-        bool pass_2t33_d1 = pass_2t33 && deepESM_bin1, pass_2t33_d2 = pass_2t33 && deepESM_bin2, pass_2t33_d3 = pass_2t33 && deepESM_bin3, pass_2t33_d4 = pass_2t33 && deepESM_bin4;
-
-        // at least selections
-        bool pass_ge2t    = ntops>=2;
-        bool pass_ge2t_d1 = pass_ge2t && deepESM_bin1, pass_ge2t_d2 = pass_ge2t && deepESM_bin2, pass_ge2t_d3 = pass_ge2t && deepESM_bin3, pass_ge2t_d4 = pass_ge2t && deepESM_bin4;
-
-        bool pass_ge2t11 = pass_ge2t && ntops_1jet>=2;
-        bool pass_ge2t12 = pass_ge2t && ntops_1jet>=1 && ntops_2jet>=1;
-        bool pass_ge2t13 = pass_ge2t && ntops_1jet>=1 && ntops_3jet>=1;
-        bool pass_ge2t22 = pass_ge2t && ntops_2jet>=2;
-        bool pass_ge2t23 = pass_ge2t && ntops_2jet>=1 && ntops_3jet>=1;
-        bool pass_ge2t33 = pass_ge2t && ntops_3jet>=2;
-
-        //Merge or no Merge selections
-        bool pass_Merge = ntops_1jet >= 1, pass_noMerge = ntops_1jet == 0;
-        bool pass_ge2t11or12or13 = pass_Merge   && (pass_ge2t11 or pass_ge2t12 or pass_ge2t13);
-        bool pass_ge2t22or23or33 = pass_noMerge && (pass_ge2t22 or pass_ge2t23 or pass_ge2t33);
-
-        bool pass_ge2t11_d1 = pass_ge2t11 && deepESM_bin1, pass_ge2t11_d2 = pass_ge2t11 && deepESM_bin2, pass_ge2t11_d3 = pass_ge2t11 && deepESM_bin3, pass_ge2t11_d4 = pass_ge2t11 && deepESM_bin4;
-        bool pass_ge2t12_d1 = pass_ge2t12 && deepESM_bin1, pass_ge2t12_d2 = pass_ge2t12 && deepESM_bin2, pass_ge2t12_d3 = pass_ge2t12 && deepESM_bin3, pass_ge2t12_d4 = pass_ge2t12 && deepESM_bin4;
-        bool pass_ge2t13_d1 = pass_ge2t13 && deepESM_bin1, pass_ge2t13_d2 = pass_ge2t13 && deepESM_bin2, pass_ge2t13_d3 = pass_ge2t13 && deepESM_bin3, pass_ge2t13_d4 = pass_ge2t13 && deepESM_bin4;
-        bool pass_ge2t22_d1 = pass_ge2t22 && deepESM_bin1, pass_ge2t22_d2 = pass_ge2t22 && deepESM_bin2, pass_ge2t22_d3 = pass_ge2t22 && deepESM_bin3, pass_ge2t22_d4 = pass_ge2t22 && deepESM_bin4;
-        bool pass_ge2t23_d1 = pass_ge2t23 && deepESM_bin1, pass_ge2t23_d2 = pass_ge2t23 && deepESM_bin2, pass_ge2t23_d3 = pass_ge2t23 && deepESM_bin3, pass_ge2t23_d4 = pass_ge2t23 && deepESM_bin4;
-        bool pass_ge2t33_d1 = pass_ge2t33 && deepESM_bin1, pass_ge2t33_d2 = pass_ge2t33 && deepESM_bin2, pass_ge2t33_d3 = pass_ge2t33 && deepESM_bin3, pass_ge2t33_d4 = pass_ge2t33 && deepESM_bin4;
-
-        bool pass_ge2t11or12or13_d1 = pass_ge2t11or12or13 && deepESM_bin1, pass_ge2t11or12or13_d2 = pass_ge2t11or12or13 && deepESM_bin2, pass_ge2t11or12or13_d3 = pass_ge2t11or12or13 && deepESM_bin3, pass_ge2t11or12or13_d4 = pass_ge2t11or12or13 && deepESM_bin4;
-        bool pass_ge2t22or23or33_d1 = pass_ge2t22or23or33 && deepESM_bin1, pass_ge2t22or23or33_d2 = pass_ge2t22or23or33 && deepESM_bin2, pass_ge2t22or23or33_d3 = pass_ge2t22or23or33 && deepESM_bin3, pass_ge2t22or23or33_d4 = pass_ge2t22or23or33 && deepESM_bin4;
 
         // -------------------
         // --- Fill Histos ---
@@ -260,10 +216,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"_1l_ge2b"                        , pass_1l && pass_njet_pt30_2btag && JetID                                 },
             {"_1e_1m_ge2b_le5j"                , passBaseline1e1m                                                         },
             {"_1l_1t"                          , pass_1l && pass_1t                                                       },
-            {"_1l_2t"                          , pass_1l && pass_2t                                                       },
             {"_1l_ge1t"                        , pass_1l && pass_ge1t                                                     },
-            {"_1l_ge2t"                        , pass_1l && pass_ge2t                                                     },
-            {"_1l_5to6j_ge1b"                  , pass_1l && pass_5to6njet_pt30 && pass_njet_pt30_1btag && JetID           },
             {"_1l_ge7j_ge2b"                   , pass_1l && pass_njet_pt30 && pass_njet_pt30_2btag && JetID               },
             {"_1l_ge7j_ge1b_noMbl"             , pass_1l && pass_njet_pt30 && pass_njet_pt30_1btag && JetID               },
             {"_1l_ge7j_ge1b"                   , passBaseline1l_Good                                                      },                         
@@ -273,6 +226,9 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"_1l_ge7j_ge1b_d2"                , passBaseline1l_Good && deepESM_bin2                                      },                         
             {"_1l_ge7j_ge1b_d3"                , passBaseline1l_Good && deepESM_bin3                                      },                         
             {"_1l_ge7j_ge1b_d4"                , passBaseline1l_Good && deepESM_bin4                                      },                         
+            {"_1l_1j_ge1b"                     , pass_1l && NGoodJets_pt30 == 1 && pass_njet_pt30_1btag && JetID          },
+            {"_1l_2j_ge1b"                     , pass_1l && NGoodJets_pt30 == 2 && pass_njet_pt30_1btag && JetID          },
+            {"_1l_3j_ge1b"                     , pass_1l && NGoodJets_pt30 == 3 && pass_njet_pt30_1btag && JetID          },
             {"_1l_4j_ge1b"                     , pass_1l && NGoodJets_pt30 == 4 && pass_njet_pt30_1btag && JetID          },
             {"_1l_5j_ge1b"                     , pass_1l && NGoodJets_pt30 == 5 && pass_njet_pt30_1btag && JetID          },
             {"_1l_6j_ge1b"                     , pass_1l && NGoodJets_pt30 == 6 && pass_njet_pt30_1btag && JetID          },
@@ -295,6 +251,10 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"_1l_ge7j_ge1b_ge1t_d2"           , passBaseline1l_Good && pass_ge1t_d2                                      }, 
             {"_1l_ge7j_ge1b_ge1t_d3"           , passBaseline1l_Good && pass_ge1t_d3                                      }, 
             {"_1l_ge7j_ge1b_ge1t_d4"           , passBaseline1l_Good && pass_ge1t_d4                                      },
+            //{"_1l_5j_ge1b_htCorr"              , pass_1l && NGoodJets_pt30 == 5 && pass_njet_pt30_1btag && JetID          },
+            //{"_1l_6j_ge1b_htCorr"              , pass_1l && NGoodJets_pt30 == 6 && pass_njet_pt30_1btag && JetID          },
+            //{"_1l_7j_ge1b_htCorr"              , passBaseline1l_Good && NGoodJets_pt30 == 7                               },
+            //{"_1l_ge7j_ge1b_htCorr"            , passBaseline1l_Good                                                      },
             
             {"_1l_ge7j_ge1b_1t1"               , passBaseline1l_Good && pass_1t1                                          },
             {"_1l_ge7j_ge1b_1t2"               , passBaseline1l_Good && pass_1t2                                          },
@@ -330,89 +290,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"_1l_ge7j_ge1b_ge1t3_d1"          , passBaseline1l_Good && pass_ge1t3_d1                                     },
             {"_1l_ge7j_ge1b_ge1t3_d2"          , passBaseline1l_Good && pass_ge1t3_d2                                     },
             {"_1l_ge7j_ge1b_ge1t3_d3"          , passBaseline1l_Good && pass_ge1t3_d3                                     },
-            {"_1l_ge7j_ge1b_ge1t3_d4"          , passBaseline1l_Good && pass_ge1t3_d4                                     },
-                                                 
-            {"_1l_ge7j_ge1b_2t"                , passBaseline1l_Good && pass_2t                                           },
-            {"_1l_ge7j_ge1b_2t_d1"             , passBaseline1l_Good && pass_2t_d1                                        },
-            {"_1l_ge7j_ge1b_2t_d2"             , passBaseline1l_Good && pass_2t_d2                                        }, 
-            {"_1l_ge7j_ge1b_2t_d3"             , passBaseline1l_Good && pass_2t_d3                                        }, 
-            {"_1l_ge7j_ge1b_2t_d4"             , passBaseline1l_Good && pass_2t_d4                                        },
-            {"_1l_ge7j_ge1b_ge2t"              , passBaseline1l_Good && pass_ge2t                                         },
-            {"_1l_ge7j_ge1b_ge2t_d1"           , passBaseline1l_Good && pass_ge2t_d1                                      },
-            {"_1l_ge7j_ge1b_ge2t_d2"           , passBaseline1l_Good && pass_ge2t_d2                                      }, 
-            {"_1l_ge7j_ge1b_ge2t_d3"           , passBaseline1l_Good && pass_ge2t_d3                                      }, 
-            {"_1l_ge7j_ge1b_ge2t_d4"           , passBaseline1l_Good && pass_ge2t_d4                                      },
-                                                 
-            //{"_1l_ge7j_ge1b_2t11"              , passBaseline1l_Good && pass_2t11                                         },
-            //{"_1l_ge7j_ge1b_2t12"              , passBaseline1l_Good && pass_2t12                                         },
-            //{"_1l_ge7j_ge1b_2t13"              , passBaseline1l_Good && pass_2t13                                         },
-            //{"_1l_ge7j_ge1b_2t22"              , passBaseline1l_Good && pass_2t22                                         },
-            //{"_1l_ge7j_ge1b_2t23"              , passBaseline1l_Good && pass_2t23                                         },
-            //{"_1l_ge7j_ge1b_2t33"              , passBaseline1l_Good && pass_2t33                                         },
-            //{"_1l_ge7j_ge1b_2t11_d1"           , passBaseline1l_Good && pass_2t11_d1                                      },
-            //{"_1l_ge7j_ge1b_2t11_d2"           , passBaseline1l_Good && pass_2t11_d2                                      },
-            //{"_1l_ge7j_ge1b_2t11_d3"           , passBaseline1l_Good && pass_2t11_d3                                      },
-            //{"_1l_ge7j_ge1b_2t11_d4"           , passBaseline1l_Good && pass_2t11_d4                                      },
-            //{"_1l_ge7j_ge1b_2t12_d1"           , passBaseline1l_Good && pass_2t12_d1                                      },
-            //{"_1l_ge7j_ge1b_2t12_d2"           , passBaseline1l_Good && pass_2t12_d2                                      },
-            //{"_1l_ge7j_ge1b_2t12_d3"           , passBaseline1l_Good && pass_2t12_d3                                      },
-            //{"_1l_ge7j_ge1b_2t12_d4"           , passBaseline1l_Good && pass_2t12_d4                                      },
-            //{"_1l_ge7j_ge1b_2t13_d1"           , passBaseline1l_Good && pass_2t13_d1                                      },
-            //{"_1l_ge7j_ge1b_2t13_d2"           , passBaseline1l_Good && pass_2t13_d2                                      },
-            //{"_1l_ge7j_ge1b_2t13_d3"           , passBaseline1l_Good && pass_2t13_d3                                      },
-            //{"_1l_ge7j_ge1b_2t13_d4"           , passBaseline1l_Good && pass_2t13_d4                                      },
-            //{"_1l_ge7j_ge1b_2t22_d1"           , passBaseline1l_Good && pass_2t22_d1                                      },
-            //{"_1l_ge7j_ge1b_2t22_d2"           , passBaseline1l_Good && pass_2t22_d2                                      },
-            //{"_1l_ge7j_ge1b_2t22_d3"           , passBaseline1l_Good && pass_2t22_d3                                      },
-            //{"_1l_ge7j_ge1b_2t22_d4"           , passBaseline1l_Good && pass_2t22_d4                                      },
-            //{"_1l_ge7j_ge1b_2t23_d1"           , passBaseline1l_Good && pass_2t23_d1                                      },
-            //{"_1l_ge7j_ge1b_2t23_d2"           , passBaseline1l_Good && pass_2t23_d2                                      },
-            //{"_1l_ge7j_ge1b_2t23_d3"           , passBaseline1l_Good && pass_2t23_d3                                      },
-            //{"_1l_ge7j_ge1b_2t23_d4"           , passBaseline1l_Good && pass_2t23_d4                                      },
-            //{"_1l_ge7j_ge1b_2t33_d1"           , passBaseline1l_Good && pass_2t33_d1                                      },
-            //{"_1l_ge7j_ge1b_2t33_d2"           , passBaseline1l_Good && pass_2t33_d2                                      },
-            //{"_1l_ge7j_ge1b_2t33_d3"           , passBaseline1l_Good && pass_2t33_d3                                      },
-            //{"_1l_ge7j_ge1b_2t33_d4"           , passBaseline1l_Good && pass_2t33_d4                                      },
-            //{"_1l_ge7j_ge1b_ge2t11"            , passBaseline1l_Good && pass_ge2t11                                       },
-            //{"_1l_ge7j_ge1b_ge2t12"            , passBaseline1l_Good && pass_ge2t12                                       },
-            //{"_1l_ge7j_ge1b_ge2t13"            , passBaseline1l_Good && pass_ge2t13                                       },
-            //{"_1l_ge7j_ge1b_ge2t11or12or13"    , passBaseline1l_Good && pass_ge2t11or12or13                               },
-            //{"_1l_ge7j_ge1b_ge2t22"            , passBaseline1l_Good && pass_ge2t22                                       },
-            //{"_1l_ge7j_ge1b_ge2t23"            , passBaseline1l_Good && pass_ge2t23                                       },
-            //{"_1l_ge7j_ge1b_ge2t33"            , passBaseline1l_Good && pass_ge2t33                                       },
-            //{"_1l_ge7j_ge1b_ge2t22or23or33"    , passBaseline1l_Good && pass_ge2t22or23or33                               },
-            //{"_1l_ge7j_ge1b_ge2t11_d1"         , passBaseline1l_Good && pass_ge2t11_d1                                    },
-            //{"_1l_ge7j_ge1b_ge2t11_d2"         , passBaseline1l_Good && pass_ge2t11_d2                                    },
-            //{"_1l_ge7j_ge1b_ge2t11_d3"         , passBaseline1l_Good && pass_ge2t11_d3                                    },
-            //{"_1l_ge7j_ge1b_ge2t11_d4"         , passBaseline1l_Good && pass_ge2t11_d4                                    },
-            //{"_1l_ge7j_ge1b_ge2t12_d1"         , passBaseline1l_Good && pass_ge2t12_d1                                    },
-            //{"_1l_ge7j_ge1b_ge2t12_d2"         , passBaseline1l_Good && pass_ge2t12_d2                                    },
-            //{"_1l_ge7j_ge1b_ge2t12_d3"         , passBaseline1l_Good && pass_ge2t12_d3                                    },
-            //{"_1l_ge7j_ge1b_ge2t12_d4"         , passBaseline1l_Good && pass_ge2t12_d4                                    },
-            //{"_1l_ge7j_ge1b_ge2t13_d1"         , passBaseline1l_Good && pass_ge2t13_d1                                    },
-            //{"_1l_ge7j_ge1b_ge2t13_d2"         , passBaseline1l_Good && pass_ge2t13_d2                                    },
-            //{"_1l_ge7j_ge1b_ge2t13_d3"         , passBaseline1l_Good && pass_ge2t13_d3                                    },
-            //{"_1l_ge7j_ge1b_ge2t13_d4"         , passBaseline1l_Good && pass_ge2t13_d4                                    },
-            //{"_1l_ge7j_ge1b_ge2t11or12or13_d1" , passBaseline1l_Good && pass_ge2t11or12or13_d1                            },
-            //{"_1l_ge7j_ge1b_ge2t11or12or13_d2" , passBaseline1l_Good && pass_ge2t11or12or13_d2                            },
-            //{"_1l_ge7j_ge1b_ge2t11or12or13_d3" , passBaseline1l_Good && pass_ge2t11or12or13_d3                            },
-            //{"_1l_ge7j_ge1b_ge2t11or12or13_d4" , passBaseline1l_Good && pass_ge2t11or12or13_d4                            },
-            //{"_1l_ge7j_ge1b_ge2t22_d1"         , passBaseline1l_Good && pass_ge2t22_d1                                    },
-            //{"_1l_ge7j_ge1b_ge2t22_d2"         , passBaseline1l_Good && pass_ge2t22_d2                                    },
-            //{"_1l_ge7j_ge1b_ge2t22_d3"         , passBaseline1l_Good && pass_ge2t22_d3                                    },
-            //{"_1l_ge7j_ge1b_ge2t22_d4"         , passBaseline1l_Good && pass_ge2t22_d4                                    },
-            //{"_1l_ge7j_ge1b_ge2t23_d1"         , passBaseline1l_Good && pass_ge2t23_d1                                    },
-            //{"_1l_ge7j_ge1b_ge2t23_d2"         , passBaseline1l_Good && pass_ge2t23_d2                                    },
-            //{"_1l_ge7j_ge1b_ge2t23_d3"         , passBaseline1l_Good && pass_ge2t23_d3                                    },
-            //{"_1l_ge7j_ge1b_ge2t23_d4"         , passBaseline1l_Good && pass_ge2t23_d4                                    },
-            //{"_1l_ge7j_ge1b_ge2t33_d1"         , passBaseline1l_Good && pass_ge2t33_d1                                    },
-            //{"_1l_ge7j_ge1b_ge2t33_d2"         , passBaseline1l_Good && pass_ge2t33_d2                                    },
-            //{"_1l_ge7j_ge1b_ge2t33_d3"         , passBaseline1l_Good && pass_ge2t33_d3                                    },
-            //{"_1l_ge7j_ge1b_ge2t33_d4"         , passBaseline1l_Good && pass_ge2t33_d4                                    },
-            //{"_1l_ge7j_ge1b_ge2t22or23or33_d1" , passBaseline1l_Good && pass_ge2t22or23or33_d1                            },
-            //{"_1l_ge7j_ge1b_ge2t22or23or33_d2" , passBaseline1l_Good && pass_ge2t22or23or33_d2                            },
-            //{"_1l_ge7j_ge1b_ge2t22or23or33_d3" , passBaseline1l_Good && pass_ge2t22or23or33_d3                            },
-            //{"_1l_ge7j_ge1b_ge2t22or23or33_d4" , passBaseline1l_Good && pass_ge2t22or23or33_d4                            },
+            {"_1l_ge7j_ge1b_ge1t3_d4"          , passBaseline1l_Good && pass_ge1t3_d4                                     },                                                 
         };
 
         std::vector<TH1DInfo> histInfos = {
@@ -426,6 +304,8 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"blind_fisher",       200,  -0.5,    0.5},
             {    "h_deepESM",      200,   0.0,    1.0},
             {"blind_deepESM",      200,   0.0,    1.0},
+            {    "h_deepESMMerged",  4,   0.5,    4.5},
+            {"blind_deepESMMerged",  4,   0.5,    4.5},
             {    "h_ht",           300,   0.0, 3000.0},
             {"blind_ht",           300,   0.0, 3000.0},
             {    "h_mbl",          300,   0.0,  300.0},
@@ -479,6 +359,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_histos["h_nb"            +kv.first]->Fill(NGoodBJets_pt30, w);
                 my_histos["h_fisher"        +kv.first]->Fill(fisher_val, w);
                 my_histos["h_deepESM"       +kv.first]->Fill(deepESM_val, w);
+                my_histos["h_deepESMMerged" +kv.first]->Fill(deepESM_binNum, w);
                 my_histos["h_ht"            +kv.first]->Fill(HT_trigger_pt30, w);
                 my_histos["h_mbl"           +kv.first]->Fill(Mbl, w);
                 my_histos["h_weight"        +kv.first]->Fill(weight, w);
@@ -508,6 +389,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                     my_histos["blind_nb"            +kv.first]->Fill(NGoodBJets_pt30, w);
                     my_histos["blind_fisher"        +kv.first]->Fill(fisher_val, w);
                     my_histos["blind_deepESM"       +kv.first]->Fill(deepESM_val, w);
+                    my_histos["blind_deepESMMerged" +kv.first]->Fill(deepESM_binNum, w);
                     my_histos["blind_ht"            +kv.first]->Fill(HT_trigger_pt30, w);
                     my_histos["blind_mbl"           +kv.first]->Fill(Mbl, w);
                     my_histos["blind_weight"        +kv.first]->Fill(weight, w);

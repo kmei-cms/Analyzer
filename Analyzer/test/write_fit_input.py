@@ -16,28 +16,46 @@ class WriteNJetPlots:
     def calcUnc(self,a,unc_a,b,unc_b):
         return  a/b * sqrt( (unc_a/a)**2+(unc_b/b)**2)
     
-    def writeHistos(self, data, basename, cut):
+    def writeHistos(self, data, basenameIn, basenameOut, bin, sys):
         histos = []
         for key, dsi in data.iteritems():
-            h = dsi.getHisto(basename+"_"+cut)
-            h.SetName(h.GetName()+"_"+dsi.label)
-            h.SetTitle(h.GetTitle()+"_"+dsi.label)
+            h = dsi.getHisto(basenameIn+"_"+bin+sys)
+            h.SetName(bin+"_"+dsi.label+"_"+basenameOut+sys)
+            h.SetTitle(bin+"_"+dsi.label+"_"+basenameOut+sys)
             h.Write()
             histos.append(h)
         return histos
 
-    def makePseudoData(self, histos, signalhistos, sgData, jettype, cut):
+    def writeStatHistos(self, data, basenameIn, basenameOut, bin, sys):
+        for key, dsi in data.iteritems():
+            h = dsi.getHisto(basenameIn+"_"+bin+sys)
+            for i in range(1, h.GetNbinsX()+1):
+                name = bin+"_"+dsi.label+"_mcStatBin"+str(i)
+                hStatUp = h.Clone(name+"Up")
+                hStatUp.SetTitle(name+"Up")
+                hStatDown = h.Clone(name+"Down")
+                hStatDown.SetTitle(name+"Down")
+                content = h.GetBinContent(i)
+                error = h.GetBinError(i)
+                up = content+error if content+error > 0.0 else 0.0
+                down = content-error if content-error > 0.0 else 0.0
+                hStatUp.SetBinContent(i, up)
+                hStatDown.SetBinContent(i, down)
+                hStatUp.Write()
+                hStatDown.Write()
+
+    def makePseudoData(self, histos, signalhistos, sgData, basename, bin, sys):
         #make some pseudo_data
-        mynewh = ROOT.TH1D(basename+"_"+cut+"_pseudodata", basename+"_"+cut+"_pseudodata",
-                           histos[0].GetNbinsX(), histos[0].GetBinLowEdge(1), histos[0].GetBinLowEdge(1)+histos[0].GetNbinsX())
+        name = bin+"_pseudodata_"+basename+sys
+        mynewh = ROOT.TH1D(name, name, histos[0].GetNbinsX(), histos[0].GetBinLowEdge(1), histos[0].GetBinLowEdge(1)+histos[0].GetNbinsX())
         
         #make some pseudo_data with signal
         pseudodataS_histos = []
         for key, dsi in sgData.iteritems():
             sig = dsi.label
-            pseudodataS_histos.append( ROOT.TH1D(basename+"_"+cut+"_pseudodataS_"+sig, basename+"_"+cut+"_pseudodataS_"+sig,
-                                                 histos[0].GetNbinsX(), histos[0].GetBinLowEdge(1), histos[0].GetBinLowEdge(1)+histos[0].GetNbinsX())
-                                       )
+            name = bin+"_pseudodataS_"+sig+"_"+basename+sys
+            pseudodataS_histos.append( ROOT.TH1D(name, name, histos[0].GetNbinsX(), histos[0].GetBinLowEdge(1), histos[0].GetBinLowEdge(1)+histos[0].GetNbinsX()) )
+
         for bin in range(histos[0].GetNbinsX()):
             sumdata = 0
             #sumunc = 0
@@ -58,22 +76,22 @@ class WriteNJetPlots:
             h.Write()
 
 class MakeDataCard:
-    def __init__(self, outFile, bgData, otData, sgData, basename, cutlevels):
-        self.nMVABins = len(cutlevels)
+    def __init__(self, outFile, bgData, otData, sgData, basename, mvaBin):
+        self.nMVABins = len(mvaBin)
         self.outFile = outFile
         self.bgData = bgData
         self.otData = otData
         self.sgData = sgData
         self.basename = basename
-        self.cutlevels = cutlevels
-        bgMVAHistos = self.getMVAHists(bgData, cutlevels, basename)
-        otMVAHistos = self.getMVAHists(otData, cutlevels, basename)
-        sgMVAHistos = self.getMVAHists(sgData, cutlevels, basename)        
+        self.mvaBin = mvaBin
+        bgMVAHistos = self.getMVAHists(bgData, mvaBin, basename)
+        otMVAHistos = self.getMVAHists(otData, mvaBin, basename)
+        sgMVAHistos = self.getMVAHists(sgData, mvaBin, basename)        
         self.dataSets = [(sgMVAHistos, sgData), (bgMVAHistos, bgData), (otMVAHistos, otData)]
 
-    def getMVAHists(self, data, cutlevels, basename):
+    def getMVAHists(self, data, mvaBin, basename):
         histos = []
-        for cut in self.cutlevels:
+        for cut in self.mvaBin:
             h = data.getHisto(self.basename+"_"+cut)
             histos.append(h)
         return histos
@@ -150,16 +168,16 @@ if __name__ == "__main__":
         exit(0)        
     else:
         os.makedirs(outDir)    
-    jettypes = ["pt30"]#, "pt45"]
-    cutlevels = [ "1l_deepESMbin1", "1l_deepESMbin2","1l_deepESMbin3","1l_deepESMbin4"]
-    systypes = ["", "JECup", "JECdown", "JERup", "JERdown"]
+    jettypes = ["pt30_1l"]#, "pt45_0l"]
+    mvaBin = [ "D1", "D2","D3","D4"]
+    systypes = ["", "_JECUp", "_JECDown", "_JERUp", "_JERDown", "_btgUp", "_btgDown", "_lepUp", "_lepDown"]
     outputfile = ROOT.TFile.Open(outDir + "/" + options.rootFile,"RECREATE")
     outputDataCard = options.dataCard
 
     # I hadd my ttbar files into TT.root, and I hadd all other backgrounds into BG_noTT.root
     bgData = {
         "TT"    : info.DataSetInfo(basedir=basedir, fileName="TT.root",      label="TT",    processName="bkg_tt",    process="1", rate=False, lumiSys="-"),
-        "other" : info.DataSetInfo(basedir=basedir, fileName="BG_noTT.root", label="other", processName="bkg_other", process="2", rate=True,  lumiSys="-"),
+        "OTHER" : info.DataSetInfo(basedir=basedir, fileName="BG_noTT.root", label="OTHER", processName="bkg_other", process="2", rate=True,  lumiSys="-"),
     }
 
     sgData = {
@@ -177,24 +195,33 @@ if __name__ == "__main__":
         "RPV_850" : info.DataSetInfo(basedir=basedir, fileName="rpv_stop_850.root",         label="RPV_850", processName="signal", process="0", rate=True, lumiSys="1.05"),
     }
 
+    Data = {
+        "data" : info.DataSetInfo(basedir=basedir, fileName="Data.root", label="data", processName="data", process="1", rate=False, lumiSys="-")
+    }
+
     #Write all histos to outputfile
     outputfile.cd()
     wp = WriteNJetPlots()
     for jettype in jettypes:
-        basename = "h_njets_" + jettype
-        for cut in cutlevels:
+        for bin in mvaBin:
             for sys in systypes:
-                histos = wp.writeHistos(bgData, basename, cut+sys)
-                signalhistos = wp.writeHistos(sgData, basename, cut+sys)
-                if sys == "": 
-                    wp.makePseudoData(histos, signalhistos, sgData, jettype, cut+sys)
+                basenameIn  = "h_njetsShifted_" + jettype
+                basenameOut = "h_njets_" + jettype                
+                histos = wp.writeHistos(bgData, basenameIn, basenameOut, bin, sys)
+                signalhistos = wp.writeHistos(sgData, basenameIn, basenameOut, bin, sys)
+                if sys == "":
+                    wp.writeHistos(Data, basenameIn, basenameOut, bin, sys)
+                    wp.writeStatHistos({"OTHER" : bgData["OTHER"]}, basenameIn, basenameOut, bin, sys)
+                    wp.writeStatHistos(sgData, basenameIn, basenameOut, bin, sys)
+                    wp.makePseudoData(histos, signalhistos, sgData, basenameOut, bin, sys)
     
+
     #Close outfile
     outputfile.Close()
     
     #Make data card
     for key in sgData:
-            md = MakeDataCard(outFile="MVA_ws.root", bgData=bgData["TT"], otData=bgData["other"], sgData=sgData[key], basename="h_njets_pt30", cutlevels=cutlevels)
+            md = MakeDataCard(outFile="MVA_ws.root", bgData=bgData["TT"], otData=bgData["OTHER"], sgData=sgData[key], basename="h_njets_pt30_1l", mvaBin=mvaBin)
             md.writeDataCard(outDir+"/"+key+"_"+outputDataCard)
             
     import os

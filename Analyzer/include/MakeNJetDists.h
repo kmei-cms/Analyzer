@@ -16,13 +16,13 @@ class MakeNJetDists
 {
 public:
     std::vector<std::unique_ptr<Histo_Base>> my_Histos;
-    std::vector<std::string> myVarSuffixs;
+    std::vector<std::pair<std::string, std::string>> myVarSuffixPairs;
     
     MakeNJetDists();
     ~MakeNJetDists(){};
     
     void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false);
-    void InitHistos();
+    void InitHistos(const std::string& runtype);
     void WriteHistos(TFile* outfile); 
 };
 
