@@ -46,7 +46,7 @@ INCLUDESDIRS    += -I$(TENSORFLOW_DIR)/include
 
 #OBJS       = $(patsubst %, $(ODIR)/%, $(OBJ))
 
-PROGRAMS = MyTreeMaker MyAnalysis MySkimAnalysis plot_0l plot_1l MySlimAnalysis 
+PROGRAMS = MyAnalysis MySkimAnalysis plot_0l plot_1l 
 
 all: mkobj sampPyWrap $(PROGRAMS)
 
@@ -130,16 +130,10 @@ $(ODIR)/%.o : $(WDIR)/%.cc
 $(ODIR)/%.o : $(WDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
 
-MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/CalculateHtSF.o $(ODIR)/AnalyzeLepTrigger.o $(ODIR)/MakeSlimChecks.o $(ODIR)/ValidateTTJetSample.o $(ODIR)/AnalyzeWControlRegion.o $(ODIR)/MakeMiniTree.o $(ODIR)/MakeNJetDists.o $(ODIR)/MiniTupleMaker.o $(ODIR)/CalculateBTagSF.o $(ODIR)/AnalyzeBTagSF.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/AnalyzeNjetsMinusOneCSFillDijetHists.o $(ODIR)/AnalyzeNjetsMinusOneCSJetReplacement.o $(ODIR)/Analyze1Lep.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o $(ODIR)/EventShapeVariables.o $(ODIR)/histio.o
-	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
-
-MySlimAnalysis: $(ODIR)/MySlimAnalysis.o $(ODIR)/AnalyzeHighNJetQCD.o $(ODIR)/MakeDataMCPlots.o $(ODIR)/AnalyzeLepTrigger.o $(ODIR)/MakeSmallChecks.o $(ODIR)/MakeSlimChecks.o  $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/AnalyzeBackground.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/EventShapeVariables.o
+MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/CalculateHtSF.o $(ODIR)/AnalyzeWControlRegion.o $(ODIR)/MakeMiniTree.o $(ODIR)/MakeNJetDists.o $(ODIR)/MiniTupleMaker.o $(ODIR)/CalculateBTagSF.o $(ODIR)/AnalyzeBTagSF.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/AnalyzeNjetsMinusOneCSFillDijetHists.o $(ODIR)/AnalyzeNjetsMinusOneCSJetReplacement.o $(ODIR)/Analyze1Lep.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o $(ODIR)/EventShapeVariables.o $(ODIR)/histio.o
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
 
 MySkimAnalysis: $(ODIR)/MySkimAnalysis.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o $(ODIR)/EventShapeVariables.o
-	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
-
-MyTreeMaker: $(ODIR)/MyTreeMaker.o $(ODIR)/MakeMiniTree.o $(ODIR)/MiniTupleMaker.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/EventShapeVariables.o
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
 
 plot_0l: $(ODIR)/plot_0l.o

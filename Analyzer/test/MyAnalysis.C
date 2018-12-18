@@ -14,7 +14,6 @@
 #include "Analyzer/Analyzer/include/AnalyzeEventShape.h"
 #include "Analyzer/Analyzer/include/Analyze0Lep.h"
 #include "Analyzer/Analyzer/include/Analyze1Lep.h"
-#include "Analyzer/Analyzer/include/AnalyzeLepTrigger.h"
 #include "Analyzer/Analyzer/include/AnalyzeNjetsMinusOneCSFillDijetHists.h"
 #include "Analyzer/Analyzer/include/AnalyzeNjetsMinusOneCSJetReplacement.h"
 #include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
@@ -111,11 +110,11 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         if( runtype == "MC" ) 
         {
             //std::string eosPath =   "root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/";
-            BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
-            bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets", "Jets_bDiscriminatorCSV", "Jets_partonFlavor");
+            //BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
+            //bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets", "Jets_bDiscriminatorCSV", "Jets_partonFlavor");
             Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
             ScaleFactors scaleFactors("allInOne_leptonSF_Moriond17.root");
-            tr.registerFunction(bTagCorrector);
+            //tr.registerFunction(bTagCorrector);
             tr.registerFunction(pileup);
             tr.registerFunction(scaleFactors);
         }
@@ -180,7 +179,6 @@ int main(int argc, char *argv[])
         {"doEventShape",       no_argument, 0, 'p'},
         {"do0Lep",             no_argument, 0, 'z'},
         {"do1Lep",             no_argument, 0, 'o'},
-        {"doLepTrig",          no_argument, 0, 'l'},
         {"doNjetsMinusOneCSFillDijetHists",  no_argument, 0, 'q'},
         {"doNjetsMinusOneCSJetReplacement",  no_argument, 0, 'r'},
         {"doStealthTT",        no_argument, 0, 'x'},
@@ -198,7 +196,7 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-    while((opt = getopt_long(argc, argv, "bwtsplzoqrxfFgmncvH:D:N:M:E:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "bwtspzoqrxfFgmncvH:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
@@ -209,7 +207,6 @@ int main(int argc, char *argv[])
             case 'p': doEventShape      = true;              break;
             case 'z': do0Lep            = true;              break;
             case 'o': do1Lep            = true;              break;
-            case 'l': doLepTrig         = true;              break;
             case 'q': doNjetsMinusOneCSFillDijetHists = true;              break;
             case 'r': doNjetsMinusOneCSJetReplacement = true;              break;
             case 'x': doStealthTT       = true;              break;
@@ -246,7 +243,6 @@ int main(int argc, char *argv[])
         {doEventShape,      run<AnalyzeEventShape>},
         {do0Lep,            run<Analyze0Lep>},
         {do1Lep,            run<Analyze1Lep>},
-        {doLepTrig,         run<AnalyzeLepTrigger>},
         {doNjetsMinusOneCSFillDijetHists, run<AnalyzeNjetsMinusOneCSFillDijetHists>},
         {doNjetsMinusOneCSJetReplacement, run<AnalyzeNjetsMinusOneCSJetReplacement>},
         {doStealthTT,       run<AnalyzeStealthTopTagger>},
