@@ -72,14 +72,16 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         file.addFilesToChain(ch, startFile, nFiles);
         NTupleReader tr(ch);
         double weight = file.getWeight(); // not used currently
-        std::string runtype = (file.tag.find("Data") != std::string::npos) ? "Data" : "MC";
+        const std::string runtype = (file.tag.find("Data") != std::string::npos) ? "Data" : "MC";
+        const std::string runYear = (file.tag.find("2017") != std::string::npos) ? "2017" : "2016";
         std::cout << "Starting loop (in run)" << std::endl;
         printf( "runtype: %s fileWeight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts ); fflush( stdout );
-        tr.registerDerivedVar<std::string>("runtype",runtype);
-        tr.registerDerivedVar<std::string>("filetag",file.tag);
-        tr.registerDerivedVar<double>("etaCut",2.4); 
-        tr.registerDerivedVar<double>("Lumi",35900); 
-        tr.registerDerivedVar<bool>("blind",true);
+        tr.registerDerivedVar("runtype",runtype);
+        tr.registerDerivedVar("runYear",runYear);
+        tr.registerDerivedVar("filetag",file.tag);
+        tr.registerDerivedVar("etaCut",2.4); 
+        tr.registerDerivedVar("Lumi",35900.0); 
+        tr.registerDerivedVar("blind",true);
 
         // Define classes/functions that add variables on the fly
         RunTopTagger rtt;

@@ -35,6 +35,11 @@ void MakeNJetDists::InitHistos(const std::string& runtype)
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
 
+    //////////////////////////////////////////////////
+    //Need to add this SF
+    //puSysDown, puSysUp, puWeight
+    //////////////////////////////////////////////////
+
     std::vector<std::string> weightVec;
     if( runtype == "MC" )
     {
@@ -44,47 +49,47 @@ void MakeNJetDists::InitHistos(const std::string& runtype)
         //--------------------------------------------------------------------------------
         // Plots that are made only once and for MC only
         //--------------------------------------------------------------------------------
-        my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_btgUp",   8,  6.5, 14.5, "NGoodJets_pt30_inclusive", {"passBaseline1l_Good"}, 
+        my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_btgUp",   8,  7.0, 15.0, "NGoodJets_pt30_inclusive", {"passBaseline1l_Good"}, 
                                            {"Lumi", "Weight", "bTagSF_EventWeightSimple_Up", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight"}));
-        my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_btgDown", 8,  6.5, 14.5, "NGoodJets_pt30_inclusive", {"passBaseline1l_Good"}, 
+        my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_btgDown", 8,  7.0, 15.0, "NGoodJets_pt30_inclusive", {"passBaseline1l_Good"}, 
                                            {"Lumi", "Weight", "bTagSF_EventWeightSimple_Down", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight"}));
 
-        my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_lepUp",   8,  6.5, 14.5, "NGoodJets_pt30_inclusive", {"passBaseline1l_Good"}, 
+        my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_lepUp",   8,  7.0, 15.0, "NGoodJets_pt30_inclusive", {"passBaseline1l_Good"}, 
                                            {"Lumi", "Weight", "bTagSF_EventWeightSimple_Up", "totGoodElectronSF_Up", "totGoodMuonSF_Up", "htDerivedweight"}));
-        my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_lepDown", 8,  6.5, 14.5, "NGoodJets_pt30_inclusive", {"passBaseline1l_Good"}, 
+        my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_lepDown", 8,  7.0, 15.0, "NGoodJets_pt30_inclusive", {"passBaseline1l_Good"}, 
                                            {"Lumi", "Weight", "bTagSF_EventWeightSimple_Down", "totGoodElectronSF_Down", "totGoodMuonSF_Down", "htDerivedweight"}));
 
-        my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_btgUp",   8, -0.5,  7.5, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, 
+        my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_btgUp",   8, 0.0,  8.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, 
                                            {"Lumi", "Weight", "bTagSF_EventWeightSimple_Up", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight"}));
-        my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_btgDown", 8, -0.5,  7.5, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, 
+        my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_btgDown", 8, 0.0,  8.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, 
                                            {"Lumi", "Weight", "bTagSF_EventWeightSimple_Down", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight"}));
 
-        my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_lepUp",   8, -0.5,  7.5, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, 
+        my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_lepUp",   8, 0.0,  8.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, 
                                            {"Lumi", "Weight", "bTagSF_EventWeightSimple_Up", "totGoodElectronSF_Up", "totGoodMuonSF_Up", "htDerivedweight"}));
-        my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_lepDown", 8, -0.5,  7.5, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, 
+        my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_lepDown", 8, 0.0,  8.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, 
                                            {"Lumi", "Weight", "bTagSF_EventWeightSimple_Down", "totGoodElectronSF_Down", "totGoodMuonSF_Down", "htDerivedweight"}));
 
         for(int i = 0; i < 4; i++)
         {
             std::string index = std::to_string(i+1);
-            my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_D"+index+"_btgUp",   8,  6.5, 14.5, "NGoodJets_pt30_inclusive", {"passBaseline1l_Good", "deepESM_bin"+index}, 
+            my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_D"+index+"_btgUp",   8,  7.0, 15.0, "NGoodJets_pt30_inclusive", {"passBaseline1l_Good", "deepESM_bin"+index}, 
                                                {"Lumi", "Weight", "bTagSF_EventWeightSimple_Up", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight"}));
-            my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_D"+index+"_btgDown", 8,  6.5, 14.5, "NGoodJets_pt30_inclusive", {"passBaseline1l_Good", "deepESM_bin"+index}, 
+            my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_D"+index+"_btgDown", 8,  7.0, 15.0, "NGoodJets_pt30_inclusive", {"passBaseline1l_Good", "deepESM_bin"+index}, 
                                                {"Lumi", "Weight", "bTagSF_EventWeightSimple_Down", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight"}));
 
-            my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_D"+index+"_lepUp",   8,  6.5, 14.5, "NGoodJets_pt30_inclusive", {"passBaseline1l_Good", "deepESM_bin"+index}, 
+            my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_D"+index+"_lepUp",   8,  7.0, 15.0, "NGoodJets_pt30_inclusive", {"passBaseline1l_Good", "deepESM_bin"+index}, 
                                                {"Lumi", "Weight", "bTagSF_EventWeightSimple_Up", "totGoodElectronSF_Up", "totGoodMuonSF_Up", "htDerivedweight"}));
-            my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_D"+index+"_lepDown", 8,  6.5, 14.5, "NGoodJets_pt30_inclusive", {"passBaseline1l_Good", "deepESM_bin"+index}, 
+            my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_D"+index+"_lepDown", 8,  7.0, 15.0, "NGoodJets_pt30_inclusive", {"passBaseline1l_Good", "deepESM_bin"+index}, 
                                                {"Lumi", "Weight", "bTagSF_EventWeightSimple_Down", "totGoodElectronSF_Down", "totGoodMuonSF_Down", "htDerivedweight"}));
 
-            my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+"_btgUp",   8, -0.5,  7.5, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good", "deepESM_bin"+index}, 
+            my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+"_btgUp",   8, 0.0,  8.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good", "deepESM_bin"+index}, 
                                                {"Lumi", "Weight", "bTagSF_EventWeightSimple_Up", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight"}));
-            my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+"_btgDown", 8, -0.5,  7.5, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good", "deepESM_bin"+index}, 
+            my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+"_btgDown", 8, 0.0,  8.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good", "deepESM_bin"+index}, 
                                                {"Lumi", "Weight", "bTagSF_EventWeightSimple_Down", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight"}));
 
-            my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+"_lepUp",   8, -0.5,  7.5, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good", "deepESM_bin"+index}, 
+            my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+"_lepUp",   8, 0.0,  8.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good", "deepESM_bin"+index}, 
                                                {"Lumi", "Weight", "bTagSF_EventWeightSimple_Up", "totGoodElectronSF_Up", "totGoodMuonSF_Up", "htDerivedweight"}));
-            my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+"_lepDown", 8, -0.5,  7.5, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good", "deepESM_bin"+index}, 
+            my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+"_lepDown", 8, 0.0,  8.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good", "deepESM_bin"+index}, 
                                                {"Lumi", "Weight", "bTagSF_EventWeightSimple_Down", "totGoodElectronSF_Down", "totGoodMuonSF_Down", "htDerivedweight"}));
         }            
     }
@@ -116,16 +121,16 @@ void MakeNJetDists::InitHistos(const std::string& runtype)
         //-----------------------------------------------------------------
         // NJet plots
         //-----------------------------------------------------------------       
-        my_Histos.emplace_back(new Histo1D("h_njets"+n,         8,  6.5, 14.5, "NGoodJets_pt30_inclusive"+s,       {}, weightVec));
-        my_Histos.emplace_back(new Histo1D("h_njetsShifted"+n,  8, -0.5,  7.5, "NGoodJets_pt30_inclusive_shift"+s, {}, weightVec));
+        my_Histos.emplace_back(new Histo1D("h_njets"+n,         8,  7.0, 15.0, "NGoodJets_pt30_inclusive"+s,       {}, weightVec));
+        my_Histos.emplace_back(new Histo1D("h_njetsShifted"+n,  8, 0.0,  8.0, "NGoodJets_pt30_inclusive_shift"+s, {}, weightVec));
 
-        my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l"+n,        8,  6.5, 14.5, "NGoodJets_pt30_inclusive"+s,       {"passBaseline1l_Good"+s}, weightVecAll));
-        my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l"+n, 8, -0.5,  7.5, "NGoodJets_pt30_inclusive_shift"+s, {"passBaseline1l_Good"+s}, weightVecAll));
+        my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l"+n,        8,  7.0, 15.0, "NGoodJets_pt30_inclusive"+s,       {"passBaseline1l_Good"+s}, weightVecAll));
+        my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l"+n, 8, 0.0,  8.0, "NGoodJets_pt30_inclusive_shift"+s, {"passBaseline1l_Good"+s}, weightVecAll));
         for(int i = 0; i < 4; i++)
         {
             std::string index = std::to_string(i+1);
-            my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_D"+index+n,        8,  6.5, 14.5, "NGoodJets_pt30_inclusive"+s,       {"passBaseline1l_Good"+s,"deepESM_bin"+index+s}, weightVecAll));
-            my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+n, 8, -0.5,  7.5, "NGoodJets_pt30_inclusive_shift"+s, {"passBaseline1l_Good"+s,"deepESM_bin"+index+s}, weightVecAll));
+            my_Histos.emplace_back(new Histo1D("h_njets_pt30_1l_D"+index+n,        8,  7.0, 15.0, "NGoodJets_pt30_inclusive"+s,       {"passBaseline1l_Good"+s,"deepESM_bin"+index+s}, weightVecAll));
+            my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+n, 8, 0.0,  8.0, "NGoodJets_pt30_inclusive_shift"+s, {"passBaseline1l_Good"+s,"deepESM_bin"+index+s}, weightVecAll));
         }
     }
     
