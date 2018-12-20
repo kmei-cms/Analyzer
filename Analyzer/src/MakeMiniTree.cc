@@ -89,7 +89,7 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
             "NGoodBJets_pt30_tight",
             "Mbl"
         };
-        
+ 
         if( tr.isFirstEvent() ) {
             std::string myTreeName = "myMiniTree";
             myTree = new TTree( (myTreeName).c_str() , (myTreeName).c_str() );
@@ -118,7 +118,7 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
         //-----------------------------------
         //-- Fill Histograms Below
         //-----------------------------------
-       
+        
         if( passBaseline1l && passTriggerMC ) {
 
             myMiniTuple->fill();
