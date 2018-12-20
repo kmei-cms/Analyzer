@@ -56,7 +56,7 @@ for sampleCollection in scl:
         print "-----------------------------------------------------------"
         
         # copy signal root files
-        if sampleCollection == "AllSignal":
+        if sampleCollection == "AllSignal" or sampleCollection == "2016_AllSignal" or sampleCollection == "2017_AllSignal":
             for sample in sl:
                 command = "cp %s/%s/MyAnalysis_%s_0.root %s/%s.root" % (inPath, directory, sample[1], outDir, sample[1])
                 print command
@@ -77,7 +77,10 @@ for sampleCollection in scl:
                 pass
 
 # Hack to make the BG_noTT.root file
-sigNttbar = ["AllSignal", "TT", "TTJets", "Data_SingleMuon", "Data_SingleElectron"]
+sigNttbar_old = ["AllSignal", "TT", "TTJets", "Data_SingleMuon", "Data_SingleElectron"]
+sigNttbar_2016 = ["2016_AllSignal", "2016_TT", "2016_TTJets", "2016_Data_SingleMuon", "2016_Data_SingleElectron"]
+sigNttbar_2017 = ["2017_AllSignal", "2017_TT", "2017_TTJets", "2017_Data_SingleMuon", "2017_Data_SingleElectron"]
+sigNttbar = sigNttbar_old+sigNttbar_2016+sigNttbar_2017
 files = ""
 for sampleCollection in scl:
     sl = sc.sampleList(sampleCollection)
@@ -92,7 +95,9 @@ print "-----------------------------------------------------------"
 system(command)
 
 # Hack to make the Data.root file (hadd all the data together)
-dataFiles = ["Data_SingleMuon.root", "Data_SingleElectron.root"]
+dataFiles = ["Data_SingleMuon.root", "Data_SingleElectron.root", 
+             "2016_Data_SingleMuon.root", "2016_Data_SingleElectron.root", 
+             "2017_Data_SingleMuon.root", "2017_Data_SingleElectron.root"]
 command = "hadd %s/Data.root " % outDir
 for f in dataFiles:
     command += " %s/%s" % (outDir, f)
