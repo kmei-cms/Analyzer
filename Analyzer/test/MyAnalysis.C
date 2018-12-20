@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
     bool doBackground = false, doTopTagger = false, doEventSelection = false, 
          doEventShape = false, do0Lep = false, do1Lep = false, doStealthTT = false,
          doBTagSF = false, calcBTagSF = false, calcHtSF = false, doWControlRegion = false, 
-         makeMiniTree = false, makeNJetDists = false, 
+         makeMiniTree = false, makeNJetDists = false,
          doNjetsMinusOneCSFillDijetHists = false, doNjetsMinusOneCSJetReplacement = false, isQuiet = true;
 
     bool runOnCondor = false;

@@ -185,11 +185,13 @@ int main(int argc, char *argv[])
     {
         //std::string eosPath =   "root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/";
         BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
+        bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets", "Jets_bDiscriminatorCSV", "Jets_partonFlavor");
         Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
-        ScaleFactors scaleFactors("allInOne_leptonSF_Moriond17.root");
-        tr.registerFunction( std::move(bTagCorrector) );
-        tr.registerFunction( std::move(pileup) );
-        tr.registerFunction( std::move(scaleFactors) );
+        std::string scaleFactorHistoFileName = (file.tag.find("2017") != std::string::npos ) ? "allInOne_leptonSF_2017.root" : "allInOne_leptonSF_Moriond17.root";
+            leFactors scaleFactors( scaleFactorHistoFileName );
+        tr.registerFunction(bTagCorrector);
+        tr.registerFunction(pileup);
+        tr.registerFunction(scaleFactors);
     }
 
     //double                  deepESM_val;
@@ -211,12 +213,8 @@ int main(int argc, char *argv[])
 
         //deepESM_val = deepESMValue;
 
-        if( !passTrigger && NGoodLeptons > 0 && NGoodJets_pt30 > 4 ) std::cout<<NGoodLeptons<<std::endl;
+        if( NGoodJets_pt30 > 4 && NGoodLeptons > 0 && passTrigger ) mySkimTree->Fill();
 
-        if( NGoodJets_pt30 > 4 && NGoodLeptons > 0 ) mySkimTree->Fill();
-
-    }
-    
     outfile->cd();
     mySkimTree->Write();        
     outfile->Write();

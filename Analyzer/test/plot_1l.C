@@ -29,8 +29,8 @@ void setHistInfo(const std::string& path, std::vector<histInfo>& data, std::vect
         {"WJetsToLNu",      path + "/WJetsToLNu.root",      "hist", kYellow + 1 },
         {"ST",              path + "/ST.root",              "hist", kRed + 1    },
         {"QCD",             path + "/QCD.root",             "hist", kGreen + 1  },
-        {"T#bar{T}",        path + "/TT.root",              "hist", kBlue       },
-        //{"T#bar{T}",        path + "/TTJets.root",              "hist", kBlue       },
+        //{"T#bar{T}",        path + "/TT.root",              "hist", kBlue       },
+        {"T#bar{T}",        path + "/TTJets.root",              "hist", kBlue       },
     };
     //bg = {
     //    //{"T#bar{T}",   "condor/output-files/" + path + "/TT/TT.root", "hist", bgColor[color]        },

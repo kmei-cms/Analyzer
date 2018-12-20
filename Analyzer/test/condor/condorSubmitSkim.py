@@ -52,6 +52,7 @@ filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MySkimAnalysis" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape.cfg" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/allInOne_BTagEff.root" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/allInOne_leptonSF_Moriond17.root" % repo,
+                   environ["CMSSW_BASE"] + "/src/%s/test/allInOne_leptonSF_2017.root" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/PileupHistograms_0121_69p2mb_pm4p6.root" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/CSVv2_Moriond17_B_H.csv" % repo,
                    environ["CMSSW_BASE"] + "/src/%s/test/allInONe_HtSFDist_2016.root" % repo,
@@ -108,8 +109,8 @@ for ds in datasets:
     ds = ds.strip()
     print ds
     # create the directory
-    #if not os.path.isdir("skim-output-files/%s" % ds):
-    #    os.makedirs("skim-output-files/%s" % ds)
+    if not os.path.isdir("skim-output-files/%s" % ds):
+        os.makedirs("skim-output-files/%s" % ds)
 
     for s, n in sc.sampleList(ds):
         print "s:", s, ", n:", n
@@ -121,7 +122,7 @@ for ds in datasets:
                 if '.root' in l:
                     count = count + 1
             for startFileNum in xrange(0, count, nFilesPerJob):
-     #           fileParts.append("transfer_output_remaps = \"MySkimAnalysis_%s_%s.root = skim-output-files/%s/MySkimAnalysis_%s_%s.root\"\n" % (n, startFileNum, ds, n, startFileNum))
+                fileParts.append("transfer_output_remaps = \"MySkimAnalysis_%s_%s.root = skim-output-files/%s/MySkimAnalysis_%s_%s.root\"\n" % (n, startFileNum, ds, n, startFileNum))
                 fileParts.append("Arguments = %s %i %i %s\n"%(n, nFilesPerJob, startFileNum, s))
                 fileParts.append("Output = skim-log-files/MySkimAnalysis_%s_%i.stdout\n"%(n, startFileNum))
                 fileParts.append("Error = skim-log-files/MySkimAnalysis_%s_%i.stderr\n"%(n, startFileNum))
