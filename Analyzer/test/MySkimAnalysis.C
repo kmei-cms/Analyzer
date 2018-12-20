@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
     Photon photon;
     RunFisher runFisher("v3",myVarSuffix);
     CommonVariables commonVariables;
-    MakeMVAVariables makeMVAVariables(false, myVarSuffix);
+    MakeMVAVariables makeMVAVariables(false, myVarSuffix, false);
     Baseline baseline;
     DeepEventShape deepEventShape;
     
@@ -185,22 +185,23 @@ int main(int argc, char *argv[])
     {
         //std::string eosPath =   "root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/";
         BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
+        bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets", "Jets_bDiscriminatorCSV", "Jets_partonFlavor");
         Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
-        ScaleFactors scaleFactors("allInOne_leptonSF_Moriond17.root");
-        tr.registerFunction( std::move(bTagCorrector) );
-        tr.registerFunction( std::move(pileup) );
-        tr.registerFunction( std::move(scaleFactors) );
+        std::string scaleFactorHistoFileName = (file.tag.find("2017") != std::string::npos ) ? "allInOne_leptonSF_2017.root" : "allInOne_leptonSF_Moriond17.root";
+            leFactors scaleFactors( scaleFactorHistoFileName );
+        tr.registerFunction(bTagCorrector);
+        tr.registerFunction(pileup);
+        tr.registerFunction(scaleFactors);
     }
 
-    double                  deepESM_val;
-    TBranch *b_deepESM_val = mySkimTree->Branch( "deepESM_val", &deepESM_val, "deepESM_val/D");
-    
-
+    //double                  deepESM_val;
+    //TBranch *b_deepESM_val = mySkimTree->Branch( "deepESM_val", &deepESM_val, "deepESM_val/D");
+   
     while( tr.getNextEvent() ) 
     {
         const auto& NGoodJets_pt30  = tr.getVar<int>("NGoodJets_pt30");
         const auto& NGoodLeptons    = tr.getVar<int>("NGoodLeptons");
-        const auto& passTrigger     = tr.getVar<bool>("passTrigger");
+        const auto& passTrigger     = tr.getVar<bool>("passTriggerMC");
         const auto& deepESMValue    = tr.getVar<double>("deepESM_val");
 
         if( maxEvts != -1 && tr.getEvtNum() >= maxEvts ) break;
@@ -210,11 +211,9 @@ int main(int argc, char *argv[])
             if( !passMadHT ) continue;
         }
 
-        deepESM_val = deepESMValue;
-
         if( NGoodJets_pt30 > 4 && NGoodLeptons > 0 && passTrigger ) mySkimTree->Fill();
     }
-    
+
     outfile->cd();
     mySkimTree->Write();        
     outfile->Write();

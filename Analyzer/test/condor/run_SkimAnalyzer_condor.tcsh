@@ -79,7 +79,7 @@ printf "\n\n ls output\n"
 ls -l
 
 #mv *.root ${base_dir}
-xrdcp MySkim*.root root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/SkimmedTuples/.
+xrdcp *.root root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/SkimmedTuples/.
 
 cd ${base_dir}
 
