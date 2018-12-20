@@ -32,7 +32,7 @@ do
     fi
 
     #echo "hadd ${sc}.root *.root"
-    hadd -fk ${sc}.root ${f}/*.root
+    hadd -fk ${f}/${sc}.root ${f}/*.root
 
     #if [ "${sc}" = "Rare" ]
     #then
