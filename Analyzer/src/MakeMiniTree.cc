@@ -82,13 +82,20 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
         //-----------------------------------
         
         std::set<std::string> variables = {
+            "totGoodElectronSF",
+            "totGoodMuonSF",
+            "totGoodMuonSFErr",
+            "totGoodMuonSF_Up",
+            "totGoodMuonSF_Down",
+            "totGoodElectronSFErr",
+            "totGoodElectronSF_Up",
+            "totGoodElectronSF_Down",
             "Weight",
             "deepESM_val",
             "NGoodJets_pt30",
             "NGoodBJets_pt30",
             "NGoodBJets_pt30_tight",
-            "Mbl",
-            "totalEventWeight"
+            "Mbl"
         };
         
         if( tr.isFirstEvent() ) {
