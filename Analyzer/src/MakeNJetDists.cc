@@ -136,7 +136,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
     const auto& runtype = tr.getVar<std::string>("runtype");
     const auto& filetag = tr.getVar<std::string>("filetag");
     InitHistos(runtype);
-    
+ 
     for(const auto& pair : myVarSuffixPairs)
     {
         const std::string& myVarSuffix = pair.first;
