@@ -49,7 +49,7 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
         //------------------------------------
 
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
-        if( tr.getEvtNum() % 10000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
+        if( tr.getEvtNum() % 1000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
 
         //-----------------------------------
         //-- Make sure you are running over MC
@@ -127,8 +127,6 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
         //-- Fill Histograms Below
         //-----------------------------------
        
-
-        
         if( passBaseline1l ) {
 
             myMiniTuple->fill();
