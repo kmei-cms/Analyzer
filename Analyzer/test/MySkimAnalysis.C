@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
         bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets", "Jets_bDiscriminatorCSV", "Jets_partonFlavor");
         Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
         std::string scaleFactorHistoFileName = (file.tag.find("2017") != std::string::npos ) ? "allInOne_leptonSF_2017.root" : "allInOne_leptonSF_Moriond17.root";
-            leFactors scaleFactors( scaleFactorHistoFileName );
+        ScaleFactors scaleFactors( scaleFactorHistoFileName );
         tr.registerFunction(bTagCorrector);
         tr.registerFunction(pileup);
         tr.registerFunction(scaleFactors);
