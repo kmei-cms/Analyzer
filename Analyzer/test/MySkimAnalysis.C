@@ -211,9 +211,8 @@ int main(int argc, char *argv[])
             if( !passMadHT ) continue;
         }
 
-        //deepESM_val = deepESMValue;
-
         if( NGoodJets_pt30 > 4 && NGoodLeptons > 0 && passTrigger ) mySkimTree->Fill();
+    }
 
     outfile->cd();
     mySkimTree->Write();        
