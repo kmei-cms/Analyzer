@@ -209,12 +209,12 @@ if __name__ == "__main__":
                 basenameOut = "h_njets_" + jettype                
                 histos = wp.writeHistos(bgData, basenameIn, basenameOut, bin, sys)
                 signalhistos = wp.writeHistos(sgData, basenameIn, basenameOut, bin, sys)
-                if sys == "":
-                    wp.writeHistos(Data, basenameIn, basenameOut, bin, sys)
-                    wp.writeStatHistos({"OTHER" : bgData["OTHER"]}, basenameIn, basenameOut, bin, sys)
-                    wp.writeStatHistos(sgData, basenameIn, basenameOut, bin, sys)
+                if sys in ["", "_JECUp", "_JECDown", "_JERUp", "_JERDown"]:    
                     wp.makePseudoData(histos, signalhistos, sgData, basenameOut, bin, sys)
-    
+                    if sys == "":
+                        wp.writeHistos(Data, basenameIn, basenameOut, bin, sys)
+                        wp.writeStatHistos({"OTHER" : bgData["OTHER"]}, basenameIn, basenameOut, bin, sys)
+                        wp.writeStatHistos(sgData, basenameIn, basenameOut, bin, sys)                        
 
     #Close outfile
     outputfile.Close()

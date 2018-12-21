@@ -83,6 +83,8 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& NGoodJets_pt45       = tr.getVar<int>("NGoodJets_pt45");
         const auto& NGoodBJets_pt30      = tr.getVar<int>("NGoodBJets_pt30");
         const auto& NGoodBJets_pt45      = tr.getVar<int>("NGoodBJets_pt45");
+        const auto& NGoodMuons           = tr.getVar<int>("NGoodMuons");
+        const auto& NGoodElectrons      = tr.getVar<int>("NGoodElectrons");
         const auto& NGoodLeptons         = tr.getVar<int>("NGoodLeptons");
         const auto& GoodLeptons          = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
         const auto& fisher_val           = tr.getVar<double>("fisher_val");
@@ -136,7 +138,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             // Define Lumi weight
             double eventweight = 1.0;        
             const auto& Weight  = tr.getVar<double>("Weight");
-            double lumi = 35900; // Lumi for 2016
+            const auto& lumi = tr.getVar<double>("Lumi");
             eventweight = lumi*Weight;
             
             // Define lepton weight
@@ -146,12 +148,12 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 const auto& muLepWeight  = tr.getVar<double>("totGoodMuonSF");
                 leptonweight = (GoodLeptons[0].first == "e") ? eleLepWeight : muLepWeight;
             }
-
-            PileupWeight = tr.getVar<double>("_PUweightFactor");
+            
+            //PileupWeight = tr.getVar<double>("_PUweightFactor");
             bTagWeight   = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
             htDerivedweight = tr.getVar<double>("htDerivedweight");
             topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
-
+            
             weight *= eventweight*leptonweight*bTagWeight*htDerivedweight;
         }
 
@@ -159,7 +161,9 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // -- Define cuts
         // -------------------------------
         bool pass_0l              = NGoodLeptons == 0;
-        bool pass_1l              = NGoodLeptons == 1 && HT_trigger_pt30 > 300;
+        bool pass_1l              = NGoodLeptons == 1;
+        bool pass_ht              = HT_trigger_pt30 > 300;
+        bool pass_MBL             = (50 < Mbl && Mbl < 250);
         bool pass_1e_1m = false;
         if(NGoodLeptons == 2)
             pass_1e_1m = GoodLeptons[0].first != GoodLeptons[1].first;
@@ -175,6 +179,20 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         }
         bool pass_5to6njet_pt30 = (NGoodJets_pt30 == 5 || NGoodJets_pt30 == 6);
 
+        bool passBaseline1l_AllJets = JetID              &&
+                                 HT_trigger_pt30 > 300   &&
+                                 passMadHT               &&
+                                 passTrigger             &&
+                                 passTriggerMC           &&
+                                 passBlind               &&
+                                 NGoodBJets_pt30 >= 1    &&
+                                 (50 < Mbl && Mbl < 250) &&
+            (
+                ((runtype != "Data" || filetag.find("Data_SingleMuon")     != std::string::npos) && NGoodMuons == 1     && NGoodElectrons == 0)
+                                                                                     ||
+                ((runtype != "Data" || filetag.find("Data_SingleElectron") != std::string::npos) && NGoodElectrons == 1 && NGoodMuons == 0)
+            );
+        
         // ---------------------------
         // --    1 Top selection
         // ---------------------------
@@ -210,15 +228,15 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const std::map<std::string, bool> cut_map_1l 
         {
             {""                                , true                                                                     },
-            {"_1l"                             , pass_1l                                                                  },
-            {"_1l_ge7j"                        , pass_1l && pass_njet_pt30 && JetID                                       },
-            {"_1l_ge1b"                        , pass_1l && pass_njet_pt30_1btag && JetID                                 },
-            {"_1l_ge2b"                        , pass_1l && pass_njet_pt30_2btag && JetID                                 },
+            {"_1l"                             , pass_1l && pass_ht                                                       },
+            {"_1l_ge7j"                        , pass_1l && pass_ht && pass_njet_pt30 && JetID                            },
+            {"_1l_ge1b"                        , pass_1l && pass_ht && pass_njet_pt30_1btag && JetID                      },
+            {"_1l_ge2b"                        , pass_1l && pass_ht && pass_njet_pt30_2btag && JetID                      },
             {"_1e_1m_ge2b_le5j"                , passBaseline1e1m                                                         },
-            {"_1l_1t"                          , pass_1l && pass_1t                                                       },
-            {"_1l_ge1t"                        , pass_1l && pass_ge1t                                                     },
-            {"_1l_ge7j_ge2b"                   , pass_1l && pass_njet_pt30 && pass_njet_pt30_2btag && JetID               },
-            {"_1l_ge7j_ge1b_noMbl"             , pass_1l && pass_njet_pt30 && pass_njet_pt30_1btag && JetID               },
+            {"_1l_1t"                          , pass_1l && pass_ht && pass_1t && JetID                                   },
+            {"_1l_ge1t"                        , pass_1l && pass_ht && pass_ge1t && JetID                                 },
+            {"_1l_ge7j_ge2b"                   , passBaseline1l_AllJets && pass_njet_pt30_2btag                           },
+            {"_1l_ge7j_ge1b_noMbl"             , pass_1l && pass_ht && pass_njet_pt30 && pass_njet_pt30_1btag && JetID    },
             {"_1l_ge7j_ge1b"                   , passBaseline1l_Good                                                      },                         
             {"_1e_ge7j_ge1b"                   , passBaseline1l_Good && pass_1e                                           },                         
             {"_1m_ge7j_ge1b"                   , passBaseline1l_Good && pass_1m                                           },                         
@@ -226,12 +244,12 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"_1l_ge7j_ge1b_d2"                , passBaseline1l_Good && deepESM_bin2                                      },                         
             {"_1l_ge7j_ge1b_d3"                , passBaseline1l_Good && deepESM_bin3                                      },                         
             {"_1l_ge7j_ge1b_d4"                , passBaseline1l_Good && deepESM_bin4                                      },                         
-            {"_1l_1j_ge1b"                     , pass_1l && NGoodJets_pt30 == 1 && pass_njet_pt30_1btag && JetID          },
-            {"_1l_2j_ge1b"                     , pass_1l && NGoodJets_pt30 == 2 && pass_njet_pt30_1btag && JetID          },
-            {"_1l_3j_ge1b"                     , pass_1l && NGoodJets_pt30 == 3 && pass_njet_pt30_1btag && JetID          },
-            {"_1l_4j_ge1b"                     , pass_1l && NGoodJets_pt30 == 4 && pass_njet_pt30_1btag && JetID          },
-            {"_1l_5j_ge1b"                     , pass_1l && NGoodJets_pt30 == 5 && pass_njet_pt30_1btag && JetID          },
-            {"_1l_6j_ge1b"                     , pass_1l && NGoodJets_pt30 == 6 && pass_njet_pt30_1btag && JetID          },
+            {"_1l_1j_ge1b"                     , passBaseline1l_AllJets && NGoodJets_pt30 == 1                            },
+            {"_1l_2j_ge1b"                     , passBaseline1l_AllJets && NGoodJets_pt30 == 2                            },
+            {"_1l_3j_ge1b"                     , passBaseline1l_AllJets && NGoodJets_pt30 == 3                            },
+            {"_1l_4j_ge1b"                     , passBaseline1l_AllJets && NGoodJets_pt30 == 4                            },
+            {"_1l_5j_ge1b"                     , passBaseline1l_AllJets && NGoodJets_pt30 == 5                            },
+            {"_1l_6j_ge1b"                     , passBaseline1l_AllJets && NGoodJets_pt30 == 6                            },
             {"_1l_7j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt30 == 7                               },
             {"_1l_8j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt30 == 8                               },
             {"_1l_9j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt30 == 9                               },
@@ -251,10 +269,9 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"_1l_ge7j_ge1b_ge1t_d2"           , passBaseline1l_Good && pass_ge1t_d2                                      }, 
             {"_1l_ge7j_ge1b_ge1t_d3"           , passBaseline1l_Good && pass_ge1t_d3                                      }, 
             {"_1l_ge7j_ge1b_ge1t_d4"           , passBaseline1l_Good && pass_ge1t_d4                                      },
-            //{"_1l_5j_ge1b_htCorr"              , pass_1l && NGoodJets_pt30 == 5 && pass_njet_pt30_1btag && JetID          },
-            //{"_1l_6j_ge1b_htCorr"              , pass_1l && NGoodJets_pt30 == 6 && pass_njet_pt30_1btag && JetID          },
-            //{"_1l_7j_ge1b_htCorr"              , passBaseline1l_Good && NGoodJets_pt30 == 7                               },
-            //{"_1l_ge7j_ge1b_htCorr"            , passBaseline1l_Good                                                      },
+            {"_1l_5j_ge1b_htCorr"              , passBaseline1l_AllJets && NGoodJets_pt30 == 5                            },
+            {"_1l_6j_ge1b_htCorr"              , passBaseline1l_AllJets && NGoodJets_pt30 == 6                            },
+            {"_1l_7j_ge1b_htCorr"              , passBaseline1l_Good && NGoodJets_pt30 == 7                               },
             
             {"_1l_ge7j_ge1b_1t1"               , passBaseline1l_Good && pass_1t1                                          },
             {"_1l_ge7j_ge1b_1t2"               , passBaseline1l_Good && pass_1t2                                          },

@@ -23,6 +23,7 @@
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 #include "Analyzer/Analyzer/include/CalculateHtSF.h"
 
+#include "Framework/Framework/include/PrepNTupleVars.h"
 #include "Framework/Framework/include/RunTopTagger.h"
 #include "Framework/Framework/include/Muon.h"
 #include "Framework/Framework/include/Electron.h"
@@ -72,16 +73,20 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         file.addFilesToChain(ch, startFile, nFiles);
         NTupleReader tr(ch);
         double weight = file.getWeight(); // not used currently
-        std::string runtype = (file.tag.find("Data") != std::string::npos) ? "Data" : "MC";
+        const std::string runtype = (file.tag.find("Data") != std::string::npos) ? "Data" : "MC";
+        const std::string runYear = (file.tag.find("2017") != std::string::npos) ? "2017" : "2016";
+        const double Lumi = (runYear == "2016") ? 35900.0 : 41525.0;
         std::cout << "Starting loop (in run)" << std::endl;
         printf( "runtype: %s fileWeight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts ); fflush( stdout );
-        tr.registerDerivedVar<std::string>("runtype",runtype);
-        tr.registerDerivedVar<std::string>("filetag",file.tag);
-        tr.registerDerivedVar<double>("etaCut",2.4); 
-        tr.registerDerivedVar<double>("Lumi",35900); 
-        tr.registerDerivedVar<bool>("blind",true);
+        tr.registerDerivedVar("runtype",runtype);
+        tr.registerDerivedVar("runYear",runYear);
+        tr.registerDerivedVar("filetag",file.tag);
+        tr.registerDerivedVar("etaCut",2.4); 
+        tr.registerDerivedVar("Lumi",Lumi); 
+        tr.registerDerivedVar("blind",true);
 
         // Define classes/functions that add variables on the fly
+        PrepNTupleVars prep;
         RunTopTagger rtt;
         Muon muon;
         Electron electron;
@@ -95,6 +100,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         DeepEventShape deepEventShape;
         
         // Register classes/functions that add variables on the fly
+        tr.registerFunction(prep);
         tr.registerFunction(rtt);
         tr.registerFunction(muon);
         tr.registerFunction(electron);
@@ -114,8 +120,8 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
             bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets", "Jets_bDiscriminatorCSV", "Jets_partonFlavor");
             Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
             std::string scaleFactorHistoFileName = (file.tag.find("2017") != std::string::npos ) ? "allInOne_leptonSF_2017.root" : "allInOne_leptonSF_Moriond17.root";
-
             ScaleFactors scaleFactors( scaleFactorHistoFileName );
+
             tr.registerFunction(bTagCorrector);
             tr.registerFunction(pileup);
             tr.registerFunction(scaleFactors);
