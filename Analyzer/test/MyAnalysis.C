@@ -23,6 +23,7 @@
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 #include "Analyzer/Analyzer/include/CalculateHtSF.h"
 
+#include "Framework/Framework/include/PrepNTupleVars.h"
 #include "Framework/Framework/include/RunTopTagger.h"
 #include "Framework/Framework/include/Muon.h"
 #include "Framework/Framework/include/Electron.h"
@@ -85,6 +86,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerDerivedVar("blind",true);
 
         // Define classes/functions that add variables on the fly
+        PrepNTupleVars prep;
         RunTopTagger rtt;
         Muon muon;
         Electron electron;
@@ -98,6 +100,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         DeepEventShape deepEventShape;
         
         // Register classes/functions that add variables on the fly
+        tr.registerFunction(prep);
         tr.registerFunction(rtt);
         tr.registerFunction(muon);
         tr.registerFunction(electron);
