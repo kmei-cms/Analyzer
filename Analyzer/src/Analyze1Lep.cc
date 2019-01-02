@@ -4,6 +4,7 @@
 
 #include <TH1D.h>
 #include <TH2D.h>
+#include <TProfile2D.h>
 #include <TProfile.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -15,7 +16,8 @@ Analyze1Lep::Analyze1Lep() : initHistos(false)
 {
 }
 
-void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap, const std::vector<TH1DInfo>& histInfos, const std::vector<TH2DInfo>& hist2DInfos)
+void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap, const std::vector<TH1DInfo>& histInfos, 
+                             const std::vector<TH2DInfo>& hist2DInfos,  const std::vector<TH2DProfileInfo>& hist2DProfileInfos)
 {
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
@@ -63,7 +65,15 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap, const st
         for(const auto& h2dInfo : hist2DInfos)
         {
             my_2d_histos.emplace(h2dInfo.name+mycut.first, 
-                                 std::make_shared<TH2D>((h2dInfo.name+mycut.first).c_str(),(h2dInfo.name+mycut.first).c_str(), h2dInfo.nBinsX, h2dInfo.lowX, h2dInfo.highX, h2dInfo.nBinsY, h2dInfo.lowY, h2dInfo.highY));
+                                 std::make_shared<TH2D>((h2dInfo.name+mycut.first).c_str(),(h2dInfo.name+mycut.first).c_str(), 
+                                                        h2dInfo.nBinsX, h2dInfo.lowX, h2dInfo.highX, h2dInfo.nBinsY, h2dInfo.lowY, h2dInfo.highY));
+        }
+
+        for(const auto& h2dProfile : hist2DProfileInfos)
+        {
+            my_2d_tp_histos.emplace(h2dProfile.name+mycut.first,
+                                    std::make_shared<TProfile2D>((h2dProfile.name+mycut.first).c_str(),(h2dProfile.name+mycut.first).c_str(), 
+                                                                 h2dProfile.nBinsX, h2dProfile.lowX, h2dProfile.highX, h2dProfile.nBinsY, h2dProfile.lowY, h2dProfile.highY, h2dProfile.lowZ, h2dProfile.highZ));
         }
     }
 }
@@ -79,12 +89,13 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& ntops_1jet           = tr.getVar<int>("ntops_1jet");
         const auto& runtype              = tr.getVar<std::string>("runtype");     
         const auto& filetag              = tr.getVar<std::string>("filetag");
+        const auto& NJet                 = tr.getVar<int>("NJets");
         const auto& NGoodJets_pt30       = tr.getVar<int>("NGoodJets_pt30");
         const auto& NGoodJets_pt45       = tr.getVar<int>("NGoodJets_pt45");
         const auto& NGoodBJets_pt30      = tr.getVar<int>("NGoodBJets_pt30");
         const auto& NGoodBJets_pt45      = tr.getVar<int>("NGoodBJets_pt45");
         const auto& NGoodMuons           = tr.getVar<int>("NGoodMuons");
-        const auto& NGoodElectrons      = tr.getVar<int>("NGoodElectrons");
+        const auto& NGoodElectrons       = tr.getVar<int>("NGoodElectrons");
         const auto& NGoodLeptons         = tr.getVar<int>("NGoodLeptons");
         const auto& GoodLeptons          = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
         const auto& fisher_val           = tr.getVar<double>("fisher_val");
@@ -133,6 +144,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         double bTagWeight = 1.0;
         double htDerivedweight = 1.0;
         double topPtScaleFactor = 1.0;
+        double prefiringScaleFactor = 1.0;
         if(runtype == "MC")
         {
             // Define Lumi weight
@@ -153,8 +165,9 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             bTagWeight   = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
             htDerivedweight = tr.getVar<double>("htDerivedweight");
             topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
+            prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
             
-            weight *= eventweight*leptonweight*bTagWeight*htDerivedweight;
+            weight *= eventweight*leptonweight*bTagWeight*htDerivedweight*prefiringScaleFactor;
         }
 
         // -------------------------------
@@ -331,18 +344,14 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"blind_lPt",          200,   0.0, 2000.0},
             {    "h_lEta",         100,  -6.0,    6.0},
             {"blind_lEta",         100,  -6.0,    6.0},
-            {    "h_weight",       100,  -5.0,    5.0},
-            {"blind_weight",       100,  -5.0,    5.0},
-            {    "h_leptonweight", 100,  -5.0,    5.0},
-            {"blind_leptonweight", 100,  -5.0,    5.0},
-            {    "h_PileupWeight", 100,  -5.0,    5.0},
-            {"blind_PileupWeight", 100,  -5.0,    5.0},
-            {    "h_bTagWeight",   100,  -5.0,    5.0},
-            {"blind_bTagWeight",   100,  -5.0,    5.0},
-            {    "h_htDerivedweight",   100,  -5.0,    5.0},
-            {"blind_htDerivedweight",   100,  -5.0,    5.0},
             {    "h_allMbl",       300,   0.0,  300.0},
             {"blind_allMbl",       300,   0.0,  300.0},
+            {"h_weight",               100,  -5.0, 5.0},
+            {"h_leptonweight",         100,  -5.0, 5.0},
+            {"h_PileupWeight",         100,  -5.0, 5.0},
+            {"h_bTagWeight",           100,  -5.0, 5.0},
+            {"h_htDerivedweight",      100,  -5.0, 5.0},
+            {"h_prefiringScaleFactor", 100,  -5.0, 5.0},
         };
 
         std::vector<TH2DInfo> hist2DInfos = {
@@ -356,10 +365,14 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"blind_ht_deepESM",   300, 0, 3000, 200,  0.0, 1.0},
         };
 
+        std::vector<TH2DProfileInfo> hist2DProfileInfos = {
+            {"h_njets_deepESMMerged_preFireSF", 15,0,15, 4,0.5,4.5, 0,1.0},
+        };
+
         // Initialize Histograms
         if(!initHistos)
         {
-            InitHistos(cut_map_1l, histInfos, hist2DInfos);
+            InitHistos(cut_map_1l, histInfos, hist2DInfos, hist2DProfileInfos);
             initHistos = true;
         }
 
@@ -371,20 +384,20 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             if(kv.second)
             {
                 double w = weight;
-                my_histos["h_njets"         +kv.first]->Fill(NGoodJets_pt30, w);
-                my_histos["h_ntops"         +kv.first]->Fill(ntops, w);
-                my_histos["h_nb"            +kv.first]->Fill(NGoodBJets_pt30, w);
-                my_histos["h_fisher"        +kv.first]->Fill(fisher_val, w);
-                my_histos["h_deepESM"       +kv.first]->Fill(deepESM_val, w);
-                my_histos["h_deepESMMerged" +kv.first]->Fill(deepESM_binNum, w);
-                my_histos["h_ht"            +kv.first]->Fill(HT_trigger_pt30, w);
-                my_histos["h_mbl"           +kv.first]->Fill(Mbl, w);
-                my_histos["h_weight"        +kv.first]->Fill(weight, w);
-                my_histos["h_leptonweight"  +kv.first]->Fill(leptonweight, w);
-                my_histos["h_PileupWeight"  +kv.first]->Fill(PileupWeight, w);
-                my_histos["h_bTagWeight"    +kv.first]->Fill(bTagWeight, w);
-                my_histos["h_htDerivedweight"+kv.first]->Fill(htDerivedweight, w);
-                
+                my_histos["h_njets"               +kv.first]->Fill(NGoodJets_pt30, w);
+                my_histos["h_ntops"               +kv.first]->Fill(ntops, w);
+                my_histos["h_nb"                  +kv.first]->Fill(NGoodBJets_pt30, w);
+                my_histos["h_fisher"              +kv.first]->Fill(fisher_val, w);
+                my_histos["h_deepESM"             +kv.first]->Fill(deepESM_val, w);
+                my_histos["h_deepESMMerged"       +kv.first]->Fill(deepESM_binNum, w);
+                my_histos["h_ht"                  +kv.first]->Fill(HT_trigger_pt30, w);
+                my_histos["h_mbl"                 +kv.first]->Fill(Mbl, w);
+                my_histos["h_weight"              +kv.first]->Fill(weight, w);
+                my_histos["h_leptonweight"        +kv.first]->Fill(leptonweight, w);
+                my_histos["h_PileupWeight"        +kv.first]->Fill(PileupWeight, w);
+                my_histos["h_bTagWeight"          +kv.first]->Fill(bTagWeight, w);
+                my_histos["h_htDerivedweight"     +kv.first]->Fill(htDerivedweight, w);
+                my_histos["h_prefiringScaleFactor"+kv.first]->Fill(prefiringScaleFactor, w);
                 for(const auto& l : GoodLeptons)
                 {
                     my_histos["h_lPt"+kv.first]->Fill(l.second.Pt(), w);
@@ -398,6 +411,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_2d_histos["h_njets_deepESM"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, w);
                 my_2d_histos["h_njets_mbl"+kv.first]->Fill(NGoodJets_pt30, Mbl, w);
                 my_2d_histos["h_ht_deepESM"+kv.first]->Fill(HT_trigger_pt30, deepESM_val, w);
+                my_2d_tp_histos["h_njets_deepESMMerged_preFireSF"+kv.first]->Fill(NJet, deepESM_binNum, prefiringScaleFactor, w);
 
                 if ( NGoodJets_pt30 <= 7 )
                 {
@@ -409,11 +423,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                     my_histos["blind_deepESMMerged" +kv.first]->Fill(deepESM_binNum, w);
                     my_histos["blind_ht"            +kv.first]->Fill(HT_trigger_pt30, w);
                     my_histos["blind_mbl"           +kv.first]->Fill(Mbl, w);
-                    my_histos["blind_weight"        +kv.first]->Fill(weight, w);
-                    my_histos["blind_leptonweight"  +kv.first]->Fill(leptonweight, w);
-                    my_histos["blind_PileupWeight"  +kv.first]->Fill(PileupWeight, w);
-                    my_histos["blind_bTagWeight"    +kv.first]->Fill(bTagWeight, w);
-                    my_histos["blind_htDerivedweight"+kv.first]->Fill(htDerivedweight, w);
                     for(const auto l : GoodLeptons)
                     {
                         my_histos["blind_lPt"+kv.first]->Fill(l.second.Pt(), w);
@@ -481,6 +490,11 @@ void Analyze1Lep::WriteHistos(TFile* outfile)
     }
 
     for(const auto& p : my_tp_histos) 
+    {
+        p.second->Write();
+    }
+
+    for(const auto& p : my_2d_tp_histos)
     {
         p.second->Write();
     }
