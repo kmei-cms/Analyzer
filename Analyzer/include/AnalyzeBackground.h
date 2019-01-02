@@ -5,6 +5,7 @@
 #include <TH2D.h>
 #include <TEfficiency.h>
 #include <TTree.h>
+#include <TFile.h>
 
 #include <map>
 #include <string>
