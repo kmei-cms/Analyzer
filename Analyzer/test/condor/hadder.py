@@ -14,6 +14,7 @@ parser = optparse.OptionParser("usage: %prog [options]\n")
 parser.add_option('-d', dest='datasets', type='string', default='',             help="Lists of datasets, comma separated")
 parser.add_option('-H', dest='outDir',   type='string', default='rootfiles',    help="Can pass in the output directory name")
 parser.add_option('-p', dest='inPath',   type='string', default='output-files', help="Can pass in the input directory name")
+parser.add_option('-y', dest='year',     type='string', default='',             help="Can pass in the year for this data")
 parser.add_option('-o', action='store_true',                                    help="Overwrite output directory")
 options, args = parser.parse_args()
 
@@ -88,7 +89,10 @@ for sampleCollection in scl:
         if sampleCollection not in sigNttbar: 
             directory = sampleCollection
             files += " %s/%s.root " % (outDir, directory)
-command = "hadd %s/BG_noTT.root %s" % (outDir, files)
+if options.year:
+    command = "hadd %s/%s_BG_noTT.root %s" % (outDir, options.year, files)
+else:
+    command = "hadd %s/BG_noTT.root %s" % (outDir, files)
 print "-----------------------------------------------------------"
 print command
 print "-----------------------------------------------------------"
@@ -98,9 +102,13 @@ system(command)
 dataFiles = ["Data_SingleMuon.root", "Data_SingleElectron.root", 
              "2016_Data_SingleMuon.root", "2016_Data_SingleElectron.root", 
              "2017_Data_SingleMuon.root", "2017_Data_SingleElectron.root"]
-command = "hadd %s/Data.root " % outDir
+if options.year:
+    command = "hadd %s/%s_Data.root " % (outDir,options.year)
+else:
+    command = "hadd %s/Data.root " % outDir
 for f in dataFiles:
-    command += " %s/%s" % (outDir, f)
+    if os.path.exists(outDir+"/"+f):
+        command += " %s/%s" % (outDir, f)
 print "-----------------------------------------------------------"
 print command
 print "-----------------------------------------------------------"
