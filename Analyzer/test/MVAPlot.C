@@ -74,29 +74,30 @@ void MVAPlot()
     //std::string path = "deepESM_GRtrue_3Layer_28Vars";
     //std::string path = "deepESM_MyCodeTrue_3Layer_28Vars";
     //std::string path = "owenCode_inputsvsNJet";
-    std::string path = "deepESM_perNJet_1Layer";
+    //std::string path = "deepESM_perNJet_1Layer";
+    std::string path = ""
 
     std::vector<histInfo> bgEntries = {
-        //{"DYJetsToLL_M-50", "condor/output-files/" + path + "/DYJetsToLL_M-50/DYJetsToLL_M-50.root", "hist", kBlack      },        
-        //{"Rare",            "condor/output-files/" + path + "/Rare/Rare.root",                       "hist", kCyan + 1   },
-        //{"Diboson",         "condor/output-files/" + path + "/Diboson/Diboson.root",                 "hist", kMagenta + 1},
-        //{"WJetsToLNu",      "condor/output-files/" + path + "/WJetsToLNu/WJetsToLNu.root",           "hist", kYellow + 1 },
-        //{"ST",              "condor/output-files/" + path + "/ST/ST.root",                           "hist", kRed + 1    },
-        //{"QCD",             "condor/output-files/" + path + "/QCD/QCD.root",                         "hist", kGreen + 1  },
-        //{"TT",        "condor/output-files/" + path + "/TT/TT.root",                           "hist", kBlue - 7   },
-        {"TT",        "condor/output-files/" + path + "/TTJets/TTJets.root",                           "hist", kBlue - 7   },
-        //{"Data_SingleLepton" , "condor/output-files/" + path + "/Data_SingleLepton/Data_SingleLepton.root", "PEX0", kBlack},
+        //{"DYJetsToLL_M-50",  path + "/DYJetsToLL_M-50/DYJetsToLL_M-50.root", "hist", kBlack      },        
+        //{"Rare",             path + "/Rare/Rare.root",                       "hist", kCyan + 1   },
+        //{"Diboson",          path + "/Diboson/Diboson.root",                 "hist", kMagenta + 1},
+        //{"WJetsToLNu",       path + "/WJetsToLNu/WJetsToLNu.root",           "hist", kYellow + 1 },
+        //{"ST",               path + "/ST/ST.root",                           "hist", kRed + 1    },
+        //{"QCD",              path + "/QCD/QCD.root",                         "hist", kGreen + 1  },
+        //{"TT",         path + "/TT/TT.root",                           "hist", kBlue - 7   },
+        {"TT",         path + "/TTJets/TTJets.root",                           "hist", kBlue - 7   },
+        //{"Data_SingleLepton" ,  path + "/Data_SingleLepton/Data_SingleLepton.root", "PEX0", kBlack},
     };
 
     //vector summarizing signal histograms to include in the plot
     std::vector<histInfo> sigEntries = {
-        //{"RPV_350", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_350_0.root",         "hist", kMagenta + 2},
-        //{"RPV_450", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_450_0.root",         "hist", kMagenta + 2},
-        {"RPV_550", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_550_0.root",         "hist", kMagenta + 2},
-        //{"RPV_650", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_650_0.root",         "hist", kMagenta + 2},
-        //{"RPV_750", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_750_0.root",         "hist", kMagenta + 2},
-        //{"SYY_650", "condor/output-files/" + path + "/AllSignal/MyAnalysis_stealth_stop_650_SYY_0.root", "hist", kGreen + 3  },
-        //{"RPV_850", "condor/output-files/" + path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", kRed + 1    },
+        //{"RPV_350",  path + "/AllSignal/MyAnalysis_rpv_stop_350_0.root",         "hist", kMagenta + 2},
+        //{"RPV_450",  path + "/AllSignal/MyAnalysis_rpv_stop_450_0.root",         "hist", kMagenta + 2},
+        {"RPV_550",  path + "/AllSignal/MyAnalysis_rpv_stop_550_0.root",         "hist", kMagenta + 2},
+        //{"RPV_650",  path + "/AllSignal/MyAnalysis_rpv_stop_650_0.root",         "hist", kMagenta + 2},
+        //{"RPV_750",  path + "/AllSignal/MyAnalysis_rpv_stop_750_0.root",         "hist", kMagenta + 2},
+        //{"SYY_650",  path + "/AllSignal/MyAnalysis_stealth_stop_650_SYY_0.root", "hist", kGreen + 3  },
+        //{"RPV_850",  path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", kRed + 1    },
     };
 
     std::vector<std::string> histNameVec = {

@@ -14,41 +14,25 @@ void setHistInfo(const std::string& path, std::vector<histInfo>& data, std::vect
     //this uses the initializer syntax to initialize the histInfo object
     //               leg entry root file                 draw options  draw color
     data = {
-        //{"Data_JetHT", "condor/output-files/" + path + "/Data_JetHT/Data_JetHT.root", "PEX0", kBlack},
-        {"Data_SingleLepton" , path + "/Data.root", "PEX0", kBlack},
-        //{"Data 1 #gamma", "condor/output-files/" + path + "/Data_SinglePhoton/Data_SinglePhoton.root", "PEX0", kBlack}, 
+        {"Data_SingleLepton" , path + "/2017_Data.root", "PEX0", kBlack},
     };
     
     std::vector<int> bgColor = {kRed, kBlack, kBlue};
     std::vector<int> sigColor = {kBlack, kBlue, kRed};
 
     bg = {
-        {"DYJetsToLL_M-50", path + "/DYJetsToLL_M-50.root", "hist", kOrange + 2 },        
-        {"Rare",            path + "/Rare.root",            "hist", kCyan + 1   },
-        {"Diboson",         path + "/Diboson.root",         "hist", kMagenta + 1},
-        {"WJetsToLNu",      path + "/WJetsToLNu.root",      "hist", kYellow + 1 },
-        {"ST",              path + "/ST.root",              "hist", kRed + 1    },
-        {"QCD",             path + "/QCD.root",             "hist", kGreen + 1  },
-        //{"T#bar{T}",        path + "/TT.root",              "hist", kBlue       },
-        {"T#bar{T}",        path + "/TTJets.root",              "hist", kBlue       },
+        {"DYJetsToLL_M-50", path + "/2017_DYJetsToLL_M-50.root", "hist", kOrange + 2 },        
+        {"Rare",            path + "/2017_Rare.root",            "hist", kCyan + 1   },
+        {"Diboson",         path + "/2017_Diboson.root",         "hist", kMagenta + 1},
+        {"WJetsToLNu",      path + "/2017_WJetsToLNu.root",      "hist", kYellow + 1 },
+        {"ST",              path + "/2017_ST.root",              "hist", kRed + 1    },
+        {"QCD",             path + "/2017_QCD.root",             "hist", kGreen + 1  },
+        {"T#bar{T}",        path + "/2017_TT.root",              "hist", kBlue       },
     };
-    //bg = {
-    //    //{"T#bar{T}",   "condor/output-files/" + path + "/TT/TT.root", "hist", bgColor[color]        },
-    //    {"Rare",           "condor/output-files/" + path + "/Rare/Rare.root",             "hist", kOrange + 2 },  
-    //    {"Diboson",        "condor/output-files/" + path + "/Diboson/Diboson.root",       "hist", kCyan + 1   },
-    //    {"ST",             "condor/output-files/" + path + "/ST/ST.root",                 "hist", kMagenta + 1},  
-    //    {"T#bar{T}",       "condor/output-files/" + path + "/TT/TT.root",                 "hist", kYellow + 1 },
-    //    {"T#bar{T}#gamma", "condor/output-files/" + path + "/TTGJets/TTGJets.root",       "hist", kBlue + 1   },
-    //    {"W(l#nu) + jets", "condor/output-files/" + path + "/WJetsToLNu/WJetsToLNu.root", "hist", kRed + 1    },
-    //    {"QCD",            "condor/output-files/" + path + "/QCD/QCD.root",               "hist", kBlue - 7   },  
-    //    {"#gamma + jets",  "condor/output-files/" + path + "/SP/SP.root",                 "hist", kGreen + 1  },  
-    //};
     sig = {
-        //{"RPV 850", path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", sigColor[color]        },
-        {"RPV 850", path + "/rpv_stop_850.root",         "hist", kRed        },
-        {"SYY 650", path + "/stealth_stop_650_SYY.root", "hist", kMagenta    },
-        //{"RPV 450", path + "/rpv_stop_450.root",         "hist", kRed       },
-        {"RPV 350", path + "/rpv_stop_350.root",         "hist", kCyan       },
+        {"RPV 850", path + "/2017_RPV_2t6j_mStop-850.root",         "hist", kRed  + 2*color      },
+        {"SYY 650", path + "/2017_StealthSYY_2t6j_mStop-650.root",  "hist", kMagenta + 2*color   },
+        {"RPV 350", path + "/2017_RPV_2t6j_mStop-350.root",         "hist", kCyan  + 2*color     },        
     };
 }
 
@@ -59,19 +43,12 @@ int main()
     //std::string pathGRfalse = "deepESM_GRfalse_1Layer_8Vars";
     //std::string pathGRfalse = "deepESM_GRfalse_1Layer_24Vars";
     //std::string pathGRfalse = "deepESM_GRfalse_1Layer_9Vars_nJets";
-    //std::string pathGRtrue = "deepESM_GRtrue_1Layer_8Vars";
-    //std::string pathGRtrue = "deepESM_GRtrue_1Layer_9Vars_nJets";
-    //std::string pathGRtrue = "deepESM_GRtrue15-2_4Vars_1Layer";
-    //std::string pathGRtrue = "deepESM_GRtrue15-20_4Vars_1Layer";
-    //std::string pathGRtrue = "deepESM_7Vars_GRtrue_HighWeight";
-    //std::string pathGRtrue = "deepESM_7Vars_GRtrue_HighWeight_noMETMassVar";
-    //std::string pathGRtrue = "deepESM_GRtrue_1Layer_24Vars";
-    //std::string pathGRtrue = "deepESM_GRtrue_1Layer_24Vars_v2";
+    //std::string pathGRfalse = "condor/Analyze1Lep_Kerasv1.3.0";
 
-    //std::string pathGRtrue = "deepESM_MyCodeTrue_3Layer_28Vars";
-    //std::string pathGRtrue = "deepESM_perNJet_1Layer";
-    //std::string pathGRtrue = "Training_V2";
-    std::string pathGRtrue = "condor/Analyze1Lep_Kerasv1.2.0";
+    //std::string pathGRtrue = "condor/Analyze1Lep_Kerasv1.2.0_MCTrigger_bTag_leptonWeight_ht300";
+    //std::string pathGRtrue = "condor/Analyze1Lep_Kerasv1.2.3";
+    //std::string pathGRtrue = "condor/Analyze1Lep_Kerasv3.0.0";
+    std::string pathGRtrue = "condor/Analyze1Lep_Kerasv3.0.0_v2";
 
     //std::string pathFisher = "oldTest/DeepESMTests_JoesCode/deepESM_v1";
     //std::string pathPhoton = "photonCR";
@@ -82,8 +59,8 @@ int main()
     std::vector<histInfo> data_fisher, bg_fisher, sig_fisher;
     std::vector<histInfo> data_photon, bg_photon, sig_photon;
 
-    //setHistInfo(pathGRfalse, data_GRfalse, bg_GRfalse, sig_GRfalse, 0);
-    setHistInfo(pathGRtrue, data_GRtrue, bg_GRtrue, sig_GRtrue, 1);
+    //setHistInfo(pathGRfalse, data_GRfalse, bg_GRfalse, sig_GRfalse, 1);
+    setHistInfo(pathGRtrue, data_GRtrue, bg_GRtrue, sig_GRtrue, 0);
     //setHistInfo(pathFisher, data_fisher, bg_fisher, sig_fisher, 2);
     //setHistInfo(pathPhoton, data_photon, bg_photon, sig_photon, 0);
 
@@ -94,8 +71,8 @@ int main()
     //HistInfoCollection histInfoCollection_photon(data_photon, bg_photon, sig_photon);
 
     // vector of histInfoCollection for Roc Curves
-    std::map< std::string, HistInfoCollection > rocMap = { //{"NN", histInfoCollection_GRfalse},
-                                                           {"NN GR", histInfoCollection_GRtrue},
+    std::map< std::string, HistInfoCollection > rocMap = { //{"No 350", histInfoCollection_GRfalse},
+                                                           {"2017", histInfoCollection_GRtrue},
                                                            //{"fisher", histInfoCollection_fisher},
     };
 
@@ -115,13 +92,17 @@ int main()
         "",
         "_1l",
         "_1l_ge7j",                        
+        "_1l_ge1b",                       
         "_1l_ge2b",                       
+        //"_1e_1m_ge2b_le5j",
         //"_1l_1t",                          
         //"_1l_2t",                          
         //"_1l_ge1t",                        
         //"_1l_ge2t",                        
-        "_1l_5to6j_ge1b",
-        //"_1l_7j_ge1b", 
+        "_1l_4j_ge1b",
+        "_1l_5j_ge1b",
+        "_1l_6j_ge1b",
+        "_1l_7j_ge1b", 
         //"_1l_8j_ge1b", 
         //"_1l_9j_ge1b", 
         //"_1l_10j_ge1b", 
@@ -152,11 +133,13 @@ int main()
 
     for(std::string mycut : mycuts_1l)
     {
-        //plt.plotStack( "h_njets"+mycut, "N_{J}" , "Events", true);
-        //plt.plotStack( "h_deepESM"+mycut, "DeepESM" , "Events", true, 10);
-        plt.plotStack( "h_mbl"+mycut, "M(l,b) [GeV]",        "Events", true, 10);
-        plt.plotStack( "h_lPt"+mycut, "Lepton P_{T} [GeV]",  "Events", true, 2, false, 0, 1000);
-        plt.plotStack( "h_lEta"+mycut, "Lepton Eta",         "Events", true, 2);
+        plt.plotStack( "h_njets"+mycut, "N_{J}" ,              "Events", true);
+        plt.plotStack( "h_deepESM"+mycut, "DeepESM" ,          "Events", true, 10);
+        plt.plotStack( "h_deepESMMerged"+mycut, "DeepESM Bin", "Events", true, -1);
+        plt.plotStack( "h_mbl"+mycut,    "M(l,b) [GeV]",       "Events", true, 10);
+        plt.plotStack( "h_allMbl"+mycut, "M(l,b) [GeV]",       "Events", true, 10, false);
+        plt.plotStack( "h_lPt"+mycut,    "Lepton P_{T} [GeV]", "Events", true, 2, false, 0, 1000);
+        //plt.plotStack( "h_lEta"+mycut,   "Lepton Eta",         "Events", true, 2);
         //plt.plotStack( "h_ntops"+mycut, "N_{T}" , "Events", true);
         //plt.plotStack( "h_nb"   +mycut, "N_{B}" , "Events", true);        
         //plt.plotStack( "h_fisher"+mycut, "fisher value" , "Events", true, 4);        
@@ -164,7 +147,9 @@ int main()
         //
         //// Make Normalized fisher
         //pltSkim.plotNormFisher("h_fisher_1l"+mycut, "fisher value" , "Events", false, 4);
-        //plt.plotNormFisher("h_deepESM"+mycut, "DeepESM" , "Events", false, 10);
+
+        plt.plotNormFisher("h_deepESM"+mycut, "DeepESM" , "Norm", false, 10);
+        
         //plt.plotNormFisher("h_njets"+mycut, "DeepESM" , "Events", true);
         //plt.plotNormFisher("h_BestComboMass_1l"+mycut, "Average BestCombo Mass [GeV]" , "Events", false, 4);
         //plt.plotNormFisher("h_BestComboPt_1l"+mycut, "Average BestCombo P_{T} [GeV]" , "Events", false, 4);
@@ -175,39 +160,47 @@ int main()
         //
         // - Make  Roc Curve
         //pltRoc.plotRocFisher("h_deepESM_1l"+mycut,"Background","Signal", false);
-        //pltRocCompare.plotRocFisher(mycut,"Background","Signal", true);
+        
+        pltRocCompare.plotRocFisher("h_deepESM"+mycut,"Background","Signal", true, false);
+        
         //        
         ////Need these until we un blind
         plt.plotStack( "blind_njets"+mycut,   "N_{J}",               "Events", true, -1, false);
         plt.plotStack( "blind_deepESM"+mycut, "DeepESM",             "Events", true, 10, false);
+        plt.plotStack( "blind_deepESMMerged"+mycut, "DeepESM Bin",   "Events", true, -1, false);
         plt.plotStack( "blind_mbl"+mycut,     "M(l,b) [GeV]",        "Events", true, 10, false);
+        plt.plotStack( "blind_allMbl"+mycut,  "M(l,b) [GeV]",        "Events", true, 10, false);
         plt.plotStack( "blind_ht"+mycut,      "H_{T} [GeV]",         "Events", true, 10, false);
         plt.plotStack( "blind_ntops"+mycut,   "N_{T}",               "Events", true, -1, false);
         plt.plotStack( "blind_nb"   +mycut,   "N_{B}",               "Events", true, -1, false);        
         plt.plotStack( "blind_lPt"+mycut,     "Lepton P_{T} [GeV]",  "Events", true,  2, false, 0, 1000);
-        plt.plotStack( "blind_lEta"+mycut,    "Lepton Eta",          "Events", true,  2);
+        //plt.plotStack( "blind_lEta"+mycut,    "Lepton Eta",          "Events", true,  2, false);
         //plt.plotStack( "blind_fisher"+mycut, "fisher value" , "Events", true, 10);        
     }
-
+    //plt.plotStack( "h_leptonweight_1l_ge7j_ge1b",    "Lepton W",         "Events", true, -1, false, 0, 2);
+    //plt.plotStack( "h_weight_1l_ge7j_ge1b",          "Total Weight",     "Events", true, -1, false, 0, 2);
+    //plt.plotStack( "h_htDerivedweight_1l_ge7j_ge1b", "HtDerived Weight", "Events", true, -1, false, 0, 2);
+    //plt.plotStack( "h_bTagWeight_1l_ge7j_ge1b",      "BTagWeight",       "Events", true, -1, false, 0, 2);
+    
     // --------------------
     // - Make fisher plots
     // --------------------
 
-    std::vector< FisherHolder > fisherHolder
-    {
-        { {"h_njets_1l_ge7j_ge1b_d1"  , "h_njets_1l_ge7j_ge1b_d2"  , "h_njets_1l_ge7j_ge1b_d3"  , "h_njets_1l_ge7j_ge1b_d4"  } , "njets_1l_ge7j_ge1b"  },
-        //{ {"h_njets_1l_ge7j_ge1b_ge6-7esm", "h_njets_1l_ge7j_ge1b_ge7-8esm", "h_njets_1l_ge7j_ge1b_ge8-95esm", "h_njets_1l_ge7j_ge1b_ge95esm" }, "njets_1l_ge7j_ge1b_esmBins"},
-        //{ {"h_njets_1l_ge7j_ge1b_ge5-6esm", "h_njets_1l_ge7j_ge1b_ge6-7esm", "h_njets_1l_ge7j_ge1b_ge7-8esm", "h_njets_1l_ge7j_ge1b_ge8-95esm", "h_njets_1l_ge7j_ge1b_ge95esm" }, "njets_1l_ge7j_ge1b_esmBins"},
-        //{ {"h_njets_1l_ge7j_ge1b_f1"  , "h_njets_1l_ge7j_ge1b_f2"  , "h_njets_1l_ge7j_ge1b_f3"  , "h_njets_1l_ge7j_ge1b_f4"  } , "njets_1l_ge7j_ge1b"  },
-    };
+    //std::vector< FisherHolder > fisherHolder
+    //{
+    //    { {"h_njets_1l_ge7j_ge1b_d1"  , "h_njets_1l_ge7j_ge1b_d2"  , "h_njets_1l_ge7j_ge1b_d3"  , "h_njets_1l_ge7j_ge1b_d4"  } , "njets_1l_ge7j_ge1b"  },
+    //    //{ {"h_njets_1l_ge7j_ge1b_ge6-7esm", "h_njets_1l_ge7j_ge1b_ge7-8esm", "h_njets_1l_ge7j_ge1b_ge8-95esm", "h_njets_1l_ge7j_ge1b_ge95esm" }, "njets_1l_ge7j_ge1b_esmBins"},
+    //    //{ {"h_njets_1l_ge7j_ge1b_ge5-6esm", "h_njets_1l_ge7j_ge1b_ge6-7esm", "h_njets_1l_ge7j_ge1b_ge7-8esm", "h_njets_1l_ge7j_ge1b_ge8-95esm", "h_njets_1l_ge7j_ge1b_ge95esm" }, "njets_1l_ge7j_ge1b_esmBins"},
+    //    //{ {"h_njets_1l_ge7j_ge1b_f1"  , "h_njets_1l_ge7j_ge1b_f2"  , "h_njets_1l_ge7j_ge1b_f3"  , "h_njets_1l_ge7j_ge1b_f4"  } , "njets_1l_ge7j_ge1b"  },
+    //};
     
-    for (auto& f : fisherHolder)
-    {
-        //plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true, 9, "DeepESM");
-        //plt.plotRatioFisher(f.cutNames_,  f.plotName_, "N_{J}", "N_{J+1} / N_{J}", false, 6, "DeepESM");
-        plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true, 9, "Fisher");
-        plt.plotRatioFisher(f.cutNames_,  f.plotName_, "N_{J}", "N_{J+1} / N_{J}", false, 6, "Fisher");
-    }
+    //for (auto& f : fisherHolder)
+    //{
+    //    //plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true, 9, "DeepESM");
+    //    //plt.plotRatioFisher(f.cutNames_,  f.plotName_, "N_{J}", "N_{J+1} / N_{J}", false, 6, "DeepESM");
+    //    plt.plotFisher(f.cutNames_,  f.plotName_, "N_{J}", "Events", true, 9, "Fisher");
+    //    plt.plotRatioFisher(f.cutNames_,  f.plotName_, "N_{J}", "N_{J+1} / N_{J}", false, 6, "Fisher");
+    //}
     
     // --------------------
     // - Compute Yields
