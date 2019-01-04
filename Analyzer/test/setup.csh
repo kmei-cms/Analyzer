@@ -37,7 +37,7 @@ if (! -f allInOne_BTagEff.root) then
     xrdcp root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/PileupHistograms_0121_69p2mb_pm4p6.root .
     xrdcp root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/allInOne_leptonSF_Moriond17.root .
     xrdcp root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/CSVv2_Moriond17_B_H.csv .
-    xrdcp root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/allInONe_HtSFDist_2016.root .
+    xrdcp root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/allInOne_HtSFDist_2016.root .
     xrdcp root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/allInOne_leptonSF_2017.root .
     xrdcp root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/L1prefiring_jetpt_2017BtoF.root .
 endif
