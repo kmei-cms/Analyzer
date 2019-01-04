@@ -21,7 +21,7 @@ void CalculateHtSF::InitHistos(std::string filetag)
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
 
-    my_Histos.emplace_back(new Histo1D(filetag, 100, 0, 5, "htDerivedweight", {"passMadHT"}, {"Lumi", "Weight"}));
+    my_Histos.emplace_back(new Histo1D(filetag, 100, 0, 5, "htDerivedweightUncor", {"passMadHT"}, {"Lumi", "Weight"}));
 }
 
 void CalculateHtSF::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
