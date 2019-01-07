@@ -161,7 +161,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets"+myVarSuffix, "Jets"+myVarSuffix+"_bDiscriminatorCSV", "Jets"+myVarSuffix+"_partonFlavor", myVarSuffix);
         //Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
         std::string scaleFactorHistoFileName = (runYear == "2017") ? "allInOne_leptonSF_2017.root" : "allInOne_leptonSF_Moriond17.root";
-        ScaleFactors scaleFactors( scaleFactorHistoFileName, "allInONe_HtSFDist_2016.root", myVarSuffix );
+        ScaleFactors scaleFactors( scaleFactorHistoFileName, "allInOne_HtSFDist_2016.root", myVarSuffix );
         
         //tr.registerFunction(rtt);
         tr.registerFunction(muon);
