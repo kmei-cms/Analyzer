@@ -4,11 +4,10 @@ import numpy as np
 import DataSetInfo as info
 
 def main():
-    #path = "condor/Analyze1Lep_Kerasv1.2.0/"
-    path = "condor/Analyze1Lep_Kerasv1.2.0_MCTrigger_bTag_leptonWeight_ht300/"
+    path = "condor/Analyze1Lep_Kerasv1.2.4_HTSF/"
     histoNames = [
         #"blind_ht_1l_4j_ge1b", "blind_ht_1l_5j_ge1b", "blind_ht_1l_6j_ge1b", "blind_ht_1l_ge7j_ge1b",
-        "blind_ht_1l_5j_ge1b", "blind_ht_1l_6j_ge1b", "blind_ht_1l_ge7j_ge1b",
+        "blind_ht_1l_5j_ge1b", "blind_ht_1l_6j_ge1b", "blind_ht_1l_7j_ge1b",
         #"blind_deepESM_1l_4j_ge1b", "blind_deepESM_1l_5j_ge1b", "blind_deepESM_1l_6j_ge1b", "blind_deepESM_1l_ge7j_ge1b",
                   ]
     nJets = []
@@ -26,8 +25,8 @@ def main():
         ROOT.TH1.SetDefaultSumw2()
         ROOT.gStyle.SetOptFit();
 
-        data = info.DataSetInfo(basedir=path, fileName="Data.root",   label="Data")
-        bg   = info.DataSetInfo(basedir=path, fileName="AllBG.root",  label="Background")
+        data = info.DataSetInfo(basedir=path, fileName="2016_Data.root",   label="Data")
+        bg   = info.DataSetInfo(basedir=path, fileName="2016_AllBG.root",  label="Background")
         dHist = data.getHisto(histoName)
         bHist = bg.getHisto(histoName)
         dHist.Rebin(10)
@@ -74,7 +73,7 @@ def main():
         norm.append(fit.GetParameter(0))
         expo.append(fit.GetParameter(1))
 
-        c.SaveAs(histoName+"_ratio.png")
+        c.SaveAs(histoName+"_ratio.pdf")
         del c           
         nJet+=1
 
@@ -124,7 +123,7 @@ def main():
         l[1].Fit(fit, "M", "", 0.0, 10.0)
         fit.Draw("same")
         
-        c.SaveAs(l[0]+"_fits.png")
+        c.SaveAs(l[0]+"_fits.pdf")
         del c           
 
     ####################################################
@@ -149,7 +148,7 @@ def main():
     h = ROOT.TH1F("Ht Scale Factor", "Ht Scale Factor", 1,0,5000)
     h.GetXaxis().SetTitle("Ht [GeV]")
     h.GetYaxis().SetTitle("Scale Factor")
-    h.Set
+    h.SetMaximum(1.6)
     h.Draw()
 
     dummyList = []
@@ -167,7 +166,7 @@ def main():
         dummyList.append(hd)
 
     leg.Draw()
-    c.SaveAs("sf.png")
+    c.SaveAs("sf.pdf")
         
 if __name__ == '__main__':
     main()
