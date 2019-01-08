@@ -46,6 +46,7 @@
 #include <getopt.h>
 #include <string>
 #include <functional>
+#include <unistd.h>
 
 std::string color(const std::string& text, const std::string& color)
 {
@@ -57,6 +58,22 @@ std::string color(const std::string& text, const std::string& color)
     else if(color=="white") c = "37";
     
     return "\033[1;"+c+"m"+ text +"\033[0m";
+}
+
+const std::string getFullPath(const std::string& file)
+{
+    char buf[512];
+    int count = readlink(file.c_str(), buf, sizeof(buf));
+    if(count >= 0)
+    {
+        buf[count] = '\0';
+        return std::string(buf);
+    }
+    else
+    {
+        std::cout<<"Could not get full path of "<<file<<std::endl;
+        return std::string();
+    }
 }
 
 template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
@@ -84,7 +101,18 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerDerivedVar("etaCut",2.4); 
         tr.registerDerivedVar("Lumi",Lumi); 
         tr.registerDerivedVar("blind",true);
-
+        const auto& fullPath = getFullPath("DeepEventShape.cfg");
+        try
+        {
+            if      (runYear == "2016" && fullPath.find("DeepESMCfg-Keras_Tensorflow_v1") == std::string::npos) throw color("Using the wrong DeepESM config file","red");
+            else if (runYear == "2017" && fullPath.find("DeepESMCfg-Keras_Tensorflow_v3") == std::string::npos) throw color("Using the wrong DeepESM config file","red");
+        }
+        catch (const char* msg) 
+        {
+            std::cerr<<msg<<std::endl;
+            throw;
+        }
+        
         // Define classes/functions that add variables on the fly
         PrepNTupleVars prep;
         RunTopTagger rtt;
