@@ -93,13 +93,15 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         const std::string runtype = (file.tag.find("Data") != std::string::npos) ? "Data" : "MC";
         const std::string runYear = (file.tag.find("2017") != std::string::npos) ? "2017" : "2016";
         const double Lumi = (runYear == "2016") ? 35900.0 : 41525.0;
+        const bool isSignal = (file.tag.find("_stop") != std::string::npos || file.tag.find("_mStop") != std::string::npos) ? true : false;
         std::cout << "Starting loop (in run)" << std::endl;
         printf( "runtype: %s fileWeight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts ); fflush( stdout );
         tr.registerDerivedVar("runtype",runtype);
         tr.registerDerivedVar("runYear",runYear);
         tr.registerDerivedVar("filetag",file.tag);
         tr.registerDerivedVar("etaCut",2.4); 
-        tr.registerDerivedVar("Lumi",Lumi); 
+        tr.registerDerivedVar("Lumi",Lumi);
+        tr.registerDerivedVar("isSignal",isSignal);
         tr.registerDerivedVar("blind",true);
         if( !runOnCondor ) 
         {
