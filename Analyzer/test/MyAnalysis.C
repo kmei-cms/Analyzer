@@ -102,7 +102,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerDerivedVar("etaCut",2.4); 
         tr.registerDerivedVar("Lumi",Lumi);
         tr.registerDerivedVar("isSignal",isSignal);
-        tr.registerDerivedVar("blind",true);
+        tr.registerDerivedVar("blind",false);
         
         // Define classes/functions that add variables on the fly
         PrepNTupleVars prep;
