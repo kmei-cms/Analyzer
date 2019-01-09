@@ -78,7 +78,7 @@ const std::string getFullPath(const std::string& file)
 
 template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
                                     int startFile, int nFiles, int maxEvts, 
-                                    TFile* outfile, bool isQuiet, bool runOnCondor)
+                                    TFile* outfile, bool isQuiet)
 {
     std::cout << "Initializing..." << std::endl;
     Analyze a;
@@ -103,20 +103,6 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerDerivedVar("Lumi",Lumi);
         tr.registerDerivedVar("isSignal",isSignal);
         tr.registerDerivedVar("blind",true);
-        if( !runOnCondor ) 
-        {
-            const auto& fullPath = getFullPath("DeepEventShape.cfg");
-            try
-            {
-                if      (runYear == "2016" && fullPath.find("DeepESMCfg-Keras_Tensorflow_v1") == std::string::npos) throw color("Using the wrong DeepESM config file","red");
-                else if (runYear == "2017" && fullPath.find("DeepESMCfg-Keras_Tensorflow_v3") == std::string::npos) throw color("Using the wrong DeepESM config file","red");
-            }
-            catch (const char* msg) 
-            {
-                std::cerr<<msg<<std::endl;
-                throw;
-            }
-        }
         
         // Define classes/functions that add variables on the fly
         PrepNTupleVars prep;
@@ -276,7 +262,7 @@ int main(int argc, char *argv[])
     std::set<AnaSamples::FileSummary> vvf = setFS(dataSets, runOnCondor); 
     TFile* outfile = TFile::Open(histFile.c_str(), "RECREATE");
 
-    std::vector<std::pair<bool, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,TFile*,bool,bool)>>> AnalyzerPairVec = {
+    std::vector<std::pair<bool, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,TFile*,bool)>>> AnalyzerPairVec = {
         {doBackground,      run<AnalyzeBackground>},
         {doWControlRegion,  run<AnalyzeWControlRegion>},
         {doTopTagger,       run<AnalyzeTopTagger>},
@@ -298,7 +284,7 @@ int main(int argc, char *argv[])
     {
         for(auto& pair : AnalyzerPairVec)
         {
-            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,outfile,isQuiet,runOnCondor); 
+            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,outfile,isQuiet); 
         }
 
         outfile->Close();
