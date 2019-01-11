@@ -150,6 +150,10 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         double htDerivedweight = 1.0;
         double topPtScaleFactor = 1.0;
         double prefiringScaleFactor = 1.0;
+        double FSRUp = 1.0;
+        double FSRDown = 1.0;
+        double FSRUp_2 = 1.0;
+        double FSRDown_2 = 1.0;
         if(runtype == "MC")
         {
             // Define Lumi weight
@@ -170,8 +174,13 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             htDerivedweight = tr.getVar<double>("htDerivedweight");
             topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
             prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
+            FSRUp = tr.getVar<double>("PSweight_FSRUp");
+            FSRDown = tr.getVar<double>("PSweight_FSRDown");
+            FSRUp_2 = tr.getVar<double>("PSweight_FSRUp_2");
+            FSRDown_2 = tr.getVar<double>("PSweight_FSRDown_2");
             
-            weight *= eventweight*leptonweight*bTagWeight*htDerivedweight*prefiringScaleFactor;
+            //weight *= eventweight*leptonweight*bTagWeight*htDerivedweight*prefiringScaleFactor;
+            weight *= eventweight*leptonweight*bTagWeight*prefiringScaleFactor;
         }
 
         // -------------------------------
@@ -402,12 +411,16 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"blind_jEta",         100,  -6.0,    6.0},
             {    "h_allMbl",       300,   0.0,  300.0},            
             {"blind_allMbl",       300,   0.0,  300.0},
-            {"h_weight",               100,  -5.0, 5.0},
-            {"h_leptonweight",         100,  -5.0, 5.0},
-            {"h_PileupWeight",         100,  -5.0, 5.0},
-            {"h_bTagWeight",           100,  -5.0, 5.0},
-            {"h_htDerivedweight",      100,  -5.0, 5.0},
-            {"h_prefiringScaleFactor", 100,  -5.0, 5.0},
+            {"h_weight",               200,  -5.0, 5.0},
+            {"h_leptonweight",         200,  -5.0, 5.0},
+            {"h_PileupWeight",         200,  -5.0, 5.0},
+            {"h_bTagWeight",           200,  -5.0, 5.0},
+            {"h_htDerivedweight",      200,  -5.0, 5.0},
+            {"h_prefiringScaleFactor", 200,  -5.0, 5.0},
+            {"h_FSRUp",                200,  -5.0, 5.0},
+            {"h_FSRUp_2",              200,  -5.0, 5.0},
+            {"h_FSRDown",              200,  -5.0, 5.0},
+            {"h_FSRDown_2",            200,  -5.0, 5.0},
         };
 
         std::vector<TH2DInfo> hist2DInfos = {
@@ -455,6 +468,10 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_histos["h_bTagWeight"          +kv.first]->Fill(bTagWeight, w);
                 my_histos["h_htDerivedweight"     +kv.first]->Fill(htDerivedweight, w);
                 my_histos["h_prefiringScaleFactor"+kv.first]->Fill(prefiringScaleFactor, w);
+                my_histos["h_FSRUp"               +kv.first]->Fill(FSRUp);
+                my_histos["h_FSRDown"             +kv.first]->Fill(FSRDown);
+                my_histos["h_FSRUp_2"             +kv.first]->Fill(FSRUp_2);
+                my_histos["h_FSRDown_2"           +kv.first]->Fill(FSRDown_2);
                 for(const auto& l : GoodLeptons)
                 {
                     my_histos["h_lPt"+kv.first]->Fill(l.second.Pt(), w);
