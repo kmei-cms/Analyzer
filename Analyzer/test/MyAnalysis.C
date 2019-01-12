@@ -36,6 +36,7 @@
 #include "Framework/Framework/include/Baseline.h"
 #include "Framework/Framework/include/DeepEventShape.h"
 #include "Framework/Framework/include/ScaleFactors.h"
+#include "Framework/Framework/include/PartialUnBlinding.h"
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -105,6 +106,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerDerivedVar("blind",false);
         
         // Define classes/functions that add variables on the fly
+        PartialUnBlinding partUnBlind;
         PrepNTupleVars prep;
         RunTopTagger rtt;
         Muon muon;
@@ -119,6 +121,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         DeepEventShape deepEventShape;
         
         // Register classes/functions that add variables on the fly
+        tr.registerFunction(partUnBlind);
         tr.registerFunction(prep);
         tr.registerFunction(rtt);
         tr.registerFunction(muon);
