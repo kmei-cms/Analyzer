@@ -179,8 +179,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             FSRUp_2 = tr.getVar<double>("PSweight_FSRUp_2");
             FSRDown_2 = tr.getVar<double>("PSweight_FSRDown_2");
             
-            //weight *= eventweight*leptonweight*bTagWeight*htDerivedweight*prefiringScaleFactor;
-            weight *= eventweight*leptonweight*bTagWeight*prefiringScaleFactor;
+            weight *= eventweight*leptonweight*bTagWeight*htDerivedweight*prefiringScaleFactor;
         }
 
         // -------------------------------
