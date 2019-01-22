@@ -87,6 +87,7 @@ Executable = run_Analyzer_condor.tcsh
 Transfer_Input_Files = CMSSW_9_3_3.tar.gz, exestuff.tar.gz
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
+x509userproxy = $ENV(X509_USER_PROXY)
 
 """
 
