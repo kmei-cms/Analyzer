@@ -9,12 +9,12 @@ from samples import SampleCollection
 import optparse 
 import subprocess
 
-def makeExeAndFriendsTarball(filestoTransfer, fname):
+def makeExeAndFriendsTarball(filestoTransfer, fname, path):
     system("mkdir -p %s" % fname)
     for fn in filestoTransfer:
         system("cd %s; ln -s %s" % (fname, fn))
         
-    tarallinputs = "tar czvf %s.tar.gz %s --dereference"% (fname, fname)
+    tarallinputs = "tar czvf %s/%s.tar.gz %s --dereference"% (path, fname, fname)
     print tarallinputs
     system(tarallinputs)
     system("rm -r %s" % fname)
@@ -101,7 +101,7 @@ def main():
     fileParts = []
     fileParts.append("Universe   = vanilla\n")
     fileParts.append("Executable = run_Analyzer_condor.tcsh\n")
-    fileParts.append("Transfer_Input_Files = CMSSW_9_3_3.tar.gz, exestuff.tar.gz\n")
+    fileParts.append("Transfer_Input_Files = %s/CMSSW_9_3_3.tar.gz, %s/exestuff.tar.gz\n" % (options.outPath,options.outPath))
     fileParts.append("Should_Transfer_Files = YES\n")
     fileParts.append("WhenToTransferOutput = ON_EXIT\n")
     fileParts.append("x509userproxy = $ENV(X509_USER_PROXY)\n\n")
@@ -138,8 +138,8 @@ def main():
     fout.close()
 
     if not options.dataCollections and not options.dataCollectionslong:
-        makeExeAndFriendsTarball(filestoTransfer, "exestuff")
-        system("tar --exclude-caches-all --exclude-vcs -zcf ${CMSSW_VERSION}.tar.gz -C ${CMSSW_BASE}/.. ${CMSSW_VERSION} --exclude=src --exclude=tmp")
+        makeExeAndFriendsTarball(filestoTransfer, "exestuff", options.outPath)
+        system("tar --exclude-caches-all --exclude-vcs -zcf %s/${CMSSW_VERSION}.tar.gz -C ${CMSSW_BASE}/.. ${CMSSW_VERSION} --exclude=src --exclude=tmp" % options.outPath)
         
     if not options.noSubmit: 
         system('mkdir -p %s/log-files' % options.outPath)
