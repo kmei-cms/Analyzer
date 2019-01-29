@@ -78,7 +78,7 @@ printf "\n\n Attempting to run MyAnalysis executable.\n\n"
 printf "\n\n ls output\n"
 ls -l
 
-mv *.root ${base_dir}
+mv MyAnalysis*.root ${base_dir}
 
 cd ${base_dir}
 
