@@ -137,7 +137,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         
         if( runtype == "MC" ) 
         {
-            //std::string eosPath =   "root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/";
+            //std::string eosPath =   "root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/SUS-19-004_Final/";
             BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
             bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets", "Jets_bDiscriminatorCSV", "Jets_partonFlavor");
             Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
