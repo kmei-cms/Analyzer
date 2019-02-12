@@ -217,7 +217,7 @@ public:
         c->cd();
 
         //Set Canvas margin (gPad is root magic to access the current pad, in this case canvas "c")
-        gPad->SetLeftMargin(0.12);
+        gPad->SetLeftMargin(0.16);
         gPad->SetRightMargin(0.06);
         gPad->SetTopMargin(0.08);
         gPad->SetBottomMargin(0.12);
@@ -288,7 +288,9 @@ public:
 
         //Draw dummy hist again to get axes on top of histograms
         setupDummy(dummy, leg, histName, xAxisLabel, yAxisLabel, isLogY, xmin, xmax, min, max, lmax);
+        dummy.h->GetYaxis()->SetTitleOffset(1.6);
         dummy.draw("AXIS");
+        
 
         //Draw CMS and lumi lables
         //drawLables(lumi);

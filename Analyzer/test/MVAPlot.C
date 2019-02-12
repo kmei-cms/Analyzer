@@ -55,50 +55,39 @@ template<typename H> std::unique_ptr<H> GetHisto(const std::string& histName, hi
 void MVAPlot()
 {
     TH1::AddDirectory(false);
-    //std::string path = "lep0Ana_TestFisherV8-May-30-2018";
-    //std::string path = "deepESM_v1";
-    //std::string path = "deepESM_v2";
-    //std::string path = "deepESM_GRfalse_1Layer";
-    //std::string path = "deepESM_GRtrue_1Layer";
-    //std::string path = "deepESM_GRfalse_1Layer_8Vars";
-    //std::string path = "deepESM_GRtrue_1Layer_8Vars";
-    //std::string path = "deepESM_GRtrue_1Layer_9Vars_nJets";
-    //std::string path = "deepESM_GRfalse_1Layer_9Vars_nJets";    
-    //std::string path = "deepESM_GRtrue15-2_4Vars_1Layer";
-    //std::string path = "deepESM_GRtrue15-20_4Vars_1Layer";
-    //std::string path = "deepESM_7Vars_GRtrue_HighWeight";
-    //std::string path = "deepESM_GRfalse_1Layer_24Vars";
-    //std::string path = "deepESM_GRtrue_1Layer_24Vars";
-    //std::string path = "deepESM_GRtrue_1Layer_24Vars_v2";
-    //std::string path = "deepESM_GRtrue_1Layer_24Vars_10inclusive";
-    //std::string path = "deepESM_GRtrue_3Layer_28Vars";
-    //std::string path = "deepESM_MyCodeTrue_3Layer_28Vars";
-    //std::string path = "owenCode_inputsvsNJet";
-    //std::string path = "deepESM_perNJet_1Layer";
-    std::string path = ""
+    //std::string path = "condor/oldTest/Analyze1Lep_Kerasv1.2.5";
+    //td::string year = "2016";
+    std::string path = "condor/oldTest/Analyze1Lep_Kerasv3.0.1";
+    std::string year = "2017";
 
     std::vector<histInfo> bgEntries = {
-        //{"DYJetsToLL_M-50",  path + "/DYJetsToLL_M-50/DYJetsToLL_M-50.root", "hist", kBlack      },        
-        //{"Rare",             path + "/Rare/Rare.root",                       "hist", kCyan + 1   },
-        //{"Diboson",          path + "/Diboson/Diboson.root",                 "hist", kMagenta + 1},
-        //{"WJetsToLNu",       path + "/WJetsToLNu/WJetsToLNu.root",           "hist", kYellow + 1 },
-        //{"ST",               path + "/ST/ST.root",                           "hist", kRed + 1    },
-        //{"QCD",              path + "/QCD/QCD.root",                         "hist", kGreen + 1  },
-        //{"TT",         path + "/TT/TT.root",                           "hist", kBlue - 7   },
-        {"TT",         path + "/TTJets/TTJets.root",                           "hist", kBlue - 7   },
-        //{"Data_SingleLepton" ,  path + "/Data_SingleLepton/Data_SingleLepton.root", "PEX0", kBlack},
+        //{"DYJetsToLL_M-50", path + "/"+year+"_DYJetsToLL_M-50.root", "hist", kOrange + 2 },        
+        //{"Rare",            path + "/"+year+"_Rare.root",            "hist", kCyan + 1   },
+        //{"Diboson",         path + "/"+year+"_Diboson.root",         "hist", kMagenta + 1},
+        //{"WJetsToLNu",      path + "/"+year+"_WJetsToLNu.root",      "hist", kYellow + 1 },
+        //{"ST",              path + "/"+year+"_ST.root",              "hist", kRed + 1    },
+        //{"QCD",             path + "/"+year+"_QCD.root",             "hist", kGreen + 1  },
+        {"TT",        path + "/"+year+"_TT.root",              "hist", kBlue       },
     };
 
     //vector summarizing signal histograms to include in the plot
-    std::vector<histInfo> sigEntries = {
-        //{"RPV_350",  path + "/AllSignal/MyAnalysis_rpv_stop_350_0.root",         "hist", kMagenta + 2},
-        //{"RPV_450",  path + "/AllSignal/MyAnalysis_rpv_stop_450_0.root",         "hist", kMagenta + 2},
-        {"RPV_550",  path + "/AllSignal/MyAnalysis_rpv_stop_550_0.root",         "hist", kMagenta + 2},
-        //{"RPV_650",  path + "/AllSignal/MyAnalysis_rpv_stop_650_0.root",         "hist", kMagenta + 2},
-        //{"RPV_750",  path + "/AllSignal/MyAnalysis_rpv_stop_750_0.root",         "hist", kMagenta + 2},
-        //{"SYY_650",  path + "/AllSignal/MyAnalysis_stealth_stop_650_SYY_0.root", "hist", kGreen + 3  },
-        //{"RPV_850",  path + "/AllSignal/MyAnalysis_rpv_stop_850_0.root",         "hist", kRed + 1    },
-    };
+    std::vector<histInfo> sigEntries;
+    if(year == "2016")
+    {        
+        sigEntries = {
+            {"RPV 850", path + "/"+year+"_rpv_stop_850.root",               "hist", kRed      },
+            {"SYY 650", path + "/"+year+"_stealth_stop_650_SYY.root",       "hist", kMagenta  },
+            {"RPV 350", path + "/"+year+"_rpv_stop_350.root",               "hist", kCyan     },        
+        };
+    }
+    else
+    {
+        sigEntries = {        
+            {"RPV 850", path + "/"+year+"_RPV_2t6j_mStop-850.root",         "hist", kRed     },
+            {"SYY 650", path + "/"+year+"_StealthSYY_2t6j_mStop-650.root",  "hist", kMagenta },
+            {"RPV 350", path + "/"+year+"_RPV_2t6j_mStop-350.root",         "hist", kCyan    },        
+        };
+    }
 
     std::vector<std::string> histNameVec = {
         "h_deepESM_1l_6j_ge1b","h_deepESM_1l_7j_ge1b",
@@ -159,7 +148,7 @@ void MVAPlot()
     //c->Print(("Integral_"+baselineName+".png").c_str());    
     
     //Make plots to show NJet dependance 
-    //std::vector<std::string> variables = {"deepESM", "fisher", "BestComboMass"};
+    std::vector<std::string> variables = {"deepESM"};
     //std::vector<std::string> variables = {"njets_deepESM", "njets_fisher"};
     //std::vector<std::string> variables = {
     //    //"Jet_cm_pt_1_deepESM", "Jet_cm_pt_2_deepESM", "Jet_cm_pt_3_deepESM", "Jet_cm_pt_4_deepESM", "Jet_cm_pt_5_deepESM", "Jet_cm_pt_6_deepESM", "Jet_cm_pt_7_deepESM",
@@ -177,13 +166,9 @@ void MVAPlot()
     //    "Jet_cm_eta_1", "Jet_cm_eta_2", "Jet_cm_eta_3", "Jet_cm_eta_4", "Jet_cm_eta_5", "Jet_cm_eta_6", "Jet_cm_eta_7",
     //    "Jet_cm_phi_1", "Jet_cm_phi_2", "Jet_cm_phi_3", "Jet_cm_phi_4", "Jet_cm_phi_5", "Jet_cm_phi_6", "Jet_cm_phi_7",
     //    "Jet_cm_m_1", "Jet_cm_m_2", "Jet_cm_m_3", "Jet_cm_m_4", "Jet_cm_m_5", "Jet_cm_m_6", "Jet_cm_m_7",
-    //
-    //    "Jet_pt_1", "Jet_pt_2", "Jet_pt_3", "Jet_pt_4", "Jet_pt_5", "Jet_pt_6", "Jet_pt_7",
-    //    "Jet_eta_1", "Jet_eta_2", "Jet_eta_3", "Jet_eta_4", "Jet_eta_5", "Jet_eta_6", "Jet_eta_7",
-    //    "Jet_phi_1", "Jet_phi_2", "Jet_phi_3", "Jet_phi_4", "Jet_phi_5", "Jet_phi_6", "Jet_phi_7",
-    //    "Jet_m_1", "Jet_m_2", "Jet_m_3", "Jet_m_4", "Jet_m_5", "Jet_m_6", "Jet_m_7",
+    //    "fwm2_top6","fwm3_top6","fwm4_top6","fwm5_top6","jmt_ev0_top6","jmt_ev1_top6","jmt_ev2_top6",
     //};
-    std::vector<std::string> variables = {"deepESM"};
+    //std::vector<std::string> variables = {"deepESM"};
     std::vector<histInfo> entries = sigEntries; 
     entries.push_back(bgEntries[0]);
     for(const auto& v : variables)
@@ -221,50 +206,52 @@ void MVAPlot()
             gPad->SetBottomMargin(0.12);
             gPad->SetTicks(1,1);
             gPad->SetLogz();
-            c->Print((entry.legEntry+"_"+v+"_nJetDependance.png").c_str());            
+            c->Print((entry.legEntry+"_"+v+"_nJetDependance_"+year+".pdf").c_str());            
         }
     
-        for(auto& entry : sigEntries)
-        {
-            TLegend *leg = new TLegend(0.20, 0.76, 0.89, 0.88);
-            leg->SetFillStyle(0);
-            leg->SetBorderSize(0);
-            leg->SetLineWidth(1);
-            leg->SetNColumns(3);
-            leg->SetTextFont(42);
-        
-            double norm = 1.0;
-            std::unique_ptr<TH1> h1 = GetHisto<TH1>("h_"+v+"_1l_ge7j_ge1b", entry);
-            h1->Rebin(10);
-            h1->SetStats(0);
-            h1->GetXaxis()->SetTitle((v+" Discriminator").c_str());
-            h1->GetYaxis()->SetTitle("Norm Events");            
-            h1->Scale(norm / h1->Integral() );
-            double h1max = h1->GetBinContent(h1->GetMaximumBin()) * 1.3;
-            h1->SetFillStyle(3005);
-            h1->Draw("hist");
-            leg->AddEntry(h1.get(), (entry.legEntry+"_"+v).c_str(), "F");
-        
-            std::unique_ptr<TH1> h2 = GetHisto<TH1>("h_"+v+"_1l_ge7j_ge1b", bgEntries[0]);
-            h2->Rebin(10);
-            h2->Scale(norm / h2->Integral() );
-            double h2max = h2->GetBinContent(h2->GetMaximumBin()) * 1.3;
-            h2->Draw("hist same");
-            leg->AddEntry(h2.get(), ("TT_"+v).c_str(), "F");
-        
-            //std::unique_ptr<TH1> h3 = GetHisto<TH1>("h_"v+"_1l_ge6j_ge1b", bgEntries[1]);
-            //h3->Rebin(1);
-            //h3->Scale(norm / h3->Integral() );
-            //double h3max = h3->GetBinContent(h3->GetMaximumBin()) * 1.3;
-            //h3->Draw("PEX0 same");
-            //leg->AddEntry(h3.get(), ("Data_"+v).c_str(), "F");
-            //leg->Draw();
-            //h1->SetMaximum( std::max(std::max(h1max, h2max), h3max) );
-            
-            h1->SetMaximum( std::max(h1max, h2max) );
-            h1->Draw("hist same");
-            c->Print((entry.legEntry+"_"+v+"_.png").c_str());            
-        }
+        //TLegend *leg = new TLegend(0.20, 0.76, 0.89, 0.88);
+        //leg->SetFillStyle(0);
+        //leg->SetBorderSize(0);
+        //leg->SetLineWidth(1);
+        //leg->SetNColumns(3);
+        //leg->SetTextFont(42);
+        //
+        //double norm = 1.0;
+        //std::unique_ptr<TH1> h1 = GetHisto<TH1>(v+"_1l_ge7j_ge1b", bgEntries[0]);
+        ////h1->Rebin(10);
+        //h1->Scale(norm / h1->Integral() );
+        //h1->SetStats(0);
+        //h1->GetXaxis()->SetTitle((v).c_str());
+        //h1->GetYaxis()->SetTitle("A.U.");            
+        //double h1max = h1->GetBinContent(h1->GetMaximumBin()) * 1.3;
+        //h1->Draw("hist");
+        //leg->AddEntry(h1.get(), ("TT_"+v).c_str(), "F");
+        //
+        //std::vector<std::unique_ptr<TH1>> hVec;
+        //for(auto& entry : sigEntries)
+        //{        
+        //    hVec.emplace_back( GetHisto<TH1>(v+"_1l_ge7j_ge1b", entry) );            
+        //    //hVec.back()->Rebin(10);
+        //    hVec.back()->Scale(norm / hVec.back()->Integral() );
+        //    double h2max = hVec.back()->GetBinContent(hVec.back()->GetMaximumBin()) * 1.3;
+        //    hVec.back()->SetFillStyle(3005);
+        //    hVec.back()->Draw("hist same");
+        //    leg->AddEntry(hVec.back().get(), (entry.legEntry+"_"+v).c_str(), "F");
+        //    h1max = std::max(h1max, h2max);
+        //
+        //    //std::unique_ptr<TH1> h3 = GetHisto<TH1>("h_"v+"_1l_ge6j_ge1b", bgEntries[1]);
+        //    //h3->Rebin(1);
+        //    //h3->Scale(norm / h3->Integral() );
+        //    //double h3max = h3->GetBinContent(h3->GetMaximumBin()) * 1.3;
+        //    //h3->Draw("PEX0 same");
+        //    //leg->AddEntry(h3.get(), ("Data_"+v).c_str(), "F");
+        //    //h1->SetMaximum( std::max(std::max(h1max, h2max), h3max) );
+        //}
+        //
+        //leg->Draw();
+        //h1->SetMaximum( h1max );
+        ////h1->Draw("hist same");
+        //c->Print((year+"_"+v+"_.png").c_str());
     }
     //
     ////Make input variable plots

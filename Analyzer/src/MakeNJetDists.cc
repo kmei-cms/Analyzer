@@ -35,6 +35,8 @@ void MakeNJetDists::InitHistos(const std::string& runtype)
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
 
+    my_Histos.emplace_back(new Histo1D("EventCounter", 2,  -1.1, 1.1, "eventCounter", {}, {}));
+
     std::vector<std::string> weightVec;
     if( runtype == "MC" )
     {

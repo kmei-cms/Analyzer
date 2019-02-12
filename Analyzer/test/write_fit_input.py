@@ -32,6 +32,20 @@ class WriteNJetPlots:
             histos.append(h)
         return histos
 
+    def writeHistosSetBins(self, data, suffix, basenameIn, basenameOut, bin, sys, binDic):
+        for key, dsi in data.iteritems():
+            h = dsi.getHisto(basenameIn+"_"+bin+sys)
+            h.SetName(bin+"_"+dsi.label+suffix+"_"+basenameOut+sys)
+            h.SetTitle(bin+"_"+dsi.label+suffix+"_"+basenameOut+sys)
+            for keyBin, valueList in binDic.iteritems():
+                if keyBin == bin:
+                    i=0
+                    for b in valueList:
+                        i+=1
+                        if b >= 0.0:
+                            h.SetBinContent(i, b)
+            h.Write()
+
     def writeStatHistos(self, data, basenameIn, basenameOut, bin, sys):
         for key, dsi in data.iteritems():
             h = dsi.getHisto(basenameIn+"_"+bin+sys)
@@ -202,8 +216,8 @@ if __name__ == "__main__":
     systypes = ["", "_JECUp", "_JECDown", "_JERUp", "_JERDown", "_btgUp", "_btgDown", "_lepUp", "_lepDown",
                 "_isrUp", "_isrDown", "_fsrUp", "_fsrDown", "_isr2Up", "_isr2Down", "_fsr2Up", "_fsr2Down",
                 #"_pdfUp", "_pdfDown", "_sclUp", "_sclDown"]
-                "_pdfUp", "_pdfDown", "_htUp", "_htDown"]
-                #"_pdfUp", "_pdfDown", "_htUp", "_htDown", "_sclUp", "_sclDown"]
+                #"_pdfUp", "_pdfDown", "_htUp", "_htDown"]
+                "_pdfUp", "_pdfDown", "_htUp", "_htDown", "_sclUp", "_sclDown"]
     outputfile = ROOT.TFile.Open(outDir + "/" + options.rootFile,"RECREATE")
     outputDataCard = options.dataCard
 
@@ -236,6 +250,13 @@ if __name__ == "__main__":
             "RPV_750" : info.DataSetInfo(basedir=basedir, fileName="2016_rpv_stop_750.root",         label="RPV_750", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scale),
             "RPV_850" : info.DataSetInfo(basedir=basedir, fileName="2016_rpv_stop_850.root",         label="RPV_850", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scale),
             }
+
+        binDicData = {
+            "D1" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0], 
+            "D2" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0],
+            "D3" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0],
+            "D4" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0],
+        }
 
     elif options.year== "2017":
         sgData = {
@@ -282,9 +303,35 @@ if __name__ == "__main__":
             "RPV_900" : info.DataSetInfo(basedir=basedir, fileName="2017_RPV_2t6j_mStop-900.root",        label="RPV_900", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scale),
             }
 
+        binDicData = {
+            "D1" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,2.0], 
+            "D2" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,2.0],
+            "D3" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0],
+            "D4" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0],
+        }
+
     Data = {
         "data" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_Data.root", label="data", processName="data", process="1", rate=False, lumiSys="-", scale=-1.0)
     }
+
+    dicNoD4 = {
+        "D1" : [   -1.0,  -1.0,  -1.0, -1.0, -1.0, -1.0, -1.0, -1.0], 
+        "D2" : [   -1.0,  -1.0,  -1.0, -1.0, -1.0, -1.0, -1.0, -1.0],
+        "D3" : [   -1.0,  -1.0,  -1.0, -1.0, -1.0, -1.0, -1.0, -1.0],
+        "D4" : [ 1364.0, 398.0, 109.0, 28.0,  7.0,  2.0,  1.0,  0.0],
+    }
+    dicNoD3D4 = {
+        "D1" : [   -1.0,  -1.0,  -1.0, -1.0, -1.0, -1.0, -1.0, -1.0], 
+        "D2" : [   -1.0,  -1.0,  -1.0, -1.0, -1.0, -1.0, -1.0, -1.0],
+        "D3" : [ 3250.0, 939.0, 259.0, 63.0, 18.0,  4.0,  1.0,  0.0],
+        "D4" : [ 1364.0, 398.0, 109.0, 28.0,  7.0,  2.0,  1.0,  0.0],
+    }
+    dicNoD1D2D3D4 = {
+        "D1" : [29495.0, 8374.0, 2216.0, 563.0, 143.0, 35.0, 9.0, 2.0],
+        "D2" : [18308.0, 5295.0, 1454.0, 392.0, 107.0, 24.0, 6.0, 2.0],
+        "D3" : [ 3250.0,  939.0,  259.0,  63.0,  18.0,  4.0, 1.0, 0.0],
+        "D4" : [ 1364.0,  398.0,  109.0,  28.0,   7.0,  2.0, 1.0, 0.0],
+    }    
 
     #Write all histos to outputfile
     outputfile.cd()
@@ -303,6 +350,11 @@ if __name__ == "__main__":
                     wp.makePseudoData_Func(histos, "28_24_-20", basenameOut, bin, sys, a0=0.28, a1=0.24, a2=-0.20)
                     if sys == "":
                         wp.writeHistos(Data, basenameIn, basenameOut, bin, sys)
+                        wp.writeHistosSetBins(Data, "SetBin", basenameIn, basenameOut, bin, sys, binDicData)
+                        if options.year == "2016":
+                            wp.writeHistosSetBins(Data, "SetBinNoD4", basenameIn, basenameOut, bin, sys, dicNoD4)
+                            wp.writeHistosSetBins(Data, "SetBinNoD3D4", basenameIn, basenameOut, bin, sys, dicNoD3D4)
+                            wp.writeHistosSetBins(Data, "SetBinNoD1D2D3D4", basenameIn, basenameOut, bin, sys, dicNoD1D2D3D4)
                         wp.writeStatHistos({"OTHER" : bgData["OTHER"]}, basenameIn, basenameOut, bin, sys)
                         wp.writeStatHistos(sgData, basenameIn, basenameOut, bin, sys)
 
