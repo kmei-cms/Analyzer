@@ -1,5 +1,5 @@
-#define CalculateHtSF_cxx
-#include "Analyzer/Analyzer/include/CalculateHtSF.h"
+#define CalculateSFMean_cxx
+#include "Analyzer/Analyzer/include/CalculateSFMean.h"
 #include "Analyzer/Analyzer/include/Histo.h"
 
 #include "SusyAnaTools/Tools/NTupleReader.h"
@@ -12,19 +12,23 @@
 #include <TRandom3.h>
 #include <iostream>
 
-CalculateHtSF::CalculateHtSF()
+CalculateSFMean::CalculateSFMean()
 {
 }
 
-void CalculateHtSF::InitHistos(std::string filetag)
+void CalculateSFMean::InitHistos(std::string filetag)
 {
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
 
-    my_Histos.emplace_back(new Histo1D(filetag, 100, 0, 5, "htDerivedweightUncor", {"passMadHT"}, {"Lumi", "Weight"}));
+    my_Histos.emplace_back(new Histo1D(filetag+"_ht",       100, 0, 5, "htDerivedweightUncor", {"passMadHT"}, {"Lumi", "Weight"}));
+    my_Histos.emplace_back(new Histo1D(filetag+"_sclUp",    100, 0, 5, "scaleWeightUpUncor",   {"passMadHT"}, {"Lumi", "Weight"}));
+    my_Histos.emplace_back(new Histo1D(filetag+"_sclDown",  100, 0, 5, "scaleWeightDownUncor", {"passMadHT"}, {"Lumi", "Weight"}));
+    my_Histos.emplace_back(new Histo1D(filetag+"_pdf_Up",   100, 0, 5, "PDFweightUpUncor",     {"passMadHT"}, {"Lumi", "Weight"}));
+    my_Histos.emplace_back(new Histo1D(filetag+"_pdf_Down", 100, 0, 5, "PDFweightDownUncor",   {"passMadHT"}, {"Lumi", "Weight"}));    
 }
 
-void CalculateHtSF::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void CalculateSFMean::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
 {
     const auto& runtype = tr.getVar<std::string>("runtype");
     const auto& filetag = tr.getVar<std::string>("filetag");
@@ -59,7 +63,7 @@ void CalculateHtSF::Loop(NTupleReader& tr, double weight, int maxevents, bool is
     }//END of while tr.getNextEvent loop   
 }//END of function
       
-void CalculateHtSF::WriteHistos( TFile* outfile ) 
+void CalculateSFMean::WriteHistos( TFile* outfile ) 
 {
     outfile->cd();
     

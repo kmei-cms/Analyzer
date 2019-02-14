@@ -1,5 +1,5 @@
-#ifndef CalculateHtSF_h
-#define CalculateHtSF_h
+#ifndef CalculateSFMean_h
+#define CalculateSFMean_h
 
 #include <TH1D.h>
 #include <TH2D.h>
@@ -13,13 +13,13 @@
 #include "Analyzer/Analyzer/include/Histo.h"
 class NTupleReader;
 
-class CalculateHtSF
+class CalculateSFMean
 {
 public:
     std::vector<std::unique_ptr<Histo_Base>> my_Histos;
     
-    CalculateHtSF();
-    ~CalculateHtSF(){};
+    CalculateSFMean();
+    ~CalculateSFMean(){};
     
     void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false);
     void InitHistos(std::string filetag);
