@@ -211,6 +211,9 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
     const auto& runtype = tr.getVar<std::string>("runtype");
     const auto& filetag = tr.getVar<std::string>("filetag");
     const auto& runYear = tr.getVar<std::string>("runYear");
+    const auto& DeepESMCfg = tr.getVar<std::string>("DeepESMCfg");
+    const auto& ModelFile = tr.getVar<std::string>("ModelFile");
+
     InitHistos(runtype);
 
     for(const auto& pair : myVarSuffixPairs)
@@ -226,7 +229,7 @@ void MakeNJetDists::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         CommonVariables commonVariables(myVarSuffix);
         MakeMVAVariables makeMVAVariables(false, myVarSuffix);
         Baseline baseline(myVarSuffix);
-        DeepEventShape deepEventShape("DeepEventShape.cfg", "Info", true, myVarSuffix);
+        DeepEventShape deepEventShape(DeepESMCfg, ModelFile, "Info", true, myVarSuffix);
         BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, filetag);
         bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets"+myVarSuffix, "Jets"+myVarSuffix+"_bDiscriminatorCSV", "Jets"+myVarSuffix+"_partonFlavor", myVarSuffix);
         //Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");

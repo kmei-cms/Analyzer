@@ -45,23 +45,16 @@ def main():
                 print "------------------------------------------------"
                 break
     
-    ESMVAFileName = ""
-    with file(environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape.cfg" % repo) as ESMcfgFile:
-        for line in ESMcfgFile:
-            if "modelFile" in line:
-                ESMVAFileName = line.split("=")[1].strip().strip("\"")
-                print "------------------------------------------------"
-                print "DeepESM training:", ESMVAFileName
-                print "------------------------------------------------"
-                break
-    
     filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MyAnalysis" % repo, 
                        environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,mvaFileName),
                        environ["CMSSW_BASE"] + "/src/%s/test/TopTagger.cfg" % repo,
                        environ["CMSSW_BASE"] + "/src/TopTagger/TopTagger/test/libTopTagger.so",
                        environ["CMSSW_BASE"] + "/src/%s/test/sampleSets.cfg" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/sampleCollections.cfg" % repo,
-                       environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape.cfg" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape_2016.cfg" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape_2017.cfg" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/keras_frozen_2016.pb" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/keras_frozen_2017.pb" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/allInOne_BTagEff.root" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/allInOne_leptonSF_2016.root" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/allInOne_leptonSF_2017.root" % repo,
@@ -69,7 +62,6 @@ def main():
                        environ["CMSSW_BASE"] + "/src/%s/test/CSVv2_Moriond17_B_H.csv" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/allInOne_SFMean.root" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/L1prefiring_jetpt_2017BtoF.root" % repo,
-                       environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,ESMVAFileName),
                        ]
     
     print "--------------Files to Transfer-----------------"
