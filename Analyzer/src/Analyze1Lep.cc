@@ -23,6 +23,8 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap, const st
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
 
+    my_histos.emplace("EventCounter", std::make_shared<TH1D>("EventCounter","EventCounter", 2, -1.1, 1.1 ) );
+
     // Declare all your histograms here, that way we can fill them for multiple chains
     my_histos.emplace("fwm2_top6_1l_ge7j_ge1b", std::make_shared<TH1D>("fwm2_top6_1l_ge7j_ge1b","fwm2_top6_1l_ge7j_ge1b", 50, 0, 1 ) );
     my_histos.emplace("fwm3_top6_1l_ge7j_ge1b", std::make_shared<TH1D>("fwm3_top6_1l_ge7j_ge1b","fwm3_top6_1l_ge7j_ge1b", 50, 0, 1 ) );
@@ -132,6 +134,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& jmt_ev1_top6         = tr.getVar<double>("jmt_ev1_top6");
         const auto& jmt_ev2_top6         = tr.getVar<double>("jmt_ev2_top6");
         const auto& Jets_cm_top6         = tr.getVec<TLorentzVector>("Jets_cm_top6");
+        const auto& eventCounter         = tr.getVar<int>("eventCounter");
 
         // ------------------------
         // -- Print event number
@@ -153,7 +156,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         double FSRUp = 1.0;
         double FSRDown = 1.0;
         double FSRUp_2 = 1.0;
-        double FSRDown_2 = 1.0;
+        double FSRDown_2 = 1.0;        
         if(runtype == "MC")
         {
             // Define Lumi weight
@@ -180,11 +183,29 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             FSRDown_2 = tr.getVar<double>("PSweight_FSRDown_2");
             
             weight *= eventweight*leptonweight*bTagWeight*htDerivedweight*prefiringScaleFactor;
+
+        }
+
+        int NGenJets = 0;
+        int NGenJets_pt30 = 0;
+        if(runtype == "MC")
+        {
+            //Get the numer of GenJets 
+            const auto& GenJets = tr.getVec<TLorentzVector>("GenJets");           
+            for(const auto& lv : GenJets)
+            {
+                NGenJets++;
+                if(lv.Pt() > 30)
+                {
+                    NGenJets_pt30++;
+                }
+            }
         }
 
         // -------------------------------
         // -- Define cuts
         // -------------------------------
+        bool pass_general         = passTriggerMC && passTrigger && passMadHT && passBlind;
         bool pass_0l              = NGoodLeptons == 0;
         bool pass_1l              = NGoodLeptons == 1;
         bool pass_ht              = HT_trigger_pt30 > 300;
@@ -297,95 +318,97 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // -------------------                        
         const std::map<std::string, bool> cut_map_1l 
         {
-            {""                                , true                                                                     },
-            {"_1l"                             , pass_1l && pass_ht                                                       },
-            {"_1l_ge7j"                        , pass_1l && pass_ht && pass_njet_pt30 && JetID                            },
-            {"_1l_ge1b"                        , pass_1l && pass_ht && pass_njet_pt30_1btag && JetID                      },
-            {"_1l_ge2b"                        , pass_1l && pass_ht && pass_njet_pt30_2btag && JetID                      },
-            {"_1l_0b_ge300ht_50to110mt_ge30MET", passBaseline1l_WCR                                                       },
-            {"_1l_0b_ge300ht_50to110mt_ge30MET_even", passBaseline1l_WCR && evenEvent                                          },
-            {"_1l_0b_ge300ht_50to110mt_ge30MET_odd" , passBaseline1l_WCR && !evenEvent                                         },
-            {"_1e_1m_ge2b_le5j"                , passBaseline1e1m                                                         },
-            {"_1l_1t"                          , pass_1l && pass_ht && pass_1t && JetID                                   },
-            {"_1l_ge1t"                        , pass_1l && pass_ht && pass_ge1t && JetID                                 },
-            {"_1l_ge7j_ge2b"                   , passBaseline1l_AllJets && pass_njet_pt30_2btag                           },
-            {"_1l_ge7j_ge1b_noMbl"             , pass_1l && pass_ht && pass_njet_pt30 && pass_njet_pt30_1btag && JetID    },
-            {"_1l_ge7j_ge1b"                   , passBaseline1l_Good                                                      },                         
-            {"_1e_ge7j_ge1b"                   , passBaseline1l_Good && pass_1e                                           },                         
-            {"_1m_ge7j_ge1b"                   , passBaseline1l_Good && pass_1m                                           },                         
-            {"_1l_ge7j_ge1b_d1"                , passBaseline1l_Good && deepESM_bin1                                      },                         
-            {"_1l_ge7j_ge1b_d2"                , passBaseline1l_Good && deepESM_bin2                                      },                         
-            {"_1l_ge7j_ge1b_d3"                , passBaseline1l_Good && deepESM_bin3                                      },                         
-            {"_1l_ge7j_ge1b_d4"                , passBaseline1l_Good && deepESM_bin4                                      },                         
-            {"_1l_1j_ge1b"                     , passBaseline1l_AllJets && NGoodJets_pt30 == 1                            },
-            {"_1l_2j_ge1b"                     , passBaseline1l_AllJets && NGoodJets_pt30 == 2                            },
-            {"_1l_3j_ge1b"                     , passBaseline1l_AllJets && NGoodJets_pt30 == 3                            },
-            {"_1l_4j_ge1b"                     , passBaseline1l_AllJets && NGoodJets_pt30 == 4                            },
-            {"_1l_5j_ge1b"                     , passBaseline1l_AllJets && NGoodJets_pt30 == 5                            },
-            {"_1l_6j_ge1b"                     , passBaseline1l_AllJets && NGoodJets_pt30 == 6                            },
-            {"_1l_7j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt30 == 7                               },
-            {"_1l_8j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt30 == 8                               },
-            {"_1l_9j_ge1b"                     , passBaseline1l_Good && NGoodJets_pt30 == 9                               },
-            {"_1l_10j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt30 == 10                              },
-            {"_1l_11j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt30 == 11                              },
-            {"_1l_12j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt30 == 12                              },
-            {"_1l_13j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt30 == 13                              },
-            {"_1l_14j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt30 == 14                              },
-            {"_1l_15j_ge1b"                    , passBaseline1l_Good && NGoodJets_pt30 == 15                              },
-            {"_1l_ge7j_ge1b_1t"                , passBaseline1l_Good && pass_1t                                           },
-            {"_1l_ge7j_ge1b_1t_d1"             , passBaseline1l_Good && pass_1t_d1                                        },
-            {"_1l_ge7j_ge1b_1t_d2"             , passBaseline1l_Good && pass_1t_d2                                        }, 
-            {"_1l_ge7j_ge1b_1t_d3"             , passBaseline1l_Good && pass_1t_d3                                        }, 
-            {"_1l_ge7j_ge1b_1t_d4"             , passBaseline1l_Good && pass_1t_d4                                        },
-            {"_1l_ge7j_ge1b_ge1t"              , passBaseline1l_Good && pass_ge1t                                         },
-            {"_1l_ge7j_ge1b_ge1t_d1"           , passBaseline1l_Good && pass_ge1t_d1                                      },
-            {"_1l_ge7j_ge1b_ge1t_d2"           , passBaseline1l_Good && pass_ge1t_d2                                      }, 
-            {"_1l_ge7j_ge1b_ge1t_d3"           , passBaseline1l_Good && pass_ge1t_d3                                      }, 
-            {"_1l_ge7j_ge1b_ge1t_d4"           , passBaseline1l_Good && pass_ge1t_d4                                      },
-            {"_1l_5j_ge1b_htCorr"              , passBaseline1l_AllJets && NGoodJets_pt30 == 5                            },
-            {"_1l_6j_ge1b_htCorr"              , passBaseline1l_AllJets && NGoodJets_pt30 == 6                            },
-            {"_1l_7j_ge1b_htCorr"              , passBaseline1l_Good && NGoodJets_pt30 == 7                               },
+            {""                                , pass_general                                                                             },
+            {"_1l"                             , pass_general && pass_1l && pass_ht                                                       },
+            {"_1l_ge7j"                        , pass_general && pass_1l && pass_ht && pass_njet_pt30 && JetID                            },
+            {"_1l_ge1b"                        , pass_general && pass_1l && pass_ht && pass_njet_pt30_1btag && JetID                      },
+            {"_1l_ge2b"                        , pass_general && pass_1l && pass_ht && pass_njet_pt30_2btag && JetID                      },
+            {"_1l_0b_ge300ht_50to110mt_ge30MET", pass_general && passBaseline1l_WCR                                                       },
+            {"_1l_0b_ge300ht_50to110mt_ge30MET_even", pass_general && passBaseline1l_WCR && evenEvent                                          },
+            {"_1l_0b_ge300ht_50to110mt_ge30MET_odd" , pass_general && passBaseline1l_WCR && !evenEvent                                         },
+            {"_1e_1m_ge2b_le5j"                , pass_general && passBaseline1e1m                                                         },
+            {"_1l_1t"                          , pass_general && pass_1l && pass_ht && pass_1t && JetID                                   },
+            {"_1l_ge1t"                        , pass_general && pass_1l && pass_ht && pass_ge1t && JetID                                 },
+            {"_1l_ge7j_ge2b"                   , pass_general && passBaseline1l_AllJets && pass_njet_pt30_2btag                           },
+            {"_1l_ge7j_ge1b_noMbl"             , pass_general && pass_1l && pass_ht && pass_njet_pt30 && pass_njet_pt30_1btag && JetID    },
+            {"_1l_ge7j_ge1b"                   , pass_general && passBaseline1l_Good                                                      },                         
+            {"_1e_ge7j_ge1b"                   , pass_general && passBaseline1l_Good && pass_1e                                           },                         
+            {"_1m_ge7j_ge1b"                   , pass_general && passBaseline1l_Good && pass_1m                                           },                         
+            {"_1l_ge7j_ge1b_d1"                , pass_general && passBaseline1l_Good && deepESM_bin1                                      },                         
+            {"_1l_ge7j_ge1b_d2"                , pass_general && passBaseline1l_Good && deepESM_bin2                                      },                         
+            {"_1l_ge7j_ge1b_d3"                , pass_general && passBaseline1l_Good && deepESM_bin3                                      },                         
+            {"_1l_ge7j_ge1b_d4"                , pass_general && passBaseline1l_Good && deepESM_bin4                                      },                         
+            {"_1l_1j_ge1b"                     , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 1                            },
+            {"_1l_2j_ge1b"                     , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 2                            },
+            {"_1l_3j_ge1b"                     , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 3                            },
+            {"_1l_4j_ge1b"                     , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 4                            },
+            {"_1l_5j_ge1b"                     , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 5                            },
+            {"_1l_6j_ge1b"                     , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 6                            },
+            {"_1l_7j_ge1b"                     , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 7                               },
+            {"_1l_8j_ge1b"                     , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 8                               },
+            {"_1l_9j_ge1b"                     , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 9                               },
+            {"_1l_10j_ge1b"                    , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 10                              },
+            {"_1l_11j_ge1b"                    , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 11                              },
+            {"_1l_12j_ge1b"                    , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 12                              },
+            {"_1l_13j_ge1b"                    , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 13                              },
+            {"_1l_14j_ge1b"                    , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 14                              },
+            {"_1l_15j_ge1b"                    , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 15                              },
+            {"_1l_ge7j_ge1b_1t"                , pass_general && passBaseline1l_Good && pass_1t                                           },
+            {"_1l_ge7j_ge1b_1t_d1"             , pass_general && passBaseline1l_Good && pass_1t_d1                                        },
+            {"_1l_ge7j_ge1b_1t_d2"             , pass_general && passBaseline1l_Good && pass_1t_d2                                        }, 
+            {"_1l_ge7j_ge1b_1t_d3"             , pass_general && passBaseline1l_Good && pass_1t_d3                                        }, 
+            {"_1l_ge7j_ge1b_1t_d4"             , pass_general && passBaseline1l_Good && pass_1t_d4                                        },
+            {"_1l_ge7j_ge1b_ge1t"              , pass_general && passBaseline1l_Good && pass_ge1t                                         },
+            {"_1l_ge7j_ge1b_ge1t_d1"           , pass_general && passBaseline1l_Good && pass_ge1t_d1                                      },
+            {"_1l_ge7j_ge1b_ge1t_d2"           , pass_general && passBaseline1l_Good && pass_ge1t_d2                                      }, 
+            {"_1l_ge7j_ge1b_ge1t_d3"           , pass_general && passBaseline1l_Good && pass_ge1t_d3                                      }, 
+            {"_1l_ge7j_ge1b_ge1t_d4"           , pass_general && passBaseline1l_Good && pass_ge1t_d4                                      },
+            {"_1l_5j_ge1b_htCorr"              , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 5                            },
+            {"_1l_6j_ge1b_htCorr"              , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 6                            },
+            {"_1l_7j_ge1b_htCorr"              , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 7                               },
             
-            {"_1l_ge7j_ge1b_1t1"               , passBaseline1l_Good && pass_1t1                                          },
-            {"_1l_ge7j_ge1b_1t2"               , passBaseline1l_Good && pass_1t2                                          },
-            {"_1l_ge7j_ge1b_1t3"               , passBaseline1l_Good && pass_1t3                                          },
-            {"_1l_ge7j_ge1b_1t2or3"            , passBaseline1l_Good && pass_1t2or3                                       },
-            {"_1l_ge7j_ge1b_1t1_d1"            , passBaseline1l_Good && pass_1t1_d1                                       },
-            {"_1l_ge7j_ge1b_1t1_d2"            , passBaseline1l_Good && pass_1t1_d2                                       },
-            {"_1l_ge7j_ge1b_1t1_d3"            , passBaseline1l_Good && pass_1t1_d3                                       },
-            {"_1l_ge7j_ge1b_1t1_d4"            , passBaseline1l_Good && pass_1t1_d4                                       },
-            {"_1l_ge7j_ge1b_1t2_d1"            , passBaseline1l_Good && pass_1t2_d1                                       },
-            {"_1l_ge7j_ge1b_1t2_d2"            , passBaseline1l_Good && pass_1t2_d2                                       },
-            {"_1l_ge7j_ge1b_1t2_d3"            , passBaseline1l_Good && pass_1t2_d3                                       },
-            {"_1l_ge7j_ge1b_1t2_d4"            , passBaseline1l_Good && pass_1t2_d4                                       },
-            {"_1l_ge7j_ge1b_1t3_d1"            , passBaseline1l_Good && pass_1t3_d1                                       },
-            {"_1l_ge7j_ge1b_1t3_d2"            , passBaseline1l_Good && pass_1t3_d2                                       },
-            {"_1l_ge7j_ge1b_1t3_d3"            , passBaseline1l_Good && pass_1t3_d3                                       },
-            {"_1l_ge7j_ge1b_1t3_d4"            , passBaseline1l_Good && pass_1t3_d4                                       },
-            {"_1l_ge7j_ge1b_1t2or3_d1"         , passBaseline1l_Good && pass_1t2or3_d1                                    },
-            {"_1l_ge7j_ge1b_1t2or3_d2"         , passBaseline1l_Good && pass_1t2or3_d2                                    },
-            {"_1l_ge7j_ge1b_1t2or3_d3"         , passBaseline1l_Good && pass_1t2or3_d3                                    },
-            {"_1l_ge7j_ge1b_1t2or3_d4"         , passBaseline1l_Good && pass_1t2or3_d4                                    },
-            {"_1l_ge7j_ge1b_ge1t1"             , passBaseline1l_Good && pass_ge1t1                                        },
-            {"_1l_ge7j_ge1b_ge1t2"             , passBaseline1l_Good && pass_ge1t2                                        },
-            {"_1l_ge7j_ge1b_ge1t3"             , passBaseline1l_Good && pass_ge1t3                                        },
-            {"_1l_ge7j_ge1b_ge1t1_d1"          , passBaseline1l_Good && pass_ge1t1_d1                                     },
-            {"_1l_ge7j_ge1b_ge1t1_d2"          , passBaseline1l_Good && pass_ge1t1_d2                                     },
-            {"_1l_ge7j_ge1b_ge1t1_d3"          , passBaseline1l_Good && pass_ge1t1_d3                                     },
-            {"_1l_ge7j_ge1b_ge1t1_d4"          , passBaseline1l_Good && pass_ge1t1_d4                                     },
-            {"_1l_ge7j_ge1b_ge1t2_d1"          , passBaseline1l_Good && pass_ge1t2_d1                                     },
-            {"_1l_ge7j_ge1b_ge1t2_d2"          , passBaseline1l_Good && pass_ge1t2_d2                                     },
-            {"_1l_ge7j_ge1b_ge1t2_d3"          , passBaseline1l_Good && pass_ge1t2_d3                                     },
-            {"_1l_ge7j_ge1b_ge1t2_d4"          , passBaseline1l_Good && pass_ge1t2_d4                                     },
-            {"_1l_ge7j_ge1b_ge1t3_d1"          , passBaseline1l_Good && pass_ge1t3_d1                                     },
-            {"_1l_ge7j_ge1b_ge1t3_d2"          , passBaseline1l_Good && pass_ge1t3_d2                                     },
-            {"_1l_ge7j_ge1b_ge1t3_d3"          , passBaseline1l_Good && pass_ge1t3_d3                                     },
-            {"_1l_ge7j_ge1b_ge1t3_d4"          , passBaseline1l_Good && pass_ge1t3_d4                                     },                                                 
+            {"_1l_ge7j_ge1b_1t1"               , pass_general && passBaseline1l_Good && pass_1t1                                          },
+            {"_1l_ge7j_ge1b_1t2"               , pass_general && passBaseline1l_Good && pass_1t2                                          },
+            {"_1l_ge7j_ge1b_1t3"               , pass_general && passBaseline1l_Good && pass_1t3                                          },
+            {"_1l_ge7j_ge1b_1t2or3"            , pass_general && passBaseline1l_Good && pass_1t2or3                                       },
+            {"_1l_ge7j_ge1b_1t1_d1"            , pass_general && passBaseline1l_Good && pass_1t1_d1                                       },
+            {"_1l_ge7j_ge1b_1t1_d2"            , pass_general && passBaseline1l_Good && pass_1t1_d2                                       },
+            {"_1l_ge7j_ge1b_1t1_d3"            , pass_general && passBaseline1l_Good && pass_1t1_d3                                       },
+            {"_1l_ge7j_ge1b_1t1_d4"            , pass_general && passBaseline1l_Good && pass_1t1_d4                                       },
+            {"_1l_ge7j_ge1b_1t2_d1"            , pass_general && passBaseline1l_Good && pass_1t2_d1                                       },
+            {"_1l_ge7j_ge1b_1t2_d2"            , pass_general && passBaseline1l_Good && pass_1t2_d2                                       },
+            {"_1l_ge7j_ge1b_1t2_d3"            , pass_general && passBaseline1l_Good && pass_1t2_d3                                       },
+            {"_1l_ge7j_ge1b_1t2_d4"            , pass_general && passBaseline1l_Good && pass_1t2_d4                                       },
+            {"_1l_ge7j_ge1b_1t3_d1"            , pass_general && passBaseline1l_Good && pass_1t3_d1                                       },
+            {"_1l_ge7j_ge1b_1t3_d2"            , pass_general && passBaseline1l_Good && pass_1t3_d2                                       },
+            {"_1l_ge7j_ge1b_1t3_d3"            , pass_general && passBaseline1l_Good && pass_1t3_d3                                       },
+            {"_1l_ge7j_ge1b_1t3_d4"            , pass_general && passBaseline1l_Good && pass_1t3_d4                                       },
+            {"_1l_ge7j_ge1b_1t2or3_d1"         , pass_general && passBaseline1l_Good && pass_1t2or3_d1                                    },
+            {"_1l_ge7j_ge1b_1t2or3_d2"         , pass_general && passBaseline1l_Good && pass_1t2or3_d2                                    },
+            {"_1l_ge7j_ge1b_1t2or3_d3"         , pass_general && passBaseline1l_Good && pass_1t2or3_d3                                    },
+            {"_1l_ge7j_ge1b_1t2or3_d4"         , pass_general && passBaseline1l_Good && pass_1t2or3_d4                                    },
+            {"_1l_ge7j_ge1b_ge1t1"             , pass_general && passBaseline1l_Good && pass_ge1t1                                        },
+            {"_1l_ge7j_ge1b_ge1t2"             , pass_general && passBaseline1l_Good && pass_ge1t2                                        },
+            {"_1l_ge7j_ge1b_ge1t3"             , pass_general && passBaseline1l_Good && pass_ge1t3                                        },
+            {"_1l_ge7j_ge1b_ge1t1_d1"          , pass_general && passBaseline1l_Good && pass_ge1t1_d1                                     },
+            {"_1l_ge7j_ge1b_ge1t1_d2"          , pass_general && passBaseline1l_Good && pass_ge1t1_d2                                     },
+            {"_1l_ge7j_ge1b_ge1t1_d3"          , pass_general && passBaseline1l_Good && pass_ge1t1_d3                                     },
+            {"_1l_ge7j_ge1b_ge1t1_d4"          , pass_general && passBaseline1l_Good && pass_ge1t1_d4                                     },
+            {"_1l_ge7j_ge1b_ge1t2_d1"          , pass_general && passBaseline1l_Good && pass_ge1t2_d1                                     },
+            {"_1l_ge7j_ge1b_ge1t2_d2"          , pass_general && passBaseline1l_Good && pass_ge1t2_d2                                     },
+            {"_1l_ge7j_ge1b_ge1t2_d3"          , pass_general && passBaseline1l_Good && pass_ge1t2_d3                                     },
+            {"_1l_ge7j_ge1b_ge1t2_d4"          , pass_general && passBaseline1l_Good && pass_ge1t2_d4                                     },
+            {"_1l_ge7j_ge1b_ge1t3_d1"          , pass_general && passBaseline1l_Good && pass_ge1t3_d1                                     },
+            {"_1l_ge7j_ge1b_ge1t3_d2"          , pass_general && passBaseline1l_Good && pass_ge1t3_d2                                     },
+            {"_1l_ge7j_ge1b_ge1t3_d3"          , pass_general && passBaseline1l_Good && pass_ge1t3_d3                                     },
+            {"_1l_ge7j_ge1b_ge1t3_d4"          , pass_general && passBaseline1l_Good && pass_ge1t3_d4                                     },                                                 
         };
 
         std::vector<TH1DInfo> histInfos = {
             {    "h_njets",         20,   0.0,   20.0},
             {"blind_njets",         20,   0.0,   20.0},
+            {"h_ngjets",            20,   0.0,   20.0},
+            {"h_ngjets_pt30",       20,   0.0,   20.0},
             {    "h_ntops",         10,   0.0,   10.0},
             {"blind_ntops",         10,   0.0,   10.0},
             {    "h_nb",            10,   0.0,   10.0},
@@ -444,8 +467,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             initHistos = true;
         }
 
-        // Global cuts
-        if ( !(passTriggerMC && passTrigger && passMadHT && passBlind) ) continue;
+        my_histos["EventCounter"]->Fill(eventCounter);
 
         for(auto& kv : cut_map_1l)
         {
@@ -454,6 +476,8 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 double w = weight;
                 if(kv.first.find("50to110mt") != std::string::npos) w = eventweight*leptonweight*bTagWeight*prefiringScaleFactor;
                 my_histos["h_njets"               +kv.first]->Fill(NGoodJets_pt30, w);
+                my_histos["h_ngjets"              +kv.first]->Fill(NGenJets, eventweight);
+                my_histos["h_ngjets_pt30"         +kv.first]->Fill(NGenJets_pt30, eventweight);
                 my_histos["h_ntops"               +kv.first]->Fill(ntops, w);
                 my_histos["h_nb"                  +kv.first]->Fill(NGoodBJets_pt30, w);
                 my_histos["h_fisher"              +kv.first]->Fill(fisher_val, w);
