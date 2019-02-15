@@ -95,6 +95,8 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         const std::string runYear = (file.tag.find("2017") != std::string::npos) ? "2017" : "2016";
         const double Lumi = (runYear == "2016") ? 35900.0 : 41525.0;
         const bool isSignal = (file.tag.find("_stop") != std::string::npos || file.tag.find("_mStop") != std::string::npos) ? true : false;
+        const std::string DeepESMCfg = (runYear == "2016") ? "DeepEventShape_2016.cfg" : "DeepEventShape_2017.cfg";
+        const std::string ModelFile = (runYear == "2016") ? "keras_frozen_2016.pb" : "keras_frozen_2017.pb";
         std::cout << "Starting loop (in run)" << std::endl;
         printf( "runtype: %s fileWeight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts ); fflush( stdout );
         tr.registerDerivedVar("runtype",runtype);
@@ -103,6 +105,8 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerDerivedVar("etaCut",2.4); 
         tr.registerDerivedVar("Lumi",Lumi);
         tr.registerDerivedVar("isSignal",isSignal);
+        tr.registerDerivedVar("DeepESMCfg",DeepESMCfg);
+        tr.registerDerivedVar("ModelFile",ModelFile);        
         tr.registerDerivedVar("blind",false);
         
         // Define classes/functions that add variables on the fly
@@ -118,7 +122,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         CommonVariables commonVariables;
         MakeMVAVariables makeMVAVariables;
         Baseline baseline;
-        DeepEventShape deepEventShape;
+        DeepEventShape deepEventShape(DeepESMCfg,ModelFile);
         
         // Register classes/functions that add variables on the fly
         tr.registerFunction(partUnBlind);

@@ -917,7 +917,7 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
            
                MakeMVAVariables makeMVAVariables(false,"",false,false);
                makeMVAVariables(newtr);
-               DeepEventShape deepEventShape("DeepEventShape.cfg", "Info", false);
+               DeepEventShape deepEventShape("DeepEventShape.cfg", "keras_frozen.pb", "Info", false);
                deepEventShape(newtr);
                const auto& alt_deepESM_val = newtr.getVar<double>("deepESM_val");
                if ( !isQuiet ) {
