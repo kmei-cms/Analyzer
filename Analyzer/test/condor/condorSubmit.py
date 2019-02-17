@@ -30,7 +30,7 @@ def main():
     parser.add_option ('-L',  dest='dataCollectionslong', action='store_true', default = False, help="List all datacollections and sub collections")
     parser.add_option ('-c',  dest='noSubmit', action='store_true', default = False, help="Do not submit jobs.  Only create condor_submit.txt.")
     parser.add_option ('--output',   dest='outPath', type='string', default = '.', help="Name of directory where output of each condor job goes")
-    parser.add_option ('--analyze',  dest='analyze', default = 'f', help="AnalyzeTopTagger (t), AnalyzeBackground (b), AnalyzeEventSelection (s), Analyze0Lep (z), AnalyzeStealthTopTagger (x), MakeNJetDists (n)")
+    parser.add_option ('--analyze',  dest='analyze', default = 'f', help="AnalyzeBackground (b), AnalyzeEventSelection (s), Analyze0Lep (z), Analyze1Lep (o), MakeNJetDists (n)")
     
     options, args = parser.parse_args()
     

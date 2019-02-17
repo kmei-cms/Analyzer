@@ -67,14 +67,38 @@ Options:
   -l                 List all datacollections
   -L                 List all datacollections and sub collections
   -c                 Do not submit jobs.  Only create condor_submit.txt.
-  --explore=EXPLORE  ExploreTopTagger (t), ExploreBackground (b),
-                     ExploreEventSelection (s)
+  --output=OUTPATH   Name of directory where output of each condor job goes
+  --analyze=ANALYZE  AnalyzeBackground (b), AnalyzeEventSelection (s),
+                     Analyze0Lep (z), Analyze1Lep (o), MakeNJetDists (n)
 ```
 As you can see from the above help menu, there are a number of options. 
-With the `-n` option you can specify how many files to run over per job. The `--explore` option lets you pick which analyzer to use. 
+With the `-n` option you can specify how many files to run over per job. The `--analyze` option lets you pick which analyzer to use. 
 The MyAnalysis program has been updated to have these same switches. 
 MyAnalysis now also uses the samples code to keep track of datasets, their cross sections, and their names. 
 To see a list of available datasets, you can call the submission script with the `-l` or `-L` options. Pass the list of datasets you want to run over to the script with the option `-d`. 
 Before submitting jobs, make sure to have called `voms-proxy-init`. 
 
+## Making inputs for the fit
 
+```
+cd $CMSSW_BASE/src/Analyzer/Analyzer/test/condor
+python condorSubmit.py -d 2016_Data_SingleElectron,2016_Data_SingleMuon,2016_TT,2016_TT_fsrUp,2016_TT_fsrDown,2016_TT_isrUp,2016_TT_isrDown,2016_WJetsToLNu,2016_DYJetsToLL_M-50,2016_QCD,2016_ST,2016_Diboson,2016_Rare,2016_AllSignal -n 10 --analyze n --output CondorOutput_Keras1.2.5_Final
+python condorSubmit.py -d 2017_Data_SingleElectron,2017_Data_SingleMuon,2017_TT,2017_WJetsToLNu,2017_DYJetsToLL_M-50,2017_QCD,2017_ST,2017_Diboson,2017_Rare,2017_AllSignal -n 10 --analyze n --output CondorOutput_Keras3.0.1_Final
+```
+
+Now hadd the outputs when the jobs are done
+
+```
+cd $CMSSW_BASE/src/Analyzer/Analyzer/test/condor
+python hadder.py -d 2016_Data_SingleElectron,2016_Data_SingleMuon,2016_TT,2016_TT_fsrUp,2016_TT_fsrDown,2016_TT_isrUp,2016_TT_isrDown,2016_WJetsToLNu,2016_DYJetsToLL_M-50,2016_QCD,2016_ST,2016_Diboson,2016_Rare,2016_AllSignal -H MakeNJetsDists_Kerasv1.2.5_Final -p CondorOutput_Keras1.2.5_Final/output-files -y 2016 --doHack
+python hadder.py -d  2017_Data_SingleElectron,2017_Data_SingleMuon,2017_TT,2017_WJetsToLNu,2017_DYJetsToLL_M-50,2017_QCD,2017_ST,2017_Diboson,2017_Rare,2017_AllSignal -H MakeNJetsDists_Kerasv3.0.1_Final -p CondorOutput_Keras3.0.1_Final/output-files -y 2017 --doHack
+```
+
+If there are missing jobs you should see a message in red after each sample is hadded.
+After hadding now put all the samples together into one file for the fit input.
+
+```
+cd $CMSSW_BASE/src/Analyzer/Analyzer/test/
+python write_fit_input.py -d condor/MakeNJetsDists_Kerasv1.2.5_Final -H FitInput/Keras_V1.2.5_Final -y 2016
+python write_fit_input.py -d condor/MakeNJetsDists_Kerasv3.0.1_Final -H FitInput/Keras_V3.0.1_Final -y 2017
+```
