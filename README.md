@@ -50,10 +50,10 @@ No changes to the analysis code should be needed.
 
 The condor directory contains some scripts to help submit jobs via condor on the cmslpc cluster. 
 The requirements for condor submission are: 
- - A script to run on the worker node. This script should set up the area, copy any needed files, call your executable with the right options, and make sure the output gets copied to where you want. The example included here is [run_Exploration_condor.tcsh](condor/run_Exploration_condor.tcsh)
+ - A script to run on the worker node. This script should set up the area, copy any needed files, call your executable with the right options, and make sure the output gets copied to where you want. The example included here is [run_Analyzer_condor.tcsh](Analyzer/test/condor/run_Analyzer_condor.tcsh)
  - One or more tarballs to unpack on the worker node, these usually contain a slimmed down CMSSW area, and your executable with any needed libraries
  - A so-called jdl file that contains the condor setup and specifies the jobs to be submitted
-The last two items are produced by a python script called [condorSubmit.py](condor/condorSubmit.py). 
+The last two items are produced by a python script called [condorSubmit.py](Analyzer/test/condor/condorSubmit.py). 
 
 ```
 [condor]$ python condorSubmit.py -h
@@ -80,13 +80,15 @@ Before submitting jobs, make sure to have called `voms-proxy-init`.
 
 ## Making inputs for the fit
 
+Running the condor jobs to produce the input histograms for the fit.
+
 ```
 cd $CMSSW_BASE/src/Analyzer/Analyzer/test/condor
 python condorSubmit.py -d 2016_Data_SingleElectron,2016_Data_SingleMuon,2016_TT,2016_TT_fsrUp,2016_TT_fsrDown,2016_TT_isrUp,2016_TT_isrDown,2016_WJetsToLNu,2016_DYJetsToLL_M-50,2016_QCD,2016_ST,2016_Diboson,2016_Rare,2016_AllSignal -n 10 --analyze n --output CondorOutput_Keras1.2.5_Final
 python condorSubmit.py -d 2017_Data_SingleElectron,2017_Data_SingleMuon,2017_TT,2017_WJetsToLNu,2017_DYJetsToLL_M-50,2017_QCD,2017_ST,2017_Diboson,2017_Rare,2017_AllSignal -n 10 --analyze n --output CondorOutput_Keras3.0.1_Final
 ```
 
-Now hadd the outputs when the jobs are done
+Now hadd the outputs when the jobs are done.
 
 ```
 cd $CMSSW_BASE/src/Analyzer/Analyzer/test/condor
