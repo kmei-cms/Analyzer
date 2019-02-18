@@ -99,6 +99,7 @@ def main():
     fileParts.append("x509userproxy = $ENV(X509_USER_PROXY)\n\n")
 
     nFilesPerJob = options.numfile
+    numberOfJobs = 0
     for ds in datasets:
         ds = ds.strip()
         print ds
@@ -116,6 +117,7 @@ def main():
                     if '.root' in l:
                         count = count + 1
                 for startFileNum in xrange(0, count, nFilesPerJob):
+                    numberOfJobs+=1
                     fileParts.append("transfer_output_remaps = \"MyAnalysis_%s_%s.root = %s/output-files/%s/MyAnalysis_%s_%s.root\"\n" % (n, startFileNum, options.outPath, ds, n, startFileNum))
                     fileParts.append("Arguments = %s %i %i %s %s\n"%(n, nFilesPerJob, startFileNum, s, options.analyze))
                     fileParts.append("Output = %s/log-files/MyAnalysis_%s_%i.stdout\n"%(options.outPath, n, startFileNum))
@@ -137,6 +139,10 @@ def main():
         system('mkdir -p %s/log-files' % options.outPath)
         system("echo 'condor_submit condor_submit.txt'")
         system('condor_submit condor_submit.txt')
+    else:
+        print "------------------------------------------"
+        print "Number of Jobs:", numberOfJobs
+        print "------------------------------------------"
 
 if __name__ == "__main__":
     main()

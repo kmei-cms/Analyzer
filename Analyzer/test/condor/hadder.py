@@ -23,7 +23,7 @@ def checkNumEvents(nEvents, rootFile):
               nNeg = h.GetBinContent(1)
               nPos = h.GetBinContent(2)
               diff = float(nEvents)-(nPos-nNeg)
-              if diff > 10.0:
+              if abs(diff) > 10.0:
                    print red("------------------------------------------------------------------------------------------------")
                    print red("Num events in \"EventCounter\" doesn't match the number in \"sampleSet.cfg\"")
                    print "SampleSet nEvents: ", red(nEvents), "EventCounter nEvents: ", red(nPos-nNeg), "=", red(nPos), red(-nNeg)
