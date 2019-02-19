@@ -36,6 +36,13 @@ def checkNumEvents(nEvents, rootFile):
          print red("Can't open rootFile: %s" % rootFile)
          pass
 
+def getDataSets(inPath):
+    l = glob(inPath+"/*")
+    print "-------------------------------------------------------------------" 
+    print "No dataset specified: using all directory names in input path"
+    print "-------------------------------------------------------------------\n" 
+    return list(s[len(inPath)+1:] for s in l)
+
 def main():
     # Parse command line arguments
     parser = optparse.OptionParser("usage: %prog [options]\n")
@@ -46,14 +53,16 @@ def main():
     parser.add_option('-o', action='store_true',                                    help="Overwrite output directory")
     parser.add_option('--doHack', action='store_true',                              help="Do the hack to make Data.root and BG_noTT.root")
     options, args = parser.parse_args()
-    
+
+    # Get input directory path
+    inPath = options.inPath
+        
     # Checks if user specified a dataset(s)
     datasets = []
     if options.datasets:
         datasets = options.datasets.split(',')
     else:
-        print "Failed: No dataset specified"
-        exit(0)
+        datasets = getDataSets(inPath)
     
     # Check if output directory exits and makes it if not
     outDir = options.outDir
@@ -68,9 +77,6 @@ def main():
             exit(0)    
     else:
         os.makedirs(outDir) 
-    
-    # Get input directory path
-    inPath = options.inPath
     
     # Loop over all sample options to find files to hadd
     sc = SampleCollection("../sampleSets.cfg", "../sampleCollections.cfg")
