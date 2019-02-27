@@ -215,8 +215,6 @@ if __name__ == "__main__":
     mvaBin = [ "D1", "D2","D3","D4"]
     systypes = ["", "_JECUp", "_JECDown", "_JERUp", "_JERDown", "_btgUp", "_btgDown", "_lepUp", "_lepDown",
                 "_isrUp", "_isrDown", "_fsrUp", "_fsrDown", "_isr2Up", "_isr2Down", "_fsr2Up", "_fsr2Down",
-                #"_pdfUp", "_pdfDown", "_sclUp", "_sclDown"]
-                #"_pdfUp", "_pdfDown", "_htUp", "_htDown"]
                 "_pdfUp", "_pdfDown", "_htUp", "_htDown", "_sclUp", "_sclDown"]
     outputfile = ROOT.TFile.Open(outDir + "/" + options.rootFile,"RECREATE")
     outputDataCard = options.dataCard
@@ -257,6 +255,13 @@ if __name__ == "__main__":
             "D3" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0],
             "D4" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0],
         }
+
+        #TTBar_ISR_FSR_SYS_2016 = {
+        #    "TT_isrUp"   : info.DataSetInfo(basedir=basedir, fileName="2016_TT_isrUp.root",   label="TT_isrUp",   processName="bg", process="0", rate=False, lumiSys="-", scale=-1.0)
+        #    "TT_isrDown" : info.DataSetInfo(basedir=basedir, fileName="2016_TT_isrDown.root", label="TT_isrDown", processName="bg", process="0", rate=False, lumiSys="-", scale=-1.0)
+        #    "TT_fsrUp"   : info.DataSetInfo(basedir=basedir, fileName="2016_TT_fsrUp.root",   label="TT_fsrUp",   processName="bg", process="0", rate=False, lumiSys="-", scale=-1.0)
+        #    "TT_fsrDown" : info.DataSetInfo(basedir=basedir, fileName="2016_TT_fsrDown.root", label="TT_fsrDown", processName="bg", process="0", rate=False, lumiSys="-", scale=-1.0)
+        #}
 
     elif options.year== "2017":
         sgData = {
@@ -352,6 +357,7 @@ if __name__ == "__main__":
                         wp.writeHistos(Data, basenameIn, basenameOut, bin, sys)
                         wp.writeHistosSetBins(Data, "SetBin", basenameIn, basenameOut, bin, sys, binDicData)
                         if options.year == "2016":
+                            #wp.writeHistos(TTBar_ISR_FSR_SYS_2016, basenameIn, basenameOut, bin, sys)                            
                             wp.writeHistosSetBins(Data, "SetBinNoD4", basenameIn, basenameOut, bin, sys, dicNoD4)
                             wp.writeHistosSetBins(Data, "SetBinNoD3D4", basenameIn, basenameOut, bin, sys, dicNoD3D4)
                             wp.writeHistosSetBins(Data, "SetBinNoD1D2D3D4", basenameIn, basenameOut, bin, sys, dicNoD1D2D3D4)
