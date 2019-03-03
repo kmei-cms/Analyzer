@@ -19,7 +19,7 @@ class DataSetInfo:
     def getHisto(self, name, scale=-1):
         histo = self.file.Get(name)
         if(self.scale != -1.0):
-            print self.scale
+            #print self.scale
             histo.Scale(self.scale)
         return histo
 
