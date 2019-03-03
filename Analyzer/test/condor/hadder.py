@@ -122,7 +122,7 @@ def main():
     if options.doHack:
         # Hack to make the BG_noTT.root file
         sigNttbar_old = ["AllSignal", "TT", "TTJets", "Data_SingleMuon", "Data_SingleElectron"]
-        sigNttbar_2016 = ["2016_AllSignal", "2016_TT", "2016_TTJets", "2016_Data_SingleMuon", "2016_Data_SingleElectron"]
+        sigNttbar_2016 = ["2016_AllSignal", "2016_TT", "2016_TTJets", "2016_Data_SingleMuon", "2016_Data_SingleElectron","2016_TT_isrUp", "2016_TT_isrDown", "2016_TT_fsrUp", "2016_TT_fsrDown" ]
         sigNttbar_2017 = ["2017_AllSignal", "2017_TT", "2017_TTJets", "2017_Data_SingleMuon", "2017_Data_SingleElectron"]
         sigNttbar = sigNttbar_old+sigNttbar_2016+sigNttbar_2017
         files = ""
