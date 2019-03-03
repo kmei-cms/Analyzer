@@ -200,7 +200,7 @@ if __name__ == "__main__":
     parser.add_option('--dataCard', dest='dataCard', type='string', default='dataCard.txt',        help="Output data card file")
     parser.add_option('-H',         dest='outDir',   type='string', default='',                    help="Can pass in the output directory name")
     parser.add_option('-y',         dest='year',     type='string', default='2016',                help="Can pass in the run year")
-    parser.add_option("-s",         dest='scale',    type='float',  default=-1.0,                  help="Can scale to a different lumi")
+    parser.add_option("-s",         dest='scale',    type='float',  default=1.0,                  help="Can scale to a different lumi")
     options, args = parser.parse_args()
 
     # Where the root files are stored
