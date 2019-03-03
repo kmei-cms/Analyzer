@@ -39,7 +39,7 @@ Last step is to get the cfg and model files for the top tagger and deepESM.
 ```
 cmsenv
 getTaggerCfg.sh -t Tensorflow_Medium_Example_v1.0.2 -o
-getDeepESMCfg.sh -t Keras_Tensorflow_v1.2.5 -o -s 2016
+getDeepESMCfg.sh -t Keras_Tensorflow_v1.2.6 -o -s 2016
 getDeepESMCfg.sh -t Keras_Tensorflow_v3.0.1 -o -s 2017
 ```
 
