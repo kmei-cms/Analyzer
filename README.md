@@ -40,7 +40,7 @@ Last step is to get the cfg and model files for the top tagger and deepESM.
 cmsenv
 getTaggerCfg.sh -t Tensorflow_Medium_Example_v1.0.2 -o
 getDeepESMCfg.sh -t Keras_Tensorflow_v1.2.6 -o -s 2016
-getDeepESMCfg.sh -t Keras_Tensorflow_v3.0.1 -o -s 2017
+getDeepESMCfg.sh -t Keras_Tensorflow_v3.0.2 -o -s 2017
 ```
 
 No changes to the analysis code should be needed. 
@@ -85,7 +85,7 @@ Running the condor jobs to produce the input histograms for the fit.
 ```
 cd $CMSSW_BASE/src/Analyzer/Analyzer/test/condor
 python condorSubmit.py -d 2016_Data_SingleElectron,2016_Data_SingleMuon,2016_TT,2016_TT_fsrUp,2016_TT_fsrDown,2016_TT_isrUp,2016_TT_isrDown,2016_WJetsToLNu,2016_DYJetsToLL_M-50,2016_QCD,2016_ST,2016_Diboson,2016_Rare,2016_AllSignal -n 10 --analyze n --output CondorOutput_Keras1.2.6_Final
-python condorSubmit.py -d 2017_Data_SingleElectron,2017_Data_SingleMuon,2017_TT,2017_WJetsToLNu,2017_DYJetsToLL_M-50,2017_QCD,2017_ST,2017_Diboson,2017_Rare,2017_AllSignal -n 10 --analyze n --output CondorOutput_Keras3.0.1_Final
+python condorSubmit.py -d 2017_Data_SingleElectron,2017_Data_SingleMuon,2017_TT,2017_WJetsToLNu,2017_DYJetsToLL_M-50,2017_QCD,2017_ST,2017_Diboson,2017_Rare,2017_AllSignal -n 10 --analyze n --output CondorOutput_Keras3.0.2_Final
 ```
 
 Now hadd the outputs when the jobs are done.
@@ -93,7 +93,7 @@ Now hadd the outputs when the jobs are done.
 ```
 cd $CMSSW_BASE/src/Analyzer/Analyzer/test/condor
 python hadder.py -d 2016_Data_SingleElectron,2016_Data_SingleMuon,2016_TT,2016_TT_fsrUp,2016_TT_fsrDown,2016_TT_isrUp,2016_TT_isrDown,2016_WJetsToLNu,2016_DYJetsToLL_M-50,2016_QCD,2016_ST,2016_Diboson,2016_Rare,2016_AllSignal -H MakeNJetsDists_Kerasv1.2.6_Final -p CondorOutput_Keras1.2.6_Final/output-files -y 2016 --doHack
-python hadder.py -d  2017_Data_SingleElectron,2017_Data_SingleMuon,2017_TT,2017_WJetsToLNu,2017_DYJetsToLL_M-50,2017_QCD,2017_ST,2017_Diboson,2017_Rare,2017_AllSignal -H MakeNJetsDists_Kerasv3.0.1_Final -p CondorOutput_Keras3.0.1_Final/output-files -y 2017 --doHack
+python hadder.py -d  2017_Data_SingleElectron,2017_Data_SingleMuon,2017_TT,2017_WJetsToLNu,2017_DYJetsToLL_M-50,2017_QCD,2017_ST,2017_Diboson,2017_Rare,2017_AllSignal -H MakeNJetsDists_Kerasv3.0.2_Final -p CondorOutput_Keras3.0.2_Final/output-files -y 2017 --doHack
 ```
 
 If there are missing jobs you should see a message in red after each sample is hadded.
@@ -102,5 +102,5 @@ After hadding now put all the samples together into one file for the fit input.
 ```
 cd $CMSSW_BASE/src/Analyzer/Analyzer/test/
 python write_fit_input.py -d condor/MakeNJetsDists_Kerasv1.2.6_Final -H FitInput/Keras_V1.2.6_Final -y 2016
-python write_fit_input.py -d condor/MakeNJetsDists_Kerasv3.0.1_Final -H FitInput/Keras_V3.0.1_Final -y 2017
+python write_fit_input.py -d condor/MakeNJetsDists_Kerasv3.0.2_Final -H FitInput/Keras_V3.0.2_Final -y 2017
 ```

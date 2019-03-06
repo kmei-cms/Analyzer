@@ -2,6 +2,8 @@
 #define Histo_h
 
 #include "SusyAnaTools/Tools/NTupleReader.h"
+#include <iostream>
+#include <string>
 
 class Histo_Base
 {
@@ -50,24 +52,90 @@ protected:
         }        
         return weight;
     }
+
+    std::string split(const std::string& half, const std::string& s, const std::string& h) const
+    {
+        std::string token;
+        if      ("first"==half) token = s.substr(0, s.find(h));
+        else if ("last" ==half) token = s.substr(s.find(h) + h.length(), std::string::npos);
+        return token;
+    }
+
+    template<typename T> T tlvGetValue(const TLorentzVector& lv, const std::string& varType) const
+    {
+        T val = 0;
+        if     (varType.find("P()")   != std::string::npos) val = lv.P();
+        else if(varType.find("Pt()")  != std::string::npos) val = lv.Pt();
+        else if(varType.find("Phi()") != std::string::npos) val = lv.Phi();
+        else if(varType.find("Eta()") != std::string::npos) val = lv.Eta();
+        else if(varType.find("M()")   != std::string::npos) val = lv.M();
+        else if(varType.find("E()")   != std::string::npos) val = lv.E();
+        else std::cout<<"No option for \""<<varType<<"\" found"<<std::endl;
+        return val;
+    }
 };
 
 class Histo1D : public Histo_FirstChild<TH1>
 {
 private:
+    template<typename T> void vecFill(const std::string& varX, std::unique_ptr<TH1>& histo, const double weight, const NTupleReader& tr) const
+    {
+        const std::string& varType = split("last",  varX, ".");
+        const std::string&     var = split("first", varX, ".");
+        const auto& vec = tr.getVec<T>(varX);
+        for(const auto& v : vec)
+        {            
+            histo->Fill( v, weight );
+        }
+    }
+
+    void vecFilltlv(const std::string& varX, std::unique_ptr<TH1>& histo, const double weight, const NTupleReader& tr) const
+    {
+        const std::string& varType = split("last",  varX, ".");
+        const std::string&     var = split("first", varX, ".");
+        const auto& vec = tr.getVec<TLorentzVector>(var);
+        for(const auto& v : vec)
+        {            
+            histo->Fill( tlvGetValue<double>(v,varType), weight ); 
+        }            
+    }
+
     void fillHisto(const std::string& varX, std::unique_ptr<TH1>& histo, const double weight, const NTupleReader& tr) const
     {
         std::string type;
-        tr.getType(varX, type);
-        
-        if(type.find("double")       != std::string::npos) histo->Fill( tr.getVar<double>(varX),       weight );
-        if(type.find("unsigned int") != std::string::npos) histo->Fill( tr.getVar<unsigned int>(varX), weight );
-        if(type.find("int")          != std::string::npos) histo->Fill( tr.getVar<int>(varX),          weight );
-        if(type.find("bool")         != std::string::npos) histo->Fill( tr.getVar<bool>(varX),         weight );
-        if(type.find("float")        != std::string::npos) histo->Fill( tr.getVar<float>(varX),        weight );
-        if(type.find("char")         != std::string::npos) histo->Fill( tr.getVar<char>(varX),         weight );
-        if(type.find("short")        != std::string::npos) histo->Fill( tr.getVar<short>(varX),        weight );
-        if(type.find("long")         != std::string::npos) histo->Fill( tr.getVar<long>(varX),         weight );        
+        tr.getType(split("first", split("first", varX, "."), "["), type);
+
+        if(type.find("std::vector<") != std::string::npos)
+        {
+            if     (type.find("double")         != std::string::npos) vecFill<double>      ( varX, histo, weight, tr );
+            else if(type.find("unsigned int")   != std::string::npos) vecFill<unsigned int>( varX, histo, weight, tr );
+            else if(type.find("int")            != std::string::npos) vecFill<int>         ( varX, histo, weight, tr );
+            else if(type.find("bool")           != std::string::npos) vecFill<bool>        ( varX, histo, weight, tr );
+            else if(type.find("float")          != std::string::npos) vecFill<float>       ( varX, histo, weight, tr );
+            else if(type.find("char")           != std::string::npos) vecFill<char>        ( varX, histo, weight, tr );
+            else if(type.find("short")          != std::string::npos) vecFill<short>       ( varX, histo, weight, tr );
+            else if(type.find("long")           != std::string::npos) vecFill<long>        ( varX, histo, weight, tr );        
+            else if(type.find("TLorentzVector") != std::string::npos) vecFilltlv           ( varX, histo, weight, tr );        
+            else std::cout<<"Type \""<<type<<"\" is not an option for vector variable \""<<varX<<"\"";
+        }
+        else
+        {
+            if     (type.find("double")         != std::string::npos) histo->Fill( tr.getVar<double>(varX),       weight );
+            else if(type.find("unsigned int")   != std::string::npos) histo->Fill( tr.getVar<unsigned int>(varX), weight );
+            else if(type.find("int")            != std::string::npos) histo->Fill( tr.getVar<int>(varX),          weight );
+            else if(type.find("bool")           != std::string::npos) histo->Fill( tr.getVar<bool>(varX),         weight );
+            else if(type.find("float")          != std::string::npos) histo->Fill( tr.getVar<float>(varX),        weight );
+            else if(type.find("char")           != std::string::npos) histo->Fill( tr.getVar<char>(varX),         weight );
+            else if(type.find("short")          != std::string::npos) histo->Fill( tr.getVar<short>(varX),        weight );
+            else if(type.find("long")           != std::string::npos) histo->Fill( tr.getVar<long>(varX),         weight );        
+            else if(type.find("TLorentzVector") != std::string::npos)
+            {
+                const std::string& varType = split("last",  varX, ".");
+                const std::string&     var = split("first", varX, ".");
+                histo->Fill( tlvGetValue<double>(tr.getVar<TLorentzVector>(var), varType), weight );
+            }
+            else std::cout<<"Type \""<<type<<"\" is not an option for variable \""<<varX<<"\"";
+        }
     } 
 
 public:

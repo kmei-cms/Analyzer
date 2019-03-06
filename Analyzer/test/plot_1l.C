@@ -31,50 +31,26 @@ void setHistInfo(const std::string& path, std::vector<histInfo>& data, std::vect
         {"QCD",             path + "/"+year+"_QCD.root",             "hist", kGreen + 1  },
         {"T#bar{T}",        path + "/"+year+"_TT.root",              "hist", kBlue       },
     };
-    if(year == "2016")
-    {        
-        sig = {
-            {"RPV 850", path + "/"+year+"_rpv_stop_850.root",               "hist", kRed  + 2*color      },
-            //{"RPV 650", path + "/"+year+"_rpv_stop_650.root",               "hist", kGreen  + 2*color    },        
-            //{"RPV 550", path + "/"+year+"_rpv_stop_550.root",               "hist", kMagenta  + 2*color  },        
-            //{"RPV 450", path + "/"+year+"_rpv_stop_450.root",               "hist", kOrange  + 2*color   },        
-            {"RPV 350", path + "/"+year+"_rpv_stop_350.root",               "hist", kCyan  + 2*color     },
-            //
-            //{"SYY 850", path + "/"+year+"_stealth_stop_850_SYY.root",       "hist", kRed  + 2*color      },
-            //{"SYY 650", path + "/"+year+"_stealth_stop_650_SYY.root",       "hist", kGreen  + 2*color    },        
-            {"SYY 550", path + "/"+year+"_stealth_stop_550_SYY.root",       "hist", kMagenta  + 2*color  },        
-            //{"SYY 450", path + "/"+year+"_stealth_stop_450_SYY.root",       "hist", kOrange  + 2*color   },        
-            //{"SYY 350", path + "/"+year+"_stealth_stop_350_SYY.root",       "hist", kCyan  + 2*color     },
+
+    sig = {        
+        {"RPV 850", path + "/"+year+"_RPV_2t6j_mStop-850.root",               "hist", kRed  + 2*color      },
+        //{"RPV 650", path + "/"+year+"_RPV_2t6j_mStop-650.root",               "hist", kGreen  + 2*color    },        
+        //{"RPV 550", path + "/"+year+"_RPV_2t6j_mStop-550.root",               "hist", kMagenta  + 2*color  },        
+        //{"RPV 450", path + "/"+year+"_RPV_2t6j_mStop-450.root",               "hist", kOrange  + 2*color   },        
+        {"RPV 350", path + "/"+year+"_RPV_2t6j_mStop-350.root",               "hist", kCyan  + 2*color     },
             
-            //{"SHuHd 850", path + "/"+year+"_stealth_stop_850_SHuHd.root",     "hist", kRed  + 2*color      },
-            //{"SHuHd 650", path + "/"+year+"_stealth_stop_650_SHuHd.root",     "hist", kGreen  + 2*color    },        
-            //{"SHuHd 550", path + "/"+year+"_stealth_stop_550_SHuHd.root",     "hist", kMagenta  + 2*color  },        
-            //{"SHuHd 450", path + "/"+year+"_stealth_stop_450_SHuHd.root",     "hist", kOrange  + 2*color   },        
-            //{"SHuHd 350", path + "/"+year+"_stealth_stop_350_SHuHd.root",     "hist", kCyan  + 2*color     },
-        };
-    }
-    else
-    {
-        sig = {        
-            {"RPV 850", path + "/"+year+"_RPV_2t6j_mStop-850.root",               "hist", kRed  + 2*color      },
-            //{"RPV 650", path + "/"+year+"_RPV_2t6j_mStop-650.root",               "hist", kGreen  + 2*color    },        
-            //{"RPV 550", path + "/"+year+"_RPV_2t6j_mStop-550.root",               "hist", kMagenta  + 2*color  },        
-            //{"RPV 450", path + "/"+year+"_RPV_2t6j_mStop-450.root",               "hist", kOrange  + 2*color   },        
-            {"RPV 350", path + "/"+year+"_RPV_2t6j_mStop-350.root",               "hist", kCyan  + 2*color     },
-            
-            //{"SYY 850", path + "/"+year+"_StealthSYY_2t6j_mStop-850.root",       "hist", kRed  + 2*color      },
-            //{"SYY 650", path + "/"+year+"_StealthSYY_2t6j_mStop-650.root",       "hist", kGreen  + 2*color    },        
-            {"SYY 550", path + "/"+year+"_StealthSYY_2t6j_mStop-550.root",       "hist", kMagenta  + 2*color  },        
-            //{"SYY 450", path + "/"+year+"_StealthSYY_2t6j_mStop-450.root",       "hist", kOrange  + 2*color   },        
-            //{"SYY 350", path + "/"+year+"_StealthSYY_2t6j_mStop-350.root",       "hist", kCyan  + 2*color     },
-            //
-            //{"SHuHd 850", path + "/"+year+"_StealthSHH_2t4b_mStop-850.root",     "hist", kRed  + 2*color      },
-            //{"SHuHd 650", path + "/"+year+"_StealthSHH_2t4b_mStop-650.root",     "hist", kGreen  + 2*color    },        
-            //{"SHuHd 550", path + "/"+year+"_StealthSHH_2t4b_mStop-550.root",     "hist", kMagenta  + 2*color  },        
-            //{"SHuHd 450", path + "/"+year+"_StealthSHH_2t4b_mStop-450.root",     "hist", kOrange  + 2*color   },        
-            //{"SHuHd 350", path + "/"+year+"_StealthSHH_2t4b_mStop-350.root",     "hist", kCyan  + 2*color     },
-        };
-    }
+        //{"SYY 850", path + "/"+year+"_StealthSYY_2t6j_mStop-850.root",       "hist", kRed  + 2*color      },
+        //{"SYY 650", path + "/"+year+"_StealthSYY_2t6j_mStop-650.root",       "hist", kGreen  + 2*color    },        
+        {"SYY 550", path + "/"+year+"_StealthSYY_2t6j_mStop-550.root",       "hist", kMagenta  + 2*color  },        
+        //{"SYY 450", path + "/"+year+"_StealthSYY_2t6j_mStop-450.root",       "hist", kOrange  + 2*color   },        
+        //{"SYY 350", path + "/"+year+"_StealthSYY_2t6j_mStop-350.root",       "hist", kCyan  + 2*color     },
+        //
+        //{"SHuHd 850", path + "/"+year+"_StealthSHH_2t4b_mStop-850.root",     "hist", kRed  + 2*color      },
+        //{"SHuHd 650", path + "/"+year+"_StealthSHH_2t4b_mStop-650.root",     "hist", kGreen  + 2*color    },        
+        //{"SHuHd 550", path + "/"+year+"_StealthSHH_2t4b_mStop-550.root",     "hist", kMagenta  + 2*color  },        
+        //{"SHuHd 450", path + "/"+year+"_StealthSHH_2t4b_mStop-450.root",     "hist", kOrange  + 2*color   },        
+        //{"SHuHd 350", path + "/"+year+"_StealthSHH_2t4b_mStop-350.root",     "hist", kCyan  + 2*color     },
+    };
 }
 
 int main()
@@ -91,7 +67,7 @@ int main()
     //std::string pathGRtrue = "condor/Analyze1Lep_Kerasv1.2.4";
     //std::string pathGRtrue = "condor/Analyze1Lep_Kerasv1.2.4_HTSF";
     //std::string pathGRtrue = "condor/Analyze1Lep_Kerasv1.2.5_noHT";
-    std::string pathGRtrue = "condor/oldTest/Analyze1Lep_Kerasv1.2.5_Freezing";
+    //std::string pathGRtrue = "condor/oldTest/Analyze1Lep_Kerasv1.2.5_Freezing";
     //std::string pathGRtrue = "condor/Analyze1Lep_Kerasv3.0.0";
     //std::string pathGRtrue = "condor/Analyze1Lep_Kerasv3.0.0_v2";
     //std::string pathGRtrue = "condor/Analyze1Lep_Kerasv3.0.1";
@@ -99,6 +75,10 @@ int main()
     //std::string pathFisher = "oldTest/DeepESMTests_JoesCode/deepESM_v1";
     //std::string pathPhoton = "photonCR";
     //std::string pathPhoton = "photonCR_Barrel";
+
+    std::string pathGRtrue;
+    if     (year=="2016") pathGRtrue = "condor/Analyze1Lep_Kerasv1.2.5";
+    else if(year=="2017") pathGRtrue = "condor/Analyze1Lep_Kerasv3.0.1";
 
     std::vector<histInfo> data_GRfalse, bg_GRfalse, sig_GRfalse;
     std::vector<histInfo> data_GRtrue, bg_GRtrue, sig_GRtrue;
@@ -139,7 +119,7 @@ int main()
         //"_1l",
         //"_1l_ge7j",                        
         //"_1l_ge1b",                       
-        //"_1l_ge2b",                       
+        "_1l_ge2b",                       
         //"_1e_1m_ge2b_le5j",
         //"_1l_1t",                          
         //"_1l_2t",                          
@@ -164,10 +144,10 @@ int main()
         //"_1l_0b_ge300ht_50to110mt_ge30MET",
         //"_1l_0b_ge300ht_50to110mt_ge30MET_even",
         //"_1l_0b_ge300ht_50to110mt_ge30MET_odd",
-        //"_1l_ge7j_ge1b_d1",
-        //"_1l_ge7j_ge1b_d2",
-        //"_1l_ge7j_ge1b_d3",
-        //"_1l_ge7j_ge1b_d4",
+        "_1l_ge7j_ge1b_d1",
+        "_1l_ge7j_ge1b_d2",
+        "_1l_ge7j_ge1b_d3",
+        "_1l_ge7j_ge1b_d4",
         //"_1l_ge7j_ge2b",                 
         //"_1l_ge7j_ge1b_1t",
         //"_1l_ge7j_ge1b_ge1t",                                                    
@@ -182,18 +162,18 @@ int main()
 
     for(std::string mycut : mycuts_1l)
     {
-        plt.plotStack( "h_njets"+mycut, "N_{J}" ,              "Events", true, -1, true);
-        plt.plotStack( "h_deepESM"+mycut, "DeepESM" ,          "Events", true, 10, true);
-        plt.plotStack( "h_deepESMMerged"+mycut, "DeepESM Bin", "Events", true, -1, true);
-        //plt.plotStack( "h_mbl"+mycut,    "M(l,b) [GeV]",       "Events", true, 10);
+        plt.plotStack( "h_njets"+mycut, "N_{J}" ,              "Events", true, -1, false);
+        plt.plotStack( "h_deepESM"+mycut, "DeepESM" ,          "Events", true, 10, false);
+        plt.plotStack( "h_deepESMMerged"+mycut, "DeepESM Bin", "Events", true, -1, false);
+        plt.plotStack( "h_mbl"+mycut,    "M(l,b) [GeV]",       "Events", true, 10);
+        plt.plotStack( "h_ht"+mycut,     "H_{T} [GeV]",        "Events", true, 10, false);
+        plt.plotStack( "h_lPt"+mycut,    "Lepton P_{T} [GeV]", "Events", true,  2, false, 0, 1000);
+        plt.plotStack( "h_lEta"+mycut,   "Lepton Eta",         "Events", true,  2);
+        plt.plotStack( "h_jPt"+mycut,     "Jet P_{T} [GeV]",   "Events", true,  2, false, 0, 1000);
+        plt.plotStack( "h_jEta"+mycut,    "Jet Eta",           "Events", true,  2, false);
+        plt.plotStack( "h_ntops"+mycut, "N_{T}" , "Events", true);
+        plt.plotStack( "h_nb"   +mycut, "N_{B}" , "Events", true);        
         //plt.plotStack( "h_allMbl"+mycut, "M(l,b) [GeV]",       "Events", true, 10, false);
-        //plt.plotStack( "h_ht"+mycut,     "H_{T} [GeV]",        "Events", true, 10, false);
-        //plt.plotStack( "h_lPt"+mycut,    "Lepton P_{T} [GeV]", "Events", true, 2, false, 0, 1000);
-        //plt.plotStack( "h_lEta"+mycut,   "Lepton Eta",         "Events", true, 2);
-        //plt.plotStack( "h_jPt"+mycut,     "Jet P_{T} [GeV]",     "Events", true,  2, false, 0, 1000);
-        //plt.plotStack( "h_jEta"+mycut,    "Jet Eta",             "Events", true,  2, false);
-        //plt.plotStack( "h_ntops"+mycut, "N_{T}" , "Events", true);
-        //plt.plotStack( "h_nb"   +mycut, "N_{B}" , "Events", true);        
         //plt.plotStack( "h_fisher"+mycut, "fisher value" , "Events", true, 4);        
         //plt.plotStack( "h_photonPt"+mycut, "P_{T}^{#gamma}" , "Events", false, 10);
         //
@@ -215,20 +195,20 @@ int main()
         
         //pltRocCompare.plotRocFisher("h_deepESM"+mycut,"Background","Signal", true, false);
         
-        //////Need these until we un blind
-        //plt.plotStack( "blind_njets"+mycut,   "N_{J}",               "Events", true, -1, false);
-        //plt.plotStack( "blind_deepESM"+mycut, "DeepESM",             "Events", true, 10, false);
-        //plt.plotStack( "blind_deepESMMerged"+mycut, "DeepESM Bin",   "Events", true, -1, false);
-        //plt.plotStack( "blind_mbl"+mycut,     "M(l,b) [GeV]",        "Events", true, 10, false);
+        ////Need these until we un blind
+        plt.plotStack( "blind_njets"+mycut,   "N_{J}",               "Events", true, -1, false);
+        plt.plotStack( "blind_deepESM"+mycut, "DeepESM",             "Events", true, 10, false);
+        plt.plotStack( "blind_deepESMMerged"+mycut, "DeepESM Bin",   "Events", true, -1, false);
+        plt.plotStack( "blind_mbl"+mycut,     "M(l,b) [GeV]",        "Events", true, 10, false);
+        plt.plotStack( "blind_ht"+mycut,      "H_{T} [GeV]",         "Events", true, 10, false);
+        plt.plotStack( "blind_ntops"+mycut,   "N_{T}",               "Events", true, -1, false);
+        plt.plotStack( "blind_nb"   +mycut,   "N_{B}",               "Events", true, -1, false);        
+        plt.plotStack( "blind_lPt"+mycut,     "Lepton P_{T} [GeV]",  "Events", true,  2, false, 0, 1000);
+        plt.plotStack( "blind_lEta"+mycut,    "Lepton Eta",          "Events", true,  2, false);
+        plt.plotStack( "blind_jPt"+mycut,     "Jet P_{T} [GeV]",     "Events", true,  2, false, 0, 1000);
+        plt.plotStack( "blind_jEta"+mycut,    "Jet Eta",             "Events", true,  2, false);
         //plt.plotStack( "blind_allMbl"+mycut,  "M(l,b) [GeV]",        "Events", true, 10, false);
-        //plt.plotStack( "blind_ht"+mycut,      "H_{T} [GeV]",         "Events", true, 10, false);
-        //plt.plotStack( "blind_ntops"+mycut,   "N_{T}",               "Events", true, -1, false);
-        //plt.plotStack( "blind_nb"   +mycut,   "N_{B}",               "Events", true, -1, false);        
-        //plt.plotStack( "blind_lPt"+mycut,     "Lepton P_{T} [GeV]",  "Events", true,  2, false, 0, 1000);
-        //plt.plotStack( "blind_lEta"+mycut,    "Lepton Eta",          "Events", true,  2, false);
-        //plt.plotStack( "blind_jPt"+mycut,     "Jet P_{T} [GeV]",     "Events", true,  2, false, 0, 1000);
-        //plt.plotStack( "blind_jEta"+mycut,    "Jet Eta",             "Events", true,  2, false);
-        //////plt.plotStack( "blind_fisher"+mycut, "fisher value" , "Events", true, 10);        
+        ////plt.plotStack( "blind_fisher"+mycut, "fisher value" , "Events", true, 10);        
     }
     //plt.plotStack( "h_leptonweight_1l_ge7j_ge1b",    "Lepton W",         "Events", true, -1, false, 0, 2);
     //plt.plotStack( "h_weight_1l_ge7j_ge1b",          "Total Weight",     "Events", true, -1, false, 0, 2);
