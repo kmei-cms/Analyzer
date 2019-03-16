@@ -35,7 +35,8 @@ public:
             //------------------------------------
             //-- Print Event Number
             //------------------------------------
-            printEventNum(maxevents, tr.getEvtNum());
+            const bool breakLoop = printEventNum(maxevents, tr.getEvtNum());
+            if(breakLoop) break;
 
             //-----------------------------------
             //-- Code unique to this Analyzer

@@ -29,10 +29,12 @@ public:
         }
     }
 
-    void printEventNum(const int maxEvents, const int evtNum, const int divisor = 1000)
+    const bool printEventNum(const int maxevents, const int evtNum, const int divisor = 1000)
     {
-        if( maxevents != -1 && evtNum >= maxevents ) break;
-        if( tr.getEvtNum() % divisor == 0 ) printf( " Event %i\n", evtNum );
+        bool b = false;
+        if( maxevents != -1 && evtNum >= maxevents ) b = true;
+        if( evtNum % divisor == 0 ) printf( " Event %i\n", evtNum );
+        return b;
     }
 
     void Fill(NTupleReader& tr)
