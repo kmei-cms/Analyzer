@@ -9,6 +9,7 @@
 #include <map>
 #include <string>
 
+#include "Analyzer/Analyzer/include/Histo.h"
 class NTupleReader;
 
 class AnalyzeBase
@@ -18,7 +19,6 @@ protected:
 
 public:
     virtual void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false) = 0;
-    virtual void InitHistos(std::string filetag) = 0;
     void WriteHistos(TFile* outfile)
     {
         outfile->cd();
@@ -32,7 +32,7 @@ public:
     const bool printEventNum(const int maxevents, const int evtNum, const int divisor = 1000)
     {
         bool b = false;
-        if( maxevents != -1 && evtNum >= maxevents ) b = true;
+        if( maxevents != -1 && evtNum >= maxevents + 1 ) b = true;
         if( evtNum % divisor == 0 ) printf( " Event %i\n", evtNum );
         return b;
     }
