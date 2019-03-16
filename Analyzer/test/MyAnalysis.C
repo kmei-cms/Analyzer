@@ -60,9 +60,9 @@ const std::string getFullPath(const std::string& file)
     }
 }
 
-template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
-                                    int startFile, int nFiles, int maxEvts, 
-                                    TFile* outfile, bool isQuiet, const std::string& analyzer)
+template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf, 
+                                    const int startFile, const int nFiles, const int maxEvts, 
+                                    TFile* const outfile, const bool isQuiet, const std::string& analyzer)
 {
     std::cout << "Initializing..." << std::endl;
     Analyze a;
@@ -91,6 +91,7 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerDerivedVar("DeepESMCfg",DeepESMCfg);
         tr.registerDerivedVar("ModelFile",ModelFile);        
         tr.registerDerivedVar("blind",false);
+        tr.registerDerivedVar("analyzer",analyzer);
 
         // Define classes/functions that add variables on the fly        
         Config c;
@@ -179,7 +180,7 @@ int main(int argc, char *argv[])
     std::set<AnaSamples::FileSummary> vvf = setFS(dataSets, runOnCondor); 
     TFile* outfile = TFile::Open(histFile.c_str(), "RECREATE");
 
-    std::vector<std::pair<std::string, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,TFile*,bool,const std::string&)>>> AnalyzerPairVec = {
+    std::vector<std::pair<std::string, std::function<void(const std::set<AnaSamples::FileSummary>&,const int,const int,const int,TFile* const,const bool,const std::string&)>>> AnalyzerPairVec = {
         {"AnalyzeBackground",       run<AnalyzeBackground>},
         {"AnalyzeWControlRegion",   run<AnalyzeWControlRegion>},
         {"AnalyzeTopTagger",        run<AnalyzeTopTagger>},
