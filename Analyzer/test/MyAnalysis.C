@@ -1,8 +1,5 @@
 #include "SusyAnaTools/Tools/samples.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
-#include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
-#include "SusyAnaTools/Tools/BTagCorrector.h"
-#include "SusyAnaTools/Tools/PileupWeights.h"
 #include "SusyAnaTools/Tools/MiniTupleMaker.h"
 
 #include "TopTagger/CfgParser/include/TTException.h"
@@ -22,21 +19,7 @@
 #include "Analyzer/Analyzer/include/MakeMiniTree.h"
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 #include "Analyzer/Analyzer/include/CalculateSFMean.h"
-
-#include "Framework/Framework/include/PrepNTupleVars.h"
-#include "Framework/Framework/include/RunTopTagger.h"
-#include "Framework/Framework/include/Muon.h"
-#include "Framework/Framework/include/Electron.h"
-#include "Framework/Framework/include/Photon.h"
-#include "Framework/Framework/include/Jet.h"
-#include "Framework/Framework/include/BJet.h"
-#include "Framework/Framework/include/RunFisher.h"
-#include "Framework/Framework/include/CommonVariables.h"
-#include "Framework/Framework/include/MakeMVAVariables.h"
-#include "Framework/Framework/include/Baseline.h"
-#include "Framework/Framework/include/DeepEventShape.h"
-#include "Framework/Framework/include/ScaleFactors.h"
-#include "Framework/Framework/include/PartialUnBlinding.h"
+#include "Analyzer/Analyzer/include/Config.h"
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -79,7 +62,7 @@ const std::string getFullPath(const std::string& file)
 
 template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
                                     int startFile, int nFiles, int maxEvts, 
-                                    TFile* outfile, bool isQuiet)
+                                    TFile* outfile, bool isQuiet, const std::string& analyzer)
 {
     std::cout << "Initializing..." << std::endl;
     Analyze a;
@@ -108,50 +91,11 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerDerivedVar("DeepESMCfg",DeepESMCfg);
         tr.registerDerivedVar("ModelFile",ModelFile);        
         tr.registerDerivedVar("blind",false);
-        
-        // Define classes/functions that add variables on the fly
-        PartialUnBlinding partUnBlind;
-        PrepNTupleVars prep;
-        RunTopTagger rtt;
-        Muon muon;
-        Electron electron;
-        Photon photon;
-        Jet jet;
-        BJet bjet;
-        RunFisher runFisher("v3");
-        CommonVariables commonVariables;
-        MakeMVAVariables makeMVAVariables;
-        Baseline baseline;
-        DeepEventShape deepEventShape(DeepESMCfg,ModelFile);
-        
-        // Register classes/functions that add variables on the fly
-        tr.registerFunction(partUnBlind);
-        tr.registerFunction(prep);
-        tr.registerFunction(rtt);
-        tr.registerFunction(muon);
-        tr.registerFunction(electron);
-        tr.registerFunction(photon);
-        tr.registerFunction(jet);
-        tr.registerFunction(bjet);
-        tr.registerFunction(runFisher);
-        tr.registerFunction(commonVariables);
-        tr.registerFunction(makeMVAVariables);
-        tr.registerFunction(baseline);
-        tr.registerFunction(deepEventShape);
-        
-        if( runtype == "MC" ) 
-        {
-            //std::string eosPath =   "root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/SUS-19-004_Final/";
-            BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
-            bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets", "Jets_bDiscriminatorCSV", "Jets_partonFlavor");
-            Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
-            std::string scaleFactorHistoFileName = (file.tag.find("2017") != std::string::npos ) ? "allInOne_leptonSF_2017.root" : "allInOne_leptonSF_2016.root";
-            ScaleFactors scaleFactors( scaleFactorHistoFileName );
 
-            tr.registerFunction(bTagCorrector);
-            tr.registerFunction(pileup);
-            tr.registerFunction(scaleFactors);
-        }
+        // Define classes/functions that add variables on the fly        
+        Config c;
+        c.registerModules(tr);
+
         // Loop over all of the events and fill histos
         a.Loop(tr, weight, maxEvts, isQuiet);
 
@@ -235,7 +179,7 @@ int main(int argc, char *argv[])
     std::set<AnaSamples::FileSummary> vvf = setFS(dataSets, runOnCondor); 
     TFile* outfile = TFile::Open(histFile.c_str(), "RECREATE");
 
-    std::vector<std::pair<std::string, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,TFile*,bool)>>> AnalyzerPairVec = {
+    std::vector<std::pair<std::string, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,TFile*,bool,const std::string&)>>> AnalyzerPairVec = {
         {"AnalyzeBackground",       run<AnalyzeBackground>},
         {"AnalyzeWControlRegion",   run<AnalyzeWControlRegion>},
         {"AnalyzeTopTagger",        run<AnalyzeTopTagger>},
@@ -257,7 +201,7 @@ int main(int argc, char *argv[])
     {
         for(auto& pair : AnalyzerPairVec)
         {
-            if(pair.first==analyzer) pair.second(vvf,startFile,nFiles,maxEvts,outfile,isQuiet); 
+            if(pair.first==analyzer) pair.second(vvf,startFile,nFiles,maxEvts,outfile,isQuiet,analyzer); 
         }
 
         outfile->Close();
