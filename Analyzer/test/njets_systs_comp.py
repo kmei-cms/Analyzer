@@ -1,15 +1,17 @@
 import ROOT
 import plot
+import math
 
-#version = "Keras_V1.2.5_v3"
-version = "Keras_V3.0.1_v4"
+#version = "Keras_V1.2.5_v4"
+version = "Keras_V1.2.6_v1_DataQCDShapev2"
+#version = "Keras_V3.0.1_v5"
 
-#fitversion = "GL_2016"
-fitversion = "GL_2017"
+fitversion = "GL_2016"
+#fitversion = "GL_2017"
 #fitversion = "FS2017"
 #GL_2016_nom_shared
 
-year = 2017
+year = 2016
 
 #inputfilename = "~cmadrid/nobackup/ana/SUSY/Stealth/AnaNTuples/CMSSW_9_3_3/src/Analyzer/Analyzer/test/FitInput/Keras_V1.2.4/njets_for_Aron.root"
 #inputfilename = "~cmadrid/nobackup/ana/SUSY/Stealth/AnaNTuples/CMSSW_9_3_3/src/Analyzer/Analyzer/test/FitInput/%s/njets_for_Aron.root"%version
@@ -34,10 +36,10 @@ systs = ["",
          "_pdfDown",
          "_sclUp",
          "_sclDown",
-         #"_htUp",
-         #"_htDown",
-         "_isrUp",
-         "_isrDown",
+         "_htUp",
+         "_htDown",
+         #"_isrUp",
+         #"_isrDown",
          #"_fsrUp",
          #"_fsrDown",
          ]
@@ -76,10 +78,10 @@ for mva in mvas:
 
 extra_histos = {}
 extra_systs = ["_isrUp",
-              "_isrDown",
-              "_fsrUp",
-              "_fsrDown",
-              ]
+               "_isrDown",
+               "_fsrUp",
+               "_fsrDown",
+               ]
 extra_base = "_h_njets_pt30_1l"
 if "2016" in fitversion:
     # deal with the isr and fsr uncertainties
@@ -149,7 +151,8 @@ for mva in mvas:
         #     diffratios.append(diffratio)
 
         # Also make symmetrized versions of the lepton and btag and pdf uncertainties and isr
-        if start > 4: # and start <= 12:
+        if start > 4 and start <= len(systs)-5:
+            print "making final histo for systematic: ", systs[start]
             # take the average of Up and 1/Down
             mytemph = divratios[0].Clone(mva+systs[start].replace("Up","temp"))
             #for bin in range(mytemph.GetNbinsX()):
@@ -181,6 +184,10 @@ for mva in mvas:
                     myh.SetBinContent(bin+1, average)
                 else:
                     myh.SetBinContent(bin+1, myh.GetBinContent(bin))
+            # 2016 PDF unc in bin D3 is subject to very large stat fluctuation, set by hand to value from bin before
+            if "2016" in fitversion:
+                if "pdf" in systs[start]:
+                    myh.SetBinContent(8, myh.GetBinContent(7))
             myh.Write()
 
 
@@ -217,6 +224,29 @@ for mva in mvas:
 #for h in h_isr_2017:
 #    h.Write()
 
+# Add the QCD CR systematic
+if "2016" in fitversion:
+    f_CR_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/qcdCR_shape_systematic_2016.root")
+    h_CR_2016 = [f_CR_2016.Get("%s_qcdCR"%mva) for mva in mvas]
+    outputfile.cd()
+    for h in h_CR_2016:
+        h.Write()
+        
+if "2017" in fitversion:
+    f_CR_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/qcdCR_shape_systematic_2017.root")
+    h_CR_2017 = [f_CR_2017.Get("%s_qcdCR"%mva) for mva in mvas]
+    outputfile.cd()
+    for h in h_CR_2017:
+        h.Write()
+
+
+# Add the systematic from Owen
+# if "2016" in fitversion:
+#     f_owen = ROOT.TFile.Open("/uscms_data/d1/owenl/stealth-rpv/signal-syst-shape-2016_RPV_2t6j_mStop-450.root")
+#     h_owen = [f_owen.Get("h_njets_double_ratio_%s_rebin"%mva.replace("D","d")).Clone("%s_ttHTshape"%mva) for mva in mvas]
+#     outputfile.cd()
+#     for h in h_owen:
+#         h.Write()
 
 # Look at results from Aron's fits -- update with my own background-only fits
 fitdir = "/uscms_data/d3/nstrobbe/StealthRPV/FitRepo/CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit/"
@@ -321,7 +351,7 @@ histos_FSRUp_shared = {}
 histos_FSRUp_sep = {}
 histos_FSRDown_shared = {}
 histos_FSRDown_sep = {}
-if "2017" in fitversion:
+if "201" in fitversion:
     #*(11) Fit with a0, a1, a2 shared across MVA bins, fitting to pseudo-data composed of FSR UP samples*
     #Results are here:
     fname_FSRUp_shared = "%s/%s_FSRUp_shared/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
@@ -353,6 +383,43 @@ if "2017" in fitversion:
     for mva in mvas:
         h = f_FSRDown_sep.Get("shapes_fit_b/%s/TT" % mva)
         histos_FSRDown_sep[mva] = h
+
+histos_ISRUp_shared = {}
+histos_ISRUp_sep = {}
+histos_ISRDown_shared = {}
+histos_ISRDown_sep = {}
+if "201" in fitversion:
+    #*(15) Fit with a0, a1, a2 shared across MVA bins, fitting to pseudo-data composed of ISR UP samples*
+    #Results are here:
+    fname_ISRUp_shared = "%s/%s_ISRUp_shared/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+    f_ISRUp_shared = ROOT.TFile.Open(fname_ISRUp_shared)
+    for mva in mvas:
+        h = f_ISRUp_shared.Get("shapes_fit_b/%s/TT" % mva)
+        histos_ISRUp_shared[mva] = h
+    
+    #*(16) Fit with separate a0, a1, a2 for each MVA bin, fitting to pseudo-data composed of ISR UP samples*
+    #Results are here:
+    fname_ISRUp_sep = "%s/%s_ISRUp_sep/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+    f_ISRUp_sep = ROOT.TFile.Open(fname_ISRUp_sep)
+    for mva in mvas:
+        h = f_ISRUp_sep.Get("shapes_fit_b/%s/TT" % mva)
+        histos_ISRUp_sep[mva] = h
+    
+    #*(17) Fit with a0, a1, a2 shared across MVA bins, fitting to pseudo-data composed of ISR Down samples*
+    #Results are here:
+    fname_ISRDown_shared = "%s/%s_ISRDown_shared/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+    f_ISRDown_shared = ROOT.TFile.Open(fname_ISRDown_shared)
+    for mva in mvas:
+        h = f_ISRDown_shared.Get("shapes_fit_b/%s/TT" % mva)
+        histos_ISRDown_shared[mva] = h
+    
+    #*(18) Fit with separate a0, a1, a2 for each MVA bin, fitting to pseudo-data composed of ISR Down samples*
+    #Results are here:
+    fname_ISRDown_sep = "%s/%s_ISRDown_sep/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+    f_ISRDown_sep = ROOT.TFile.Open(fname_ISRDown_sep)
+    for mva in mvas:
+        h = f_ISRDown_sep.Get("shapes_fit_b/%s/TT" % mva)
+        histos_ISRDown_sep[mva] = h
     
 
 
@@ -364,12 +431,12 @@ if "2017" in fitversion:
 # fname_rebin = "/uscms_data/d2/soha/stealth/CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit/Keras_V1.2.4/njets_rebin_for_Aron.root"
 # inputfile_rebin = ROOT.TFile.Open(fname_rebin)
 inputfile_rebin=inputfile # normal file now has correct bin edges
-histos_rebin = {}
-for mva in mvas: 
-    # get all histograms
-    histnames = [mva+"_"+base+syst for syst in systs]
-    Dhistos = [inputfile_rebin.Get(histname) for histname in histnames]
-    histos_rebin[mva] = Dhistos
+histos_rebin = histos
+# for mva in mvas: 
+#     # get all histograms
+#     histnames = [mva+"_"+base+syst for syst in systs]
+#     Dhistos = [inputfile_rebin.Get(histname) for histname in histnames]
+#     histos_rebin[mva] = Dhistos
 
 colors2 = [ROOT.kBlack,
            ROOT.kCyan+1,
@@ -423,9 +490,10 @@ for mva in mvas:
                   ylabel="",
                   colors=colors3, norm=False, drawstyle="lastP")
    
-    if "2017" in fitversion:
+    if "201" in fitversion:
         # for FSR Up case
-        plot.makeplot([histos_nom_shared[mva].Clone(), histos_FSRUp_sep[mva].Clone(), histos_FSRUp_shared[mva].Clone(), histos_rebin[mva][3].Clone()], 
+        index_FSRUp = systs.index("_fsrUp")
+        plot.makeplot([histos_nom_shared[mva].Clone(), histos_FSRUp_sep[mva].Clone(), histos_FSRUp_shared[mva].Clone(), histos_rebin[mva][index_FSRUp].Clone()], 
                       ["Nominal","Separate", "Shared", "MC"], 
                       "N_{j}-7", mva+"_FSRUp_fit"+"_njets", plotdir="./", linear=False, legendColumns=1, 
                       ymin=0.01, ymax=1e5, 
@@ -433,9 +501,29 @@ for mva in mvas:
                       colors=colors3, norm=False, drawstyle="lastP")
         
         # for FSR Down case
-        plot.makeplot([histos_nom_shared[mva].Clone(), histos_FSRDown_sep[mva].Clone(), histos_FSRDown_shared[mva].Clone(), histos_rebin[mva][4].Clone()], 
+        index_FSRDown = systs.index("_fsrDown")
+        plot.makeplot([histos_nom_shared[mva].Clone(), histos_FSRDown_sep[mva].Clone(), histos_FSRDown_shared[mva].Clone(), histos_rebin[mva][index_FSRDown].Clone()], 
                       ["Nominal","Separate", "Shared", "MC"], 
                       "N_{j}-7", mva+"_FSRDown_fit"+"_njets", plotdir="./", linear=False, legendColumns=1, 
+                      ymin=0.01, ymax=1e5, 
+                      ylabel="",
+                      colors=colors3, norm=False, drawstyle="lastP")
+        
+    if "201" in fitversion:
+        # for ISR Up case
+        index_ISRUp = systs.index("_isrUp")
+        plot.makeplot([histos_nom_shared[mva].Clone(), histos_ISRUp_sep[mva].Clone(), histos_ISRUp_shared[mva].Clone(), histos_rebin[mva][index_ISRUp].Clone()], 
+                      ["Nominal","Separate", "Shared", "MC"], 
+                      "N_{j}-7", mva+"_ISRUp_fit"+"_njets", plotdir="./", linear=False, legendColumns=1, 
+                      ymin=0.01, ymax=1e5, 
+                      ylabel="",
+                      colors=colors3, norm=False, drawstyle="lastP")
+        
+        # for ISR Down case
+        index_ISRDown = systs.index("_isrDown")
+        plot.makeplot([histos_nom_shared[mva].Clone(), histos_ISRDown_sep[mva].Clone(), histos_ISRDown_shared[mva].Clone(), histos_rebin[mva][index_ISRDown].Clone()], 
+                      ["Nominal","Separate", "Shared", "MC"], 
+                      "N_{j}-7", mva+"_ISRDown_fit"+"_njets", plotdir="./", linear=False, legendColumns=1, 
                       ymin=0.01, ymax=1e5, 
                       ylabel="",
                       colors=colors3, norm=False, drawstyle="lastP")
@@ -466,13 +554,23 @@ for mva in mvas:
     
     ratio_FSRUp = None
     ratio_FSRDown = None
-    if "2017" in fitversion:
+    if "201" in fitversion:
         # For the FSR Up case
         ratio_FSRUp = histos_FSRUp_sep[mva].Clone(mva+"_ratio_FSRUp_fit")
         ratio_FSRUp.Divide(histos_FSRUp_shared[mva])
         # For the FSR Down case
         ratio_FSRDown = histos_FSRDown_sep[mva].Clone(mva+"_ratio_FSRDown_fit")
         ratio_FSRDown.Divide(histos_FSRDown_shared[mva])
+
+    ratio_ISRUp = None
+    ratio_ISRDown = None
+    if "201" in fitversion:
+        # For the ISR Up case
+        ratio_ISRUp = histos_ISRUp_sep[mva].Clone(mva+"_ratio_ISRUp_fit")
+        ratio_ISRUp.Divide(histos_ISRUp_shared[mva])
+        # For the ISR Down case
+        ratio_ISRDown = histos_ISRDown_sep[mva].Clone(mva+"_ratio_ISRDown_fit")
+        ratio_ISRDown.Divide(histos_ISRDown_shared[mva])
 
 
     # Also make plots of difference wrt nominal
@@ -486,11 +584,18 @@ for mva in mvas:
     divratio_JERDown.Divide(ratio_nom)
     divratio_FSRUp = None
     divratio_FSRDown = None
-    if "2017" in fitversion:
+    if "201" in fitversion:
         divratio_FSRUp = ratio_FSRUp.Clone(mva+"_ratio_FSRUp_div_fit")
         divratio_FSRUp.Divide(ratio_nom)
         divratio_FSRDown = ratio_FSRDown.Clone(mva+"_ratio_FSRDown_div_fit")
         divratio_FSRDown.Divide(ratio_nom)
+    divratio_ISRUp = None
+    divratio_ISRDown = None
+    if "201" in fitversion:
+        divratio_ISRUp = ratio_ISRUp.Clone(mva+"_ratio_ISRUp_div_fit")
+        divratio_ISRUp.Divide(ratio_nom)
+        divratio_ISRDown = ratio_ISRDown.Clone(mva+"_ratio_ISRDown_div_fit")
+        divratio_ISRDown.Divide(ratio_nom)
 
     outputfile.cd()
     # Rather than put JECUp and JERUp, construct maximum of the Up and Down variations, but preserve the "sign"
@@ -529,7 +634,7 @@ for mva in mvas:
                 mva_JER.SetBinContent(i+1,1/down_value)
 
     mva_FSR = None
-    if "2017" in fitversion:
+    if "201" in fitversion:
         mva_FSR = divratio_FSRUp.Clone(mva+"_FSR")
         for i in range(divratio_FSRUp.GetNbinsX()):
             print "bin ", i
@@ -551,13 +656,48 @@ for mva in mvas:
                     mva_FSR.SetBinContent(i+1,1/down_value)
                     print "writing 1/down", 1/down_value
     
-        
+    mva_ISR = None
+    if "201" in fitversion:
+        mva_ISR = divratio_ISRUp.Clone(mva+"_ISR")
+        for i in range(divratio_ISRUp.GetNbinsX()):
+            print "bin ", i
+            up_value = divratio_ISRUp.GetBinContent(i+1)
+            print "Up: ", up_value
+            if up_value<1:
+                up_value = 1/up_value
+                print "inverting up, ", up_value
+            down_value = divratio_ISRDown.GetBinContent(i+1)
+            print "Down: " , down_value
+            if down_value<1:
+                down_value = 1/down_value
+                print "inverting down, ", down_value
+            if down_value > up_value:
+                if divratio_ISRUp.GetBinContent(i+1) > 1:
+                    mva_ISR.SetBinContent(i+1,down_value)
+                    print "writing down value", down_value
+                else:
+                    mva_ISR.SetBinContent(i+1,1/down_value)
+                    print "writing 1/down", 1/down_value
+    if "2016" in fitversion:
+        for bin in range(mva_ISR.GetNbinsX()):
+            old_value = mva_ISR.GetBinContent(bin+1)
+            diff_value = abs(old_value-1)/math.sqrt(2)
+            new_value = 1 + diff_value if (old_value > 1) else 1 - diff_value
+            mva_ISR.SetBinContent(bin+1, new_value)
+        for bin in range(mva_FSR.GetNbinsX()):
+            old_value = mva_FSR.GetBinContent(bin+1)
+            diff_value = abs(old_value-1)/math.sqrt(2)
+            new_value = 1 + diff_value if (old_value > 1) else 1 - diff_value
+            mva_FSR.SetBinContent(bin+1, new_value)
+
     #divratio.Write(mva+"_JEC")
     #divratio_JERUp.Write(mva+"_JER")
     mva_JEC.Write(mva+"_JEC")
     mva_JER.Write(mva+"_JER")
-    if "2017" in fitversion:
+    if "201" in fitversion:
         mva_FSR.Write(mva+"_FSR")
+    if "201" in fitversion:
+        mva_ISR.Write(mva+"_ISR")
 
 
     # Also write the shape differences for the no-systematics case to the file
@@ -578,8 +718,12 @@ for mva in mvas:
     #ymin=0.7, ymax=1.3, ylabel="",
     #colors=colors, norm=False, drawstyle="hist")
 
-    if "2017" in fitversion:
+    if "201" in fitversion:
         plot.makeplot([ratio_nom, ratio_FSRUp, ratio_FSRDown], ["Nominal", "FSR Up", "FSR Down"], "N_{j}-7", mva+"_fit"+"_comp_FSR", plotdir="./", linear=True, legendColumns=1, 
+                      ymin=0.7, ymax=1.3, ylabel="",
+                      colors=colors, norm=False, drawstyle="hist")
+    if "201" in fitversion:
+        plot.makeplot([ratio_nom, ratio_ISRUp, ratio_ISRDown], ["Nominal", "ISR Up", "ISR Down"], "N_{j}-7", mva+"_fit"+"_comp_ISR", plotdir="./", linear=True, legendColumns=1, 
                       ymin=0.7, ymax=1.3, ylabel="",
                       colors=colors, norm=False, drawstyle="hist")
 
@@ -595,8 +739,12 @@ for mva in mvas:
     #ymin=0.8, ymax=1.3, ylabel="", dropzeroes=False,
     #colors=colors, norm=False, drawstyle="hist")
 
-    if "2017" in fitversion:
+    if "201" in fitversion:
         plot.makeplot([divratio_FSRUp, divratio_FSRDown], ["FSR Up","FSR Down"], "N_{j}-7", mva+"_fit_comp_div_FSR", plotdir="./", linear=True, legendColumns=1, 
+                      ymin=0.8, ymax=1.3, ylabel="", dropzeroes=False,
+                      colors=colors, norm=False, drawstyle="hist")
+    if "201" in fitversion:
+        plot.makeplot([divratio_ISRUp, divratio_ISRDown], ["ISR Up","ISR Down"], "N_{j}-7", mva+"_fit_comp_div_ISR", plotdir="./", linear=True, legendColumns=1, 
                       ymin=0.8, ymax=1.3, ylabel="", dropzeroes=False,
                       colors=colors, norm=False, drawstyle="hist")
 
