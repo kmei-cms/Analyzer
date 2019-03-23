@@ -43,7 +43,11 @@ getDeepESMCfg.sh -t Keras_Tensorflow_v1.2.6 -o -s 2016
 getDeepESMCfg.sh -t Keras_Tensorflow_v3.0.2 -o -s 2017
 ```
 
-No changes to the analysis code should be needed. 
+Example of running MyAnalysis interactively
+```
+cd $CMSSW_BASE/src/Analyzer/Analyzer/test/
+./MyAnalysis -A MakeNJetDists -H myoutputfile.root -D 2016_TT -E 1001
+```
 
 
 ## Condor submission
@@ -84,8 +88,8 @@ Running the condor jobs to produce the input histograms for the fit.
 
 ```
 cd $CMSSW_BASE/src/Analyzer/Analyzer/test/condor
-python condorSubmit.py -d 2016_Data_SingleElectron,2016_Data_SingleMuon,2016_TT,2016_TT_fsrUp,2016_TT_fsrDown,2016_TT_isrUp,2016_TT_isrDown,2016_WJetsToLNu,2016_DYJetsToLL_M-50,2016_QCD,2016_ST,2016_Diboson,2016_Rare,2016_AllSignal -n 10 --analyze n --output CondorOutput_Keras1.2.6_Final
-python condorSubmit.py -d 2017_Data_SingleElectron,2017_Data_SingleMuon,2017_TT,2017_WJetsToLNu,2017_DYJetsToLL_M-50,2017_QCD,2017_ST,2017_Diboson,2017_Rare,2017_AllSignal -n 10 --analyze n --output CondorOutput_Keras3.0.2_Final
+python condorSubmit.py --analyze MakeNJetDists -d 2016_Data_SingleElectron,2016_Data_SingleMuon,2016_TT,2016_TT_fsrUp,2016_TT_fsrDown,2016_TT_isrUp,2016_TT_isrDown,2016_WJetsToLNu,2016_DYJetsToLL_M-50,2016_QCD,2016_ST,2016_Diboson,2016_Rare,2016_AllSignal -n 10 --output CondorOutput_Keras1.2.6_Final
+python condorSubmit.py --analyze MakeNJetDists -d 2017_Data_SingleElectron,2017_Data_SingleMuon,2017_TT,2017_WJetsToLNu,2017_DYJetsToLL_M-50,2017_QCD,2017_ST,2017_Diboson,2017_Rare,2017_AllSignal -n 10 --output CondorOutput_Keras3.0.2_Final
 ```
 
 Now hadd the outputs when the jobs are done.

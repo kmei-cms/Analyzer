@@ -1,8 +1,5 @@
 #include "SusyAnaTools/Tools/samples.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
-#include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
-#include "SusyAnaTools/Tools/BTagCorrector.h"
-#include "SusyAnaTools/Tools/PileupWeights.h"
 #include "SusyAnaTools/Tools/MiniTupleMaker.h"
 
 #include "TopTagger/CfgParser/include/TTException.h"
@@ -22,21 +19,7 @@
 #include "Analyzer/Analyzer/include/MakeMiniTree.h"
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 #include "Analyzer/Analyzer/include/CalculateSFMean.h"
-
-#include "Framework/Framework/include/PrepNTupleVars.h"
-#include "Framework/Framework/include/RunTopTagger.h"
-#include "Framework/Framework/include/Muon.h"
-#include "Framework/Framework/include/Electron.h"
-#include "Framework/Framework/include/Photon.h"
-#include "Framework/Framework/include/Jet.h"
-#include "Framework/Framework/include/BJet.h"
-#include "Framework/Framework/include/RunFisher.h"
-#include "Framework/Framework/include/CommonVariables.h"
-#include "Framework/Framework/include/MakeMVAVariables.h"
-#include "Framework/Framework/include/Baseline.h"
-#include "Framework/Framework/include/DeepEventShape.h"
-#include "Framework/Framework/include/ScaleFactors.h"
-#include "Framework/Framework/include/PartialUnBlinding.h"
+#include "Analyzer/Analyzer/include/Config.h"
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -77,9 +60,9 @@ const std::string getFullPath(const std::string& file)
     }
 }
 
-template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf, 
-                                    int startFile, int nFiles, int maxEvts, 
-                                    TFile* outfile, bool isQuiet)
+template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf, 
+                                    const int startFile, const int nFiles, const int maxEvts, 
+                                    TFile* const outfile, const bool isQuiet, const std::string& analyzer)
 {
     std::cout << "Initializing..." << std::endl;
     Analyze a;
@@ -108,50 +91,12 @@ template<typename Analyze> void run(std::set<AnaSamples::FileSummary> vvf,
         tr.registerDerivedVar("DeepESMCfg",DeepESMCfg);
         tr.registerDerivedVar("ModelFile",ModelFile);        
         tr.registerDerivedVar("blind",false);
-        
-        // Define classes/functions that add variables on the fly
-        PartialUnBlinding partUnBlind;
-        PrepNTupleVars prep;
-        RunTopTagger rtt;
-        Muon muon;
-        Electron electron;
-        Photon photon;
-        Jet jet;
-        BJet bjet;
-        RunFisher runFisher("v3");
-        CommonVariables commonVariables;
-        MakeMVAVariables makeMVAVariables;
-        Baseline baseline;
-        DeepEventShape deepEventShape(DeepESMCfg,ModelFile);
-        
-        // Register classes/functions that add variables on the fly
-        tr.registerFunction(partUnBlind);
-        tr.registerFunction(prep);
-        tr.registerFunction(rtt);
-        tr.registerFunction(muon);
-        tr.registerFunction(electron);
-        tr.registerFunction(photon);
-        tr.registerFunction(jet);
-        tr.registerFunction(bjet);
-        tr.registerFunction(runFisher);
-        tr.registerFunction(commonVariables);
-        tr.registerFunction(makeMVAVariables);
-        tr.registerFunction(baseline);
-        tr.registerFunction(deepEventShape);
-        
-        if( runtype == "MC" ) 
-        {
-            //std::string eosPath =   "root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/SUS-19-004_Final/";
-            BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, file.tag);
-            bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets", "Jets_bDiscriminatorCSV", "Jets_partonFlavor");
-            Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
-            std::string scaleFactorHistoFileName = (file.tag.find("2017") != std::string::npos ) ? "allInOne_leptonSF_2017.root" : "allInOne_leptonSF_2016.root";
-            ScaleFactors scaleFactors( scaleFactorHistoFileName );
+        tr.registerDerivedVar("analyzer",analyzer);
 
-            tr.registerFunction(bTagCorrector);
-            tr.registerFunction(pileup);
-            tr.registerFunction(scaleFactors);
-        }
+        // Define classes/functions that add variables on the fly        
+        Config c;
+        c.registerModules(tr);
+
         // Loop over all of the events and fill histos
         a.Loop(tr, weight, maxEvts, isQuiet);
 
@@ -195,34 +140,14 @@ std::set<AnaSamples::FileSummary> setFS(const std::string& dataSets, const bool&
 int main(int argc, char *argv[])
 {
     int opt, option_index = 0;
-    bool doBackground = false, doTopTagger = false, doEventSelection = false, 
-         doEventShape = false, do0Lep = false, do1Lep = false, doStealthTT = false,
-         doBTagSF = false, calcBTagSF = false, calcSFMean = false, doWControlRegion = false, 
-         makeMiniTree = false, makeNJetDists = false,
-         doNjetsMinusOneCSFillDijetHists = false, doNjetsMinusOneCSJetReplacement = false, isQuiet = true;
-
-    bool runOnCondor = false;
-    std::string histFile = "", dataSets = "";
+    bool runOnCondor = false, isQuiet = true;
+    std::string histFile = "", dataSets = "", analyzer = "";
     int nFiles = -1, startFile = 0, maxEvts = -1;
 
     static struct option long_options[] = {
-        {"doBackground",       no_argument, 0, 'b'},
-        {"doWControlRegion",   no_argument, 0, 'w'},
-        {"doTopTagger",        no_argument, 0, 't'},
-        {"doEventSelection",   no_argument, 0, 's'},
-        {"doEventShape",       no_argument, 0, 'p'},
-        {"do0Lep",             no_argument, 0, 'z'},
-        {"do1Lep",             no_argument, 0, 'o'},
-        {"doNjetsMinusOneCSFillDijetHists",  no_argument, 0, 'q'},
-        {"doNjetsMinusOneCSJetReplacement",  no_argument, 0, 'r'},
-        {"doStealthTT",        no_argument, 0, 'x'},
-        {"calcBTagSF",         no_argument, 0, 'f'},
-        {"calcSFMean",         no_argument, 0, 'F'},
-        {"doBTagSF",           no_argument, 0, 'g'},
-        {"makeMiniTree",       no_argument, 0, 'm'},
-        {"makeNJetDists",      no_argument, 0, 'n'},
         {"condor",             no_argument, 0, 'c'},
         {"verbose",            no_argument, 0, 'v'},
+        {"analyzer",     required_argument, 0, 'A'},
         {"histFile",     required_argument, 0, 'H'},
         {"dataSets",     required_argument, 0, 'D'},
         {"numFiles",     required_argument, 0, 'N'},
@@ -230,27 +155,13 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-    while((opt = getopt_long(argc, argv, "bwtspzoqrxfFgmncvH:D:N:M:E:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "cvA:H:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
-            case 'b': doBackground      = true;              break;
-            case 'w': doWControlRegion  = true;              break;
-            case 't': doTopTagger       = true;              break;
-            case 's': doEventSelection  = true;              break;
-            case 'p': doEventShape      = true;              break;
-            case 'z': do0Lep            = true;              break;
-            case 'o': do1Lep            = true;              break;
-            case 'q': doNjetsMinusOneCSFillDijetHists = true;              break;
-            case 'r': doNjetsMinusOneCSJetReplacement = true;              break;
-            case 'x': doStealthTT       = true;              break;
-            case 'f': calcBTagSF        = true;              break;
-            case 'F': calcSFMean        = true;              break;
-            case 'g': doBTagSF          = true;              break;
-            case 'm': makeMiniTree      = true;              break;
-            case 'n': makeNJetDists     = true;              break;
             case 'c': runOnCondor       = true;              break;
             case 'v': isQuiet           = false;             break;
+            case 'A': analyzer          = optarg;            break;
             case 'H': histFile          = optarg;            break;
             case 'D': dataSets          = optarg;            break;
             case 'N': nFiles            = int(atoi(optarg)); break;
@@ -269,29 +180,29 @@ int main(int argc, char *argv[])
     std::set<AnaSamples::FileSummary> vvf = setFS(dataSets, runOnCondor); 
     TFile* outfile = TFile::Open(histFile.c_str(), "RECREATE");
 
-    std::vector<std::pair<bool, std::function<void(std::set<AnaSamples::FileSummary>,int,int,int,TFile*,bool)>>> AnalyzerPairVec = {
-        {doBackground,      run<AnalyzeBackground>},
-        {doWControlRegion,  run<AnalyzeWControlRegion>},
-        {doTopTagger,       run<AnalyzeTopTagger>},
-        {doEventSelection,  run<AnalyzeEventSelection>},
-        {doEventShape,      run<AnalyzeEventShape>},
-        {do0Lep,            run<Analyze0Lep>},
-        {do1Lep,            run<Analyze1Lep>},
-        {doNjetsMinusOneCSFillDijetHists, run<AnalyzeNjetsMinusOneCSFillDijetHists>},
-        {doNjetsMinusOneCSJetReplacement, run<AnalyzeNjetsMinusOneCSJetReplacement>},
-        {doStealthTT,       run<AnalyzeStealthTopTagger>},
-        {doBTagSF,          run<AnalyzeBTagSF>},
-        {calcBTagSF,        run<CalculateBTagSF>},
-        {calcSFMean,        run<CalculateSFMean>},
-        {makeMiniTree,      run<MakeMiniTree>},
-        {makeNJetDists,     run<MakeNJetDists>},
+    std::vector<std::pair<std::string, std::function<void(const std::set<AnaSamples::FileSummary>&,const int,const int,const int,TFile* const,const bool,const std::string&)>>> AnalyzerPairVec = {
+        {"AnalyzeBackground",       run<AnalyzeBackground>},
+        {"AnalyzeWControlRegion",   run<AnalyzeWControlRegion>},
+        {"AnalyzeTopTagger",        run<AnalyzeTopTagger>},
+        {"AnalyzeEventSelection",   run<AnalyzeEventSelection>},
+        {"AnalyzeEventShape",       run<AnalyzeEventShape>},
+        {"Analyze0Lep",             run<Analyze0Lep>},
+        {"Analyze1Lep",             run<Analyze1Lep>},
+        {"AnalyzeStealthTopTagger", run<AnalyzeStealthTopTagger>},
+        {"AnalyzeBTagSF",           run<AnalyzeBTagSF>},
+        {"CalculateBTagSF",         run<CalculateBTagSF>},
+        {"CalculateSFMean",         run<CalculateSFMean>},
+        {"MakeMiniTree",            run<MakeMiniTree>},
+        {"MakeNJetDists",           run<MakeNJetDists>},
+        {"AnalyzeNjetsMinusOneCSFillDijetHists", run<AnalyzeNjetsMinusOneCSFillDijetHists>},
+        {"AnalyzeNjetsMinusOneCSJetReplacement", run<AnalyzeNjetsMinusOneCSJetReplacement>},
     }; 
 
     try
     {
         for(auto& pair : AnalyzerPairVec)
         {
-            if(pair.first) pair.second(vvf,startFile,nFiles,maxEvts,outfile,isQuiet); 
+            if(pair.first==analyzer) pair.second(vvf,startFile,nFiles,maxEvts,outfile,isQuiet,analyzer); 
         }
 
         outfile->Close();

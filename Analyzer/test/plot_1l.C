@@ -77,8 +77,8 @@ int main()
     //std::string pathPhoton = "photonCR_Barrel";
 
     std::string pathGRtrue;
-    if     (year=="2016") pathGRtrue = "condor/Analyze1Lep_Kerasv1.2.5";
-    else if(year=="2017") pathGRtrue = "condor/Analyze1Lep_Kerasv3.0.1";
+    if     (year=="2016") pathGRtrue = "condor/Analyze1Lep_Kerasv1.2.6";
+    else if(year=="2017") pathGRtrue = "condor/Analyze1Lep_Kerasv3.0.2";
 
     std::vector<histInfo> data_GRfalse, bg_GRfalse, sig_GRfalse;
     std::vector<histInfo> data_GRtrue, bg_GRtrue, sig_GRtrue;
@@ -209,6 +209,25 @@ int main()
         plt.plotStack( "blind_jEta"+mycut,    "Jet Eta",             "Events", true,  2, false);
         //plt.plotStack( "blind_allMbl"+mycut,  "M(l,b) [GeV]",        "Events", true, 10, false);
         ////plt.plotStack( "blind_fisher"+mycut, "fisher value" , "Events", true, 10);        
+    }
+    plt.plotStack( "fwm2_top6_1l_ge7j_ge1b",  "FWM2", "Events", true, -1, false, 0, 2);
+    plt.plotStack( "fwm3_top6_1l_ge7j_ge1b",  "FWM3", "Events", true, -1, false, 0, 2);
+    plt.plotStack( "fwm4_top6_1l_ge7j_ge1b",  "FWM4", "Events", true, -1, false, 0, 2);
+    plt.plotStack( "fwm5_top6_1l_ge7j_ge1b",  "FWM5", "Events", true, -1, false, 0, 2);
+    plt.plotStack( "fwm6_top6_1l_ge7j_ge1b",  "FWM6", "Events", true, -1, false, 0, 2);
+    plt.plotStack( "fwm7_top6_1l_ge7j_ge1b",  "FWM7", "Events", true, -1, false, 0, 2);
+    plt.plotStack( "fwm8_top6_1l_ge7j_ge1b",  "FWM8", "Events", true, -1, false, 0, 2);
+    plt.plotStack( "fwm9_top6_1l_ge7j_ge1b",  "FWM9", "Events", true, -1, false, 0, 2);
+    plt.plotStack( "fwm10_top6_1l_ge7j_ge1b", "FWM10","Events", true, -1, false, 0, 2);
+    plt.plotStack( "jmt_ev0_top6_1l_ge7j_ge1b", "JMT0", "Events", true, -1, false, 0, 2);
+    plt.plotStack( "jmt_ev1_top6_1l_ge7j_ge1b", "JMT1", "Events", true, -1, false, 0, 2);
+    plt.plotStack( "jmt_ev2_top6_1l_ge7j_ge1b", "JMT2", "Events", true, -1, false, 0, 2);
+    for(unsigned int i = 0; i < 7; i++)
+    {
+        plt.plotStack("Jet_cm_pt_"+std::to_string(i+1)+"_1l_ge7j_ge1b",  "Jet_"+std::to_string(i+1)+" P_{T}", "Events", true, -1, false, 0, 1500);
+        plt.plotStack("Jet_cm_eta_"+std::to_string(i+1)+"_1l_ge7j_ge1b", "Jet_"+std::to_string(i+1)+" Eta",   "Events", true, -1, false, -6, 6);
+        plt.plotStack("Jet_cm_phi_"+std::to_string(i+1)+"_1l_ge7j_ge1b", "Jet_"+std::to_string(i+1)+" Phi",   "Events", true, -1, false, -4, 4);
+        plt.plotStack("Jet_cm_m_"+std::to_string(i+1)  +"_1l_ge7j_ge1b", "Jet_"+std::to_string(i+1)+" Mass",  "Events", true, -1, false,  0, 200);
     }
     //plt.plotStack( "h_leptonweight_1l_ge7j_ge1b",    "Lepton W",         "Events", true, -1, false, 0, 2);
     //plt.plotStack( "h_weight_1l_ge7j_ge1b",          "Total Weight",     "Events", true, -1, false, 0, 2);
