@@ -38,6 +38,10 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap, const st
     my_histos.emplace("jmt_ev0_top6_1l_ge7j_ge1b", std::make_shared<TH1D>("jmt_ev0_top6_1l_ge7j_ge1b","jmt_ev0_top6_1l_ge7j_ge1b", 50, 0, 1 ) );
     my_histos.emplace("jmt_ev1_top6_1l_ge7j_ge1b", std::make_shared<TH1D>("jmt_ev1_top6_1l_ge7j_ge1b","jmt_ev1_top6_1l_ge7j_ge1b", 50, 0, 1 ) );
     my_histos.emplace("jmt_ev2_top6_1l_ge7j_ge1b", std::make_shared<TH1D>("jmt_ev2_top6_1l_ge7j_ge1b","jmt_ev2_top6_1l_ge7j_ge1b", 50, 0, 1 ) );
+    my_histos.emplace("GoodLeptons_pt_1", std::make_shared<TH1D>("GoodLeptons_pt_1","GoodLeptons_pt_1", 150, 0, 1500 ) );
+    my_histos.emplace("GoodLeptons_eta_1", std::make_shared<TH1D>("GoodLeptons_eta_1","GoodLeptons_eta_1", 100, -6, 6 ) );
+    my_histos.emplace("GoodLeptons_phi_1", std::make_shared<TH1D>("GoodLeptons_phi_1","GoodLeptons_phi_1", 80, -4, 4 ) );
+    my_histos.emplace("GoodLeptons_m_1", std::make_shared<TH1D>("GoodLeptons_m_1","GoodLeptons_m_1", 20, 0, 200 ) );
 
     for(unsigned int i = 1; i <= 7 ; i++) //Bad hard code
     {
@@ -564,6 +568,10 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             my_histos["jmt_ev0_top6_1l_ge7j_ge1b"]->Fill(jmt_ev0_top6, weight);
             my_histos["jmt_ev1_top6_1l_ge7j_ge1b"]->Fill(jmt_ev1_top6, weight);
             my_histos["jmt_ev2_top6_1l_ge7j_ge1b"]->Fill(jmt_ev2_top6, weight);
+            my_histos["GoodLeptons_pt_1"]->Fill(GoodLeptons.at(0).second.Pt(), weight);
+            my_histos["GoodLeptons_eta_1"]->Fill(GoodLeptons.at(0).second.Eta(), weight);
+            my_histos["GoodLeptons_phi_1"]->Fill(GoodLeptons.at(0).second.Phi(), weight);
+            my_histos["GoodLeptons_m_1"]->Fill(GoodLeptons.at(0).second.M(), weight);
 
             for(unsigned int i = 0; i < Jets_cm_top6.size(); i++)
             {

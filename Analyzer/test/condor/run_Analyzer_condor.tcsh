@@ -11,7 +11,7 @@ set dataset = $1
 set nfiles = $2
 set startfile = $3
 set filelist = $4
-set options = $5
+set analyzer = $5
 
 set base_dir = `pwd`
 printf "\n\n base dir is $base_dir\n\n"
@@ -72,7 +72,7 @@ xrdcp root://cmseos.fnal.gov/${file} .
 
 printf "\n\n Attempting to run MyAnalysis executable.\n\n"
 #./MyAnalysis root://cmseos.fnal.gov/${input_fpat} ${output_file} ${weight}
-./MyAnalysis -${options} --condor -D ${dataset} -N ${nfiles} -M ${startfile}
+./MyAnalysis -A ${analyzer} --condor -D ${dataset} -N ${nfiles} -M ${startfile}
 
 
 printf "\n\n ls output\n"
