@@ -59,6 +59,7 @@ def main():
                        environ["CMSSW_BASE"] + "/src/%s/test/allInOne_leptonSF_2016.root" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/allInOne_leptonSF_2017.root" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/PileupHistograms_0121_69p2mb_pm4p6.root" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/pu_ratio.root" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/CSVv2_Moriond17_B_H.csv" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/allInOne_SFMean.root" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/L1prefiring_jetpt_2017BtoF.root" % repo,
