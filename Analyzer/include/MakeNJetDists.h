@@ -108,6 +108,7 @@ public:
 
             my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_puUp",   8,  0.0, 8.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight", "puSysUpCorr", "prefiringScaleFactor"}));
             my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_puDown", 8,  0.0, 8.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight", "puSysDownCorr", "prefiringScaleFactor"}));
+
             my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_sclUp",   8,  0.0, 8.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight", "puWeightCorr", "prefiringScaleFactor", "scaleWeightUp"}));
             my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_sclDown", 8,  0.0, 8.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight", "puWeightCorr", "prefiringScaleFactor", "scaleWeightDown"}));
        
@@ -251,7 +252,8 @@ public:
             bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets"+myVarSuffix, "Jets"+myVarSuffix+"_bDiscriminatorCSV", "Jets"+myVarSuffix+"_partonFlavor", myVarSuffix);
             //Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
             std::string scaleFactorHistoFileName = (runYear == "2017") ? "allInOne_leptonSF_2017.root" : "allInOne_leptonSF_2016.root";
-            ScaleFactors scaleFactors( scaleFactorHistoFileName, "allInOne_SFMean.root", myVarSuffix );
+            std::string puRootFileName = ( runYear == "2017" ) ? "pu_ratio.root" : "PileupHistograms_0121_69p2mb_pm4p6.root";
+            ScaleFactors scaleFactors( scaleFactorHistoFileName, puRootFileName, "allInOne_SFMean.root", myVarSuffix );
         
             //tr.registerFunction(rtt);
             tr.registerFunction(muon);
