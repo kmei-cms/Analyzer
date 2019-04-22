@@ -3,19 +3,26 @@ import plot
 import math
 
 #version = "Keras_V1.2.5_v4"
-version = "Keras_V1.2.6_v1_DataQCDShapev2"
+#version = "Keras_V1.2.6_v1_DataQCDShapev2"
 #version = "Keras_V3.0.1_v5"
+version = "Keras_V1.2.7"
 
-fitversion = "GL_2016"
+#fitversion = "GL_2016"
 #fitversion = "GL_2017"
 #fitversion = "FS2017"
+#fitversion  = "GL_2016"
+fitversion = "Approval_2016"
 #GL_2016_nom_shared
 
 year = 2016
 
 #inputfilename = "~cmadrid/nobackup/ana/SUSY/Stealth/AnaNTuples/CMSSW_9_3_3/src/Analyzer/Analyzer/test/FitInput/Keras_V1.2.4/njets_for_Aron.root"
 #inputfilename = "~cmadrid/nobackup/ana/SUSY/Stealth/AnaNTuples/CMSSW_9_3_3/src/Analyzer/Analyzer/test/FitInput/%s/njets_for_Aron.root"%version
-inputfilename = "/uscms_data/d3/nstrobbe/StealthRPV/FitRepo/CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit/%s/njets_for_Aron.root"%version
+#inputfilename = "/uscms_data/d3/nstrobbe/StealthRPV/FitRepo/CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit/%s/njets_for_Aron.root"%version
+#inputfilename = "/uscms_data/d3/kmei91/2019/SUS-19-004/CMSSW_9_3_3/src/Analyzer/Analyzer/test/%s/njets_for_Aron.root"%version
+#inputfilename = "/uscms/homes/k/kmei91/public/forNadja/NoNewPU/njets_for_Aron.root"
+inputfilename = "/uscms_data/d3/kmei91/2019/Test/CMSSW_9_3_3/src/Analyzer/Analyzer/test/MakeNJetsForAron_2016_PU/njets_for_Aron.root"
+
 inputfile = ROOT.TFile.Open(inputfilename)
 
 ROOT.gStyle.SetOptStat(0)
@@ -38,10 +45,12 @@ systs = ["",
          "_sclDown",
          "_htUp",
          "_htDown",
-         #"_isrUp",
-         #"_isrDown",
-         #"_fsrUp",
-         #"_fsrDown",
+         "_puUp",
+         "_puDown",
+         "_isrUp",
+         "_isrDown",
+         "_fsrUp",
+         "_fsrDown",
          ]
 colors = [ROOT.kBlack,
           ROOT.kCyan+1,
@@ -76,23 +85,23 @@ for mva in mvas:
     #print "contents: " , Dhistos[-2].GetBinContent(1), " ", Dhistos[-2].GetBinContent(2), " ", Dhistos[-2].GetBinContent(3), " ", Dhistos[-2].GetBinContent(4), " "
     histos[mva] = Dhistos
 
-extra_histos = {}
-extra_systs = ["_isrUp",
-               "_isrDown",
-               "_fsrUp",
-               "_fsrDown",
-               ]
-extra_base = "_h_njets_pt30_1l"
-if "2016" in fitversion:
-    # deal with the isr and fsr uncertainties
-    for mva in mvas:
-        extra_histnames = [mva+"_TT"+syst+extra_base for syst in extra_systs]
-        print extra_histnames
-        extra_Dhistos = [inputfile.Get(histname) for histname in extra_histnames]
-        extra_histos[mva] = extra_Dhistos
-        histos[mva].extend(extra_Dhistos)
-    # now append to other lists
-    systs = systs+extra_systs
+#extra_histos = {}
+#extra_systs = ["_isrUp",
+#               "_isrDown",
+#               "_fsrUp",
+#               "_fsrDown",
+#               ]
+#extra_base = "_h_njets_pt30_1l"
+#if "2016" in fitversion:
+#    # deal with the isr and fsr uncertainties
+#    for mva in mvas:
+#        extra_histnames = [mva+"_TT"+syst+extra_base for syst in extra_systs]
+#        print extra_histnames
+#        extra_Dhistos = [inputfile.Get(histname) for histname in extra_histnames]
+#        extra_histos[mva] = extra_Dhistos
+#        histos[mva].extend(extra_Dhistos)
+#    # now append to other lists
+#    systs = systs+extra_systs
  
 #print systs
 #print histos   
@@ -120,7 +129,7 @@ for sumh in sumhistos:
     sumhistos_norm.append(newh)
 
 
-outputfile = ROOT.TFile.Open("ttbar_systematics_%s.root"%fitversion, "RECREATE")
+outputfile = ROOT.TFile.Open("output/ttbar_systematics_%s.root"%fitversion, "RECREATE")
 outputfile.cd()
 
 for mva in mvas: 
@@ -226,18 +235,36 @@ for mva in mvas:
 
 # Add the QCD CR systematic
 if "2016" in fitversion:
-    f_CR_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/qcdCR_shape_systematic_2016.root")
+    f_CR_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/FinalSystematicFiles/qcdCR_shape_systematic_2016.root")
     h_CR_2016 = [f_CR_2016.Get("%s_qcdCR"%mva) for mva in mvas]
     outputfile.cd()
     for h in h_CR_2016:
         h.Write()
-        
-if "2017" in fitversion:
-    f_CR_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/qcdCR_shape_systematic_2017.root")
-    h_CR_2017 = [f_CR_2017.Get("%s_qcdCR"%mva) for mva in mvas]
+    
+    f_HT_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/FinalSystematicFiles/2016_htRatioSyst.root")
+    h_httail_2016 = [f_HT_2016.Get("%s_httail"%mva) for mva in mvas]
+    h_htnjet_2016 = [f_HT_2016.Get("%s_htnjet"%mva) for mva in mvas]
     outputfile.cd()
-    for h in h_CR_2017:
+    for h in h_httail_2016:
         h.Write()
+    for h in h_htnjet_2016:
+        h.Write()
+        
+ #if "2017" in fitversion:
+#    f_CR_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/FinalSystematicFiles/qcdCR_shape_systematic_2017.root")
+#    h_CR_2017 = [f_CR_2017.Get("%s_qcdCR"%mva) for mva in mvas]
+#    outputfile.cd()
+#    for h in h_CR_2017:
+#        h.Write()
+#    
+#    f_HT_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/FinalSystematicFiles/2017_htRatioSyst.root")
+#    h_httail_2017 = [f_HT_2017.Get("%s_httail"%mva) for mva in mvas]
+#    h_htnjet_2017 = [f_HT_2017.Get("%s_htnjet"%mva) for mva in mvas]
+#    outputfile.cd()
+#    for h in h_httail_2017:
+#        h.Write()
+#    for h in h_htnjet_2017:
+#        h.Write()
 
 
 # Add the systematic from Owen
@@ -249,6 +276,7 @@ if "2017" in fitversion:
 #         h.Write()
 
 # Look at results from Aron's fits -- update with my own background-only fits
+#fitdir = "/uscms_data/d3/nstrobbe/StealthRPV/FitRepo/CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit/"
 fitdir = "/uscms_data/d3/nstrobbe/StealthRPV/FitRepo/CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit/"
 
 #*(1) Fit with a0, a1, a2 shared across MVA bins, fitting to pseudo-data composed of nominal samples*
@@ -259,6 +287,8 @@ histos_nom_shared = {}
 for mva in mvas:
     h = f_nom_shared.Get("shapes_fit_b/%s/TT" % mva)
     histos_nom_shared[mva] = h
+    for i in range( 8 ):
+        print h.GetBinContent(i)
 
 #*(2) Fit with separate a0, a1, a2 for each MVA bin, fitting to pseudo-data composed of nominal samples*
 #Results are here:
