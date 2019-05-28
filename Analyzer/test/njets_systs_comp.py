@@ -2,12 +2,10 @@ import ROOT
 import plot
 import math
 
-#version = "Keras_V1.2.5_v4"
-#version = "Keras_V1.2.6_Approval_upto12"
-version = "Keras_V3.0.2_Approval_upto12"
-#version = "Keras_V3.0.1_v5"
+#version = "Keras_V1.2.6_Approval_RatioOfRatios"
+version = "Keras_V3.0.2_Approval_RatioOfRatios"
 
-fitversion = "Approval_12jets_2017"
+fitversion = "Approval_2017"
 #fitversion = "GL_2017"
 #fitversion = "FS2017"
 #GL_2016_nom_shared
@@ -242,8 +240,8 @@ if "2016" in fitversion:
     h_CR_2016 = [f_CR_2016.Get("%s_qcdCR"%mva) for mva in mvas]
     outputfile.cd()
     for h in h_CR_2016:
-        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
-        for bin in range(h.GetNbinsX()-2):
+        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 8, 0, 8)
+        for bin in range(h.GetNbinsX()):
             newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
         newh.Write()
 
@@ -252,15 +250,15 @@ if "2016" in fitversion:
     h_HTnjet_2016 = [f_HT_2016.Get("%s_htnjet"%mva) for mva in mvas]
     outputfile.cd()
     for i, h in enumerate(h_HTtail_2016):
-        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
-        for bin in range(h.GetNbinsX()-2):
+        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 8, 0, 8)
+        for bin in range(h.GetNbinsX()-8):
             newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
         #if i == 2:
         #    newh.SetBinContent(8, 2*(newh.GetBinContent(7)-1)+1)
         newh.Write()
     for h in h_HTnjet_2016:
-        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
-        for bin in range(h.GetNbinsX()-2):
+        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 8, 0, 8)
+        for bin in range(h.GetNbinsX()):
             newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
         newh.Write()
 
@@ -275,8 +273,8 @@ if "2017" in fitversion:
     outputfile.cd()
     for i,h in enumerate(h_CR_2017):
         #print h
-        newh = ROOT.TH1D("D%s_qcdCR"%(i+1), "D%s_qcdCR"%(i+1), 6, 0, 6)
-        for bin in range(h.GetNbinsX()-2):
+        newh = ROOT.TH1D("D%s_qcdCR"%(i+1), "D%s_qcdCR"%(i+1), 8, 0, 8)
+        for bin in range(h.GetNbinsX()):
             newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
             # if i == 2 and bin >= 5:
             #     newh.SetBinContent(bin+1, 1.)
@@ -291,13 +289,13 @@ if "2017" in fitversion:
     h_HTnjet_2017 = [f_HT_2017.Get("%s_htnjet"%mva) for mva in mvas]
     outputfile.cd()
     for h in h_HTtail_2017:
-        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
-        for bin in range(h.GetNbinsX()-2):
+        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 8, 0, 8)
+        for bin in range(h.GetNbinsX()):
             newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
         newh.Write()
     for h in h_HTnjet_2017:
-        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
-        for bin in range(h.GetNbinsX()-2):
+        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 8, 0, 8)
+        for bin in range(h.GetNbinsX()):
             newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
         newh.Write()
 
