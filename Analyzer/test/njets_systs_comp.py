@@ -2,16 +2,15 @@ import ROOT
 import plot
 import math
 
-#version = "Keras_V1.2.5_v4"
-version = "Keras_V1.2.6"
-#version = "Keras_V3.0.1_v5"
+#version = "Keras_V1.2.6_Approval_RatioOfRatios"
+version = "Keras_V3.0.2_Approval_RatioOfRatios"
 
-fitversion = "GL_2016"
+fitversion = "Approval_2017"
 #fitversion = "GL_2017"
 #fitversion = "FS2017"
 #GL_2016_nom_shared
 
-year = 2016
+year = 2017
 
 #inputfilename = "~cmadrid/nobackup/ana/SUSY/Stealth/AnaNTuples/CMSSW_9_3_3/src/Analyzer/Analyzer/test/FitInput/Keras_V1.2.4/njets_for_Aron.root"
 #inputfilename = "~cmadrid/nobackup/ana/SUSY/Stealth/AnaNTuples/CMSSW_9_3_3/src/Analyzer/Analyzer/test/FitInput/%s/njets_for_Aron.root"%version
@@ -38,11 +37,16 @@ systs = ["",
          "_sclDown",
          "_htUp",
          "_htDown",
-         #"_isrUp",
-         #"_isrDown",
-         #"_fsrUp",
-         #"_fsrDown",
-         ]
+         "_puUp",
+         "_puDown"
+]
+if year == 2017:
+    systs.extend([
+         "_isrUp",
+         "_isrDown",
+         "_fsrUp",
+         "_fsrDown",
+         ])
 colors = [ROOT.kBlack,
           ROOT.kCyan+1,
           ROOT.kCyan+2,
@@ -185,9 +189,14 @@ for mva in mvas:
                 else:
                     myh.SetBinContent(bin+1, myh.GetBinContent(bin))
             # 2016 PDF unc in bin D3 is subject to very large stat fluctuation, set by hand to value from bin before
-            if "2016" in fitversion:
-                if "pdf" in systs[start]:
-                    myh.SetBinContent(8, myh.GetBinContent(7))
+            #if "2016" in fitversion and mva is "D3":
+            #    if "pdf" in systs[start]:
+            #        myh.SetBinContent(8, myh.GetBinContent(7))
+            # 2016 pileup unc in bin D4 is subject to very large stat fluctuation, set by hand to value from bin before
+            if "2016" in fitversion and mva in ["D4"]:
+                if "pu" in systs[start]:
+                    myh.SetBinContent(7, myh.GetBinContent(6))
+                    myh.SetBinContent(8, myh.GetBinContent(6))
             myh.Write()
 
 
@@ -224,20 +233,71 @@ for mva in mvas:
 #for h in h_isr_2017:
 #    h.Write()
 
-# Add the QCD CR systematic
+# Add the QCD CR systematic and the new HT systematics
 if "2016" in fitversion:
-    f_CR_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/qcdCR_shape_systematic_2016.root")
+    #f_CR_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/FinalSystematicFiles/qcdCR_shape_systematic_2016.root")
+    f_CR_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/RatioOfRatiosSystematic/2016_eventWeightSystematic.root")
     h_CR_2016 = [f_CR_2016.Get("%s_qcdCR"%mva) for mva in mvas]
     outputfile.cd()
     for h in h_CR_2016:
-        h.Write()
+        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 8, 0, 8)
+        for bin in range(h.GetNbinsX()):
+            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+        newh.Write()
+
+    f_HT_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/FinalSystematicFiles/2016_htRatioSyst.root")
+    h_HTtail_2016 = [f_HT_2016.Get("%s_httail"%mva) for mva in mvas]
+    h_HTnjet_2016 = [f_HT_2016.Get("%s_htnjet"%mva) for mva in mvas]
+    outputfile.cd()
+    for i, h in enumerate(h_HTtail_2016):
+        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 8, 0, 8)
+        for bin in range(h.GetNbinsX()-8):
+            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+        #if i == 2:
+        #    newh.SetBinContent(8, 2*(newh.GetBinContent(7)-1)+1)
+        newh.Write()
+    for h in h_HTnjet_2016:
+        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 8, 0, 8)
+        for bin in range(h.GetNbinsX()):
+            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+        newh.Write()
+
         
 if "2017" in fitversion:
-    f_CR_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/qcdCR_shape_systematic_2017.root")
+    f_CR_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/RatioOfRatiosSystematic/2017_eventWeightSystematic.root")
+    #f_CR_2017 = ROOT.TFile.Open("/uscms_data/d1/owenl/stealth-rpv/mva-shape-syst/dratio-rw5-fab5.root")
+    #print ["h_njets_dratio_mva%s_ab_rw5_fab"%mva for mva in ["1","2","3","4"]]
+    #h_CR_2017 = [f_CR_2017.Get("h_njets_dratio_mva%s_ab_rw5_fab5"%mva) for mva in ["1","2","3","4"]]
+    #f_CR_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/FinalSystematicFiles/qcdCR_shape_systematic_2017.root")
     h_CR_2017 = [f_CR_2017.Get("%s_qcdCR"%mva) for mva in mvas]
     outputfile.cd()
-    for h in h_CR_2017:
-        h.Write()
+    for i,h in enumerate(h_CR_2017):
+        #print h
+        newh = ROOT.TH1D("D%s_qcdCR"%(i+1), "D%s_qcdCR"%(i+1), 8, 0, 8)
+        for bin in range(h.GetNbinsX()):
+            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+            # if i == 2 and bin >= 5:
+            #     newh.SetBinContent(bin+1, 1.)
+            # elif i == 3 and bin >=4:
+            #     newh.SetBinContent(bin+1, 1.)
+            # else:
+            #     newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+        newh.Write()
+
+    f_HT_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/FinalSystematicFiles/2017_htRatioSyst.root")
+    h_HTtail_2017 = [f_HT_2017.Get("%s_httail"%mva) for mva in mvas]
+    h_HTnjet_2017 = [f_HT_2017.Get("%s_htnjet"%mva) for mva in mvas]
+    outputfile.cd()
+    for h in h_HTtail_2017:
+        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 8, 0, 8)
+        for bin in range(h.GetNbinsX()):
+            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+        newh.Write()
+    for h in h_HTnjet_2017:
+        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 8, 0, 8)
+        for bin in range(h.GetNbinsX()):
+            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+        newh.Write()
 
 #Add the HT systematics
 
@@ -601,25 +661,48 @@ for mva in mvas:
 
     outputfile.cd()
     # Rather than put JECUp and JERUp, construct maximum of the Up and Down variations, but preserve the "sign"
-    mva_JEC = divratio_JECUp.Clone(mva+"_JEC")
-    for i in range(divratio_JECUp.GetNbinsX()):
-        #print i
-        up_value = divratio_JECUp.GetBinContent(i+1)
-        #print "up: " , up_value
-        if up_value<1:
-            up_value = 1/up_value
-        down_value = divratio_JECDown.GetBinContent(i+1)
-        #print "down: " , down_value
-        if down_value<1:
-            down_value = 1/down_value
-        if down_value > up_value:
-            #print "changing value"
-            if divratio_JECUp.GetBinContent(i+1) > 1:
-                mva_JEC.SetBinContent(i+1,down_value)
-                #print "to ", down_value
-            else:
-                mva_JEC.SetBinContent(i+1,1/down_value)
-                #print "to " , 1/down_value
+    mva_JEC = None
+    if "2016" in fitversion:
+        # Use JEC Down
+        mva_JEC = divratio_JECDown.Clone(mva+"_JEC")
+        for i in range(divratio_JECDown.GetNbinsX()):
+            #print i
+            up_value = divratio_JECUp.GetBinContent(i+1)
+            #print "up: " , up_value
+            if up_value>1:
+                up_value = 1/up_value
+            down_value = divratio_JECDown.GetBinContent(i+1)
+            #print "down: " , down_value
+            if down_value>1:
+                down_value = 1/down_value
+            if up_value < down_value:
+                #print "changing value"
+                if divratio_JECUp.GetBinContent(i+1) < 1:
+                    mva_JEC.SetBinContent(i+1,up_value)
+                    #print "to ", up_value
+                else:
+                    mva_JEC.SetBinContent(i+1,1/up_value)
+                    #print "to " , 1/up_value
+    else:
+        mva_JEC = divratio_JECUp.Clone(mva+"_JEC")
+        for i in range(divratio_JECUp.GetNbinsX()):
+            #print i
+            up_value = divratio_JECUp.GetBinContent(i+1)
+            #print "up: " , up_value
+            if up_value<1:
+                up_value = 1/up_value
+            down_value = divratio_JECDown.GetBinContent(i+1)
+            #print "down: " , down_value
+            if down_value<1:
+                down_value = 1/down_value
+            if down_value > up_value:
+                #print "changing value"
+                if divratio_JECUp.GetBinContent(i+1) > 1:
+                    mva_JEC.SetBinContent(i+1,down_value)
+                    #print "to ", down_value
+                else:
+                    mva_JEC.SetBinContent(i+1,1/down_value)
+                    #print "to " , 1/down_value
 
     mva_JER = divratio_JERUp.Clone(mva+"_JER")  # should be updated to use both if fit succeeds
     for i in range(divratio_JERUp.GetNbinsX()):
@@ -692,10 +775,12 @@ for mva in mvas:
             new_value = 1 + diff_value if (old_value > 1) else 1 - diff_value
             mva_FSR.SetBinContent(bin+1, new_value)
 
-    #divratio.Write(mva+"_JEC")
-    #divratio_JERUp.Write(mva+"_JER")
-    mva_JEC.Write(mva+"_JEC")
-    mva_JER.Write(mva+"_JER")
+    divratio_JECUp.Write(mva+"_JECUp")
+    divratio_JECDown.Write(mva+"_JECDown")
+    divratio_JERUp.Write(mva+"_JERUp")
+    divratio_JERDown.Write(mva+"_JERDown")
+    #mva_JEC.Write(mva+"_JEC")
+    #mva_JER.Write(mva+"_JER")
     if "201" in fitversion:
         mva_FSR.Write(mva+"_FSR")
     if "201" in fitversion:
