@@ -3,7 +3,7 @@ import plot
 import math
 
 #version = "Keras_V1.2.5_v4"
-version = "Keras_V1.2.6_v1_DataQCDShapev2"
+version = "Keras_V1.2.6"
 #version = "Keras_V3.0.1_v5"
 
 fitversion = "GL_2016"
@@ -15,7 +15,7 @@ year = 2016
 
 #inputfilename = "~cmadrid/nobackup/ana/SUSY/Stealth/AnaNTuples/CMSSW_9_3_3/src/Analyzer/Analyzer/test/FitInput/Keras_V1.2.4/njets_for_Aron.root"
 #inputfilename = "~cmadrid/nobackup/ana/SUSY/Stealth/AnaNTuples/CMSSW_9_3_3/src/Analyzer/Analyzer/test/FitInput/%s/njets_for_Aron.root"%version
-inputfilename = "/uscms_data/d3/nstrobbe/StealthRPV/FitRepo/CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit/%s/njets_for_Aron.root"%version
+inputfilename = "/uscms_data/d3/kmei91/MakeNJetDists/CMSSW_9_3_3/src/Analyzer/Analyzer/test/NJetsForAron_%s/njets_for_Aron.root"%version
 inputfile = ROOT.TFile.Open(inputfilename)
 
 ROOT.gStyle.SetOptStat(0)
@@ -238,6 +238,8 @@ if "2017" in fitversion:
     outputfile.cd()
     for h in h_CR_2017:
         h.Write()
+
+#Add the HT systematics
 
 
 # Add the systematic from Owen
