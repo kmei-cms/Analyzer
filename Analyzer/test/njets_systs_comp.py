@@ -14,7 +14,7 @@ year = 2017
 
 #inputfilename = "~cmadrid/nobackup/ana/SUSY/Stealth/AnaNTuples/CMSSW_9_3_3/src/Analyzer/Analyzer/test/FitInput/Keras_V1.2.4/njets_for_Aron.root"
 #inputfilename = "~cmadrid/nobackup/ana/SUSY/Stealth/AnaNTuples/CMSSW_9_3_3/src/Analyzer/Analyzer/test/FitInput/%s/njets_for_Aron.root"%version
-inputfilename = "/uscms_data/d3/kmei91/MakeNJetDists/CMSSW_9_3_3/src/Analyzer/Analyzer/test/NJetsForAron_%s/njets_for_Aron.root"%version
+inputfilename = "/uscms_data/d3/nstrobbe/StealthRPV/FitRepo/CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit/%s/njets_for_Aron.root"%version
 inputfile = ROOT.TFile.Open(inputfilename)
 
 ROOT.gStyle.SetOptStat(0)
