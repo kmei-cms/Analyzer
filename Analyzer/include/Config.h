@@ -61,7 +61,8 @@ public:
             bTagCorrector->SetVarNames("GenParticles_PdgId", "Jets", "Jets_bDiscriminatorCSV", "Jets_partonFlavor");
             pileup = new Pileup_SysTemplate<double>("PileupHistograms_0121_69p2mb_pm4p6.root");
             std::string scaleFactorHistoFileName = (runYear == "2017") ? "allInOne_leptonSF_2017.root" : "allInOne_leptonSF_2016.root";
-            scaleFactors = new ScaleFactors( scaleFactorHistoFileName );
+            const std::string puFileName = (runYear == "2016") ? "PileupHistograms_0121_69p2mb_pm4p6.root" : "pu_ratio.root";
+            scaleFactors = new ScaleFactors( scaleFactorHistoFileName, puFileName );
         }
 
         //Register Modules that are needed for each Analyzer
