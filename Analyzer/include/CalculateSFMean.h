@@ -13,11 +13,18 @@ public:
         TH1::SetDefaultSumw2();
         TH2::SetDefaultSumw2();
 
+        my_Histos.emplace_back(new Histo1D("EventCounter", 2,  -1.1, 1.1, "eventCounter", {}, {}));
         my_Histos.emplace_back(new Histo1D(filetag+"_ht",       100, 0, 5, "htDerivedweightUncor", {"passMadHT"}, {"Lumi", "Weight"}));
         my_Histos.emplace_back(new Histo1D(filetag+"_sclUp",    100, 0, 5, "scaleWeightUpUncor",   {"passMadHT"}, {"Lumi", "Weight"}));
         my_Histos.emplace_back(new Histo1D(filetag+"_sclDown",  100, 0, 5, "scaleWeightDownUncor", {"passMadHT"}, {"Lumi", "Weight"}));
         my_Histos.emplace_back(new Histo1D(filetag+"_pdf_Up",   100, 0, 5, "PDFweightUpUncor",     {"passMadHT"}, {"Lumi", "Weight"}));
         my_Histos.emplace_back(new Histo1D(filetag+"_pdf_Down", 100, 0, 5, "PDFweightDownUncor",   {"passMadHT"}, {"Lumi", "Weight"}));    
+        my_Histos.emplace_back(new Histo1D(filetag+"_pu",       100, 0, 5, "puWeight", {"passMadHT"}, {"Lumi", "Weight"}));
+        my_Histos.emplace_back(new Histo1D(filetag+"_pu_Up",    100, 0, 5, "puSysUp", {"passMadHT"}, {"Lumi", "Weight"}));
+        my_Histos.emplace_back(new Histo1D(filetag+"_pu_Down",  100, 0, 5, "puSysDown", {"passMadHT"}, {"Lumi", "Weight"}));
+        my_Histos.emplace_back(new Histo1D(filetag+"_puCorr",   100, 0, 5, "puWeightCorr", {"passMadHT"}, {"Lumi", "Weight"}));
+        my_Histos.emplace_back(new Histo1D(filetag+"_pu_UpCorr", 100, 0, 5, "puSysUpCorr", {"passMadHT"}, {"Lumi", "Weight"}));
+        my_Histos.emplace_back(new Histo1D(filetag+"_pu_DownCorr", 100, 0, 5, "puSysDownCorr", {"passMadHT"}, {"Lumi", "Weight"}));
     }
 
     void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false)
