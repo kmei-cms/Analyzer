@@ -24,7 +24,7 @@ def main():
     # Parse command line arguments
     parser = optparse.OptionParser("usage: %prog [options]\n")
     
-    parser.add_option ('-n',  dest='numfile', type='int', default = 5, help="number of files per job")
+    parser.add_option ('-n',  dest='numfile', type='int', default = 10, help="number of files per job")
     parser.add_option ('-d',  dest='datasets', type='string', default = '', help="List of datasets, comma separated")
     parser.add_option ('-l',  dest='dataCollections', action='store_true', default = False, help="List all datacollections")
     parser.add_option ('-L',  dest='dataCollectionslong', action='store_true', default = False, help="List all datacollections and sub collections")
