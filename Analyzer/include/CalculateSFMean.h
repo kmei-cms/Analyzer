@@ -13,6 +13,7 @@ public:
         TH1::SetDefaultSumw2();
         TH2::SetDefaultSumw2();
 
+        my_Histos.emplace_back(new Histo1D("EventCounter", 2,  -1.1, 1.1, "eventCounter", {}, {}));
         my_Histos.emplace_back(new Histo1D(filetag+"_ht",               100, 0, 5, "htDerivedweightUncor",          {"passMadHT"}, {"Lumi", "Weight"}));
         my_Histos.emplace_back(new Histo1D(filetag+"_ht_flat2000",      100, 0, 5, "htDerivedweightFlat200Uncor",   {"passMadHT"}, {"Lumi", "Weight"}));
         my_Histos.emplace_back(new Histo1D(filetag+"_ht_njet7",         100, 0, 5, "htDerivedweightNJet7Uncor",     {"passMadHT"}, {"Lumi", "Weight"}));
