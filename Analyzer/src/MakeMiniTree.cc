@@ -126,8 +126,6 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
         //-----------------------------------
         //-- Fill Histograms Below
         //-----------------------------------
-        bool saveInTree      = JetID && HT_trigger_pt30 > 300 && passTrigger;
-        
         if( passBaseline1l ) {
             myMiniTuple->fill();
         }
