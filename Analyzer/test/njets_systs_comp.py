@@ -299,8 +299,6 @@ if "2017" in fitversion:
             newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
         newh.Write()
 
-#Add the HT systematics
-
 
 # Add the systematic from Owen
 # if "2016" in fitversion:
