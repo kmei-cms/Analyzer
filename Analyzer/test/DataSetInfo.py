@@ -1,10 +1,11 @@
 import ROOT
 
 class DataSetInfo:
-    def __init__(self, basedir, fileName, label, sys=None, processName=None, process=None, rate=None, lumiSys=None, scale=-1.0):
+    def __init__(self, basedir, fileName, label, color=ROOT.kBlack, sys=None, processName=None, process=None, rate=None, lumiSys=None, scale=-1.0):
         self.basedir = basedir
         self.fileName = fileName
         self.label = label
+        self.color = color
         try: 
             self.file = ROOT.TFile.Open(basedir+fileName)
         except:
