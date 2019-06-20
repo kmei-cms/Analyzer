@@ -51,7 +51,9 @@ def main():
     parser.add_option('-p', dest='inPath',   type='string', default='output-files', help="Can pass in the input directory name")
     parser.add_option('-y', dest='year',     type='string', default='',             help="Can pass in the year for this data")
     parser.add_option('-o', action='store_true',                                    help="Overwrite output directory")
-    parser.add_option('--doHack', action='store_true',                              help="Do the hack to make Data.root and BG_noTT.root")
+    parser.add_option('--noHadd', action='store_true',                              help="Dont hadd the the root files")
+    parser.add_option('--haddOther', action='store_true',                           help="Do the hack to make BG_OTHER.root")
+    parser.add_option('--haddData', action='store_true',                            help="Do the hack to make Data.root")
     options, args = parser.parse_args()
 
     # Get input directory path
@@ -96,7 +98,7 @@ def main():
                     files = " " + " ".join(glob("%s/%s/MyAnalysis_%s_*.root" % (inPath, directory, sample[1])))
                     outfile = "%s/%s.root" % (outDir,sample[1])
                     command = "hadd %s/%s.root %s" % (outDir, sample[1], files)
-                    system(command)
+                    if not options.noHadd: system(command)
                     checkNumEvents(nEvents=sample[2], rootFile=outfile)
     
             # hadd other condor jobs
@@ -109,21 +111,22 @@ def main():
                 outfile = "%s/%s.root" % (outDir,sampleCollection)
                 command = "hadd %s %s" % (outfile, files)
                 try:
-                    process = subprocess.Popen(command, shell=True)
-                    process.wait()
+                    if not options.noHadd: 
+                        process = subprocess.Popen(command, shell=True)
+                        process.wait()
                 except:
                     print "\033[91m Too many files to hadd: using the exception setup \033[0m"
                     command = "hadd %s/%s.root %s/%s/*" % (outDir, sampleCollection, inPath, sampleCollection)
-                    system(command)
+                    if not options.noHadd: system(command)
                     pass
 
                 checkNumEvents(nEvents=nEvents, rootFile=outfile)
     
-    if options.doHack:
-        # Hack to make the BG_noTT.root file
+    if options.haddOther:
+        # Hack to make the BG_OTHER.root file
         sigNttbar_old = ["AllSignal", "TT", "TTJets", "Data_SingleMuon", "Data_SingleElectron"]
-        sigNttbar_2016 = ["2016_AllSignal", "2016_TT", "2016_TTJets", "2016_Data_SingleMuon", "2016_Data_SingleElectron","2016_TT_isrUp", "2016_TT_isrDown", "2016_TT_fsrUp", "2016_TT_fsrDown" ]
-        sigNttbar_2017 = ["2017_AllSignal", "2017_TT", "2017_TTJets", "2017_Data_SingleMuon", "2017_Data_SingleElectron"]
+        sigNttbar_2016 = ["2016_AllSignal", "2016_TT", "2016_TTJets", "2016_Data_SingleMuon", "2016_Data_SingleElectron","2016_TT_isrUp", "2016_TT_isrDown", "2016_TT_fsrUp", "2016_TT_fsrDown", "2016_TTX" , "2016_QCD"]
+        sigNttbar_2017 = ["2017_AllSignal", "2017_TT", "2017_TTJets", "2017_Data_SingleMuon", "2017_Data_SingleElectron", "2017_TTX", "2017_QCD"]
         sigNttbar = sigNttbar_old+sigNttbar_2016+sigNttbar_2017
         files = ""
         for sampleCollection in scl:
@@ -133,14 +136,15 @@ def main():
                     directory = sampleCollection
                     files += " %s/%s.root " % (outDir, directory)
         if options.year:
-            command = "hadd %s/%s_BG_noTT.root %s" % (outDir, options.year, files)
+            command = "hadd %s/%s_BG_OTHER.root %s" % (outDir, options.year, files)
         else:
-            command = "hadd %s/BG_noTT.root %s" % (outDir, files)
+            command = "hadd %s/BG_OTHER.root %s" % (outDir, files)
         print "-----------------------------------------------------------"
         print command
         print "-----------------------------------------------------------"
         system(command)
         
+    if options.haddData:
         # Hack to make the Data.root file (hadd all the data together)
         dataFiles = ["Data_SingleMuon.root", "Data_SingleElectron.root", 
                      "2016_Data_SingleMuon.root", "2016_Data_SingleElectron.root", 

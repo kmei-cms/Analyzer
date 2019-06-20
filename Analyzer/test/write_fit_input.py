@@ -200,7 +200,7 @@ if __name__ == "__main__":
     parser.add_option('--dataCard', dest='dataCard', type='string', default='dataCard.txt',        help="Output data card file")
     parser.add_option('-H',         dest='outDir',   type='string', default='',                    help="Can pass in the output directory name")
     parser.add_option('-y',         dest='year',     type='string', default='2016',                help="Can pass in the run year")
-    parser.add_option("-s",         dest='scale',    type='float',  default=1.0,                  help="Can scale to a different lumi")
+    parser.add_option("-s",         dest='scale',    type='float',  default=1.0,                   help="Can scale to a different lumi")
     options, args = parser.parse_args()
 
     # Where the root files are stored
@@ -211,7 +211,7 @@ if __name__ == "__main__":
         exit(0)
     else:
         os.makedirs(outDir)
-    jettypes = ["pt30_1l"]#, "pt45_0l"]
+    jettypes = ["pt30_1l"]
     mvaBin = [ "D1", "D2","D3","D4"]
     systypes = ["", "_JECUp", "_JECDown", "_JERUp", "_JERDown", "_btgUp", "_btgDown", "_lepUp", "_lepDown",
                 "_isrUp", "_isrDown", "_fsrUp", "_fsrDown", "_isr2Up", "_isr2Down", "_fsr2Up", "_fsr2Down",
@@ -219,10 +219,12 @@ if __name__ == "__main__":
     outputfile = ROOT.TFile.Open(outDir + "/" + options.rootFile,"RECREATE")
     outputDataCard = options.dataCard
 
-    # I hadd my ttbar files into TT.root, and I hadd all other backgrounds into BG_noTT.root
+    # I hadd my MakeN files into TT.root, TTX, and OTHER, then take QCD from control region
     bgData = {
         "TT"    : info.DataSetInfo(basedir=basedir, fileName=options.year+"_TT.root",      label="TT",    processName="bkg_tt",    process="1", rate=False, lumiSys="-", scale=options.scale),
-        "OTHER" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_BG_noTT.root", label="OTHER", processName="bkg_other", process="2", rate=True,  lumiSys="-", scale=options.scale),
+        "QCD"   : info.DataSetInfo(basedir=basedir, fileName=options.year+"_QCD.root",     label="QCD",   processName="bkg_qcd",   process="2", rate=False, lumiSys="-", scale=options.scale),
+        "TTX"   : info.DataSetInfo(basedir=basedir, fileName=options.year+"_TTX.root",     label="TTX",   processName="bkg_ttx",   process="3", rate=False, lumiSys="-", scale=options.scale),
+        "OTHER" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_BG_OTHER.root",label="OTHER", processName="bkg_other", process="4", rate=True,  lumiSys="-", scale=options.scale),
     }
 
     if options.year == "2016":
@@ -383,15 +385,15 @@ if __name__ == "__main__":
                             wp.writeHistosSetBins(Data, "SetBinNoD3D4", basenameIn, basenameOut, bin, sys, dicNoD3D4)
                             wp.writeHistosSetBins(Data, "SetBinNoD1D2D3D4", basenameIn, basenameOut, bin, sys, dicNoD1D2D3D4)
                         wp.writeStatHistos({"OTHER" : bgData["OTHER"]}, basenameIn, basenameOut, bin, sys)
+                        wp.writeStatHistos({"QCD"   : bgData["QCD"]},   basenameIn, basenameOut, bin, sys)
+                        wp.writeStatHistos({"TTX"   : bgData["TTX"]}, basenameIn, basenameOut, bin, sys)
                         wp.writeStatHistos(sgData, basenameIn, basenameOut, bin, sys)
 
     #Close outfile
     outputfile.Close()
 
-    #Make data card
-    for key in sgData:
-            md = MakeDataCard(outFile="MVA_ws.root", bgData=bgData["TT"], otData=bgData["OTHER"], sgData=sgData[key], basename="h_njets_pt30_1l", mvaBin=mvaBin)
-            md.writeDataCard(outDir+"/"+key+"_"+outputDataCard)
-
-    import os
-    os.system("cat "+outDir+"/RPV_550_"+outputDataCard)
+    #Old----we no longer put number of events in data card
+    ##Make data card
+    #for key in sgData:
+    #        md = MakeDataCard(outFile="MVA_ws.root", bgData=bgData["TT"], otData=bgData["OTHER"], sgData=sgData[key], basename="h_njets_pt30_1l", mvaBin=mvaBin)
+    #        md.writeDataCard(outDir+"/"+key+"_"+outputDataCard)
