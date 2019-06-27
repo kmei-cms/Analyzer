@@ -406,8 +406,7 @@ int main()
         	{"Diboson",         "condor/hadd_2016_MC_Samples/2016_Diboson.root",         "hist", kMagenta + 1},
 		{"TTX",             "condor/hadd_2016_MC_Samples/2016_TTX.root",             "hist", kCyan + 1   },
 		{"Triboson",        "condor/hadd_2016_MC_Samples/2016_Triboson.root",        "hist", kGray       },
-	
-		/*
+/*
 		{"T#bar{T}",        "condor/hadd_2017_MC_Samples/2017_TT.root",              "hist", kBlue - 7   },
                 {"WJetsToLNu",      "condor/hadd_2017_MC_Samples/2017_WJetsToLNu.root",      "hist", kYellow + 1 },
                 {"DYJetsToLL_M-50", "condor/hadd_2017_MC_Samples/2017_DYJetsToLL_M-50.root", "hist", kOrange + 2 },
@@ -415,9 +414,9 @@ int main()
                 {"ST",              "condor/hadd_2017_MC_Samples/2017_ST.root",              "hist", kRed + 1    },
                 {"Diboson",         "condor/hadd_2017_MC_Samples/2017_Diboson.root",         "hist", kMagenta + 1},
                 {"TTX",             "condor/hadd_2017_MC_Samples/2017_TTX.root",             "hist", kCyan + 1   },
-                {"Triboson",        "condor/hadd_2017_MC_Samples/2017_Triboson.root",        "hist", kGray       },	
-      		*/		
-    	};
+                {"Triboson",        "condor/hadd_2017_MC_Samples/2017_Triboson.root",        "hist", kGray       },			
+*/ 
+   	};
 
     	//vector summarizing signal histograms to include in the plot
     	std::vector<histInfo> sigEntries = { 
@@ -425,12 +424,11 @@ int main()
 		{"RPV m_{#tildet} = 550", "condor/hadd_2016_MC_Samples/2016_RPV_2t6j_mStop-550.root",        "hist", kOrange - 3}, 
 		{"RPV m_{#tildet} = 350", "condor/hadd_2016_MC_Samples/2016_RPV_2t6j_mStop-350.root",        "hist", kGreen + 3 },
 		{"SYY m_{#tildet} = 900", "condor/hadd_2016_MC_Samples/2016_StealthSYY_2t6j_mStop-900.root", "hist", kBlue + 1  },
-
-		/*
+/*
 		{"RPV m_{#tildet} = 550", "condor/hadd_2017_MC_Samples/2017_RPV_2t6j_mStop-550.root",        "hist", kOrange - 3},
                 {"RPV m_{#tildet} = 350", "condor/hadd_2017_MC_Samples/2017_RPV_2t6j_mStop-350.root",        "hist", kGreen + 3 },
                 {"SYY m_{#tildet} = 900", "condor/hadd_2017_MC_Samples/2017_StealthSYY_2t6j_mStop-900.root", "hist", kBlue + 1  },	
-		*/
+*/		
     	};
 
     	//make plotter object with the required sources for histograms specified
@@ -450,6 +448,28 @@ int main()
                 "0l_1t3j"      , 
                 "0l_2t1j"      , 
                 "0l_2t3j"      ,
+
+		/*
+ 		"0l_HT500_ge6j", "0l_HT500_ge1b", "0l_HT500_ge2b", "0l_HT500_1t", "0l_HT500_2t", "0l_HT500_1t1j", "0l_HT500_1t3j", "0l_HT500_2t1j", "0l_HT500_2t3j",
+
+		"0l_ge6j_1t", "0l_ge6j_2t", "0l_ge6j_1t1j", "0l_ge6j_1t3j", "0l_ge6j_2t1j", "0l_ge6j_2t3j", 
+	
+		"0l_ge1b_ge6j", "0l_ge1b_1t", "0l_ge1b_2t", "0l_ge1b_1t1j", "0l_ge1b_1t3j", "0l_ge1b_2t1j", "0l_ge1b_2t3j",
+		
+		"0l_ge2b_ge6j", "0l_ge2b_1t", "0l_ge2b_2t", "0l_ge2b_1t1j", "0l_ge2b_1t3j", "0l_ge2b_2t1j", "0l_ge2b_2t3j",
+		
+		"0l_HT500_ge6j_1t", "0l_HT500_ge6j_2t", "0l_HT500_ge6j_1t1j", "0l_HT500_ge6j_1t3j", "0l_HT500_ge6j_2t1j", "0l_HT500_ge6j_2t3j",
+
+		"0l_HT500_ge1b_ge6j", "0l_HT500_ge1b_1t", "0l_HT500_ge1b_2t", "0l_HT500_ge1b_1t1j", "0l_HT500_ge1b_1t3j", "0l_HT500_ge1b_2t1j", "0l_HT500_ge1b_2t3j",
+
+		"0l_HT500_ge2b_ge6j", "0l_HT500_ge2b_1t", "0l_HT500_ge2b_2t", "0l_HT500_ge2b_1t1j", "0l_HT500_ge2b_1t3j", "0l_HT500_ge2b_2t1j", "0l_HT500_ge2b_2t3j",
+
+		"0l_HT500_ge1b_ge6j_1t", "0l_HT500_ge1b_ge6j_2t", "0l_HT500_ge1b_ge6j_1t1j", "0l_HT500_ge1b_ge6j_1t3j", "0l_HT500_ge1b_ge6j_2t1j", "0l_HT500_ge1b_ge6j_2t3j",
+
+		"0l_HT500_ge2b_ge6j_1t", "0l_HT500_ge2b_ge6j_2t", "0l_HT500_ge2b_ge6j_1t1j", "0l_HT500_ge2b_ge6j_1t3j", "0l_HT500_ge2b_ge6j_2t1j", "0l_HT500_ge2b_ge6j_2t3j",
+
+		*/
+
    	};
 
    	for (const auto& cutlabel : cut) {

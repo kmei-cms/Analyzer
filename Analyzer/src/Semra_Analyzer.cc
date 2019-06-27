@@ -24,6 +24,7 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // SE
     	TH2::SetDefaultSumw2();
 
 	my_histos.emplace( "EventCounter", std::make_shared<TH1D>( "EventCounter", "EventCounter", 2, -1.1, 1.1 ) ) ;
+	my_histos.emplace( "h_met",        std::make_shared<TH1D>( "h_met",        "h_met",        20,  0, 200  ) ) ;
 
 
     	for (const auto& cutVar : cutmap) {
@@ -47,6 +48,7 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // SE
 /// Put everything you want to do per event 
 void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
 {
+
  
    while( tr.getNextEvent() )
     {
@@ -58,11 +60,10 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
         if( tr.getEvtNum() & 10000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
-        
+
         const auto& runtype             = tr.getVar<std::string>("runtype");     
         const auto& filetag             = tr.getVar<std::string>("filetag");
         const auto& GoodLeptons         = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
-
         const auto& JetID               = tr.getVar<bool>("JetID");
         const auto& NGoodLeptons        = tr.getVar<int>("NGoodLeptons");
         const auto& passTriggerMC       = tr.getVar<bool>("passTriggerMC");
@@ -70,27 +71,23 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const auto& Mbl                 = tr.getVar<double>("Mbl");
         const auto& HT_trigger_pt45     = tr.getVar<double>("HT_trigger_pt45");
         const auto& NGoodJets_pt45      = tr.getVar<int>("NGoodJets_pt45");
-        
         const auto& passMadHT           = tr.getVar<bool>("passMadHT");
         const auto& passBaseline        = tr.getVar<bool>("passBaseline1l_Good");
-       
+	const auto& MET                = tr.getVar<double>("MET");       
+
 
 	// -----------------------------------------------
 	// -- SEMRA / Define Top Tag variables
 	// -----------------------------------------------
-
 	const auto& deepESM_val            = tr.getVar<double>("deepESM_val");
-	const bool& pass_0l                = NGoodLeptons==0;
-	
+	const bool& pass_0l                = NGoodLeptons==0;	
 	const auto& ntops                  = tr.getVar<int>("ntops");
 	const auto& ntops_1jet             = tr.getVar<int>("ntops_1jet");
 	const auto& ntops_2jet             = tr.getVar<int>("ntops_2jet");
 	const auto& ntops_3jet             = tr.getVar<int>("ntops_3jet");
 	const auto& pass_HT_trigger        = HT_trigger_pt45 > 500;
 	const auto& pass_NJets_pt45        = NGoodJets_pt45 >= 6;
-	const auto& pass_NBJets_pt45_2b    = NGoodBJets_pt45 >= 2;
 
-	
 
         // ------------------------
         // -- Define weight
@@ -103,7 +100,8 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         double topPtScaleFactor     = 1.0;
         double prefiringScaleFactor = 1.0;
         double puScaleFactor        = 1.0;
-        
+       
+ 
         if(runtype == "MC")
         {
             if( !passMadHT ) continue; //Make sure not to double count DY events
@@ -131,25 +129,94 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         }
         
 
-        // SEMRA / Make cuts and fill histograms here & cutmap
-        // cutmap
+        //Make cuts and fill histograms here & cutmap
         const std::map<std::string, bool>& cutmap
 	{
-		{"", true}, // no cut
-		{"0l", pass_0l},
+		{"", true														      },
+		{"0l",       		    pass_0l											      },
+		{"0l_HT500", 		    pass_0l && pass_HT_trigger									      },
+		{"0l_ge6j",  		    pass_0l && pass_NJets_pt45                                                                        },	
+		{"0l_ge1b",  		    pass_0l && NGoodBJets_pt45 >= 1								      },
+		{"0l_ge2b",  		    pass_0l && NGoodBJets_pt45 >= 2								      },	
+		{"0l_1t",    		    pass_0l && ntops==1										      },
+                {"0l_2t",    		    pass_0l && ntops==2										      },
+                {"0l_1t1j",  		    pass_0l && ntops==1 && ntops_1jet==1							      },
+                {"0l_1t3j",  		    pass_0l && ntops==1 && ntops_3jet==1							      },
+                {"0l_2t1j",  		    pass_0l && ntops==2 && ntops_1jet==1							      },
+                {"0l_2t3j",                 pass_0l && ntops==2 && ntops_3jet==1							      },
 
-		{"0l_HT500", pass_0l && pass_HT_trigger},
-		{"0l_ge6j", pass_0l && pass_NJets_pt45},
-		{"0l_ge1b", pass_0l && NGoodBJets_pt45 >= 1},
-		{"0l_ge1b_HT500", pass_0l && NGoodBJets_pt45 >= 1 && pass_HT_trigger},  
-		{"0l_ge2b", pass_0l && pass_NBJets_pt45_2b},
-		{"0l_1t", pass_0l && ntops==1},
-		{"0l_2t", pass_0l && ntops==2},
-		{"0l_1t1j", pass_0l && ntops_1jet==1},
-		{"0l_1t3j", pass_0l && ntops_3jet==1},
-		{"0l_2t1j", pass_0l && ntops_1jet==2},
-                {"0l_2t3j", pass_0l && ntops_3jet==2},
-	
+		//
+		{"0l_HT500_ge6j",           pass_0l && pass_HT_trigger && pass_NJets_pt45						      },
+                {"0l_HT500_ge1b",           pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 1 						      },
+                {"0l_HT500_ge2b",           pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2						      },
+                {"0l_HT500_1t",             pass_0l && pass_HT_trigger && ntops==1							      },
+                {"0l_HT500_2t",             pass_0l && pass_HT_trigger && ntops==2							      },
+		{"0l_HT500_1t1j",           pass_0l && pass_HT_trigger && ntops==1 && ntops_1jet==1					      },
+                {"0l_HT500_1t3j",           pass_0l && pass_HT_trigger && ntops==1 && ntops_3jet==1					      },
+                {"0l_HT500_2t1j",           pass_0l && pass_HT_trigger && ntops==2 && ntops_1jet==1                                           },
+                {"0l_HT500_2t3j",           pass_0l && pass_HT_trigger && ntops==2 && ntops_3jet==1                                           },
+
+		{"0l_ge6j_1t",              pass_0l && pass_NJets_pt45 && ntops==1                                                            },
+                {"0l_ge6j_2t",              pass_0l && pass_NJets_pt45 && ntops==2                                                            },
+                {"0l_ge6j_1t1j",            pass_0l && pass_NJets_pt45 && ntops==1 && ntops_1jet==1                                           },
+                {"0l_ge6j_1t3j",            pass_0l && pass_NJets_pt45 && ntops==1 && ntops_3jet==1                                           },
+                {"0l_ge6j_2t1j",            pass_0l && pass_NJets_pt45 && ntops==2 && ntops_1jet==1                                           },
+                {"0l_ge6j_2t3j",            pass_0l && pass_NJets_pt45 && ntops==2 && ntops_3jet==1                                           },
+
+		{"0l_ge1b_ge6j",            pass_0l && NGoodBJets_pt45 >= 1 && pass_NJets_pt45                                                },
+		{"0l_ge1b_1t",              pass_0l && NGoodBJets_pt45 >= 1 && ntops==1                                                       },
+		{"0l_ge1b_2t",              pass_0l && NGoodBJets_pt45 >= 1 && ntops==2                                                       },
+		{"0l_ge1b_1t1j",            pass_0l && NGoodBJets_pt45 >= 1 && ntops==1 && ntops_1jet==1                                      },
+		{"0l_ge1b_1t3j",            pass_0l && NGoodBJets_pt45 >= 1 && ntops==1 && ntops_3jet==1                                      },
+		{"0l_ge1b_2t1j",            pass_0l && NGoodBJets_pt45 >= 1 && ntops==2 && ntops_1jet==1                                      },
+                {"0l_ge1b_2t3j",            pass_0l && NGoodBJets_pt45 >= 1 && ntops==2 && ntops_3jet==1                                      },
+		
+		{"0l_ge2b_ge6j",            pass_0l && NGoodBJets_pt45 >= 2 && pass_NJets_pt45                                                },
+		{"0l_ge2b_1t",              pass_0l && NGoodBJets_pt45 >= 2 && ntops==1                                                       },
+                {"0l_ge2b_2t",              pass_0l && NGoodBJets_pt45 >= 2 && ntops==2                                                       },	
+		{"0l_ge2b_1t1j",            pass_0l && NGoodBJets_pt45 >= 2 && ntops==1 && ntops_1jet==1                                      },
+                {"0l_ge2b_1t3j",            pass_0l && NGoodBJets_pt45 >= 2 && ntops==1 && ntops_3jet==1                                      },
+                {"0l_ge2b_2t1j",            pass_0l && NGoodBJets_pt45 >= 2 && ntops==2 && ntops_1jet==1                                      },
+                {"0l_ge2b_2t3j",            pass_0l && NGoodBJets_pt45 >= 2 && ntops==2 && ntops_3jet==1                                      },
+
+		//
+		{"0l_HT500_ge6j_1t",        pass_0l && pass_HT_trigger && pass_NJets_pt45 && ntops==1                                         },
+                {"0l_HT500_ge6j_2t",        pass_0l && pass_HT_trigger && pass_NJets_pt45 && ntops==2                                         },
+                {"0l_HT500_ge6j_1t1j",      pass_0l && pass_HT_trigger && pass_NJets_pt45 && ntops==1 && ntops_1jet==1                        },
+                {"0l_HT500_ge6j_1t3j",      pass_0l && pass_HT_trigger && pass_NJets_pt45 && ntops==1 && ntops_3jet==1                        },
+                {"0l_HT500_ge6j_2t1j",      pass_0l && pass_HT_trigger && pass_NJets_pt45 && ntops==2 && ntops_1jet==1                        },
+                {"0l_HT500_ge6j_2t3j",      pass_0l && pass_HT_trigger && pass_NJets_pt45 && ntops==2 && ntops_3jet==1                        },
+
+		{"0l_HT500_ge1b_ge6j",      pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 1 && pass_NJets_pt45                             },
+		{"0l_HT500_ge1b_1t",        pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 1 && ntops==1                                    },
+                {"0l_HT500_ge1b_2t",        pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 1 && ntops==2                                    },
+		{"0l_HT500_ge1b_1t1j",      pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 1 && ntops==1 && ntops_1jet==1                   },
+		{"0l_HT500_ge1b_1t3j",      pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 1 && ntops==1 && ntops_3jet==1                   },
+		{"0l_HT500_ge1b_2t1j",      pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 1 && ntops==2 && ntops_1jet==1                   },
+                {"0l_HT500_ge1b_2t3j",      pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 1 && ntops==2 && ntops_3jet==1                   },
+
+		{"0l_HT500_ge2b_ge6j",      pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && pass_NJets_pt45                             },
+		{"0l_HT500_ge2b_1t",        pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && ntops==1                                    },
+                {"0l_HT500_ge2b_2t",        pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && ntops==2                                    },
+		{"0l_HT500_ge2b_1t1j",      pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && ntops==1 && ntops_1jet==1                   },
+                {"0l_HT500_ge2b_1t3j",      pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && ntops==1 && ntops_3jet==1                   },
+                {"0l_HT500_ge2b_2t1j",      pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && ntops==2 && ntops_1jet==1                   },
+                {"0l_HT500_ge2b_2t3j",      pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && ntops==2 && ntops_3jet==1                   },
+
+		//
+		{"0l_HT500_ge1b_ge6j_1t",   pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 1 && pass_NJets_pt45 && ntops==1                 },
+		{"0l_HT500_ge1b_ge6j_2t",   pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 1 && pass_NJets_pt45 && ntops==2                 },
+		{"0l_HT500_ge1b_ge6j_1t1j", pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 1 && pass_NJets_pt45 && ntops==1 && ntops_1jet==1},
+                {"0l_HT500_ge1b_ge6j_1t3j", pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 1 && pass_NJets_pt45 && ntops==1 && ntops_3jet==1},
+                {"0l_HT500_ge1b_ge6j_2t1j", pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 1 && pass_NJets_pt45 && ntops==2 && ntops_1jet==1},
+                {"0l_HT500_ge1b_ge6j_2t3j", pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 1 && pass_NJets_pt45 && ntops==2 && ntops_3jet==1},
+
+		{"0l_HT500_ge2b_ge6j_1t",   pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && pass_NJets_pt45 && ntops==1		      },
+                {"0l_HT500_ge2b_ge6j_2t",   pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && pass_NJets_pt45 && ntops==2                 },
+                {"0l_HT500_ge2b_ge6j_1t1j", pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && pass_NJets_pt45 && ntops==1 && ntops_1jet==1},
+		{"0l_HT500_ge2b_ge6j_1t3j", pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && pass_NJets_pt45 && ntops==1 && ntops_3jet==1},
+		{"0l_HT500_ge2b_ge6j_2t1j", pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && pass_NJets_pt45 && ntops==2 && ntops_1jet==1},
+		{"0l_HT500_ge2b_ge6j_2t3j", pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && pass_NJets_pt45 && ntops==2 && ntops_3jet==1},
 
 	};
 
@@ -159,8 +226,8 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
 	}
 
 
-	my_histos["EventCounter" ]->Fill( eventCounter );
-
+	my_histos["EventCounter"]->Fill( eventCounter );
+	my_histos["h_met"       ]->Fill(MET, eventweight);
 
 	for (const auto& cutVar: cutmap) {
 
