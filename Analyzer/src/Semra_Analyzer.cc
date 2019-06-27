@@ -24,8 +24,6 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // SE
     	TH2::SetDefaultSumw2();
 
 	my_histos.emplace( "EventCounter", std::make_shared<TH1D>( "EventCounter", "EventCounter", 2, -1.1, 1.1 ) ) ;
-	my_histos.emplace( "h_met",        std::make_shared<TH1D>( "h_met",        "h_met",        20,  0, 200  ) ) ;
-
 
     	for (const auto& cutVar : cutmap) {
 
@@ -33,6 +31,7 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // SE
         	my_histos.emplace( "h_ht_"+cutVar.first, std::make_shared<TH1D> ( ("h_ht_"+cutVar.first).c_str(), ("h_ht_"+cutVar.first).c_str(), 60, 0, 3000 ) );
         	my_histos.emplace( "h_njets_"+cutVar.first, std::make_shared<TH1D> ( ("h_njets_"+cutVar.first).c_str(), ("h_njets_"+cutVar.first).c_str(), 20, 0, 20 ) );
         	my_histos.emplace( "h_nbjets_"+cutVar.first, std::make_shared<TH1D> ( ("h_nbjets_"+cutVar.first).c_str(), ("h_nbjets_"+cutVar.first).c_str(), 15, 0, 15 ) );
+		my_histos.emplace( "h_met_"+cutVar.first, std::make_shared<TH1D> ( ("h_met_"+cutVar.first).c_str(), ("h_met_"+cutVar.first).c_str(),        20,  0, 200  ) ) ;
 		my_2d_histos.emplace( "h_njets_MVA_"+cutVar.first, std::make_shared<TH2D>( ("h_njets_MVA_"+cutVar.first).c_str(), ("h_njets_MVA_"+cutVar.first).c_str(), 8, 7, 15, 50, 0, 1.0 ) );
 
 	}
@@ -104,7 +103,6 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
  
         if(runtype == "MC")
         {
-            if( !passMadHT ) continue; //Make sure not to double count DY events
             // Define Lumi weight
             const auto& Weight  = tr.getVar<double>("Weight");
             const auto& lumi = tr.getVar<double>("Lumi");
@@ -225,9 +223,10 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
 		inithisto = true;
 	}
 
-
+	
 	my_histos["EventCounter"]->Fill( eventCounter );
-	my_histos["h_met"       ]->Fill(MET, eventweight);
+
+	if( !passMadHT ) continue; //Make sure not to double count DY events
 
 	for (const auto& cutVar: cutmap) {
 
@@ -236,6 +235,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
 			my_histos["h_ht_"+cutVar.first]->Fill( HT_trigger_pt45, weight );		
 			my_histos["h_njets_"+cutVar.first]->Fill( NGoodJets_pt45, weight );
 			my_histos["h_nbjets_"+cutVar.first]->Fill( NGoodBJets_pt45, weight );
+			my_histos["h_met_"+cutVar.first]->Fill( MET, weight );
 			my_2d_histos["h_njets_MVA_"+cutVar.first]->Fill( NGoodJets_pt45, deepESM_val, weight );
 		}
 	}
