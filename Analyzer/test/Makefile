@@ -46,7 +46,7 @@ INCLUDESDIRS    += -I$(TENSORFLOW_DIR)/include
 
 #OBJS       = $(patsubst %, $(ODIR)/%, $(OBJ))
 
-PROGRAMS = MyAnalysis MySkimAnalysis plot_0l plot_1l
+PROGRAMS = MyAnalysis MySkimAnalysis plot_0l plot_1l Stack_plot_2l
 
 all: mkobj sampPyWrap $(PROGRAMS)
 
@@ -130,7 +130,7 @@ $(ODIR)/%.o : $(WDIR)/%.cc
 $(ODIR)/%.o : $(WDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
 
-MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/AnalyzeTest.o $(ODIR)/AnalyzeWControlRegion.o $(ODIR)/MakeMiniTree.o $(ODIR)/MiniTupleMaker.o $(ODIR)/CalculateBTagSF.o $(ODIR)/AnalyzeBTagSF.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/Analyze1Lep.o $(ODIR)/AnalyzeNjetsMinusOneCSFillDijetHists.o $(ODIR)/AnalyzeNjetsMinusOneCSJetReplacement.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o $(ODIR)/EventShapeVariables.o $(ODIR)/histio.o $(ODIR$)/Semra_Analyzer.o
+MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/AnalyzeTest.o $(ODIR)/AnalyzeWControlRegion.o $(ODIR)/MakeMiniTree.o $(ODIR)/MiniTupleMaker.o $(ODIR)/CalculateBTagSF.o $(ODIR)/AnalyzeBTagSF.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/Analyze1Lep.o $(ODIR)/AnalyzeNjetsMinusOneCSFillDijetHists.o $(ODIR)/AnalyzeNjetsMinusOneCSJetReplacement.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o $(ODIR)/EventShapeVariables.o $(ODIR)/histio.o $(ODIR)/Semra_Analyzer.o $(ODIR)/Alex_Analyzer.o $(ODIR)/TwoLepAnalyzer.o
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
 
 MySkimAnalysis: $(ODIR)/MySkimAnalysis.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o $(ODIR)/EventShapeVariables.o
@@ -140,6 +140,9 @@ plot_0l: $(ODIR)/plot_0l.o
 	$(LD) $^ $(LIBS) -o $@
 
 plot_1l: $(ODIR)/plot_1l.o
+	$(LD) $^ $(LIBS) -o $@
+
+Stack_plot_2l: $(ODIR)/Stack_plot_2l.o
 	$(LD) $^ $(LIBS) -o $@
 
 clean:
