@@ -42,12 +42,12 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
 		my_histos.emplace( "h_bestTopMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_bestTopMass_"+cutVar.first).c_str(), ("h_bestTopMass_"+cutVar.first).c_str(), 20, 0, 200 ) );
 		my_histos.emplace( "h_bestTopEta_"+cutVar.first, std::make_shared<TH1D> ( ("h_bestTopEta_"+cutVar.first).c_str(), ("h_bestTopEta_"+cutVar.first).c_str(), 100, -6, 6 ) );
 		my_histos.emplace( "h_bestTopPt_"+cutVar.first, std::make_shared<TH1D> ( ("h_bestTopPt_"+cutVar.first).c_str(), ("h_bestTopPt_"+cutVar.first).c_str(), 1000, 0, 500 ) );
-		my_histos.emplace( "h_non-topMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_non-topMass_"+cutVar.first).c_str(), ("h_non-topMass_"+cutVar.first).c_str(), 20, 0, 200 ) );  
+		//my_histos.emplace( "h_non-topMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_non-topMass_"+cutVar.first).c_str(), ("h_non-topMass_"+cutVar.first).c_str(), 20, 0, 200 ) );  
 		//my_histos.emplace( "h_non-topPt_"+cutVar.first, std::make_shared<TH1D> ( ("h_non-topPt_"+cutVar.first).c_str(), ("h_non-topPt_"+cutVar.first).c_str(), 1000, 0, 500 ) ); 
-		my_histos.emplace( "h_XMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_XMass_"+cutVar.first).c_str(), ("h_XMass_"+cutVar.first).c_str(), 20, 0, 200 ) ); // neutralinos mass 
+		//my_histos.emplace( "h_XMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_XMass_"+cutVar.first).c_str(), ("h_XMass_"+cutVar.first).c_str(), 20, 0, 200 ) ); // neutralinos mass 
 		my_histos.emplace( "h_dR_bjet1_bjet2_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_bjet1_bjet2_"+cutVar.first).c_str(), ("h_dR_bjet1_bjet2_"+cutVar.first).c_str(), 50, 0, 10 ) );
 		my_histos.emplace( "h_dR_top1_top2_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_top1_top2_"+cutVar.first).c_str(), ("h_dR_top1_top2_"+cutVar.first).c_str(), 50, 0, 10 ) );
-		my_histos.emplace( "h_dR_top_bjet_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_top_bjet_"+cutVar.first).c_str(), ("h_dR_top_bjet_"+cutVar.first).c_str(), 50, 0, 10 ) );
+		//my_histos.emplace( "h_dR_top_bjet_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_top_bjet_"+cutVar.first).c_str(), ("h_dR_top_bjet_"+cutVar.first).c_str(), 50, 0, 10 ) );
 		my_2d_histos.emplace( "h_njets_MVA_"+cutVar.first, std::make_shared<TH2D>( ("h_njets_MVA_"+cutVar.first).c_str(), ("h_njets_MVA_"+cutVar.first).c_str(), 8, 7, 15, 50, 0, 1.0 ) );
 
 	}
@@ -68,7 +68,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const auto& eventCounter    = tr.getVar<int>("eventCounter");
 
         //--------------------------------------------------
-        //-- Print Event Number 
+        // -- Print Event Number 
         //--------------------------------------------------
         
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
@@ -152,14 +152,14 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
 	// -------------------------------------------------
 	// -- Calculate non-top (2 neutralinos) mass & pT
 	// -------------------------------------------------
-        double nonTopMass = 0;
+        /*double nonTopMass = 0;
 	const double Xcut_low = 100;
         const double Xcut_high = 200;
 	for(int ijet = 0; ijet < Jets.size(); ijet++) {
 		if (!GoodJets_pt45[ijet] && !GoodBJets_pt45[ijet]) {
 			nonTopMass += Jets.at(ijet).M();
 		}
-	}
+	}*/
 
 	// --------------------------------------
 	// -- Calculate DeltaR between 2 bjets
@@ -177,25 +177,24 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
 	// -------------------------------------------
 	// -- Calculate DeltaR between top and bjet
 	// -------------------------------------------
-	std::vector<TLorentzVector> tops;
+	/*std::vector<TLorentzVector> tops;
+	std::vector<TLorentzVector> bjets;
 	for(int ijet = 0; ijet < Jets.size(); ijet++) {	
-		if(!GoodJets_pt45[ijet]) continue;
-                tops.push_back(Jets.at(ijet));	
+	
+		if(!GoodJets_pt45[ijet]) continue; // GoodJets_pt45 for non-bjets
+                tops.push_back(Jets.at(ijet));
+	
+		if(!GoodBJets_pt45[ijet]) continue;
+                bjets.push_back(Jets.at(ijet));	
 	}
 
-	std::vector<TLorentzVector> bjets;
-	for(int ijet = 0; ijet < Jets.size(); ijet++) {
-        	if(!GoodBJets_pt45[ijet]) continue;
-                bjets.push_back(Jets.at(ijet));
-	}
-		
 	std::vector<double> dR_top_bjet;
 	for (const auto& t : tops) {
 		for (const auto& b : bjets) {
 			double dR = t.DeltaR(b);
 			dR_top_bjet.push_back(dR);
 		}
-	}
+	}*/
 
 	// -------------------------------------------------
         // -- Make cuts and fill histograms here & cutmap
@@ -271,8 +270,20 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
 		{"0l_HT500_ge2b_1t1j",      pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && ntops==1 && ntops_1jet==1                   },
                 {"0l_HT500_ge2b_1t3j",      pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && ntops==1 && ntops_3jet==1                   },
                 {"0l_HT500_ge2b_2t1j",      pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && ntops==2 && ntops_1jet==1                   },
-                {"0l_HT500_ge2b_2t3j",      pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && ntops==2 && ntops_3jet==1                   },
+                {"0l_HT500_ge2b_2t3j",      pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 2 && ntops==2 && ntops_3jet==1                   },		
+		{"0l_ge1b_ge6j_1t",         pass_0l && NGoodBJets_pt45 >= 1 && pass_NJets_pt45 && ntops==1                                    },
+                {"0l_ge1b_ge6j_2t",         pass_0l && NGoodBJets_pt45 >= 1 && pass_NJets_pt45 && ntops==2                                    },
+                {"0l_ge1b_ge6j_1t1j",       pass_0l && NGoodBJets_pt45 >= 1 && pass_NJets_pt45 && ntops==1 && ntops_1jet==1                   },
+                {"0l_ge1b_ge6j_1t3j",       pass_0l && NGoodBJets_pt45 >= 1 && pass_NJets_pt45 && ntops==1 && ntops_3jet==1                   },
+                {"0l_ge1b_ge6j_2t1j",       pass_0l && NGoodBJets_pt45 >= 1 && pass_NJets_pt45 && ntops==2 && ntops_1jet==1                   },
+                {"0l_ge1b_ge6j_2t3j",       pass_0l && NGoodBJets_pt45 >= 1 && pass_NJets_pt45 && ntops==2 && ntops_3jet==1                   },
 
+                {"0l_ge2b_ge6j_1t",         pass_0l && NGoodBJets_pt45 >= 2 && pass_NJets_pt45 && ntops==1                                    },
+                {"0l_ge2b_ge6j_2t",         pass_0l && NGoodBJets_pt45 >= 2 && pass_NJets_pt45 && ntops==2                                    },
+                {"0l_ge2b_ge6j_1t1j",       pass_0l && NGoodBJets_pt45 >= 2 && pass_NJets_pt45 && ntops==1 && ntops_1jet==1                   },
+                {"0l_ge2b_ge6j_1t3j",       pass_0l && NGoodBJets_pt45 >= 2 && pass_NJets_pt45 && ntops==1 && ntops_3jet==1                   },
+                {"0l_ge2b_ge6j_2t1j",       pass_0l && NGoodBJets_pt45 >= 2 && pass_NJets_pt45 && ntops==2 && ntops_1jet==1                   },
+                {"0l_ge2b_ge6j_2t3j",       pass_0l && NGoodBJets_pt45 >= 2 && pass_NJets_pt45 && ntops==2 && ntops_3jet==1                   },			
 		//
 		{"0l_HT500_ge1b_ge6j_1t",   pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 1 && pass_NJets_pt45 && ntops==1                 },
 		{"0l_HT500_ge1b_ge6j_2t",   pass_0l && pass_HT_trigger && NGoodBJets_pt45 >= 1 && pass_NJets_pt45 && ntops==2                 },
@@ -343,12 +354,12 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
 			my_histos["h_bestTopMass_"+cutVar.first]->Fill( bestTopMass, weight );
 			my_histos["h_bestTopEta_"+cutVar.first]->Fill( bestTopEta, weight );
 			my_histos["h_bestTopPt_"+cutVar.first]->Fill( bestTopPt, weight );
-			my_histos["h_non-topMass_"+cutVar.first]->Fill( nonTopMass, weight );
+			//my_histos["h_non-topMass_"+cutVar.first]->Fill( nonTopMass, weight );
 			//my_histos["h_non-topPt_"+cutVar.first]->Fill( , weight );
 
-			if( nonTopMass > Xcut_low && nonTopMass < Xcut_high){
-                		my_histos["h_XMass_"+cutVar.first]->Fill( nonTopMass, weight );
-        		}
+			//if( nonTopMass > Xcut_low && nonTopMass < Xcut_high){
+                		//my_histos["h_XMass_"+cutVar.first]->Fill( nonTopMass, weight );
+        		//}
 
 			my_histos["h_dR_bjet1_bjet2_"+cutVar.first]->Fill( dR_bjet1_bjet2, weight );
 			my_histos["h_dR_top1_top2_"+cutVar.first]->Fill( dR_top1_top2, weight );
@@ -356,9 +367,9 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
 			// ---------------------------------
 			// -- deltaR between top and bjet
 			// ---------------------------------
-			for (int idR = 0; idR < dR_top_bjet.size(); idR++) {
-				my_histos["h_dR_top_bjet_"+cutVar.first]->Fill( dR_top_bjet.at(idR), weight );	
-			}
+			//for (int idR = 0; idR < dR_top_bjet.size(); idR++) {
+				//my_histos["h_dR_top_bjet_"+cutVar.first]->Fill( dR_top_bjet.at(idR), weight );	
+			//}
 
 			my_2d_histos["h_njets_MVA_"+cutVar.first]->Fill( NGoodJets_pt45, deepESM_val, weight );
 		}
