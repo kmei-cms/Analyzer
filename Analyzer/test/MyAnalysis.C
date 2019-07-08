@@ -22,7 +22,6 @@
 #include "Analyzer/Analyzer/include/CalculateSFMean.h"
 #include "Analyzer/Analyzer/include/Config.h"
 #include "Analyzer/Analyzer/include/Semra_Analyzer.h" // semra
-#include "Analyzer/Analyzer/include/Alex_Analyzer.h"
 #include "Analyzer/Analyzer/include/TwoLepAnalyzer.h"
 
 #include "TH1D.h"

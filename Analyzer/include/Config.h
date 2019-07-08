@@ -66,7 +66,7 @@ public:
         }
 
         //Register Modules that are needed for each Analyzer
-        if(analyzer=="Analyze1Lep" || analyzer=="Analyze0Lep" || analyzer=="Semra_Analyzer" || analyzer=="Alex_Analyzer" || analyzer=="TwoLepAnalyzer") 
+        if(analyzer=="Analyze1Lep" || analyzer=="Analyze0Lep" || analyzer=="Semra_Analyzer" || analyzer=="TwoLepAnalyzer") 
         {
             tr.registerFunction(partUnBlind);
             tr.registerFunction(prep);                   
