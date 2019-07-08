@@ -202,7 +202,6 @@ int main(int argc, char *argv[])
         {"AnalyzeNjetsMinusOneCSFillDijetHists", run<AnalyzeNjetsMinusOneCSFillDijetHists>},
         {"AnalyzeNjetsMinusOneCSJetReplacement", run<AnalyzeNjetsMinusOneCSJetReplacement>},
 	{"Semra_Analyzer",          run<Semra_Analyzer>}, // SEMRA / to run my analyzer
-	{"Alex_Analyzer",           run<Alex_Analyzer>},
         {"TwoLepAnalyzer",          run<TwoLepAnalyzer>}
     }; 
 
