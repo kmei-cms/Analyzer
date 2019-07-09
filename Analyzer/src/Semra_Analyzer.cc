@@ -53,7 +53,8 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
 	}
 
 	//Define TEfficiencies if you are doing trigger studies (for proper error bars) or cut flow charts.
-    	my_efficiencies.emplace("event_sel_weight", std::make_shared<TEfficiency>("event_sel_weight","event_sel_weight",9,0,9));
+    	my_efficiencies.emplace("event_sel_weight_1", std::make_shared<TEfficiency>("event_sel_weight_1","event_sel_weight_1",9,0,9));
+	my_efficiencies.emplace("event_sel_weight_2", std::make_shared<TEfficiency>("event_sel_weight_2","event_sel_weight_2",9,0,9));
 	
 }
 
@@ -372,16 +373,28 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
 		}
 	}
 
+	// --------------------------------------------
+	// -- Cut flow (event selection efficiencies)
+	// --------------------------------------------
+	// for 1 top 
+        my_efficiencies["event_sel_weight_1"]->SetUseWeightedEvents();
+        my_efficiencies["event_sel_weight_1"]->FillWeighted(true, eventweight, 0);
+        my_efficiencies["event_sel_weight_1"]->FillWeighted(true && JetID, eventweight, 1);
+        my_efficiencies["event_sel_weight_1"]->FillWeighted(true && JetID && NGoodLeptons == 0, eventweight, 2);
+        my_efficiencies["event_sel_weight_1"]->FillWeighted(true && JetID && NGoodLeptons == 0 && NGoodBJets_pt45 >= 2, eventweight, 3);
+        my_efficiencies["event_sel_weight_1"]->FillWeighted(true && JetID && NGoodLeptons == 0 && NGoodBJets_pt45 >= 2 && NGoodJets_pt45 >= 6, eventweight, 4);
+	my_efficiencies["event_sel_weight_1"]->FillWeighted(true && JetID && NGoodLeptons == 0 && NGoodBJets_pt45 >= 2 && NGoodJets_pt45 >= 6 && ntops == 1 , eventweight, 5);
+	my_efficiencies["event_sel_weight_1"]->FillWeighted(true && JetID && NGoodLeptons == 0 && NGoodBJets_pt45 >= 2 && NGoodJets_pt45 >= 6 && ntops == 1 && HT_trigger_pt45 > 500, eventweight, 6);
 
-        // Example Fill event selection efficiencies (cut flow)
-        my_efficiencies["event_sel_weight"]->SetUseWeightedEvents();
-        my_efficiencies["event_sel_weight"]->FillWeighted(true, eventweight, 0);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID, eventweight, 1);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 0, eventweight, 2);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 0 && passTriggerMC, eventweight, 3);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 0 && passTriggerMC && NGoodBJets_pt45 >= 1, eventweight, 4);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 0 && passTriggerMC && NGoodBJets_pt45 >= 1 && HT_trigger_pt45 > 500, eventweight, 5);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 0 && passTriggerMC && NGoodBJets_pt45 >= 1 && HT_trigger_pt45 > 500 && NGoodJets_pt45 >= 6, eventweight, 6);
+	// for 2 tops
+	my_efficiencies["event_sel_weight_2"]->SetUseWeightedEvents();
+        my_efficiencies["event_sel_weight_2"]->FillWeighted(true, eventweight, 0);
+        my_efficiencies["event_sel_weight_2"]->FillWeighted(true && JetID, eventweight, 1);
+        my_efficiencies["event_sel_weight_2"]->FillWeighted(true && JetID && NGoodLeptons == 0, eventweight, 2);
+        my_efficiencies["event_sel_weight_2"]->FillWeighted(true && JetID && NGoodLeptons == 0 && NGoodBJets_pt45 >= 2, eventweight, 3);
+        my_efficiencies["event_sel_weight_2"]->FillWeighted(true && JetID && NGoodLeptons == 0 && NGoodBJets_pt45 >= 2 && NGoodJets_pt45 >= 6, eventweight, 4);
+        my_efficiencies["event_sel_weight_2"]->FillWeighted(true && JetID && NGoodLeptons == 0 && NGoodBJets_pt45 >= 2 && NGoodJets_pt45 >= 6 && ntops == 2 , eventweight, 5);
+        my_efficiencies["event_sel_weight_2"]->FillWeighted(true && JetID && NGoodLeptons == 0 && NGoodBJets_pt45 >= 2 && NGoodJets_pt45 >= 6 && ntops == 1 && HT_trigger_pt45 > 500, eventweight, 6);
 
     } 
 }
