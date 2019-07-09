@@ -32,22 +32,22 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
         	my_histos.emplace( "h_nbjets_"+cutVar.first, std::make_shared<TH1D> ( ("h_nbjets_"+cutVar.first).c_str(), ("h_nbjets_"+cutVar.first).c_str(), 15, 0, 15 ) );
 		my_histos.emplace( "h_ht_"+cutVar.first, std::make_shared<TH1D> ( ("h_ht_"+cutVar.first).c_str(), ("h_ht_"+cutVar.first).c_str(), 60, 0, 3000 ) );
 		my_histos.emplace( "h_met_"+cutVar.first, std::make_shared<TH1D> ( ("h_met_"+cutVar.first).c_str(), ("h_met_"+cutVar.first).c_str(), 200, 0, 2000 ) ) ;
-		my_histos.emplace( "h_jetPt_"+cutVar.first, std::make_shared<TH1D> ( ("h_jetPt_"+cutVar.first).c_str(), ("h_jetPt_"+cutVar.first).c_str(), 1000, 0, 500 ) );
-		my_histos.emplace( "h_jetMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_jetMass_"+cutVar.first).c_str(), ("h_jetMass_"+cutVar.first).c_str(), 20, 0, 200 ) );
-		my_histos.emplace( "h_bjetPt_"+cutVar.first, std::make_shared<TH1D> ( ("h_bjetPt_"+cutVar.first).c_str(), ("h_bjetPt_"+cutVar.first).c_str(), 1000, 0, 500 ) );
-                my_histos.emplace( "h_bjetMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_bjetMass_"+cutVar.first).c_str(), ("h_bjetMass_"+cutVar.first).c_str(), 20, 0, 200 ) );
-                my_histos.emplace( "h_topsMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_topsMass_"+cutVar.first).c_str(), ("h_topsMass_"+cutVar.first).c_str(), 20, 0, 200 ) );
+		my_histos.emplace( "h_jetsPt_"+cutVar.first, std::make_shared<TH1D> ( ("h_jetsPt_"+cutVar.first).c_str(), ("h_jetsPt_"+cutVar.first).c_str(), 1000, 0, 500 ) );
+		my_histos.emplace( "h_jetsMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_jetsMass_"+cutVar.first).c_str(), ("h_jetsMass_"+cutVar.first).c_str(), 1000, 0, 200 ) );
+		my_histos.emplace( "h_bjetsPt_"+cutVar.first, std::make_shared<TH1D> ( ("h_bjetsPt_"+cutVar.first).c_str(), ("h_bjetsPt_"+cutVar.first).c_str(), 1000, 0, 500 ) );
+                my_histos.emplace( "h_bjetsMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_bjetsMass_"+cutVar.first).c_str(), ("h_bjetsMass_"+cutVar.first).c_str(), 1000, 0, 200 ) );
+                my_histos.emplace( "h_topsMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_topsMass_"+cutVar.first).c_str(), ("h_topsMass_"+cutVar.first).c_str(), 1000, 0, 200 ) );
 		my_histos.emplace( "h_topsEta_"+cutVar.first, std::make_shared<TH1D> ( ("h_topsEta_"+cutVar.first).c_str(), ("h_topsEta_"+cutVar.first).c_str(), 100, -6, 6 ) );
 		my_histos.emplace( "h_topsPt_"+cutVar.first, std::make_shared<TH1D> ( ("h_topsPt_"+cutVar.first).c_str(), ("h_topsPt_"+cutVar.first).c_str(), 1000, 0, 500 ) );
-		my_histos.emplace( "h_bestTopMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_bestTopMass_"+cutVar.first).c_str(), ("h_bestTopMass_"+cutVar.first).c_str(), 20, 0, 200 ) );
+		my_histos.emplace( "h_bestTopMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_bestTopMass_"+cutVar.first).c_str(), ("h_bestTopMass_"+cutVar.first).c_str(), 1000, 0, 200 ) );
 		my_histos.emplace( "h_bestTopEta_"+cutVar.first, std::make_shared<TH1D> ( ("h_bestTopEta_"+cutVar.first).c_str(), ("h_bestTopEta_"+cutVar.first).c_str(), 100, -6, 6 ) );
 		my_histos.emplace( "h_bestTopPt_"+cutVar.first, std::make_shared<TH1D> ( ("h_bestTopPt_"+cutVar.first).c_str(), ("h_bestTopPt_"+cutVar.first).c_str(), 1000, 0, 500 ) );
-		//my_histos.emplace( "h_non-topMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_non-topMass_"+cutVar.first).c_str(), ("h_non-topMass_"+cutVar.first).c_str(), 20, 0, 200 ) );  
+		//my_histos.emplace( "h_non-topMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_non-topMass_"+cutVar.first).c_str(), ("h_non-topMass_"+cutVar.first).c_str(), 1000, 0, 200 ) );  
 		//my_histos.emplace( "h_non-topPt_"+cutVar.first, std::make_shared<TH1D> ( ("h_non-topPt_"+cutVar.first).c_str(), ("h_non-topPt_"+cutVar.first).c_str(), 1000, 0, 500 ) ); 
 		//my_histos.emplace( "h_XMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_XMass_"+cutVar.first).c_str(), ("h_XMass_"+cutVar.first).c_str(), 20, 0, 200 ) ); // neutralinos mass 
 		my_histos.emplace( "h_dR_bjet1_bjet2_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_bjet1_bjet2_"+cutVar.first).c_str(), ("h_dR_bjet1_bjet2_"+cutVar.first).c_str(), 50, 0, 10 ) );
 		my_histos.emplace( "h_dR_top1_top2_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_top1_top2_"+cutVar.first).c_str(), ("h_dR_top1_top2_"+cutVar.first).c_str(), 50, 0, 10 ) );
-		my_histos.emplace( "h_dR_top_bjet_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_top_bjet_"+cutVar.first).c_str(), ("h_dR_top_bjet_"+cutVar.first).c_str(), 50, 0, 10 ) );
+		my_histos.emplace( "h_dR_tops_bjets_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_tops_bjets_"+cutVar.first).c_str(), ("h_dR_tops_bjets_"+cutVar.first).c_str(), 50, 0, 10 ) );
 		my_2d_histos.emplace( "h_njets_MVA_"+cutVar.first, std::make_shared<TH2D>( ("h_njets_MVA_"+cutVar.first).c_str(), ("h_njets_MVA_"+cutVar.first).c_str(), 8, 7, 15, 50, 0, 1.0 ) );
 
 	}
@@ -175,9 +175,9 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             	dR_bjet1_bjet2 = bjets[0].DeltaR(bjets[1]);
         }
 
-	// -------------------------------------------
-	// -- Calculate DeltaR between top and bjet
-	// -------------------------------------------
+	// ---------------------------------------------
+	// -- Calculate DeltaR between tops and bjets
+	// ---------------------------------------------
 	std::vector<TLorentzVector> bjets;
 	for(int ijet = 0; ijet < Jets.size(); ijet++) {	
 		if(!GoodBJets_pt45[ijet]) continue;
@@ -323,13 +323,14 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
 			// -- jets & bjets mass & pT
 			// -----------------------------
 			for(int ijet = 0; ijet < Jets.size(); ijet++) {
-                        	my_histos["h_jetPt_"+cutVar.first]->Fill(Jets.at(ijet).Pt(), weight);
-                        	my_histos["h_jetMass_"+cutVar.first]->Fill(Jets.at(ijet).M(), weight);			
+				if(!GoodJets_pt45[ijet]) continue;
+                        	my_histos["h_jetsPt_"+cutVar.first]->Fill(Jets.at(ijet).Pt(), weight);
+                        	my_histos["h_jetsMass_"+cutVar.first]->Fill(Jets.at(ijet).M(), weight);			
 
 				if(!GoodBJets_pt45[ijet]) continue;
 				const TLorentzVector& bjet = Jets.at(ijet); 			
-					my_histos["h_bjetPt_"+cutVar.first]->Fill(bjet.Pt(), weight);
-                        		my_histos["h_bjetMass_"+cutVar.first]->Fill(bjet.M(), weight);
+					my_histos["h_bjetsPt_"+cutVar.first]->Fill(bjet.Pt(), weight);
+                        		my_histos["h_bjetsMass_"+cutVar.first]->Fill(bjet.M(), weight);
 			}
 	
 			// --------------------------
@@ -364,7 +365,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
 			// -- deltaR between top and bjet
 			// ---------------------------------
 			for (int idR = 0; idR < dR_top_bjet.size(); idR++) {
-				my_histos["h_dR_top_bjet_"+cutVar.first]->Fill( dR_top_bjet.at(idR), weight );	
+				my_histos["h_dR_tops_bjets_"+cutVar.first]->Fill( dR_top_bjet.at(idR), weight );	
 			}
 
 			my_2d_histos["h_njets_MVA_"+cutVar.first]->Fill( NGoodJets_pt45, deepESM_val, weight );
@@ -374,15 +375,13 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
 
         // Example Fill event selection efficiencies (cut flow)
         my_efficiencies["event_sel_weight"]->SetUseWeightedEvents();
-        my_efficiencies["event_sel_weight"]->FillWeighted(true,eventweight,0);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID,eventweight,1);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1,eventweight,2);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC,eventweight,3);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC && NGoodBJets_pt45 >= 1,eventweight,4);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC && NGoodBJets_pt45 >= 1 && 50 < Mbl && Mbl < 250,eventweight,5);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC && NGoodBJets_pt45 >= 1 && 50 < Mbl && Mbl < 250 && HT_trigger_pt45 > 300,eventweight,6);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC && NGoodBJets_pt45 >= 1 && 50 < Mbl && Mbl < 250 && HT_trigger_pt45 > 300 && NGoodJets_pt45 >= 7,eventweight,7);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC && NGoodBJets_pt45 >= 1 && 50 < Mbl && Mbl < 250 && HT_trigger_pt45 > 300 && NGoodJets_pt45 >= 7,weight,8);
+        my_efficiencies["event_sel_weight"]->FillWeighted(true, eventweight, 0);
+        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID, eventweight, 1);
+        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 0, eventweight, 2);
+        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 0 && passTriggerMC, eventweight, 3);
+        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 0 && passTriggerMC && NGoodBJets_pt45 >= 1, eventweight, 4);
+        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 0 && passTriggerMC && NGoodBJets_pt45 >= 1 && HT_trigger_pt45 > 500, eventweight, 5);
+        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 0 && passTriggerMC && NGoodBJets_pt45 >= 1 && HT_trigger_pt45 > 500 && NGoodJets_pt45 >= 6, eventweight, 6);
 
     } 
 }
