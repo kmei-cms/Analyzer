@@ -2,10 +2,10 @@ import ROOT
 import plot
 import math
 
-#version = "Keras_V1.2.6_Approval_RatioOfRatios"
-version = "Keras_V3.0.2_Approval_RatioOfRatios"
+#version = "Keras_V1.2.8_Approval_SepOther_StatErrPlusFullDev"
+version = "Keras_V3.0.4_Approval_SepOther_StatErrPlusFullDev"
 
-fitversion = "Approval_2017"
+fitversion = "Approval_With12JetFix_2017"
 #fitversion = "GL_2017"
 #fitversion = "FS2017"
 #GL_2016_nom_shared
@@ -236,44 +236,49 @@ for mva in mvas:
 # Add the QCD CR systematic and the new HT systematics
 if "2016" in fitversion:
     #f_CR_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/FinalSystematicFiles/qcdCR_shape_systematic_2016.root")
-    f_CR_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/RatioOfRatiosSystematic/2016_eventWeightSystematic.root")
+    f_CR_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/RatioOfRatiosSystematic_12BinInclusive/2016_qcdCR_qcdCRErr_Systematics.root")
     h_CR_2016 = [f_CR_2016.Get("%s_qcdCR"%mva) for mva in mvas]
+    herr_CR_2016 = [f_CR_2016.Get("%s_qcdCRErr"%mva) for mva in mvas]
     outputfile.cd()
     for h in h_CR_2016:
-        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 8, 0, 8)
+        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
+        for bin in range(h.GetNbinsX()):
+            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+        newh.Write()
+    for h in herr_CR_2016:
+        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
         for bin in range(h.GetNbinsX()):
             newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
         newh.Write()
 
-    f_HT_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/FinalSystematicFiles/2016_htRatioSyst.root")
+    f_HT_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/RatioOfRatiosSystematic_12BinInclusive/2016_htRatioSyst.root")
     h_HTtail_2016 = [f_HT_2016.Get("%s_httail"%mva) for mva in mvas]
     h_HTnjet_2016 = [f_HT_2016.Get("%s_htnjet"%mva) for mva in mvas]
     outputfile.cd()
     for i, h in enumerate(h_HTtail_2016):
-        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 8, 0, 8)
-        for bin in range(h.GetNbinsX()-8):
+        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
+        for bin in range(h.GetNbinsX()):
             newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
-        #if i == 2:
-        #    newh.SetBinContent(8, 2*(newh.GetBinContent(7)-1)+1)
         newh.Write()
     for h in h_HTnjet_2016:
-        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 8, 0, 8)
+        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
         for bin in range(h.GetNbinsX()):
             newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
         newh.Write()
 
         
 if "2017" in fitversion:
-    f_CR_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/RatioOfRatiosSystematic/2017_eventWeightSystematic.root")
+    f_CR_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/RatioOfRatiosSystematic_12BinInclusive/2017_qcdCR_qcdCRErr_Systematics.root")
     #f_CR_2017 = ROOT.TFile.Open("/uscms_data/d1/owenl/stealth-rpv/mva-shape-syst/dratio-rw5-fab5.root")
     #print ["h_njets_dratio_mva%s_ab_rw5_fab"%mva for mva in ["1","2","3","4"]]
     #h_CR_2017 = [f_CR_2017.Get("h_njets_dratio_mva%s_ab_rw5_fab5"%mva) for mva in ["1","2","3","4"]]
     #f_CR_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/FinalSystematicFiles/qcdCR_shape_systematic_2017.root")
     h_CR_2017 = [f_CR_2017.Get("%s_qcdCR"%mva) for mva in mvas]
+    herr_CR_2017 = [f_CR_2017.Get("%s_qcdCRErr"%mva) for mva in mvas]
     outputfile.cd()
     for i,h in enumerate(h_CR_2017):
         #print h
-        newh = ROOT.TH1D("D%s_qcdCR"%(i+1), "D%s_qcdCR"%(i+1), 8, 0, 8)
+        newh = ROOT.TH1D("D%s_qcdCR"%(i+1), "D%s_qcdCR"%(i+1), 6, 0, 6)
         for bin in range(h.GetNbinsX()):
             newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
             # if i == 2 and bin >= 5:
@@ -283,18 +288,23 @@ if "2017" in fitversion:
             # else:
             #     newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
         newh.Write()
+    for i,h in enumerate(herr_CR_2017):
+        newh = ROOT.TH1D("D%s_qcdCRErr"%(i+1), "D%s_qcdCRErr"%(i+1), 6, 0, 6)
+        for bin in range(h.GetNbinsX()):
+            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+        newh.Write()
 
-    f_HT_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/FinalSystematicFiles/2017_htRatioSyst.root")
+    f_HT_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/RatioOfRatiosSystematic_12BinInclusive/2017_htRatioSyst.root")
     h_HTtail_2017 = [f_HT_2017.Get("%s_httail"%mva) for mva in mvas]
     h_HTnjet_2017 = [f_HT_2017.Get("%s_htnjet"%mva) for mva in mvas]
     outputfile.cd()
     for h in h_HTtail_2017:
-        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 8, 0, 8)
+        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
         for bin in range(h.GetNbinsX()):
             newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
         newh.Write()
     for h in h_HTnjet_2017:
-        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 8, 0, 8)
+        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
         for bin in range(h.GetNbinsX()):
             newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
         newh.Write()
