@@ -21,6 +21,7 @@
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 #include "Analyzer/Analyzer/include/CalculateSFMean.h"
 #include "Analyzer/Analyzer/include/Config.h"
+#include "Analyzer/Analyzer/include/Semra_Analyzer.h" // semra
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -159,6 +160,7 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
+/// here is the options to run the codes / can add options
     while((opt = getopt_long(argc, argv, "cvA:H:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
@@ -201,6 +203,7 @@ int main(int argc, char *argv[])
         {"MakeNJetDists",           run<MakeNJetDists>},
         {"AnalyzeNjetsMinusOneCSFillDijetHists", run<AnalyzeNjetsMinusOneCSFillDijetHists>},
         {"AnalyzeNjetsMinusOneCSJetReplacement", run<AnalyzeNjetsMinusOneCSJetReplacement>},
+	{"Semra_Analyzer",          run<Semra_Analyzer>}, // SEMRA / to run my analyzer
     }; 
 
     try
