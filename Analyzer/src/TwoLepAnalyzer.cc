@@ -42,6 +42,7 @@ void TwoLepAnalyzer::InitHistos(const std::map<std::string, bool>& cutmap)
                 my_histos.emplace( "h_jet_M_"+cutVar.first, std::make_shared<TH1D> ( ("h_jet_M_"+cutVar.first).c_str(), ("h_jet_M_"+cutVar.first).c_str(), 100, 0, 500 ) );
                 my_histos.emplace( "h_Mbl1_"+cutVar.first, std::make_shared<TH1D> ( ("h_Mbl1_"+cutVar.first).c_str(), ("h_Mbl1_"+cutVar.first).c_str(), 100, 0, 500 ) );
                 my_histos.emplace( "h_Mbl2_"+cutVar.first, std::make_shared<TH1D> ( ("h_Mbl2_"+cutVar.first).c_str(), ("h_Mbl2_"+cutVar.first).c_str(), 100, 0, 500 ) );
+                my_histos.emplace( "h_njetsPlus1_"+cutVar.first, std::make_shared<TH1D> ( ("h_njetsPlus1_"+cutVar.first).c_str(), ("h_njetsPlus1_"+cutVar.first).c_str(), 20, 1, 21 ) );
 	}
 
 	//Define TEfficiencies if you are doing trigger studies (for proper error bars) or cut flow charts.
@@ -52,8 +53,7 @@ void TwoLepAnalyzer::InitHistos(const std::map<std::string, bool>& cutmap)
 /// Put everything you want to do per event 
 void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
 {
- 
-   while( tr.getNextEvent() )
+    while( tr.getNextEvent() )
     {
         //--------------------------------------------------
         //-- Print Event Number 
@@ -91,6 +91,7 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const auto& deepESM_bin4        = tr.getVar<bool>("deepESM_bin4");
         const auto& deepESM_binNum      = tr.getVar<int>("deepESM_binNum");
         const auto& onZ                 = tr.getVar<bool>("onZ");
+        const auto& GoodJets_pt30       = tr.getVec<bool>("GoodJets_pt30");
 
         // ------------------------
         // -- Define weight
@@ -132,22 +133,21 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         std::vector<TLorentzVector> GoodBJetsVec_pt30;
         for (int j=0; j < Jets.size(); j++)
         {
-            if (GoodBJets_pt30.at(j))
-            {
-                GoodBJetsVec_pt30.push_back(Jets.at(j));
-            }
+            if (GoodBJets_pt30.at(j)) GoodBJetsVec_pt30.push_back(Jets.at(j));
+        }
+        std::vector<TLorentzVector> GoodJetsVec_pt30;
+        for (int j=0; j < Jets.size(); j++)
+        {
+            if (GoodJets_pt30.at(j)) GoodJetsVec_pt30.push_back(Jets.at(j));
         }
         // two lepton M(b,l) definition
-        TLorentzVector lep1;
-        TLorentzVector lep2;
-        int  used_jet;
-        double Mbl1;
-        double Mbl2;
-        double mbl1diff=999;
-        double mbl2diff=999;
-        if(NGoodLeptons==2)
+        TLorentzVector lep1, lep2;
+        int  used_jet1, used_jet2;
+        double Mbl1=-1, Mbl2=-1;
+        double mbl1diff=999, mbl2diff=999;
+        if (NGoodLeptons==2)
         {
-            if(GoodLeptons.at(0).second.Pt() >= GoodLeptons.at(1).second.Pt())
+            if (GoodLeptons.at(0).second.Pt() >= GoodLeptons.at(1).second.Pt())
             {
                 lep1 = GoodLeptons.at(0).second;
                 lep2 = GoodLeptons.at(1).second;
@@ -157,39 +157,61 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                 lep1 = GoodLeptons.at(1).second;
                 lep2 = GoodLeptons.at(0).second;
             }
-            if(NGoodBJets_pt30 >= 2)
+            if (NGoodBJets_pt30 >= 2)
             {
-                for(int b=0; b < NGoodBJets_pt30; b++)
+                for (int b=0; b < NGoodBJets_pt30; b++)
                 {
                     double  mbl1 = (lep1 + GoodBJetsVec_pt30.at(b)).M();
                     if( abs(mbl1 - 105) < mbl1diff)
                     {
                         Mbl1 = mbl1;
                         mbl1diff = abs(mbl1 - 105);
-                        used_jet = b;
+                        used_jet1 = b;
                     }
-                }
-                for(int b=0; b < NGoodBJets_pt30; b++)
-                {
-                    if(b != used_jet)
+                    double mbl2 = (lep2 + GoodBJetsVec_pt30.at(b)).M();
+                    if (abs(mbl2 - 105) < mbl2diff)
                     {
-                        double mbl2 = (lep2 + GoodBJetsVec_pt30.at(b)).M();
-                        if( abs(mbl2 - 105) < mbl2diff)
+                        Mbl2 = mbl2;
+                        mbl2diff = abs(mbl2 - 105);
+                        used_jet2 = b;
+                    }
+                }                
+                if (used_jet1 == used_jet2)
+                {
+                    if (mbl1diff > mbl2diff)
+                    {
+                        for (int b=0; b < NGoodBJets_pt30; b++)
                         {
-                            Mbl2 = mbl2;
-                            mbl2diff = abs(mbl2 - 105);
+                            double mbl1 = (lep1 + GoodBJetsVec_pt30.at(b)).M();
+                            if( abs(mbl1 - 105) < mbl1diff && b != used_jet2)
+                            {                            
+                                Mbl1 = mbl1;
+                                mbl1diff = abs(mbl1 - 105);
+                            }
                         }
                     }
-                }
+                    else 
+                    {
+                        for (int b=0; b < NGoodBJets_pt30; b++)
+                        {
+                            double mbl2 = (lep2+ GoodBJetsVec_pt30.at(b)).M();
+                            if (abs(mbl2 - 105) < mbl2diff && b != used_jet1)
+                            {
+                                Mbl2 = mbl2;
+                                mbl2diff = abs(mbl2 - 105);
+                            }
+                        }
+                    }
+                }                        
             }
             else if (NGoodBJets_pt30 == 1)
             {
-                if ( abs((lep1 + GoodBJetsVec_pt30.at(0)).M() - 110) <= abs((lep2 + GoodBJetsVec_pt30.at(0)).M() - 110) )
+                if ( abs((lep1 + GoodBJetsVec_pt30.at(0)).M() - 105) <= abs((lep2 + GoodBJetsVec_pt30.at(0)).M() - 105) )
                 {
                     Mbl1 = (lep1 + GoodBJetsVec_pt30.at(0)).M();
-                    for (int j = 0; j < Jets.size(); j++)
+                    for (int j = 0; j < NGoodJets_pt30; j++)
                     {
-                        double mbl2 = (lep2 + Jets.at(j)).M();
+                        double mbl2 = (lep2 + GoodJetsVec_pt30.at(j)).M();
                         if (abs(mbl2 - 105) < mbl2diff && !GoodBJets_pt30.at(j))
                         {
                             Mbl2 = mbl2;
@@ -200,9 +222,9 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                 else
                 { 
                     Mbl2 = (lep2 + GoodBJetsVec_pt30.at(0)).M();
-                    for (int j = 0; j < Jets.size(); j++)
+                    for (int j = 0; j < NGoodJets_pt30; j++)
                     {
-                        double mbl1 = (lep1 + Jets.at(j)).M();
+                        double mbl1 = (lep1 + GoodJetsVec_pt30.at(j)).M();
                         if (abs(mbl1 - 105) < mbl1diff && !GoodBJets_pt30.at(j))
                         {
                             Mbl1 = mbl1;
@@ -213,52 +235,76 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             }
             else            
             {
-                for(int j=0; j < Jets.size(); j++)
+                for (int j=0; j < NGoodJets_pt30; j++)
                 {
-                    double  mbl1 = (lep1 + Jets.at(j)).M();
+                    double  mbl1 = (lep1 + GoodJetsVec_pt30.at(j)).M();
                     if( abs(mbl1 - 105) < mbl1diff)
                     {
                         Mbl1 = mbl1;
                         mbl1diff = abs(mbl1 - 105);
-                        used_jet = j;
+                        used_jet1 = j;
                     }
+                    double mbl2 = (lep2 + GoodJetsVec_pt30.at(j)).M();
+                    if( abs(mbl2 - 105) < mbl2diff)
+                    {
+                        Mbl2 = mbl2;
+                        mbl2diff = abs(mbl2 - 105);
+                        used_jet2 = j;
+                    } 
                 }
-                for(int j=0; j < Jets.size(); j++)
+                if (used_jet1 == used_jet2)
                 {
-                    if( j != used_jet)
-                    {                    
-                        double mbl2 = (lep2 + Jets.at(j)).M();
-                        if( abs(mbl2 - 105) < mbl2diff)
+                    if (mbl1diff >  mbl2diff)
+                    {
+                        for (int j=0; j < NGoodJets_pt30; j++)
                         {
-                            Mbl2 = mbl2;
-                            mbl2diff = abs(mbl2 - 105);
+                            double mbl1 = (lep1 +GoodJetsVec_pt30.at(j)).M();
+                            if (abs(mbl1 - 105) < mbl1diff && j != used_jet2)
+                            {
+                                Mbl1 = mbl1;
+                                mbl1diff = abs(mbl1 - 105);
+                            }
                         }
-                    
+                    }
+                    else
+                    {
+                        for (int j=0; j < NGoodJets_pt30; j++)
+                        {
+                            double mbl2 = (lep2 + GoodJetsVec_pt30.at(j)).M();
+                            if (abs(mbl2-105) < mbl2diff && j != used_jet1)
+                            {
+                                Mbl2 = mbl2;
+                                mbl2diff = abs(mbl2-105);
+                            }
+                        }
                     }
                 }
             }
                 
         }
+        //Some other plotting variables
+        TLorentzVector NonBJetsSum;
+        if (NGoodLeptons==2 && NGoodBJets_pt30==2) 
+        {
+            for (unsigned int i = 0; i < Jets.size(); ++i) 
+            {
+                if(!GoodBJets_pt30.at(i))  NonBJetsSum += Jets.at(i);
+            }
+        }
+        TLorentzVector lepton_sum;
+        for(int l = 0; l < GoodLeptons.size(); l++)
+        {
+            lepton_sum += GoodLeptons.at(l).second;
+        }  
         // cutmap booleans
         bool pass_general =  passMadHT && passBlind;
         bool pass_jgeneral = passMadHT && passBlind && JetID;
         bool pass_1l = NGoodLeptons==1;
-        bool is_elec = false;
-        bool is_muon = false;
-        if(pass_1l) {
-            is_elec =  GoodLeptons[0].first=="e";
-            is_muon = GoodLeptons[0].first=="m";
-        }
-        bool pass_2l = false;
-        bool pass_2l_opc = false;
-        if(NGoodLeptons==2) {
-            pass_2l = true;
-            pass_2l_opc = GoodLeptonsCharge[0]!=GoodLeptonsCharge[1];
-        }
-        bool is_ee = false;
-        bool is_em = false;
-        bool is_me = false;
-        bool is_mm = false;
+        bool is_muon =  pass_1l ? GoodLeptons[0].first=="m" : false;
+        bool is_elec =  pass_1l ?  GoodLeptons[0].first=="e" : false; 
+        bool pass_2l = NGoodLeptons==2;
+        bool pass_2l_opc =  pass_2l ? GoodLeptonsCharge[0]!=GoodLeptonsCharge[1] : false;
+        bool is_ee = false, is_em = false, is_me = false, is_mm = false;
         double twolepDeltaR = -1;
         if(pass_2l_opc) {
             is_ee = GoodLeptons[0].first=="e" && GoodLeptons[1].first=="e";
@@ -267,6 +313,9 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             is_mm = GoodLeptons[0].first=="m" && GoodLeptons[1].first=="m";
             twolepDeltaR = GoodLeptons[0].second.DeltaR(GoodLeptons[1].second);
         }
+        bool pass_Mbl1 = pass_2l_opc ? (25 <= Mbl1 && Mbl1 <= 250) : false;
+        bool pass_Mbl2 =  pass_2l_opc ? (25 <= Mbl2 && Mbl2 <= 250) : false;
+        bool pass_bothMbl = pass_Mbl1 && pass_Mbl2;
         // cutmap
         const std::map<std::string, bool>& cutmap
 	{
@@ -346,40 +395,27 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             {"_2l_offZ_ge1b", pass_jgeneral && pass_2l_opc && !onZ && NGoodBJets_pt30 >= 1},
             {"_2l_offZ_ge2b", pass_jgeneral && pass_2l_opc && !onZ && NGoodBJets_pt30 >= 2},
                 //Adjusted Mbl cuts
-            {"_2l_offZ_Mbl1ge50le250", pass_general && pass_2l_opc && !onZ && Mbl1 >= 50 && Mbl1 <= 250},
-            {"_2l_offZ_Mbl2ge50le250", pass_general && pass_2l_opc && !onZ && Mbl2 >= 50 && Mbl2 <= 250},
-            {"_2l_offZ_BothMblge50le250", pass_general && pass_2l_opc && !onZ && Mbl1 >= 50 && Mbl1 <= 250 && Mbl2 >=50 && Mbl2 <= 250},
+            {"_2l_offZ_Mbl1ge25le250", pass_general && pass_2l_opc && !onZ && pass_Mbl1},
+            {"_2l_offZ_Mbl2ge25le250", pass_general && pass_2l_opc && !onZ && pass_Mbl2},
+            {"_2l_offZ_BothMblge25le250", pass_general && pass_2l_opc && !onZ && pass_bothMbl},
+                // HT cuts
+            {"_2l_HTge200", pass_general && pass_2l_opc && HT_trigger_pt30 >= 200},
+            {"_2l_offZ_HTge200", pass_general && pass_2l_opc && !onZ && HT_trigger_pt30 >=200},
             // combo cuts
             {"_2l_offZ_ge1b_ge4j", pass_jgeneral && pass_2l_opc && !onZ && NGoodBJets_pt30 >= 1 && NGoodJets_pt30 >= 4},
             {"_2l_offZ_ge2b_ge4j", pass_jgeneral && pass_2l_opc && !onZ && NGoodBJets_pt30 >= 2 && NGoodJets_pt30 >= 4},
-            {"_2l_offZ_ge1b_BothMblge50le250", pass_jgeneral && pass_2l_opc && !onZ && NGoodBJets_pt30 >= 1 && Mbl1 >= 50 && Mbl1 <= 250 && Mbl2 >=50 && Mbl2 <= 250},
-            {"_2l_offZ_ge2b_BothMblge50le250", pass_jgeneral && pass_2l_opc && !onZ && NGoodBJets_pt30  >= 2 && Mbl1 >= 50 && Mbl1 <= 250 && Mbl2 >=50 && Mbl2 <= 250},
-            {"_2l_offZ_ge1b_ge4j_BothMblge50le250", pass_jgeneral && pass_2l_opc && !onZ & NGoodBJets_pt30 >= 1 && NGoodJets_pt30 >= 4 && Mbl1 >= 50 && Mbl1 <= 250 && Mbl2 >=50 && Mbl2 <= 250}
-            
+            {"_2l_offZ_ge1b_BothMblge25le250", pass_jgeneral && pass_2l_opc && !onZ && NGoodBJets_pt30 >= 1 && pass_bothMbl},
+            {"_2l_offZ_ge2b_BothMblge25le250", pass_jgeneral && pass_2l_opc && !onZ && NGoodBJets_pt30  >= 2 && pass_bothMbl},
+            {"_2l_offZ_ge1b_ge4j_BothMblge25le250", pass_jgeneral && pass_2l_opc && !onZ && NGoodBJets_pt30 >= 1 && NGoodJets_pt30 >= 4 && pass_bothMbl},
+            {"_2l_offZ_ge1b_BothMblge25le250_HTge200", pass_jgeneral && pass_2l_opc && !onZ && NGoodBJets_pt30 >= 1 && pass_bothMbl && HT_trigger_pt30 >= 200},
+            {"_2l_offZ_ge1b_BothMblge25le250_HTge200_ge4j", pass_jgeneral && pass_2l_opc && !onZ && NGoodBJets_pt30 >= 1 && pass_bothMbl && HT_trigger_pt30 >= 200 && NGoodJets_pt30 >= 4}
        	};
-        // Some definitions of plotting variables
-        TLorentzVector NonBJetsSum;
-        if (pass_2l_opc && NGoodBJets_pt30==2) 
-        {
-            for (unsigned int i = 0; i < Jets.size(); ++i) 
-            {
-                if(!GoodBJets_pt30.at(i)) 
-                {
-                    NonBJetsSum += Jets.at(i);
-                }
-            }
-        }
-        TLorentzVector lepton_sum;
-        for(int l = 0; l < GoodLeptons.size(); l++)
-        {
-            lepton_sum += GoodLeptons.at(l).second;
-        }  
-        
+                
 	if (!inithisto) {
 		InitHistos(cutmap);
 		inithisto = true;
 	}
-
+ 
 	my_histos["EventCounter" ]->Fill( eventCounter );
         if( !passMadHT ) continue; //Make sure not to double count DY events
 
@@ -397,10 +433,11 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                         my_histos["h_lepton_mass_"+cutVar.first]->Fill(lepton_sum.M(), weight);
                         my_histos["h_Mbl1_"+cutVar.first]->Fill(Mbl1, weight);
                         my_histos["h_Mbl2_"+cutVar.first]->Fill(Mbl2, weight);
-                        for(int j = 0; j < Jets.size(); j++) {
-                            my_histos["h_jet_pt_"+cutVar.first]->Fill(Jets.at(j).Pt(), weight);
-                            my_histos["h_jet_M_"+cutVar.first]->Fill(Jets.at(j).M(), weight);
-                            }
+                        my_histos["h_njetsPlus1_"+cutVar.first]->Fill( NGoodJets_pt30, weight );
+                        for(int j = 0; j < NGoodJets_pt30; j++) {
+                            my_histos["h_jet_pt_"+cutVar.first]->Fill(GoodJetsVec_pt30.at(j).Pt(), weight);
+                            my_histos["h_jet_M_"+cutVar.first]->Fill(GoodJetsVec_pt30.at(j).M(), weight);
+                        }   
                         for(int l = 0; l < GoodLeptons.size(); l++) {
                             my_histos["h_lepton_pt_"+cutVar.first]->Fill(GoodLeptons.at(l).second.Pt(), weight);
                            
@@ -408,19 +445,17 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
 		}
 	}
 
-
+        
         // Example Fill event selection efficiencies
         my_efficiencies["event_sel_weight"]->SetUseWeightedEvents();
-        my_efficiencies["event_sel_weight"]->FillWeighted(true,eventweight,0);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID,eventweight,1);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1,eventweight,2);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC,eventweight,3);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC && NGoodBJets_pt30 >= 1,eventweight,4);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC && NGoodBJets_pt30 >= 1 && 50 < Mbl && Mbl < 250,eventweight,5);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC && NGoodBJets_pt30 >= 1 && 50 < Mbl && Mbl < 250 && HT_trigger_pt30 > 300,eventweight,6);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC && NGoodBJets_pt30 >= 1 && 50 < Mbl && Mbl < 250 && HT_trigger_pt30 > 300 && NGoodJets_pt30 >= 7,eventweight,7);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC && NGoodBJets_pt30 >= 1 && 50 < Mbl && Mbl < 250 && HT_trigger_pt30 > 300 && NGoodJets_pt30 >= 7,weight,8);
-    } 
+        // my_efficiencies["event_sel_weight"]->FillWeighted(true,eventweight,0);
+        // my_efficiencies["event_sel_weight"]->FillWeighted(true && pass_jgeneral,eventweight,1);
+        my_efficiencies["event_sel_weight"]->FillWeighted(true && pass_jgeneral && pass_2l_opc,eventweight,0);
+        my_efficiencies["event_sel_weight"]->FillWeighted(true && pass_jgeneral && pass_2l_opc && NGoodBJets_pt30 >= 1,eventweight,1);
+        my_efficiencies["event_sel_weight"]->FillWeighted(true && pass_jgeneral && pass_2l_opc && NGoodBJets_pt30 >= 1 && NGoodJets_pt30 >= 4,eventweight,2);
+        my_efficiencies["event_sel_weight"]->FillWeighted(true && pass_jgeneral && pass_2l_opc && NGoodBJets_pt30 >= 1 && NGoodJets_pt30 >= 4 && pass_bothMbl ,eventweight,3);
+    }
+   
 }
 
 
