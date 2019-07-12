@@ -46,7 +46,7 @@ INCLUDESDIRS    += -I$(TENSORFLOW_DIR)/include
 
 #OBJS       = $(patsubst %, $(ODIR)/%, $(OBJ))
 
-PROGRAMS = MyAnalysis MySkimAnalysis plot_0l plot_1l Stack_plot
+PROGRAMS = MyAnalysis MySkimAnalysis plot_0l plot_1l Stack_plot 
 
 all: mkobj sampPyWrap $(PROGRAMS)
 
