@@ -85,6 +85,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const auto& HT_trigger_pt45 = tr.getVar<double>("HT_trigger_pt45");
         const auto& NGoodJets_pt45  = tr.getVar<int>("NGoodJets_pt45");
         const auto& passMadHT       = tr.getVar<bool>("passMadHT");
+        const auto& passBlindHad    = tr.getVar<bool>("passBlindHad");
         const auto& passBaseline    = tr.getVar<bool>("passBaseline1l_Good");
         const auto& MET             = tr.getVar<double>("MET");       
         const auto& Jets            = tr.getVec<TLorentzVector>("Jets");
@@ -114,9 +115,9 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const auto& pass_ge2b       = NGoodBJets_pt45 >= 2;
         const auto& pass_1t         = ntops == 1;
         const auto& pass_2t         = ntops == 2;
-        const auto& pass_1t1j       = ntops == 1 && ntops_1jet == 1;
-        const auto& pass_1t3j       = ntops == 1 && ntops_3jet == 1;
-        const auto& pass_2t1j       = ntops == 2 && ntops_1jet == 2;
+        const auto& pass_1t1j       = ntops == 1 && ntops_3jet == 0;
+        const auto& pass_1t3j       = ntops == 1 && ntops_1jet == 0;
+        /*const auto& pass_2t1j       = ntops == 2 && ntops_1jet == 2;
         const auto& pass_2t3j       = ntops == 2 && ntops_3jet == 2;
         const auto& pass_2t1j3j     = ntops == 2 && ntops_1jet == 1 && ntops_3jet == 1;
         const auto& pass_ge2t1j     = ntops >= 2 && ntops_1jet >= 2;
@@ -125,7 +126,18 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const auto& pass_3t1j       = ntops == 3 && ntops_1jet == 3;
         const auto& pass_3t3j       = ntops == 3 && ntops_3jet == 3;
         const auto& pass_ge3t1j     = ntops >= 3 && ntops_1jet >= 3;
-        const auto& pass_ge3t3j     = ntops >= 3 && ntops_3jet >= 3;
+        const auto& pass_ge3t3j     = ntops >= 3 && ntops_3jet >= 3;*/
+        const auto& pass_2t1j       = ntops == 2 && ntops_3jet == 0;
+        const auto& pass_2t3j       = ntops == 2 && ntops_1jet == 0;
+        const auto& pass_2t1j3j     = ntops == 2 && ntops_1jet == 1 && ntops_3jet == 1;
+        const auto& pass_ge2t1j     = ntops >= 2 && ntops_3jet == 0;
+        const auto& pass_ge2t3j     = ntops >= 2 && ntops_1jet == 0;
+        const auto& pass_ge2t1j3j   = ntops >= 2 && ntops_1jet >= 1 && ntops_3jet >= 1;
+        const auto& pass_3t1j       = ntops == 3 && ntops_3jet == 0;
+        const auto& pass_3t3j       = ntops == 3 && ntops_1jet == 0;
+        const auto& pass_ge3t1j     = ntops >= 3 && ntops_3jet == 0;
+        const auto& pass_ge3t3j     = ntops >= 3 && ntops_1jet == 0;
+        const auto& pass_general    = JetID && passMadHT && passBlindHad;
 
         // ------------------------
         // -- Define weight
@@ -250,8 +262,8 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                 {"0l_HT500_ge6j_2t",        pass_0l && pass_HT500 && pass_ge6j && pass_2t                },
                 {"0l_HT500_ge6j_1t1j",      pass_0l && pass_HT500 && pass_ge6j && pass_1t1j              },
                 {"0l_HT500_ge6j_1t3j",      pass_0l && pass_HT500 && pass_ge6j && pass_1t3j              },
-                {"0l_HT500_ge6j_2t1j",      pass_0l && pass_HT500 && pass_ge6j && pass_2t1j              },
-                {"0l_HT500_ge6j_2t3j",      pass_0l && pass_HT500 && pass_ge6j && pass_2t3j              },
+                //{"0l_HT500_ge6j_2t1j",      pass_0l && pass_HT500 && pass_ge6j && pass_2t1j              },
+                //{"0l_HT500_ge6j_2t3j",      pass_0l && pass_HT500 && pass_ge6j && pass_2t3j              },
 
                 {"0l_HT500_ge1b_ge6j",      pass_0l && pass_HT500 && pass_ge1b && pass_ge6j              },
                 {"0l_HT500_ge1b_1t",        pass_0l && pass_HT500 && pass_ge1b && pass_1t                },
@@ -266,7 +278,9 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                 {"0l_HT500_ge2b_2t",        pass_0l && pass_HT500 && pass_ge2b && pass_2t                },
                 {"0l_HT500_ge2b_1t1j",      pass_0l && pass_HT500 && pass_ge2b && pass_1t1j              },
                 {"0l_HT500_ge2b_1t3j",      pass_0l && pass_HT500 && pass_ge2b && pass_1t3j              },
-                
+                //{"0l_HT500_ge2b_2t1j",      pass_0l && pass_HT500 && pass_ge1b && pass_2t1j              },
+                //{"0l_HT500_ge2b_2t3j",      pass_0l && pass_HT500 && pass_ge1b && pass_2t3j              },               
+ 
                 {"0l_ge1b_ge6j_1t",         pass_0l && pass_ge1b && pass_ge6j && pass_1t                 },
                 {"0l_ge1b_ge6j_2t",         pass_0l && pass_ge1b && pass_ge6j && pass_2t                 },
                 {"0l_ge1b_ge6j_1t1j",       pass_0l && pass_ge1b && pass_ge6j && pass_1t1j               },
@@ -292,41 +306,50 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                 {"0l_HT500_ge2b_ge6j_1t3j", pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_1t3j },
 */
                 // 2 tops
-                {"0l_HT500_ge6j_2t1j",             pass_0l && pass_HT500 && pass_ge6j && pass_2t1j && ntops_2jet==0                  },
-                {"0l_HT500_ge6j_2t3j",             pass_0l && pass_HT500 && pass_ge6j && pass_2t3j && ntops_2jet==0                  },
-                {"0l_HT500_ge6j_2t1j-3j",          pass_0l && pass_HT500 && pass_ge6j && pass_2t1j3j && ntops_2jet==0                },
-                {"0l_HT500_ge2b_2t1j",             pass_0l && pass_HT500 && pass_ge2b && pass_2t1j && ntops_2jet==0                  },
-                {"0l_HT500_ge2b_2t3j",             pass_0l && pass_HT500 && pass_ge2b && pass_2t3j && ntops_2jet==0                  },
-                {"0l_HT500_ge2b_2t1j-3j",          pass_0l && pass_HT500 && pass_ge2b && pass_2t1j3j && ntops_2jet==0                },
-                {"0l_HT500_ge2b_ge6j_2t1j",        pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_2t1j && ntops_2jet==0     },
-                {"0l_HT500_ge2b_ge6j_2t3j",        pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_2t3j && ntops_2jet==0     },
-                {"0l_HT500_ge2b_ge6j_2t1j-3j",     pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_2t1j3j && ntops_2jet==0   },    
+                {"0l_HT500_ge6j_2t1j",           pass_0l && pass_HT500 && pass_ge6j && pass_2t1j && ntops_2jet==0                  },
+                {"0l_HT500_ge6j_2t3j",           pass_0l && pass_HT500 && pass_ge6j && pass_2t3j && ntops_2jet==0                  },
+                {"0l_HT500_ge6j_2t1j-3j",        pass_0l && pass_HT500 && pass_ge6j && pass_2t1j3j && ntops_2jet==0                },
+
+                {"0l_HT500_ge2b_2t1j",           pass_0l && pass_HT500 && pass_ge2b && pass_2t1j && ntops_2jet==0                  },
+                {"0l_HT500_ge2b_2t3j",           pass_0l && pass_HT500 && pass_ge2b && pass_2t3j && ntops_2jet==0                  },
+                {"0l_HT500_ge2b_2t1j-3j",        pass_0l && pass_HT500 && pass_ge2b && pass_2t1j3j && ntops_2jet==0                },
+
+                {"0l_HT500_ge2b_ge6j_2t1j",      pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_2t1j && ntops_2jet==0     },
+                {"0l_HT500_ge2b_ge6j_2t3j",      pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_2t3j && ntops_2jet==0     },
+                {"0l_HT500_ge2b_ge6j_2t1j-3j",   pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_2t1j3j && ntops_2jet==0   },    
+
                 // >= 2 tops
-                {"0l_HT500_ge6j_ge2t1j",           pass_0l && pass_HT500 && pass_ge6j && pass_ge2t1j && ntops_2jet==0                },
-                {"0l_HT500_ge6j_ge2t3j",           pass_0l && pass_HT500 && pass_ge6j && pass_ge2t3j && ntops_2jet==0                },
-                {"0l_HT500_ge6j_ge2t1j-3j",        pass_0l && pass_HT500 && pass_ge6j && pass_ge2t1j3j && ntops_2jet==0              },
-                {"0l_HT500_ge2b_ge2t1j",           pass_0l && pass_HT500 && pass_ge2b && pass_ge2t1j && ntops_2jet==0                },
-                {"0l_HT500_ge2b_ge2t3j",           pass_0l && pass_HT500 && pass_ge2b && pass_ge2t3j && ntops_2jet==0                },
-                {"0l_HT500_ge2b_ge2t1j-3j",        pass_0l && pass_HT500 && pass_ge2b && pass_ge2t1j3j && ntops_2jet==0              },
-                {"0l_HT500_ge2b_ge6j_ge2t1j",      pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t1j && ntops_2jet==0   },
-                {"0l_HT500_ge2b_ge6j_ge2t3j",      pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t3j && ntops_2jet==0   },
-                {"0l_HT500_ge2b_ge6j_ge2t1j-3j",   pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t1j3j && ntops_2jet==0 }, 
+                {"0l_HT500_ge6j_ge2t1j",         pass_0l && pass_HT500 && pass_ge6j && pass_ge2t1j && ntops_2jet==0                },
+                {"0l_HT500_ge6j_ge2t3j",         pass_0l && pass_HT500 && pass_ge6j && pass_ge2t3j && ntops_2jet==0                },
+                {"0l_HT500_ge6j_ge2t1j-3j",      pass_0l && pass_HT500 && pass_ge6j && pass_ge2t1j3j && ntops_2jet==0              },
+
+                {"0l_HT500_ge2b_ge2t1j",         pass_0l && pass_HT500 && pass_ge2b && pass_ge2t1j && ntops_2jet==0                },
+                {"0l_HT500_ge2b_ge2t3j",         pass_0l && pass_HT500 && pass_ge2b && pass_ge2t3j && ntops_2jet==0                },
+                {"0l_HT500_ge2b_ge2t1j-3j",      pass_0l && pass_HT500 && pass_ge2b && pass_ge2t1j3j && ntops_2jet==0              },
+
+                {"0l_HT500_ge2b_ge6j_ge2t1j",    pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t1j && ntops_2jet==0   },
+                {"0l_HT500_ge2b_ge6j_ge2t3j",    pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t3j && ntops_2jet==0   },
+                {"0l_HT500_ge2b_ge6j_ge2t1j-3j", pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t1j3j && ntops_2jet==0 }, 
     
                 // == 3 tops
-                {"0l_HT500_ge6j_3t1j",             pass_0l && pass_HT500 && pass_ge6j && pass_3t1j && ntops_2jet==0                  },
-                {"0l_HT500_ge6j_3t3j",             pass_0l && pass_HT500 && pass_ge6j && pass_3t3j && ntops_2jet==0                  },
-                {"0l_HT500_ge2b_3t1j",             pass_0l && pass_HT500 && pass_ge2b && pass_3t1j && ntops_2jet==0                  },
-                {"0l_HT500_ge2b_3t3j",             pass_0l && pass_HT500 && pass_ge2b && pass_3t3j && ntops_2jet==0                  },
-                {"0l_HT500_ge2b_ge6j_3t1j",        pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_3t1j && ntops_2jet==0     },
-                {"0l_HT500_ge2b_ge6j_3t3j",        pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_3t3j && ntops_2jet==0     },
+                {"0l_HT500_ge6j_3t1j",           pass_0l && pass_HT500 && pass_ge6j && pass_3t1j && ntops_2jet==0                  },
+                {"0l_HT500_ge6j_3t3j",           pass_0l && pass_HT500 && pass_ge6j && pass_3t3j && ntops_2jet==0                  },
+
+                {"0l_HT500_ge2b_3t1j",           pass_0l && pass_HT500 && pass_ge2b && pass_3t1j && ntops_2jet==0                  },
+                {"0l_HT500_ge2b_3t3j",           pass_0l && pass_HT500 && pass_ge2b && pass_3t3j && ntops_2jet==0                  },
+
+                {"0l_HT500_ge2b_ge6j_3t1j",      pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_3t1j && ntops_2jet==0     },
+                {"0l_HT500_ge2b_ge6j_3t3j",      pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_3t3j && ntops_2jet==0     },
                 
                 // >= 3 tops        
-                {"0l_pass_HT500_ge6j_ge3t1j",      pass_0l && pass_HT500 && pass_ge6j && pass_ge3t1j && ntops_2jet==0                },
-                {"0l_pass_HT500_ge6j_ge3t3j",      pass_0l && pass_HT500 && pass_ge6j && pass_ge3t3j && ntops_2jet==0                },
-                {"0l_pass_HT500_ge2b_ge3t1j",      pass_0l && pass_HT500 && pass_ge2b && pass_ge3t1j && ntops_2jet==0                },
-                {"0l_pass_HT500_ge2b_ge3t3j",      pass_0l && pass_HT500 && pass_ge2b && pass_ge3t3j && ntops_2jet==0                },
-                {"0l_pass_HT500_ge2b_ge6j_ge3t1j", pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge3t1j && ntops_2jet==0   },
-                {"0l_pass_HT500_ge2b_ge6j_ge3t3j", pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge3t3j && ntops_2jet==0   },
+                {"0l_HT500_ge6j_ge3t1j",         pass_0l && pass_HT500 && pass_ge6j && pass_ge3t1j && ntops_2jet==0                },
+                {"0l_HT500_ge6j_ge3t3j",         pass_0l && pass_HT500 && pass_ge6j && pass_ge3t3j && ntops_2jet==0                },
+
+                {"0l_HT500_ge2b_ge3t1j",         pass_0l && pass_HT500 && pass_ge2b && pass_ge3t1j && ntops_2jet==0                },
+                {"0l_HT500_ge2b_ge3t3j",         pass_0l && pass_HT500 && pass_ge2b && pass_ge3t3j && ntops_2jet==0                },
+
+                {"0l_HT500_ge2b_ge6j_ge3t1j",    pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge3t1j && ntops_2jet==0   },
+                {"0l_HT500_ge2b_ge6j_ge3t3j",    pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge3t3j && ntops_2jet==0   },
         };
 
         if (!inithisto) {
@@ -400,46 +423,41 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         // --------------------------------------------
         // -- Cut flow (event selection efficiencies)
         // --------------------------------------------
-        // for 2 top 
+        // for 2 tops 
         my_efficiencies["event_sel_weight_2t"]->SetUseWeightedEvents();
-        my_efficiencies["event_sel_weight_2t"]->FillWeighted(true, eventweight, 0);
-        my_efficiencies["event_sel_weight_2t"]->FillWeighted(true && JetID, eventweight, 1);
-        my_efficiencies["event_sel_weight_2t"]->FillWeighted(true && JetID && NGoodLeptons == 0, eventweight, 2);
-        my_efficiencies["event_sel_weight_2t"]->FillWeighted(true && JetID && NGoodLeptons == 0 && pass_ge2b, eventweight, 3);
-        my_efficiencies["event_sel_weight_2t"]->FillWeighted(true && JetID && NGoodLeptons == 0 && pass_ge2b && pass_ge6j, eventweight, 4);
-        my_efficiencies["event_sel_weight_2t"]->FillWeighted(true && JetID && NGoodLeptons == 0 && pass_ge2b && pass_ge6j && ntops == 2 , eventweight, 5);
-        my_efficiencies["event_sel_weight_2t"]->FillWeighted(true && JetID && NGoodLeptons == 0 && pass_ge2b && pass_ge6j && ntops == 2 && pass_HT500, eventweight, 6);
+        //my_efficiencies["event_sel_weight_2t"]->FillWeighted(true, eventweight, 0);
+        my_efficiencies["event_sel_weight_2t"]->FillWeighted(true && pass_general && NGoodLeptons == 0, eventweight, 0);
+        my_efficiencies["event_sel_weight_2t"]->FillWeighted(true && pass_general && NGoodLeptons == 0 && pass_HT500, eventweight, 1);
+        my_efficiencies["event_sel_weight_2t"]->FillWeighted(true && pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b , eventweight, 2);
+        my_efficiencies["event_sel_weight_2t"]->FillWeighted(true && pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b && pass_ge6j, eventweight, 3);
+        my_efficiencies["event_sel_weight_2t"]->FillWeighted(true && pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b && pass_ge6j && ntops == 2 , eventweight, 4);
 
-        // for >=2 tops
+        // for >= 2 tops            
         my_efficiencies["event_sel_weight_ge2t"]->SetUseWeightedEvents();
-        my_efficiencies["event_sel_weight_ge2t"]->FillWeighted(true, eventweight, 0);
-        my_efficiencies["event_sel_weight_ge2t"]->FillWeighted(true && JetID, eventweight, 1);
-        my_efficiencies["event_sel_weight_ge2t"]->FillWeighted(true && JetID && NGoodLeptons == 0, eventweight, 2);
-        my_efficiencies["event_sel_weight_ge2t"]->FillWeighted(true && JetID && NGoodLeptons == 0 && pass_ge2b, eventweight, 3);
-        my_efficiencies["event_sel_weight_ge2t"]->FillWeighted(true && JetID && NGoodLeptons == 0 && pass_ge2b && pass_ge6j, eventweight, 4);
-        my_efficiencies["event_sel_weight_ge2t"]->FillWeighted(true && JetID && NGoodLeptons == 0 && pass_ge2b && pass_ge6j && ntops >= 2 , eventweight, 5);
-        my_efficiencies["event_sel_weight_ge2t"]->FillWeighted(true && JetID && NGoodLeptons == 0 && pass_ge2b && pass_ge6j && ntops >= 2 && pass_HT500, eventweight, 6);
+        //my_efficiencies["event_sel_weight_ge2t"]->FillWeighted(true, eventweight, 0);
+        my_efficiencies["event_sel_weight_ge2t"]->FillWeighted(true && pass_general && NGoodLeptons == 0, eventweight, 0);
+        my_efficiencies["event_sel_weight_ge2t"]->FillWeighted(true && pass_general && NGoodLeptons == 0 && pass_HT500, eventweight, 1);
+        my_efficiencies["event_sel_weight_ge2t"]->FillWeighted(true && pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b , eventweight, 2);
+        my_efficiencies["event_sel_weight_ge2t"]->FillWeighted(true && pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b && pass_ge6j, eventweight, 3);
+        my_efficiencies["event_sel_weight_ge2t"]->FillWeighted(true && pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b && pass_ge6j && ntops >= 2 , eventweight, 4);
 
         // for 3 tops
         my_efficiencies["event_sel_weight_3t"]->SetUseWeightedEvents();
-        my_efficiencies["event_sel_weight_3t"]->FillWeighted(true, eventweight, 0);
-        my_efficiencies["event_sel_weight_3t"]->FillWeighted(true && JetID, eventweight, 1);
-        my_efficiencies["event_sel_weight_3t"]->FillWeighted(true && JetID && NGoodLeptons == 0, eventweight, 2);
-        my_efficiencies["event_sel_weight_3t"]->FillWeighted(true && JetID && NGoodLeptons == 0 && pass_ge2b, eventweight, 3);
-        my_efficiencies["event_sel_weight_3t"]->FillWeighted(true && JetID && NGoodLeptons == 0 && pass_ge2b && pass_ge6j, eventweight, 4);
-        my_efficiencies["event_sel_weight_3t"]->FillWeighted(true && JetID && NGoodLeptons == 0 && pass_ge2b && pass_ge6j && ntops == 3 , eventweight, 5);
-        my_efficiencies["event_sel_weight_3t"]->FillWeighted(true && JetID && NGoodLeptons == 0 && pass_ge2b && pass_ge6j && ntops == 3 && pass_HT500, eventweight, 6);
+        //my_efficiencies["event_sel_weight_ge2t"]->FillWeighted(true, eventweight, 0);
+        my_efficiencies["event_sel_weight_3t"]->FillWeighted(true && pass_general && NGoodLeptons == 0, eventweight, 0);
+        my_efficiencies["event_sel_weight_3t"]->FillWeighted(true && pass_general && NGoodLeptons == 0 && pass_HT500, eventweight, 1);
+        my_efficiencies["event_sel_weight_3t"]->FillWeighted(true && pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b , eventweight, 2);
+        my_efficiencies["event_sel_weight_3t"]->FillWeighted(true && pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b && pass_ge6j, eventweight, 3);
+        my_efficiencies["event_sel_weight_3t"]->FillWeighted(true && pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b && pass_ge6j && ntops == 3 , eventweight, 4);
 
-        // for >=3 tops
+        // for >= 3 tops
         my_efficiencies["event_sel_weight_ge3t"]->SetUseWeightedEvents();
-        my_efficiencies["event_sel_weight_ge3t"]->FillWeighted(true, eventweight, 0);
-        my_efficiencies["event_sel_weight_ge3t"]->FillWeighted(true && JetID, eventweight, 1);
-        my_efficiencies["event_sel_weight_ge3t"]->FillWeighted(true && JetID && NGoodLeptons == 0, eventweight, 2);
-        my_efficiencies["event_sel_weight_ge3t"]->FillWeighted(true && JetID && NGoodLeptons == 0 && pass_ge2b, eventweight, 3);
-        my_efficiencies["event_sel_weight_ge3t"]->FillWeighted(true && JetID && NGoodLeptons == 0 && pass_ge2b && pass_ge6j, eventweight, 4);
-        my_efficiencies["event_sel_weight_ge3t"]->FillWeighted(true && JetID && NGoodLeptons == 0 && pass_ge2b && pass_ge6j && ntops >= 3 , eventweight, 5);
-        my_efficiencies["event_sel_weight_ge3t"]->FillWeighted(true && JetID && NGoodLeptons == 0 && pass_ge2b && pass_ge6j && ntops >= 3 && pass_HT500, eventweight, 6);
-    
+        //my_efficiencies["event_sel_weight_ge3t"]->FillWeighted(true, eventweight, 0);
+        my_efficiencies["event_sel_weight_ge3t"]->FillWeighted(true && pass_general && NGoodLeptons == 0, eventweight, 0);
+        my_efficiencies["event_sel_weight_ge3t"]->FillWeighted(true && pass_general && NGoodLeptons == 0 && pass_HT500, eventweight, 1);
+        my_efficiencies["event_sel_weight_ge3t"]->FillWeighted(true && pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b , eventweight, 2);
+        my_efficiencies["event_sel_weight_ge3t"]->FillWeighted(true && pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b && pass_ge6j, eventweight, 3);
+        my_efficiencies["event_sel_weight_ge3t"]->FillWeighted(true && pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b && pass_ge6j && ntops >= 3, eventweight, 4);
 
     } 
 }
