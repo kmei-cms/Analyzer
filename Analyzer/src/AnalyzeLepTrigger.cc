@@ -264,7 +264,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         
         if( filetag == "2016_Data_SingleElectron" || filetag == "2017_Data_SingleElectron" ) {
             
-            if( !( passOfflineBaseline || passNonIsoMuonOfflineBaseline )  || !atLeastOneGoodEl ) continue;
+            if( !passOfflineBaseline  || !atLeastOneGoodEl ) continue;
 
             bool foundElectronPt40      = false;
             
