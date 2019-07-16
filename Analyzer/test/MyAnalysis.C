@@ -77,8 +77,23 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
         NTupleReader tr(ch);
         double weight = file.getWeight(); // not used currently
         const std::string runtype = (file.tag.find("Data") != std::string::npos) ? "Data" : "MC";
-        const std::string runYear = (file.tag.find("2017") != std::string::npos) ? "2017" : "2016";
-        const double Lumi = (runYear == "2016") ? 35900.0 : 41525.0;
+        const std::string runYear;
+        if (file.tag.find("2016") != std::string::npos) {
+            runYear = "2016";
+        } else if (file.tag.find("2017") != std::string::npos) {
+            runYear = "2017";
+        } else if (file.tag.find("2018") != std::string::npos) {
+            runYear = "2018";
+        }
+        const double Lumi;
+        if (runYear == "2016") {
+            Lumi = 35900.0;
+        } else if (runYear == "2017") {
+            Lumi = 41525.0;
+        } else if (runYear == "2018") {
+            Lumi = 59740.0;
+        }
+
         const bool isSignal = (file.tag.find("_stop") != std::string::npos || file.tag.find("_mStop") != std::string::npos) ? true : false;
         const std::string DeepESMCfg = (runYear == "2016") ? "DeepEventShape_2016.cfg" : "DeepEventShape_2017.cfg";
         const std::string ModelFile = (runYear == "2016") ? "keras_frozen_2016.pb" : "keras_frozen_2017.pb";
