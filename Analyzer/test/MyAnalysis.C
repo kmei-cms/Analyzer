@@ -22,7 +22,7 @@
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 #include "Analyzer/Analyzer/include/CalculateSFMean.h"
 #include "Analyzer/Analyzer/include/Config.h"
-#include "Analyzer/Analyzer/include/Semra_Analyzer.h" // semra
+#include "Analyzer/Analyzer/include/Semra_Analyzer.h"
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -79,25 +79,18 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
         double weight = file.getWeight(); // not used currently
         const std::string runtype = (file.tag.find("Data") != std::string::npos) ? "Data" : "MC";
         std::string runYear;
-        if (file.tag.find("2016") != std::string::npos) {
-            runYear = "2016";
-        } else if (file.tag.find("2017") != std::string::npos) {
-            runYear = "2017";
-        } else if (file.tag.find("2018") != std::string::npos) {
-            runYear = "2018";
-        }
+        if      (file.tag.find("2016") != std::string::npos) runYear = "2016";
+        else if (file.tag.find("2017") != std::string::npos) runYear = "2017";
+        else if (file.tag.find("2018") != std::string::npos) runYear = "2018";
+        
         double Lumi;
-        if (runYear == "2016") {
-            Lumi = 35900.0;
-        } else if (runYear == "2017") {
-            Lumi = 41525.0;
-        } else if (runYear == "2018") {
-            Lumi = 59740.0;
-        }
+        if      (runYear == "2016") Lumi = 35900.0;
+        else if (runYear == "2017") Lumi = 41525.0;
+        else if (runYear == "2018") Lumi = 59740.0;
 
         const bool isSignal = (file.tag.find("_stop") != std::string::npos || file.tag.find("_mStop") != std::string::npos) ? true : false;
-        const std::string DeepESMCfg = (runYear == "2016") ? "DeepEventShape_2016.cfg" : "DeepEventShape_2017.cfg";
-        const std::string ModelFile = (runYear == "2016") ? "keras_frozen_2016.pb" : "keras_frozen_2017.pb";
+        const std::string DeepESMCfg = "DeepEventShape_"+runYear+".cfg";
+        const std::string ModelFile = "keras_frozen_"+runYear+".pb";
         const bool doQCDCR = false;//bool to determine to use qcd control region
 
         std::cout << "Starting loop (in run)" << std::endl;
@@ -110,7 +103,7 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
         tr.registerDerivedVar("isSignal",isSignal);
         tr.registerDerivedVar("DeepESMCfg",DeepESMCfg);
         tr.registerDerivedVar("ModelFile",ModelFile);        
-        tr.registerDerivedVar("blind",false);
+        tr.registerDerivedVar("blind",true);
         tr.registerDerivedVar("doQCDCR",doQCDCR);
         tr.registerDerivedVar("analyzer",analyzer);
 
@@ -122,8 +115,7 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
         a.Loop(tr, weight, maxEvts, isQuiet);
 
         // Cleaning up dynamic memory
-        delete ch;
-            
+        delete ch;            
     }
     std::cout << "Writing histograms..." << std::endl;
     a.WriteHistos(outfile);
@@ -176,7 +168,7 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-/// here is the options to run the codes / can add options
+    // here is the options to run the codes / can add options
     while((opt = getopt_long(argc, argv, "cvA:H:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
