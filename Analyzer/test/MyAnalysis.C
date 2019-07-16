@@ -15,6 +15,7 @@
 #include "Analyzer/Analyzer/include/AnalyzeNjetsMinusOneCSJetReplacement.h"
 #include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeTest.h"
+#include "Analyzer/Analyzer/include/AnalyzeLepTrigger.h"
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
 #include "Analyzer/Analyzer/include/MakeMiniTree.h"
@@ -194,6 +195,7 @@ int main(int argc, char *argv[])
         {"AnalyzeEventShape",       run<AnalyzeEventShape>},
         {"Analyze0Lep",             run<Analyze0Lep>},
         {"Analyze1Lep",             run<Analyze1Lep>},
+        {"AnalyzeLepTrigger",       run<AnalyzeLepTrigger>},
         {"AnalyzeStealthTopTagger", run<AnalyzeStealthTopTagger>},
         {"AnalyzeBTagSF",           run<AnalyzeBTagSF>},
         {"AnalyzeTest",             run<AnalyzeTest>},
