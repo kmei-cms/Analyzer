@@ -283,7 +283,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
                 if( !GoodMuons.at( itMu ) ) continue;
 
                 myGoodMuonIndex = itMu;
-                std::cout<<"Iso Muon Pt: "<<Muons.at(itMu).Pt()<<"; Eta: "<<Muons.at(itMu).Eta()<<std::endl;
+                //std::cout<<"Iso Muon Pt: "<<Muons.at(itMu).Pt()<<"; Eta: "<<Muons.at(itMu).Eta()<<std::endl;
                 break;
             }
             
@@ -349,7 +349,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
                     if( !GoodMuons.at( itMu ) ) continue;
     
                     myGoodMuonIndex = itMu;
-                    std::cout<<"MC Iso Muon Pt: "<<Muons.at(itMu).Pt()<<"; Eta: "<<Muons.at(itMu).Eta()<<std::endl;
+                    //std::cout<<"MC Iso Muon Pt: "<<Muons.at(itMu).Pt()<<"; Eta: "<<Muons.at(itMu).Eta()<<std::endl;
                     break;
                 }
                 
