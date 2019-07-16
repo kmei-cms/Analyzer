@@ -78,7 +78,7 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
         NTupleReader tr(ch);
         double weight = file.getWeight(); // not used currently
         const std::string runtype = (file.tag.find("Data") != std::string::npos) ? "Data" : "MC";
-        const std::string runYear;
+        std::string runYear;
         if (file.tag.find("2016") != std::string::npos) {
             runYear = "2016";
         } else if (file.tag.find("2017") != std::string::npos) {
@@ -86,7 +86,7 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
         } else if (file.tag.find("2018") != std::string::npos) {
             runYear = "2018";
         }
-        const double Lumi;
+        double Lumi;
         if (runYear == "2016") {
             Lumi = 35900.0;
         } else if (runYear == "2017") {
