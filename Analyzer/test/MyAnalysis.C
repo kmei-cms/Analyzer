@@ -76,43 +76,20 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
         TChain* ch = new TChain( (file.treePath).c_str() );
         file.addFilesToChain(ch, startFile, nFiles);
         NTupleReader tr(ch);
-        double weight = file.getWeight(); // not used currently
         const std::string runtype = (file.tag.find("Data") != std::string::npos) ? "Data" : "MC";
-        std::string runYear;
-        if      (file.tag.find("2016") != std::string::npos) runYear = "2016";
-        else if (file.tag.find("2017") != std::string::npos) runYear = "2017";
-        else if (file.tag.find("2018") != std::string::npos) runYear = "2018";
-        
-        double Lumi;
-        if      (runYear == "2016") Lumi = 35900.0;
-        else if (runYear == "2017") Lumi = 41525.0;
-        else if (runYear == "2018") Lumi = 59740.0;
-
-        const bool isSignal = (file.tag.find("_stop") != std::string::npos || file.tag.find("_mStop") != std::string::npos) ? true : false;
-        const std::string DeepESMCfg = "DeepEventShape_"+runYear+".cfg";
-        const std::string ModelFile = "keras_frozen_"+runYear+".pb";
-        const bool doQCDCR = false;//bool to determine to use qcd control region
+        tr.registerDerivedVar("runtype",runtype);
+        tr.registerDerivedVar("filetag",file.tag);
+        tr.registerDerivedVar("analyzer",analyzer);
 
         std::cout << "Starting loop (in run)" << std::endl;
-        printf( "runtype: %s fileWeight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts ); fflush( stdout );
-        tr.registerDerivedVar("runtype",runtype);
-        tr.registerDerivedVar("runYear",runYear);
-        tr.registerDerivedVar("filetag",file.tag);
-        tr.registerDerivedVar("etaCut",2.4); 
-        tr.registerDerivedVar("Lumi",Lumi);
-        tr.registerDerivedVar("isSignal",isSignal);
-        tr.registerDerivedVar("DeepESMCfg",DeepESMCfg);
-        tr.registerDerivedVar("ModelFile",ModelFile);        
-        tr.registerDerivedVar("blind",true);
-        tr.registerDerivedVar("doQCDCR",doQCDCR);
-        tr.registerDerivedVar("analyzer",analyzer);
+        printf( "runtype: %s nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),nFiles,startFile,maxEvts ); fflush( stdout );
 
         // Define classes/functions that add variables on the fly        
         Config c;
         c.registerModules(tr);
 
         // Loop over all of the events and fill histos
-        a.Loop(tr, weight, maxEvts, isQuiet);
+        a.Loop(tr, 1.0, maxEvts, isQuiet);
 
         // Cleaning up dynamic memory
         delete ch;            

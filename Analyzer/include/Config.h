@@ -3,7 +3,6 @@
 
 #include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
 #include "SusyAnaTools/Tools/BTagCorrector.h"
-#include "SusyAnaTools/Tools/PileupWeights.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
 
 #include "Framework/Framework/include/PrepNTupleVars.h"
@@ -29,13 +28,66 @@ public:
 
     void registerModules(NTupleReader& tr) const
     {
-        //Get needed info
+        //Get and make needed info
         const auto& runtype = tr.getVar<std::string>("runtype");
-        const auto& runYear = tr.getVar<std::string>("runYear");
         const auto& filetag = tr.getVar<std::string>("filetag");
-        const auto& DeepESMCfg = tr.getVar<std::string>("DeepESMCfg");
-        const auto& ModelFile = tr.getVar<std::string>("ModelFile");
         const auto& analyzer = tr.getVar<std::string>("analyzer");
+
+        std::string runYear, puFileName, DeepESMCfg, ModelFile, leptonFileName, bjetFileName, bjetCSVFileName, meanFileName;
+        double Lumi = 0.0;
+        if(filetag.find("2016") != std::string::npos)
+        {
+            runYear = "2016";
+            Lumi = 35900.0;
+            puFileName = "PileupHistograms_0121_69p2mb_pm4p6.root";
+            DeepESMCfg = "DeepEventShape_2016.cfg";
+            ModelFile = "keras_frozen_2016.pb";
+            leptonFileName = "allInOne_leptonSF_2016.root";
+            bjetFileName = "allInOne_BTagEff.root";
+            bjetCSVFileName = "DeepCSV_2016LegacySF_V1.csv";
+            meanFileName = "allInOne_SFMean.root";
+        }
+        else if(filetag.find("2017") != std::string::npos)
+        { 
+            runYear = "2017";
+            Lumi = 41525.0;
+            puFileName = "pu_ratio.root";
+            DeepESMCfg = "DeepEventShape_2017.cfg";
+            ModelFile = "keras_frozen_2017.pb";
+            leptonFileName = "allInOne_leptonSF_2017.root";
+            bjetFileName = "allInOne_BTagEff.root";
+            bjetCSVFileName = "DeepCSV_94XSF_V4_B_F.csv";
+            meanFileName = "allInOne_SFMean.root";
+        }
+        else if(filetag.find("2018") != std::string::npos) 
+        {
+            runYear = "2018";
+            Lumi = 59740.0;
+            puFileName = "pu_ratio.root";
+            DeepESMCfg = "DeepEventShape_2018.cfg";
+            ModelFile = "keras_frozen_2018.pb";
+            leptonFileName = "allInOne_leptonSF_2017.root";
+            bjetFileName = "allInOne_BTagEff.root";
+            bjetCSVFileName = "DeepCSV_102XSF_V1.csv";
+            meanFileName = "allInOne_SFMean.root";
+        }
+
+        const bool isSignal = (filetag.find("_stop") != std::string::npos || filetag.find("_mStop") != std::string::npos) ? true : false;
+        const bool doQCDCR = false;//bool to determine to use qcd control region
+
+        tr.registerDerivedVar("runYear",runYear);
+        tr.registerDerivedVar("etaCut",2.4); 
+        tr.registerDerivedVar("Lumi",Lumi);
+        tr.registerDerivedVar("isSignal",isSignal);
+        tr.registerDerivedVar("DeepESMCfg",DeepESMCfg);
+        tr.registerDerivedVar("ModelFile",ModelFile);        
+        tr.registerDerivedVar("puFileName",puFileName);
+        tr.registerDerivedVar("leptonFileName",leptonFileName);        
+        tr.registerDerivedVar("bjetFileName",bjetFileName);        
+        tr.registerDerivedVar("bjetCSVFileName",bjetCSVFileName);        
+        tr.registerDerivedVar("meanFileName",meanFileName);        
+        tr.registerDerivedVar("blind",true);
+        tr.registerDerivedVar("doQCDCR",doQCDCR);
 
         //Create all possible modules
         PartialUnBlinding partUnBlind;
@@ -51,19 +103,12 @@ public:
         Baseline baseline;
         DeepEventShape deepEventShape(DeepESMCfg,ModelFile);
         BTagCorrectorTemplate<double>* bTagCorrector = nullptr;
-        Pileup_SysTemplate<double>* pileup = nullptr;
         ScaleFactors* scaleFactors = nullptr;
         if( runtype == "MC" )
         {
-            bTagCorrector = new BTagCorrectorTemplate<double>("allInOne_BTagEff.root","", false, filetag);
+            bTagCorrector = new BTagCorrectorTemplate<double>(bjetFileName, "", bjetCSVFileName, false, filetag);
             bTagCorrector->SetVarNames("GenParticles_PdgId", "Jets", "Jets_bJetTagDeepCSVtotb", "Jets_partonFlavor");
-            pileup = new Pileup_SysTemplate<double>("PileupHistograms_0121_69p2mb_pm4p6.root");
-            const std::string scaleFactorHistoFileName = "allInOne_leptonSF_"+runYear+".root";
-            std::string puFileName;
-            if     (runYear == "2016") puFileName = "PileupHistograms_0121_69p2mb_pm4p6.root";
-            else if(runYear == "2017") puFileName = "pu_ratio.root";
-            else if(runYear == "2018") puFileName = "pu_ratio.root";
-            scaleFactors = new ScaleFactors( scaleFactorHistoFileName, puFileName );
+            scaleFactors = new ScaleFactors( leptonFileName, puFileName, meanFileName );
         }
 
         //Register Modules that are needed for each Analyzer
