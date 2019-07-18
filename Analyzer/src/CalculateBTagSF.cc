@@ -72,6 +72,8 @@ void CalculateBTagSF::Loop(NTupleReader& tr, double weight, int maxevents, bool 
         const auto& passBlindLep        = tr.getVar<bool>("passBlindLep");
         const auto& passTrigger         = tr.getVar<bool>("passTrigger");
         const auto& passMadHT           = tr.getVar<bool>("passMadHT");
+        const auto& Lumi                = tr.getVar<double>("Lumi");
+        const auto& runYear             = tr.getVar<std::string>("runYear");
         
         const auto& Jets                = tr.getVec<TLorentzVector>("Jets");
         const auto& recoJetsBtag        = tr.getVec<double>("Jets_bDiscriminatorCSV");
@@ -100,7 +102,8 @@ void CalculateBTagSF::Loop(NTupleReader& tr, double weight, int maxevents, bool 
         double PUaddweight          = 1.0, PU_JPaddweight           = 1.0;
         double scaleSFaddweight     = 1.0, scaleSFaddweight_u       = 1.0, scaleSFaddweight_d       = 1.0;
         double pdfSFaddweight       = 1.0, pdfSFaddweight_u         = 1.0, pdfSFaddweight_d         = 1.0;
-        double Lumi = 35900;
+
+        double myJetCSVMediumCut  = ( runYear == "2016" ) ? .8484 : .8838;
 
         if( passMadHT )
         {
@@ -115,15 +118,15 @@ void CalculateBTagSF::Loop(NTupleReader& tr, double weight, int maxevents, bool 
     
                 if( myJetFlavor == 5 ) {
                     my_2d_histos["d_eff_b_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight );
-                    if( myJetCSV > 0.8484 ) { my_2d_histos["n_eff_b_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight ); }
+                    if( myJetCSV > myJetCSVMediumCut ) { my_2d_histos["n_eff_b_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight ); }
                 }
                 else if( myJetFlavor == 4 ) {
                     my_2d_histos["d_eff_c_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight );
-                    if( myJetCSV > 0.8484 ) { my_2d_histos["n_eff_c_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight ); }
+                    if( myJetCSV > myJetCSVMediumCut ) { my_2d_histos["n_eff_c_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight ); }
                 }
                 else if( myJetFlavor < 4 || myJetFlavor == 21 ) {
                     my_2d_histos["d_eff_udsg_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight );
-                    if( myJetCSV > 0.8484 ) { my_2d_histos["n_eff_udsg_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight ); }
+                    if( myJetCSV > myJetCSVMediumCut ) { my_2d_histos["n_eff_udsg_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight ); }
                 }
             }
         }
