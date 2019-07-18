@@ -34,11 +34,14 @@ public:
         const auto& analyzer = tr.getVar<std::string>("analyzer");
 
         std::string runYear, puFileName, DeepESMCfg, ModelFile, leptonFileName, bjetFileName, bjetCSVFileName, meanFileName;
-        double Lumi = 0.0;
+        double Lumi, deepCSV_WP_loose, deepCSV_WP_medium, deepCSV_WP_tight;
         if(filetag.find("2016") != std::string::npos)
         {
             runYear = "2016";
             Lumi = 35900.0;
+            deepCSV_WP_loose  = 0.2217;
+            deepCSV_WP_medium = 0.6321;
+            deepCSV_WP_tight  = 0.8953;            
             puFileName = "PileupHistograms_0121_69p2mb_pm4p6.root";
             DeepESMCfg = "DeepEventShape_2016.cfg";
             ModelFile = "keras_frozen_2016.pb";
@@ -51,6 +54,9 @@ public:
         { 
             runYear = "2017";
             Lumi = 41525.0;
+            deepCSV_WP_loose  = 0.1522;
+            deepCSV_WP_medium = 0.4941;       
+            deepCSV_WP_tight  = 0.8001;
             puFileName = "pu_ratio.root";
             DeepESMCfg = "DeepEventShape_2017.cfg";
             ModelFile = "keras_frozen_2017.pb";
@@ -63,6 +69,9 @@ public:
         {
             runYear = "2018";
             Lumi = 59740.0;
+            deepCSV_WP_loose  = 0.1241;
+            deepCSV_WP_medium = 0.4184;       
+            deepCSV_WP_tight  = 0.7527;
             puFileName = "pu_ratio.root";
             DeepESMCfg = "DeepEventShape_2018.cfg";
             ModelFile = "keras_frozen_2018.pb";
@@ -78,6 +87,9 @@ public:
         tr.registerDerivedVar("runYear",runYear);
         tr.registerDerivedVar("etaCut",2.4); 
         tr.registerDerivedVar("Lumi",Lumi);
+        tr.registerDerivedVar("deepCSV_WP_loose",deepCSV_WP_loose);
+        tr.registerDerivedVar("deepCSV_WP_medium",deepCSV_WP_medium);
+        tr.registerDerivedVar("deepCSV_WP_tight",deepCSV_WP_tight);
         tr.registerDerivedVar("isSignal",isSignal);
         tr.registerDerivedVar("DeepESMCfg",DeepESMCfg);
         tr.registerDerivedVar("ModelFile",ModelFile);        
@@ -104,7 +116,7 @@ public:
         DeepEventShape deepEventShape(DeepESMCfg,ModelFile);
         BTagCorrectorTemplate<double>* bTagCorrector = nullptr;
         ScaleFactors* scaleFactors = nullptr;
-        if( runtype == "MC" )
+        if( runtype == "MC" && analyzer != "CalculateBTagSF")
         {
             bTagCorrector = new BTagCorrectorTemplate<double>(bjetFileName, "", bjetCSVFileName, false, filetag);
             bTagCorrector->SetVarNames("GenParticles_PdgId", "Jets", "Jets_bJetTagDeepCSVtotb", "Jets_partonFlavor");
@@ -150,6 +162,19 @@ public:
                 tr.registerFunction(*bTagCorrector);
                 tr.registerFunction(*scaleFactors);
             }            
+        }
+        else if(analyzer=="CalculateBTagSF")
+        {
+            tr.registerFunction(partUnBlind);
+            tr.registerFunction(prep);                   
+            tr.registerFunction(muon);
+            tr.registerFunction(electron);
+            tr.registerFunction(photon);
+            tr.registerFunction(jet);
+            tr.registerFunction(bjet);
+            tr.registerFunction(commonVariables);
+            tr.registerFunction(makeMVAVariables);
+            tr.registerFunction(baseline);
         }
         else
         {

@@ -27,7 +27,6 @@ public :
    void     Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false);
    virtual void     InitHistos(std::string histoFileTag);
    virtual void     WriteHistos(TFile* outfile);
-   bool     JetPassCuts( const TLorentzVector& jet);
 };
 
 #endif
