@@ -228,6 +228,11 @@ public:
         const auto& runYear = tr.getVar<std::string>("runYear");
         const auto& DeepESMCfg = tr.getVar<std::string>("DeepESMCfg");
         const auto& ModelFile = tr.getVar<std::string>("ModelFile");
+        const auto& bjetFileName = tr.getVar<std::string>("bjetFileName");
+        const auto& bjetCSVFileName = tr.getVar<std::string>("bjetCSVFileName");
+        const auto& leptonFileName = tr.getVar<std::string>("leptonFileName");
+        const auto& puFileName = tr.getVar<std::string>("puFileName");
+        const auto& meanFileName = tr.getVar<std::string>("meanFileName");
 
         //-------------------------------------
         //-- Initialize histograms to be filled
@@ -238,7 +243,6 @@ public:
         {
             const std::string& myVarSuffix = pair.first;
             if(myVarSuffix == "") continue;
-            //RunTopTagger rtt("TopTagger.cfg", myVarSuffix);
             Muon muon(myVarSuffix);
             Electron electron(myVarSuffix);
             Photon photon(myVarSuffix);
@@ -248,14 +252,10 @@ public:
             MakeMVAVariables makeMVAVariables(false, myVarSuffix);
             Baseline baseline(myVarSuffix);
             DeepEventShape deepEventShape(DeepESMCfg, ModelFile, "Info", true, myVarSuffix);
-            BTagCorrectorTemplate<double> bTagCorrector("allInOne_BTagEff.root","", false, filetag);
+            BTagCorrectorTemplate<double> bTagCorrector(bjetFileName, "", bjetCSVFileName, false, filetag);
             bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets"+myVarSuffix, "Jets"+myVarSuffix+"_bJetTagDeepCSVtotb", "Jets"+myVarSuffix+"_partonFlavor", myVarSuffix);
-            //Pileup_SysTemplate<double> pileup("PileupHistograms_0121_69p2mb_pm4p6.root");
-            std::string scaleFactorHistoFileName = (runYear == "2017") ? "allInOne_leptonSF_2017.root" : "allInOne_leptonSF_2016.root";
-            std::string puRootFileName = ( runYear == "2017" ) ? "pu_ratio.root" : "PileupHistograms_0121_69p2mb_pm4p6.root";
-            ScaleFactors scaleFactors( scaleFactorHistoFileName, puRootFileName, "allInOne_SFMean.root", myVarSuffix );
+            ScaleFactors scaleFactors( leptonFileName, puFileName, meanFileName, myVarSuffix);
         
-            //tr.registerFunction(rtt);
             tr.registerFunction(muon);
             tr.registerFunction(electron);
             tr.registerFunction(photon);
@@ -266,7 +266,6 @@ public:
             tr.registerFunction(baseline);
             tr.registerFunction(deepEventShape);
             tr.registerFunction(bTagCorrector);
-            //tr.registerFunction(pileup);
             tr.registerFunction(scaleFactors);
         }
 
