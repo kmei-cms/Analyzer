@@ -11,13 +11,6 @@
 #include <TRandom3.h>
 #include <iostream>
 
-
-// includes for the event shapes
-#include "Framework/Framework/include/bdt_350to650_fwm10_jmtev_top6.h"
-#include "Framework/Framework/include/EventShapeVariables.h"
-#include "Framework/Framework/src/get_cmframe_jets.c"
-//#include "Framework/Framework/include/fisher_350to650_fwm10_jmtev_top6.h"
-
 AnalyzeEventShape::AnalyzeEventShape()
 {
     printf("\n\n In AnalyzeEventShape constructor.\n\n") ; fflush( stdout ) ;
