@@ -254,7 +254,7 @@ public:
             DeepEventShape deepEventShape(DeepESMCfg, ModelFile, "Info", true, myVarSuffix);
             BTagCorrectorTemplate<double> bTagCorrector(bjetFileName, "", bjetCSVFileName, false, filetag);
             bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets"+myVarSuffix, "Jets"+myVarSuffix+"_bJetTagDeepCSVtotb", "Jets"+myVarSuffix+"_partonFlavor", myVarSuffix);
-            ScaleFactors scaleFactors( leptonFileName, puFileName, meanFileName, myVarSuffix);
+            ScaleFactors scaleFactors( runYear, leptonFileName, puFileName, meanFileName, myVarSuffix);
         
             tr.registerFunction(muon);
             tr.registerFunction(electron);
