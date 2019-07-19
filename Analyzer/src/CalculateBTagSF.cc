@@ -10,6 +10,9 @@
 #include <TRandom3.h>
 #include <iostream>
 
+// Calcualte b-tag eff. needed for the scale factor 
+// Info from this Twiki: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation
+
 CalculateBTagSF::CalculateBTagSF() : initHistos(false)
 {
 }
@@ -23,9 +26,10 @@ void CalculateBTagSF::InitHistos(std::string histoFileTag)
     const std::vector<double> etaBins = { 0.0, 0.8, 1.6, 2.4 };
     const int nPtBins = ptBins.size() - 1;
     const int nEtaBins = etaBins.size() - 1;
-    std::cout<<"PtBins: "<<nPtBins<<" EtaBins: "<<nEtaBins<<std::endl;
 
     // Declare all your histograms here, that way we can fill them for multiple chains
+    my_histos.emplace("EventCounter", std::make_shared<TH1D>("EventCounter","EventCounter", 2, -1.1, 1.1 ) );
+
     my_2d_histos.emplace( "n_eff_b_"+histoFileTag,     std::make_shared<TH2D>( ("n_eff_b_"+histoFileTag ).c_str(),     ( "n_eff_b_Efficiency_"+histoFileTag ).c_str(),     nPtBins, ptBins.data(), nEtaBins, etaBins.data() ) );
     my_2d_histos.emplace( "n_eff_c_"+histoFileTag,     std::make_shared<TH2D>( ("n_eff_c_"+histoFileTag ).c_str(),     ( "n_eff_c_Efficiency_"+histoFileTag ).c_str(),     nPtBins, ptBins.data(), nEtaBins, etaBins.data() ) );
     my_2d_histos.emplace( "n_eff_udsg_"+histoFileTag,  std::make_shared<TH2D>( ("n_eff_udsg_"+histoFileTag ).c_str(),  ( "n_eff_udsg_Efficiency_"+histoFileTag ).c_str(),  nPtBins, ptBins.data(), nEtaBins, etaBins.data() ) );
@@ -74,8 +78,11 @@ void CalculateBTagSF::Loop(NTupleReader& tr, double weight, int maxevents, bool 
         if( tr.getEvtNum() % 1000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
 
         //------------------------------------
-        //-- Get the Proper Event Weight
+        //-- Fill the histo
         //------------------------------------
+        const auto& eventCounter = tr.getVar<int>("eventCounter");
+        my_histos["EventCounter"]->Fill(eventCounter);
+        
         if( passMadHT )
         {
             const auto& Weight = tr.getVar<double>("Weight");

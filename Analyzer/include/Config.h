@@ -120,7 +120,7 @@ public:
         {
             bTagCorrector = new BTagCorrectorTemplate<double>(bjetFileName, "", bjetCSVFileName, false, filetag);
             bTagCorrector->SetVarNames("GenParticles_PdgId", "Jets", "Jets_bJetTagDeepCSVtotb", "Jets_partonFlavor");
-            scaleFactors = new ScaleFactors( leptonFileName, puFileName, meanFileName );
+            scaleFactors = new ScaleFactors( runYear, leptonFileName, puFileName, meanFileName );
         }
 
         //Register Modules that are needed for each Analyzer

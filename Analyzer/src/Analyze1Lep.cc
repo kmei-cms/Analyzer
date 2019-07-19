@@ -108,7 +108,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& NGoodElectrons       = tr.getVar<int>("NGoodElectrons");
         const auto& NGoodLeptons         = tr.getVar<int>("NGoodLeptons");
         const auto& GoodLeptons          = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
-        const auto& fisher_val           = tr.getVar<double>("fisher_val");
         const auto& HT_trigger_pt30      = tr.getVar<double>("HT_trigger_pt30");
         const auto& JetID                = tr.getVar<bool>("JetID");
         const auto& passTrigger          = tr.getVar<bool>("passTrigger");
@@ -417,8 +416,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"blind_ntops",         10,   0.0,   10.0},
             {    "h_nb",            10,   0.0,   10.0},
             {"blind_nb",            10,   0.0,   10.0},
-            {    "h_fisher",       200,  -0.5,    0.5},
-            {"blind_fisher",       200,  -0.5,    0.5},
             {    "h_deepESM",      200,   0.0,    1.0},
             {"blind_deepESM",      200,   0.0,    1.0},
             {    "h_deepESMMerged",  4,   0.5,    4.5},
@@ -450,8 +447,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         };
 
         std::vector<TH2DInfo> hist2DInfos = {
-            {    "h_njets_fisher",  15, 0,   15, 200, -0.5, 0.5},
-            {"blind_njets_fisher",  15, 0,   15, 200, -0.5, 0.5},
             {    "h_njets_deepESM", 15, 0,   15, 200,  0.0, 1.0},
             {"blind_njets_deepESM", 15, 0,   15, 200,  0.0, 1.0},
             {    "h_njets_mbl",     15, 0,   15, 300,  0.0, 300},
@@ -484,7 +479,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_histos["h_ngjets_pt30"         +kv.first]->Fill(NGenJets_pt30, eventweight);
                 my_histos["h_ntops"               +kv.first]->Fill(ntops, w);
                 my_histos["h_nb"                  +kv.first]->Fill(NGoodBJets_pt30, w);
-                my_histos["h_fisher"              +kv.first]->Fill(fisher_val, w);
                 my_histos["h_deepESM"             +kv.first]->Fill(deepESM_val, w);
                 my_histos["h_deepESMMerged"       +kv.first]->Fill(deepESM_binNum, w);
                 my_histos["h_ht"                  +kv.first]->Fill(HT_trigger_pt30, w);
@@ -514,7 +508,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                     my_histos["h_jPt"+kv.first]->Fill(Jets.at(j).Pt(), w);
                     my_histos["h_jEta"+kv.first]->Fill(Jets.at(j).Eta(), w);
                 }
-                my_2d_histos["h_njets_fisher"+kv.first]->Fill(NGoodJets_pt30, fisher_val, w);
                 my_2d_histos["h_njets_deepESM"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, w);
                 my_2d_histos["h_njets_mbl"+kv.first]->Fill(NGoodJets_pt30, Mbl, w);
                 my_2d_histos["h_ht_deepESM"+kv.first]->Fill(HT_trigger_pt30, deepESM_val, w);
@@ -525,7 +518,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                     my_histos["blind_njets"         +kv.first]->Fill(NGoodJets_pt30, w);
                     my_histos["blind_ntops"         +kv.first]->Fill(ntops, w);
                     my_histos["blind_nb"            +kv.first]->Fill(NGoodBJets_pt30, w);
-                    my_histos["blind_fisher"        +kv.first]->Fill(fisher_val, w);
                     my_histos["blind_deepESM"       +kv.first]->Fill(deepESM_val, w);
                     my_histos["blind_deepESMMerged" +kv.first]->Fill(deepESM_binNum, w);
                     my_histos["blind_ht"            +kv.first]->Fill(HT_trigger_pt30, w);
@@ -545,7 +537,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                         my_histos["blind_jPt"+kv.first]->Fill(Jets.at(j).Pt(), w);
                         my_histos["blind_jEta"+kv.first]->Fill(Jets.at(j).Eta(), w);
                     }
-                    my_2d_histos["blind_njets_fisher"+kv.first]->Fill(NGoodJets_pt30, fisher_val, w);
                     my_2d_histos["blind_njets_deepESM"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, w);
                     my_2d_histos["blind_njets_mbl"+kv.first]->Fill(NGoodJets_pt30, Mbl, w);
                     my_2d_histos["blind_ht_deepESM"+kv.first]->Fill(HT_trigger_pt30, deepESM_val, w);
@@ -553,7 +544,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             }
         }
 
-        // Fill histos for deepESM and Fisher training
+        // Fill histos for deepESM training
         if(passBaseline1l_Good)
         {
             my_histos["fwm2_top6_1l_ge7j_ge1b"]->Fill(fwm2_top6, weight);
