@@ -41,6 +41,11 @@ if (! -f allInOne_BTagEff.root) then
     xrdcp root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/SUS-19-004_Final/PileupHistograms_0121_69p2mb_pm4p6.root .
     xrdcp root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/SUS-19-004_Final/pu_ratio.root .
     xrdcp root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/SUS-19-004_Final/L1prefiring_jetpt_2017BtoF.root .
+
+    #Need to add all root files to this "FullRun2" directory when they are produced: for now keep the old files from above (SUS-19-004_Final)
+    xrdcp root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/FullRun2/DeepCSV_102XSF_V1.csv . 
+    xrdcp root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/FullRun2/DeepCSV_2016LegacySF_V1.csv .  
+    xrdcp root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/ScaleFactorHistograms/FullRun2/DeepCSV_94XSF_V4_B_F.csv .
 endif
 
 # Check repos for updates

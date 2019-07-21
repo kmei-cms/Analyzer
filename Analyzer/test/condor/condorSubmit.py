@@ -63,6 +63,11 @@ def main():
                        environ["CMSSW_BASE"] + "/src/%s/test/CSVv2_Moriond17_B_H.csv" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/allInOne_SFMean.root" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/L1prefiring_jetpt_2017BtoF.root" % repo,
+
+                       #Need to add all root files to this listt when they are produced: for now keep the old files from above
+                       environ["CMSSW_BASE"] + "/src/%s/test/DeepCSV_102XSF_V1.csv" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/DeepCSV_2016LegacySF_V1.csv" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/DeepCSV_94XSF_V4_B_F.csv" % repo,
                        ]
     
     print "--------------Files to Transfer-----------------"
