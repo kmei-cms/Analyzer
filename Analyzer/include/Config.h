@@ -72,7 +72,7 @@ public:
             deepCSV_WP_loose  = 0.1241;
             deepCSV_WP_medium = 0.4184;       
             deepCSV_WP_tight  = 0.7527;
-            puFileName = "pu_ratio.root";
+            puFileName = "PileupHistograms_2018_69mb_pm5.root";
             DeepESMCfg = "DeepEventShape_2018.cfg";
             ModelFile = "keras_frozen_2018.pb";
             leptonFileName = "allInOne_leptonSF_2017.root";
