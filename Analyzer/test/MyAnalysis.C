@@ -15,6 +15,7 @@
 #include "Analyzer/Analyzer/include/AnalyzeNjetsMinusOneCSJetReplacement.h"
 #include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeTest.h"
+#include "Analyzer/Analyzer/include/AnalyzeLepTrigger.h"
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
 #include "Analyzer/Analyzer/include/MakeMiniTree.h"
@@ -83,6 +84,8 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
         const bool isSignal = (file.tag.find("_stop") != std::string::npos || file.tag.find("_mStop") != std::string::npos) ? true : false;
         const std::string DeepESMCfg = (runYear == "2016") ? "DeepEventShape_2016.cfg" : "DeepEventShape_2017.cfg";
         const std::string ModelFile = (runYear == "2016") ? "keras_frozen_2016.pb" : "keras_frozen_2017.pb";
+        const bool doQCDCR = false;//bool to determine to use qcd control region
+
         std::cout << "Starting loop (in run)" << std::endl;
         printf( "runtype: %s fileWeight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts ); fflush( stdout );
         tr.registerDerivedVar("runtype",runtype);
@@ -94,6 +97,7 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
         tr.registerDerivedVar("DeepESMCfg",DeepESMCfg);
         tr.registerDerivedVar("ModelFile",ModelFile);        
         tr.registerDerivedVar("blind",false);
+        tr.registerDerivedVar("doQCDCR",doQCDCR);
         tr.registerDerivedVar("analyzer",analyzer);
 
         // Define classes/functions that add variables on the fly        
@@ -192,6 +196,7 @@ int main(int argc, char *argv[])
         {"AnalyzeEventShape",       run<AnalyzeEventShape>},
         {"Analyze0Lep",             run<Analyze0Lep>},
         {"Analyze1Lep",             run<Analyze1Lep>},
+        {"AnalyzeLepTrigger",       run<AnalyzeLepTrigger>},
         {"AnalyzeStealthTopTagger", run<AnalyzeStealthTopTagger>},
         {"AnalyzeBTagSF",           run<AnalyzeBTagSF>},
         {"AnalyzeTest",             run<AnalyzeTest>},
