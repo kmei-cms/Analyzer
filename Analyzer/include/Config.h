@@ -18,6 +18,8 @@
 #include "Framework/Framework/include/DeepEventShape.h"
 #include "Framework/Framework/include/ScaleFactors.h"
 #include "Framework/Framework/include/PartialUnBlinding.h"
+#include "Framework/Framework/include/StopGenMatch.h"
+#include "Framework/Framework/include/MegaJetCombine.h"
 
 class Config
 {
@@ -116,15 +118,36 @@ public:
         DeepEventShape deepEventShape(DeepESMCfg,ModelFile);
         BTagCorrectorTemplate<double>* bTagCorrector = nullptr;
         ScaleFactors* scaleFactors = nullptr;
+<<<<<<< HEAD
         if( runtype == "MC" && analyzer != "CalculateBTagSF")
         {
             bTagCorrector = new BTagCorrectorTemplate<double>(bjetFileName, "", bjetCSVFileName, false, filetag);
             bTagCorrector->SetVarNames("GenParticles_PdgId", "Jets", "Jets_bJetTagDeepCSVtotb", "Jets_partonFlavor");
             scaleFactors = new ScaleFactors( runYear, leptonFileName, puFileName, meanFileName );
+            //sgmatch = new StopGenMatch();
+            megajet = new MegaJetCombine();
         }
 
         //Register Modules that are needed for each Analyzer
         if(analyzer=="Analyze1Lep" || analyzer=="Analyze0Lep" || analyzer=="Semra_Analyzer")
+=======
+//        StopGenMatch* sgmatch = nullptr;
+        MegaJetCombine* megajet = nullptr;
+        if( runtype == "MC" )
+        {
+            bTagCorrector = new BTagCorrectorTemplate<double>("allInOne_BTagEff.root","", false, filetag);
+            bTagCorrector->SetVarNames("GenParticles_PdgId", "Jets", "Jets_bDiscriminatorCSV", "Jets_partonFlavor");
+            pileup = new Pileup_SysTemplate<double>("PileupHistograms_0121_69p2mb_pm4p6.root");
+            std::string scaleFactorHistoFileName = (runYear == "2017") ? "allInOne_leptonSF_2017.root" : "allInOne_leptonSF_2016.root";
+            const std::string puFileName = (runYear == "2016") ? "PileupHistograms_0121_69p2mb_pm4p6.root" : "pu_ratio.root";
+            scaleFactors = new ScaleFactors( scaleFactorHistoFileName, puFileName );
+            //          sgmatch = new StopGenMatch();
+            megajet = new MegaJetCombine();
+        }
+
+        //Register Modules that are needed for each Analyzer
+        if(analyzer=="Analyze1Lep" || analyzer=="Analyze0Lep" || analyzer=="Semra_Analyzer" || analyzer=="TwoLepAnalyzer") 
+>>>>>>> master
         {
             tr.registerFunction(partUnBlind);
             tr.registerFunction(prep);                   
@@ -142,6 +165,8 @@ public:
             {
                 tr.registerFunction(*bTagCorrector);
                 tr.registerFunction(*scaleFactors);
+//                tr.registerFunction(*sgmatch);
+                tr.registerFunction(*megajet);
             }
         }
         else if(analyzer=="MakeNJetDists")
