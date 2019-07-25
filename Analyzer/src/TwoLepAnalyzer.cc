@@ -56,8 +56,27 @@ void TwoLepAnalyzer::InitHistos(const std::map<std::string, bool>& cutmap)
                 my_histos.emplace( "h_Single1Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_Single1Mass_"+cutVar.first).c_str(), ("h_Single1Mass_"+cutVar.first).c_str(), 500, 0, 1500 ));
                 my_histos.emplace( "h_Single2Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_Single2Mass_"+cutVar.first).c_str(), ("h_Single2Mass_"+cutVar.first).c_str(), 500,0,  1500 ));
                 my_histos.emplace( "h_Single1GenMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_Single1GenMass_"+cutVar.first).c_str(), ("h_Single1GenMass_"+cutVar.first).c_str(), 500, 0,  1500 ));
-                my_histos.emplace( "h_Single2GenMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_Single2GenMass_"+cutVar.first).c_str(), ("h_Single2GenMass_"+cutVar.first).c_str(), 500, 0,  1500 )); */
-            my_2d_histos.emplace( "h_LepMass_njets_"+cutVar.first, std::make_shared<TH2D>( ("h_LepMass_njets_"+cutVar.first).c_str(), ("h_LepMass_njets_"+cutVar.first).c_str(), 10000, 0, 500, 15, 0, 15 ) );
+                my_histos.emplace( "h_Single2GenMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_Single2GenMass_"+cutVar.first).c_str(), ("h_Single2GenMass_"+cutVar.first).c_str(), 500, 0,  1500 )); 
+                my_2d_histos.emplace( "h_LepMass_njets_"+cutVar.first, std::make_shared<TH2D>( ("h_LepMass_njets_"+cutVar.first).c_str(), ("h_LepMass_njets_"+cutVar.first).c_str(), 10000, 0, 500, 15, 0, 15 ) );*/
+
+            my_histos.emplace( "h_RecoStop1_Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_RecoStop1_Mass_"+cutVar.first).c_str(), ("h_RecoStop1_Mass_"+cutVar.first).c_str(), 500, 0,  1500 ));
+            my_histos.emplace( "h_RecoStop2_Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_RecoStop2_Mass_"+cutVar.first).c_str(), ("h_RecoStop2_Mass_"+cutVar.first).c_str(), 500, 0,  1500 ));
+            my_histos.emplace( "h_RecoStopMT2_"+cutVar.first, std::make_shared<TH1D> ( ("h_RecoStopMT2_"+cutVar.first).c_str(), ("h_RecoStopMT2_"+cutVar.first).c_str(), 500, 0,  1500 ));
+            my_histos.emplace( "h_RecoStop1_Pt_"+cutVar.first, std::make_shared<TH1D> ( ("h_RecoStop1_Pt_"+cutVar.first).c_str(), ("h_RecoStop1_Pt_"+cutVar.first).c_str(), 500, 0, 1000));
+            my_histos.emplace( "h_RecoStop2_Pt_"+cutVar.first, std::make_shared<TH1D> ( ("h_RecoStop2_Pt_"+cutVar.first).c_str(), ("h_RecoStop1_Pt_"+cutVar.first).c_str(), 500, 0, 1000));
+            my_histos.emplace( "h_RecoStop1_Eta_"+cutVar.first, std::make_shared<TH1D> ( ("h_RecoStop1_Eta_"+cutVar.first).c_str(), ("h_RecoStop1_Eta_"+cutVar.first).c_str(), 50, -6, 6));
+            my_histos.emplace( "h_RecoStop2_Eta_"+cutVar.first, std::make_shared<TH1D> ( ("h_RecoStop2_Eta_"+cutVar.first).c_str(), ("h_RecoStop2_Eta_"+cutVar.first).c_str(), 50, -6, 6));
+            my_histos.emplace( "h_RecoStop1_Phi_"+cutVar.first, std::make_shared<TH1D> ( ("h_RecoStop1_Phi_"+cutVar.first).c_str(), ("h_RecoStop1_Phi_"+cutVar.first).c_str(), 50, -4, 4));
+            my_histos.emplace( "h_RecoStop2_Phi_"+cutVar.first, std::make_shared<TH1D> ( ("h_RecoStop2_Phi_"+cutVar.first).c_str(), ("h_RecoStop2_Phi_"+cutVar.first).c_str(), 50, -4, 4));
+
+            my_2d_histos.emplace( "h_2d_RecoStops_Mass_"+cutVar.first, std::make_shared<TH2D>( ("h_2d_RecoStops_Mass_"+cutVar.first).c_str(), ("h_2d_RecoStops_Mass_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
+            my_2d_histos.emplace( "h_2d_RecoStops_Pt_"+cutVar.first, std::make_shared<TH2D>( ("h_2d_RecoStops_Pt_"+cutVar.first).c_str(), ("h_2d_RecoStops_Pt_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
+            my_2d_histos.emplace( "h_2d_RecoStops_Eta_"+cutVar.first, std::make_shared<TH2D>( ("h_2d_RecoStops_Eta_"+cutVar.first).c_str(), ("h_2d_RecoStops_Eta_"+cutVar.first).c_str(), 50, -6, 6, 50, -6, 6 ) );
+            my_2d_histos.emplace( "h_2d_RecoStops_Phi_"+cutVar.first, std::make_shared<TH2D>( ("h_2d_RecoStops_Phi_"+cutVar.first).c_str(), ("h_2d_RecoStops_Phi_"+cutVar.first).c_str(), 50, -4, 4, 50, -4, 4 ) );
+            
+            my_histos.emplace( "h_RecoStop_MT2_"+cutVar.first, std::make_shared<TH1D> ( ("h_RecoStop_MT2_"+cutVar.first).c_str(), ("h_RecoStop_MT2_"+cutVar.first).c_str(), 500, 0,  1500 ));
+
+            
 
 	}
 
@@ -108,6 +127,9 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const auto& deepESM_binNum      = tr.getVar<int>("deepESM_binNum");
         const auto& onZ                 = tr.getVar<bool>("onZ");
         const auto& GoodJets_pt30       = tr.getVec<bool>("GoodJets_pt30");
+
+        const auto& Mbl1                = tr.getVar<double>("TwoLep_Mbl1");
+        const auto& Mbl2                = tr.getVar<double>("TwoLep_Mbl2");
       
 /*        const auto& Stop1Mass           = tr.getVar<double>("Stop1Mass");
         const auto& Stop2Mass           = tr.getVar<double>("Stop2Mass");
@@ -127,6 +149,9 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const auto& HT_trigger_pt45     = tr.getVar<double>("HT_trigger_pt45");
         const auto& NGoodBJets_pt45     = tr.getVar<int>("NGoodBJets_pt45");
 
+        const auto& RecoStop1           = tr.getVar<TLorentzVector>("RecoStop1");
+        const auto& RecoStop2           = tr.getVar<TLorentzVector>("RecoStop2");
+        const auto& RecoStopMT2         = tr.getVar<double>("RecoStopMT2");
         // ------------------------
         // -- Define weight
         // ------------------------
@@ -177,178 +202,6 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             }
         }
         std::vector<std::pair<TLorentzVector,int>> GoodJetsVec_pt30;
-        // two lepton M(b,l) definition
-        TLorentzVector lep1, lep2;
-        int  used_jet1, used_jet2;
-        double Mbl1=-1, Mbl2=-1;
-        double mbl1diff=999, mbl2diff=999;
-        std::pair<int,int> Mbl1_Idx, Mbl2_Idx;
-        if (NGoodLeptons==2)
-        {
-            if (GoodLeptons.at(0).second.Pt() >= GoodLeptons.at(1).second.Pt())
-            {
-                lep1 = GoodLeptons.at(0).second;
-                lep2 = GoodLeptons.at(1).second;
-                Mbl1_Idx.second = 0;
-                Mbl2_Idx.second = 1;
-            }
-            else
-            {
-                lep1 = GoodLeptons.at(1).second;
-                lep2 = GoodLeptons.at(0).second;
-                Mbl1_Idx.second  = 1;
-                Mbl2_Idx.second  = 0;
-            }
-            if (NGoodBJets_pt30 >= 2)
-            {
-                for (int b=0; b < NGoodBJets_pt30; b++)
-                {
-                    double  mbl1 = (lep1 + GoodBJetsVec_pt30.at(b).first).M();
-                    if( abs(mbl1 - 105) < mbl1diff)
-                    {
-                        Mbl1 = mbl1;
-                        mbl1diff = abs(mbl1 - 105);
-                        used_jet1 = b;
-                        Mbl1_Idx.first = b;
-                        
-                    }
-                    double mbl2 = (lep2 + GoodBJetsVec_pt30.at(b).first).M();
-                    if (abs(mbl2 - 105) < mbl2diff)
-                    {
-                        Mbl2 = mbl2;
-                        mbl2diff = abs(mbl2 - 105);
-                        used_jet2 = b;
-                        Mbl2_Idx.first = b;
-                    }
-                }                
-                if (used_jet1 == used_jet2)
-                {
-                    if (mbl1diff > mbl2diff)
-                    {
-                        for (int b=0; b < NGoodBJets_pt30; b++)
-                        {
-                            double mbl1 = (lep1 + GoodBJetsVec_pt30.at(b).first).M();
-                            if( abs(mbl1 - 105) < mbl1diff && b != used_jet2)
-                            {                            
-                                Mbl1 = mbl1;
-                                mbl1diff = abs(mbl1 - 105);
-                                Mbl1_Idx.first = b;
-                            }
-                        }
-                    }
-                    else 
-                    {
-                        for (int b=0; b < NGoodBJets_pt30; b++)
-                        {
-                            double mbl2 = (lep2+ GoodBJetsVec_pt30.at(b).first).M();
-                            if (abs(mbl2 - 105) < mbl2diff && b != used_jet1)
-                            {
-                                Mbl2 = mbl2;
-                                mbl2diff = abs(mbl2 - 105);
-                                Mbl2_Idx.first = b;
-                            }
-                        }
-                    }
-                }                        
-            }
-            else if (NGoodBJets_pt30 == 1)
-            {
-                if ( abs((lep1 + GoodBJetsVec_pt30.at(0).first).M() - 105) <= abs((lep2 + GoodBJetsVec_pt30.at(0).first).M() - 105) )
-                {
-                    Mbl1 = (lep1 + GoodBJetsVec_pt30.at(0).first).M();
-                    for (int j = 0; j < Jets.size(); j++)
-                    {
-                        if (GoodJets_pt30.at(j))
-                        {
-                            double mbl2 = (lep2 + Jets.at(j)).M();
-                            if (abs(mbl2 - 105) < mbl2diff && !GoodBJets_pt30.at(j))
-                            {
-                                Mbl2 = mbl2;
-                                mbl2diff = abs(mbl2 - 105);
-                                Mbl2_Idx.first = j;
-                            }
-                        }
-                    }
-                }
-                else
-                { 
-                    Mbl2 = (lep2 + GoodBJetsVec_pt30.at(0).first).M();
-                    for (int j = 0; j < Jets.size(); j++)
-                    {
-                        if (GoodJets_pt30.at(j))
-                        {
-                            double mbl1 = (lep1 + Jets.at(j)).M();
-                            if (abs(mbl1 - 105) < mbl1diff && !GoodBJets_pt30.at(j))
-                            {
-                                Mbl1 = mbl1;
-                                mbl1diff = abs(mbl1 - 105);
-                                Mbl1_Idx.first = j;
-                            }
-                        }
-                    }
-                }
-            }
-            else            
-            {
-                for (int j=0; j < Jets.size(); j++)
-                {
-                    if (GoodJets_pt30.at(j))
-                    {
-                        double  mbl1 = (lep1 + Jets.at(j)).M();
-                        if( abs(mbl1 - 105) < mbl1diff)
-                        {
-                            Mbl1 = mbl1;
-                            mbl1diff = abs(mbl1 - 105);
-                            used_jet1 = j;
-                            Mbl1_Idx.first = j;
-                        }
-                        double mbl2 = (lep2 + Jets.at(j)).M();
-                        if( abs(mbl2 - 105) < mbl2diff)
-                        {
-                            Mbl2 = mbl2;
-                            mbl2diff = abs(mbl2 - 105);
-                            used_jet2 = j;
-                            Mbl2_Idx.first = j;
-                        } 
-                    }
-                }
-                if (used_jet1 == used_jet2)
-                {
-                    if (mbl1diff >  mbl2diff)
-                    {
-                        for (int j=0; j < Jets.size(); j++)
-                        {
-                            if (GoodJets_pt30.at(j))
-                            {
-                                double mbl1 = (lep1 + Jets.at(j)).M();
-                                if (abs(mbl1 - 105) < mbl1diff && j != used_jet2)
-                                {
-                                    Mbl1 = mbl1;
-                                    mbl1diff = abs(mbl1 - 105);
-                                    Mbl1_Idx.first = j;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        for (int j=0; j < Jets.size(); j++)
-                        {
-                            if (GoodJets_pt30.at(j))
-                            {
-                                double mbl2 = (lep2 + Jets.at(j)).M();
-                                if (abs(mbl2-105) < mbl2diff && j != used_jet1)
-                                {
-                                    Mbl2 = mbl2;
-                                    mbl2diff = abs(mbl2-105);
-                                    Mbl2_Idx.first = j;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }      
         
         //Some other plotting variables
         TLorentzVector NonBJetsSum;
@@ -481,7 +334,7 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             {"_2l_offZ_BothMblge25le250", pass_general && pass_2l_opc && !new_onZ && pass_bothMbl},
                 // HT cuts
             {"_2l_HTge200", pass_general && pass_2l_opc && HT_trigger_pt30 >= 200},
-            {"_2l_offZ_HTge200", pass_general && pass_2l_opc && !new_onZ && HT_trigger_pt30 >=200},
+            {"_2l_offZ_HTge200", pass_general && pass_2l_opc && !new_onZ && HT_trigger_pt30 >=200}, */
             // combo cuts
             {"_2l_offZ_ge1b_ge4j", pass_jgeneral && pass_2l_opc && !new_onZ && NGoodBJets_pt30 >= 1 && NGoodJets_pt30 >= 4},
             {"_2l_offZ_ge2b_ge4j", pass_jgeneral && pass_2l_opc && !new_onZ && NGoodBJets_pt30 >= 2 && NGoodJets_pt30 >= 4},
@@ -490,7 +343,13 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             {"_2l_offZ_ge1b_ge4j_BothMblge25le250", pass_jgeneral && pass_2l_opc && !new_onZ && NGoodBJets_pt30 >= 1 && NGoodJets_pt30 >= 4 && pass_bothMbl},
             {"_2l_offZ_ge1b_BothMblge25le250_HTge200", pass_jgeneral && pass_2l_opc && !new_onZ && NGoodBJets_pt30 >= 1 && pass_bothMbl && HT_trigger_pt30 >= 200},
             {"_2l_offZ_ge1b_BothMblge25le250_HTge200_ge4j", pass_jgeneral && pass_2l_opc && !new_onZ && NGoodBJets_pt30 >= 1 && pass_bothMbl && HT_trigger_pt30 >= 200 && NGoodJets_pt30 >= 4},
-            // Cuts for gen matching*/
+            {"_2l_ge2j", pass_jgeneral && pass_2l_opc && NGoodJets_pt30 >= 2},
+            {"_2l_ge3j", pass_jgeneral && pass_2l_opc && NGoodJets_pt30 >= 3},
+            {"_2l_ge4j", pass_jgeneral && pass_2l_opc && NGoodJets_pt30 >= 4},
+            {"_2l_ge5j", pass_jgeneral && pass_2l_opc && NGoodJets_pt30 >= 5},
+            {"_2l_ge6j", pass_jgeneral && pass_2l_opc && NGoodJets_pt30 >= 6},
+            {"_2l_ge7j", pass_jgeneral && pass_2l_opc && NGoodJets_pt30 >= 7},
+            // Cuts for gen matching
                
 
 //cuts for optimization
@@ -549,7 +408,21 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                         my_histos["h_Single2GenMass_"+cutVar.first]->Fill(Single2GenMass, weight);
                     */
 
-                    my_2d_histos["h_LepMass_njets_"+cutVar.first]->Fill(lepton_sum.M(), NGoodJets_pt30, weight);
+//                    my_2d_histos["h_LepMass_njets_"+cutVar.first]->Fill(lepton_sum.M(), NGoodJets_pt30, weight);
+                    my_histos["h_RecoStop1_Mass_"+cutVar.first]->Fill(RecoStop1.M(), weight);
+                    my_histos["h_RecoStop2_Mass_"+cutVar.first]->Fill(RecoStop2.M(), weight);
+                    my_histos["h_RecoStop1_Pt_"+cutVar.first]->Fill(RecoStop1.Pt(), weight);
+                    my_histos["h_RecoStop2_Pt_"+cutVar.first]->Fill(RecoStop2.Pt(), weight);
+                    my_histos["h_RecoStop1_Eta_"+cutVar.first]->Fill(RecoStop1.Eta(), weight);
+                    my_histos["h_RecoStop2_Eta_"+cutVar.first]->Fill(RecoStop2.Eta(), weight);
+                    my_histos["h_RecoStop1_Phi_"+cutVar.first]->Fill(RecoStop1.Phi(), weight);
+                    my_histos["h_RecoStop2_Phi_"+cutVar.first]->Fill(RecoStop2.Phi(), weight);
+                    my_histos["h_RecoStop_MT2_"+cutVar.first]->Fill(RecoStopMT2, weight);
+
+                    my_2d_histos["h_2d_RecoStops_Mass_"+cutVar.first]->Fill(RecoStop1.M(), RecoStop2.M(), weight);
+                    my_2d_histos["h_2d_RecoStops_Pt_"+cutVar.first]->Fill(RecoStop1.Pt(), RecoStop2.Pt(), weight);
+                    my_2d_histos["h_2d_RecoStops_Eta_"+cutVar.first]->Fill(RecoStop1.Eta(), RecoStop2.Eta(), weight);
+                    my_2d_histos["h_2d_RecoStops_Phi_"+cutVar.first]->Fill(RecoStop1.Phi(), RecoStop2.Phi(), weight);
 
 		}
 	}

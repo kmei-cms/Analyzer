@@ -20,6 +20,8 @@
 #include "Framework/Framework/include/DeepEventShape.h"
 #include "Framework/Framework/include/ScaleFactors.h"
 #include "Framework/Framework/include/PartialUnBlinding.h"
+#include "Framework/Framework/include/StopGenMatch.h"
+#include "Framework/Framework/include/MegaJetCombine.h"
 
 class Config
 {
@@ -55,6 +57,8 @@ public:
         BTagCorrectorTemplate<double>* bTagCorrector = nullptr;
         Pileup_SysTemplate<double>* pileup = nullptr;
         ScaleFactors* scaleFactors = nullptr;
+//        StopGenMatch* sgmatch = nullptr;
+        MegaJetCombine* megajet = nullptr;
         if( runtype == "MC" )
         {
             bTagCorrector = new BTagCorrectorTemplate<double>("allInOne_BTagEff.root","", false, filetag);
@@ -63,6 +67,8 @@ public:
             std::string scaleFactorHistoFileName = (runYear == "2017") ? "allInOne_leptonSF_2017.root" : "allInOne_leptonSF_2016.root";
             const std::string puFileName = (runYear == "2016") ? "PileupHistograms_0121_69p2mb_pm4p6.root" : "pu_ratio.root";
             scaleFactors = new ScaleFactors( scaleFactorHistoFileName, puFileName );
+            //          sgmatch = new StopGenMatch();
+            megajet = new MegaJetCombine();
         }
 
         //Register Modules that are needed for each Analyzer
@@ -86,6 +92,8 @@ public:
                 tr.registerFunction(*bTagCorrector);
                 tr.registerFunction(*pileup);
                 tr.registerFunction(*scaleFactors);
+//                tr.registerFunction(*sgmatch);
+                tr.registerFunction(*megajet);
             }
         }
         else if(analyzer=="MakeNJetDists")
