@@ -188,7 +188,7 @@ public:
     	// -------------------------------
     	// plot FUNCTION:
     	// -------------------------------   
-    	void plot(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const std::string& cutlabel = "", const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 39500) // lumi 2016 = 35900, lumi 2017= 41500 
+    void plot(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const std::string& cutlabel = "",int rebin = -1, const double xmin = 999.9, const double xmax = -999.9,  double lumi = 39500) // lumi 2016 = 35900, lumi 2017= 41500 
     	{
         	//This is a magic incantation to disassociate opened histograms from their files so the files can be closed
         	TH1::AddDirectory(false);
@@ -379,8 +379,62 @@ public:
         	delete hbgSum;
 
     	}
-};
+    /* void plotratio(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const std::string& cutlabel = "", const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 39500) // lumi 2016 = 35900, lumi 2017= 41500 
+        {
+            //This is a magic incantation to disassociate opened histograms from their file so the files can be closed
+            TH1::AddDirectory(false);
+            //create the canvas for the plot
+            TCanvas *c = new TCanvas("c1", "c1", 800, 800);
+            //switch to the canvas to ensure it is the active object
+            c->cd();
 
+            //Set canvas margin
+            gPad->SetLeftMargin(0.12);
+            gPad->SetRightMargin(0.06);
+            gPad->SetTopMargin(0.08);
+            gPad->SetBottomMargin(0.12);
+            gPad->SetTicks(1,1);
+
+            TLegend *leg = new TLegend(0.50, 0.56, 0.89, 0.88);
+            leg->SetFillStyle(0);
+            leg->SetBorderSize(0);
+            leg->SetLineWidth(1);
+            leg->SetNColumns(1);
+            leg->SetTextFont(42);
+           
+            double min = 0.0;
+            double max = 0.0;
+            double lmax = 0.0;
+
+            TH1* hbgSum = nullptr;
+            
+            for(auto& h:bgEntries_)
+            {
+                h.histName = histName;
+                h.rebin    = rebin;
+                h.retrieveHistogram();
+
+                if(!hbgSum) hbgSum = static_cast<TH1*>(h.h->Clone());
+                else        hbgSum->Add(h.h.get());
+            }
+ 
+    TH1* hbgRatioSum = static_cast<TH1*>(new TH1F(hbgSum->GetName(),hbgSum->GetName(),hbgSum->GetNbinsX(), 0, hbgSum->GetNbinsX()));
+            for( int i =0; i< hbgSum->GetNbinsX(); i++)
+            {
+                if(hbgSum->GetBinContent(i) == 0 || hbgSum->GetBinContent(i+1) == 0)
+                {
+                    hbgRatioSum->SetBinContent(i,0);
+                }
+                else
+                {
+                    hbgRatioSum->SetBinContent(i, hbgSum->GetBinContent(i+1)/hbgSum->GetBinContent(i));
+                }
+            }
+            hbgRatioSum->Draw("same");
+            c->Print((histName + ".pdf").c_str());
+            } */
+};
+    
 
 
 // -----------------------------------------------------------------------------
@@ -392,45 +446,45 @@ int main()
 	// entry for data
     	// this uses the initializer syntax to initialize the histInfo object
     	// 'leg entry' 	'root file' 	'draw options' 	'draw color'
-	histInfo data = {"Data", "condor/hadd_2016_MC_Samples/2016_BG_OTHER.root", "PEX0", kBlack, false};
+	histInfo data = {"Data", "condor/2016_Reco_MC_Samples/2016_BG_OTHER.root", "PEX0", kBlack, false};
 	//histInfo data = {"Data", "condor/hadd_2017_MC_Samples/2017_BG_OTHER.root", "PEX0", kBlack, false};	
 
 	//vector summarizing background histograms to include in the plot
     	std::vector<histInfo> bgEntries = {
 	
-		{"T#bar{T}",        "condor/2016_TwoLepBase_MC_Samples/2016_TT.root",              "hist", kBlue - 7   },
-        	{"WJetsToLNu",      "condor/2016_TwoLepBase_MC_Samples/2016_WJetsToLNu.root",      "hist", kYellow + 1 },
-        	{"DYJetsToLL_M-50", "condor/2016_TwoLepBase_MC_Samples/2016_DYJetsToLL_M-50.root", "hist", kOrange + 2 },
-       	 	{"QCD",             "condor/2016_TwoLepBase_MC_Samples/2016_QCD.root",             "hist", kGreen + 1  },
-	        {"ST",              "condor/2016_TwoLepBase_MC_Samples/2016_ST.root",              "hist", kRed + 1    },
-        	{"Diboson",         "condor/2016_TwoLepBase_MC_Samples/2016_Diboson.root",         "hist", kMagenta + 1},
-		{"TTX",             "condor/2016_TwoLepBase_MC_Samples/2016_TTX.root",             "hist", kCyan + 1   },
-		{"Triboson",        "condor/2016_TwoLepBase_MC_Samples/2016_Triboson.root",        "hist", kGray       },
+		{"T#bar{T}",        "condor/2016_Reco_MC_Samples/2016_TT.root",              "hist", kBlue - 7   },
+        	{"WJetsToLNu",      "condor/2016_Reco_MC_Samples/2016_WJetsToLNu.root",      "hist", kYellow + 1 },
+        	{"DYJetsToLL_M-50", "condor/2016_Reco_MC_Samples/2016_DYJetsToLL_M-50.root", "hist", kOrange + 2 },
+       	 	{"QCD",             "condor/2016_Reco_MC_Samples/2016_QCD.root",             "hist", kGreen + 1  },
+	        {"ST",              "condor/2016_Reco_MC_Samples/2016_ST.root",              "hist", kRed + 1    },
+        	{"Diboson",         "condor/2016_Reco_MC_Samples/2016_Diboson.root",         "hist", kMagenta + 1},
+		{"TTX",             "condor/2016_Reco_MC_Samples/2016_TTX.root",             "hist", kCyan + 1   },
+		{"Triboson",        "condor/2016_Reco_MC_Samples/2016_Triboson.root",        "hist", kGray       }, 
 	
 		/*
-		{"T#bar{T}",        "condor/hadd_2017_MC_Samples/2017_TT.root",              "hist", kBlue - 7   },
-                {"WJetsToLNu",      "condor/hadd_2017_MC_Samples/2017_WJetsToLNu.root",      "hist", kYellow + 1 },
-                {"DYJetsToLL_M-50", "condor/hadd_2017_MC_Samples/2017_DYJetsToLL_M-50.root", "hist", kOrange + 2 },
-                {"QCD",             "condor/hadd_2017_MC_Samples/2017_QCD.root",             "hist", kGreen + 1  },
-                {"ST",              "condor/hadd_2017_MC_Samples/2017_ST.root",              "hist", kRed + 1    },
-                {"Diboson",         "condor/hadd_2017_MC_Samples/2017_Diboson.root",         "hist", kMagenta + 1},
-                {"TTX",             "condor/hadd_2017_MC_Samples/2017_TTX.root",             "hist", kCyan + 1   },
-                {"Triboson",        "condor/hadd_2017_MC_Samples/2017_Triboson.root",        "hist", kGray       },	
-      		*/		
+		{"T#bar{T}",        "condor/2017_MC_Samples/2017_TT.root",              "hist", kBlue - 7   },
+                {"WJetsToLNu",      "condor/2017_MC_Samples/2017_WJetsToLNu.root",      "hist", kYellow + 1 },
+                {"DYJetsToLL_M-50", "condor/2017_MC_Samples/2017_DYJetsToLL_M-50.root", "hist", kOrange + 2 },
+                {"QCD",             "condor/2017_MC_Samples/2017_QCD.root",             "hist", kGreen + 1  },
+                {"ST",              "condor/2017_MC_Samples/2017_ST.root",              "hist", kRed + 1    },
+                {"Diboson",         "condor/2017_MC_Samples/2017_Diboson.root",         "hist", kMagenta + 1},
+                {"TTX",             "condor/2017_MC_Samples/2017_TTX.root",             "hist", kCyan + 1   },
+                {"Triboson",        "condor/2017_MC_Samples/2017_Triboson.root",        "hist", kGray       }, */	
+      	   		
     	};
 
     	//vector summarizing signal histograms to include in the plot
     	std::vector<histInfo> sigEntries = { 
- 
-		{"RPV m_{#tildet} = 550", "condor/2016_TwoLepBase_MC_Samples/2016_RPV_2t6j_mStop-550.root",        "hist", kOrange - 3}, 
-		{"RPV m_{#tildet} = 350", "condor/2016_TwoLepBase_MC_Samples/2016_RPV_2t6j_mStop-350.root",        "hist", kGreen + 3 },
-		{"SYY m_{#tildet} = 900", "condor/2016_TwoLepBase_MC_Samples/2016_StealthSYY_2t6j_mStop-900.root", "hist", kBlue + 1  },
-
-		/*
-		{"RPV m_{#tildet} = 550", "condor/hadd_2017_MC_Samples/2017_RPV_2t6j_mStop-550.root",        "hist", kOrange - 3},
-                {"RPV m_{#tildet} = 350", "condor/hadd_2017_MC_Samples/2017_RPV_2t6j_mStop-350.root",        "hist", kGreen + 3 },
-                {"SYY m_{#tildet} = 900", "condor/hadd_2017_MC_Samples/2017_StealthSYY_2t6j_mStop-900.root", "hist", kBlue + 1  },	
-		*/
+            
+		{"RPV m_{#tildet} = 550", "condor/2016_Reco_MC_Samples/2016_RPV_2t6j_mStop-550.root",        "hist", kOrange - 3}, 
+		{"RPV m_{#tildet} = 350", "condor/2016_Reco_MC_Samples/2016_RPV_2t6j_mStop-350.root",        "hist", kGreen + 3 },
+		{"SYY m_{#tildet} = 900", "condor/2016_Reco_MC_Samples/2016_StealthSYY_2t6j_mStop-900.root", "hist", kBlue + 1  },
+            
+                /*	
+		{"RPV m_{#tildet} = 550", "condor/2017_MC_Samples/2017_RPV_2t6j_mStop-550.root",        "hist", kOrange - 3},
+                {"RPV m_{#tildet} = 350", "condor/2017_MC_Samples/2017_RPV_2t6j_mStop-350.root",        "hist", kGreen + 3 },
+                {"SYY m_{#tildet} = 900", "condor/2017_MC_Samples/2017_StealthSYY_2t6j_mStop-900.root", "hist", kBlue + 1  },	*/
+		
     	};
 
     	//make plotter object with the required sources for histograms specified
@@ -520,36 +574,23 @@ int main()
                     "_2l_offZ_HTge300_Mblge50le250",
                     "_1e1m_offZ" */
 
-                    "_2l_",
-                    "_2l_offZ",
-                    "_2l_offZ_ge1j",
-                    "_2l_offZ_ge2j",
-                        "_2l_offZ_ge3j",
-                        "_2l_offZ_ge4j",
-                        "_2l_offZ_ge5j",
-                        "_2l_offZ_ge6j",
-                        "_2l_offZ_ge7j",
-                        "_2l_offZ_ge1b",
-                        "_2l_offZ_ge2b",
-                        "_2l_offZ_Mbl1ge50le250",
-                        "_2l_offZ_Mbl2ge50le250",
-                        "_2l_offZ_BothMblge50le250",
+                        "_2l_",
                         "_2l_offZ_ge1b_ge4j",
-                        "_2l_offZ_ge2b_ge4j",
-                        "_2l_offZ_ge1b_BothMblge50le250",
-                        "_2l_offZ_ge2b_BothMblge50le250",
-                        "_2l_offZ_ge1b_ge4j_BothMblge50le250"
+                        "_2l_offZ_ge1b_BothMblge25le250",
+                        "_2l_offZ_ge1b_BothMblge25le250_HTge200",
+                        "_2l_offZ_ge1b_BothMblge25le250_HTge200_ge4j"
+
 
 
 
    	};
 
    	for (const auto& cutlabel : cut) {
-		plt.plot( "h_ht_"+cutlabel,     "H_{T} [GeV]",  "Events", true, cutlabel);
+            /*	plt.plot( "h_ht_"+cutlabel,     "H_{T} [GeV]",  "Events", true, cutlabel);
 		plt.plot( "h_ntops_"+cutlabel,  "N_{T}",        "Events", true, cutlabel);
 		plt.plot( "h_njets_"+cutlabel,  "N_{J}",        "Events", true, cutlabel);
 		plt.plot( "h_nbjets_"+cutlabel, "N_{B}",        "Events", true, cutlabel);
-                plt.plot( "h_LepLepDeltaR_"+cutlabel,     "\\Delta R",  "Events", true, cutlabel);
+                plt.plot( "h_LepLepDeltaR_"+cutlabel,     "\\Delta R",  "Events", false, cutlabel);
                 plt.plot( "h_Mbl_"+cutlabel, "Mbl [GeV]",        "Events", true, cutlabel);
                 plt.plot( "h_2b_nonbMass_"+cutlabel, "Mass [GeV]",        "Events", true, cutlabel);
                 plt.plot( "h_jet_pt_"+cutlabel, "p_{t} [GeV]",        "Events", true, cutlabel);
@@ -557,6 +598,18 @@ int main()
                 plt.plot( "h_lepton_pt_"+cutlabel, "p_{t} [GeV]",        "Events", true, cutlabel);
                 plt.plot( "h_lepton_mass_"+cutlabel, "Mass [GeV]",        "Events", true, cutlabel);
                 plt.plot( "h_Mbl1_"+cutlabel, "Mass [GeV]",        "Events", true, cutlabel);
-                plt.plot( "h_Mbl2_"+cutlabel, "Mass [GeV]",        "Events", true, cutlabel);
+                plt.plot( "h_Mbl2_"+cutlabel, "Mass [GeV]",        "Events", true, cutlabel); */
+
+            plt.plot("h_RecoStop1_Mass_"+cutlabel, "Mass [GeV]",    "Events", true, cutlabel, 5);
+            plt.plot("h_RecoStop2_Mass_"+cutlabel, "Mass [GeV]",  "Events", true, cutlabel, 5);
+            plt.plot("h_RecoStop_MT2_"+cutlabel, "Mass [GeV]",    "Events", true, cutlabel, 5);
+            plt.plot("h_RecoStop1_Pt_"+cutlabel, "p_{t} [GeV]",  "Events", true, cutlabel, 5);
+            plt.plot("h_RecoStop2_Pt_"+cutlabel, "p_{t} [GeV]",  "Events", true, cutlabel, 5);
+            plt.plot("h_RecoStop1_Eta_"+cutlabel, "\\eta",  "Events", true, cutlabel, 5);
+            plt.plot("h_RecoStop2_Eta_"+cutlabel, "\\eta",  "Events", true, cutlabel, 5);
+            plt.plot("h_RecoStop1_Phi_"+cutlabel, "\\phi", "Events", true, cutlabel, 5);
+            plt.plot("h_RecoStop2_Phi_"+cutlabel, "\\phi", "Events", true, cutlabel, 5);
+            
+            plt.plot("h_RecoStop_MT2_"+cutlabel, "Mass [GeV]",    "Events", false, cutlabel, 5);
    	}
 }
