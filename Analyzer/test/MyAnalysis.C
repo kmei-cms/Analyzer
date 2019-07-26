@@ -22,13 +22,8 @@
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 #include "Analyzer/Analyzer/include/CalculateSFMean.h"
 #include "Analyzer/Analyzer/include/Config.h"
-<<<<<<< HEAD
 #include "Analyzer/Analyzer/include/Semra_Analyzer.h"
 #include "Analyzer/Analyzer/include/TwoLepAnalyzer.h"
-=======
-#include "Analyzer/Analyzer/include/Semra_Analyzer.h"
-#include "Analyzer/Analyzer/include/TwoLepAnalyzer.h"
->>>>>>> master
 
 #include "TH1D.h"
 #include "TFile.h"
