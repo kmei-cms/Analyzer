@@ -50,7 +50,7 @@ INCLUDESDIRS    += -I$(TENSORFLOW_DIR)/include
 PROGRAMS = MyAnalysis plot_0l plot_1l Stack_plot Stack_plot_2l
 
 
-all: mkobj sampPyWrap $(PROGRAMS)
+all: mkobj sampPyWrap $(PROGRAMS) link
 
 mkobj:
 	@mkdir -p obj
@@ -147,8 +147,10 @@ Stack_plot_2l: $(ODIR)/Stack_plot_2l.o
 Stack_plot: $(ODIR)/Stack_plot.o
 	$(LD) $^ $(LIBS) -o $@ 
 
+link: 
+	ln -s ${CMSSW_BASE}/src/Analyzer/Analyzer/test/$(ODIR) ${CMSSW_BASE}/src/SusyAnaTools/Tools/
 
 clean:
-	rm -rf $(ODIR)/*.o $(ODIR)/*.so $(ODIR)/*.d $(PROGRAMS) core $(ODIR)
+	rm -rf $(ODIR)/*.o $(ODIR)/*.so $(ODIR)/*.d $(PROGRAMS) core $(ODIR) && unlink ${CMSSW_BASE}/src/SusyAnaTools/Tools/$(ODIR)
 
 -include $(ODIR)/*.d
