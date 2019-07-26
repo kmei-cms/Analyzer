@@ -116,17 +116,15 @@ public:
         MakeMVAVariables makeMVAVariables;
         Baseline baseline;
         DeepEventShape deepEventShape(DeepESMCfg,ModelFile);
+        StopGenMatch sgmatch;
+        MegaJetCombine megajet;
         BTagCorrectorTemplate<double>* bTagCorrector = nullptr;
         ScaleFactors* scaleFactors = nullptr;
-            //topGenMatch* sgmatch = nullptr;
-            // MegaJetCombine* megajet = nullptr;
         if( runtype == "MC" && analyzer != "CalculateBTagSF")
         {
             bTagCorrector = new BTagCorrectorTemplate<double>(bjetFileName, "", bjetCSVFileName, false, filetag);
             bTagCorrector->SetVarNames("GenParticles_PdgId", "Jets", "Jets_bJetTagDeepCSVtotb", "Jets_partonFlavor");
             scaleFactors = new ScaleFactors( runYear, leptonFileName, puFileName, meanFileName );
-            //sgmatch = new StopGenMatch();
-            // megajet = new MegaJetCombine();
         }
 
         //Register Modules that are needed for each Analyzer
@@ -148,8 +146,6 @@ public:
             {
                 tr.registerFunction(*bTagCorrector);
                 tr.registerFunction(*scaleFactors);
-//                tr.registerFunction(*sgmatch);
-//                tr.registerFunction(*megajet);
             }
         }
         else if(analyzer=="MakeNJetDists")
@@ -183,6 +179,27 @@ public:
             tr.registerFunction(commonVariables);
             tr.registerFunction(makeMVAVariables);
             tr.registerFunction(baseline);
+        }
+        else if(analyzer=="TwoLepAnalyzer")
+        {
+            tr.registerFunction(partUnBlind);
+            tr.registerFunction(prep);                   
+            tr.registerFunction(muon);
+            tr.registerFunction(electron);
+            tr.registerFunction(photon);
+            tr.registerFunction(jet);
+            tr.registerFunction(bjet);
+            tr.registerFunction(commonVariables);
+            tr.registerFunction(makeMVAVariables);
+            tr.registerFunction(baseline);
+            tr.registerFunction(deepEventShape);        
+            tr.registerFunction(sgmatch);
+            tr.registerFunction(megajet);
+            if( runtype == "MC")
+            {
+                tr.registerFunction(*bTagCorrector);
+                tr.registerFunction(*scaleFactors);
+            }            
         }
         else
         {
