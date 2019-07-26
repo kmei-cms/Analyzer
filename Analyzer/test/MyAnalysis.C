@@ -23,6 +23,7 @@
 #include "Analyzer/Analyzer/include/CalculateSFMean.h"
 #include "Analyzer/Analyzer/include/Config.h"
 #include "Analyzer/Analyzer/include/Semra_Analyzer.h"
+#include "Analyzer/Analyzer/include/TwoLepAnalyzer.h"
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -189,7 +190,8 @@ int main(int argc, char *argv[])
         {"MakeNJetDists",           run<MakeNJetDists>},
         {"AnalyzeNjetsMinusOneCSFillDijetHists", run<AnalyzeNjetsMinusOneCSFillDijetHists>},
         {"AnalyzeNjetsMinusOneCSJetReplacement", run<AnalyzeNjetsMinusOneCSJetReplacement>},
-	{"Semra_Analyzer",          run<Semra_Analyzer>}, // SEMRA / to run my analyzer
+        {"Semra_Analyzer",          run<Semra_Analyzer>},
+        {"TwoLepAnalyzer",          run<TwoLepAnalyzer>}
     }; 
 
     try

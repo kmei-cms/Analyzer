@@ -18,6 +18,8 @@
 #include "Framework/Framework/include/DeepEventShape.h"
 #include "Framework/Framework/include/ScaleFactors.h"
 #include "Framework/Framework/include/PartialUnBlinding.h"
+#include "Framework/Framework/include/StopGenMatch.h"
+#include "Framework/Framework/include/MegaJetCombine.h"
 
 class Config
 {
@@ -114,6 +116,8 @@ public:
         MakeMVAVariables makeMVAVariables;
         Baseline baseline;
         DeepEventShape deepEventShape(DeepESMCfg,ModelFile);
+        StopGenMatch sgmatch;
+        MegaJetCombine megajet;
         BTagCorrectorTemplate<double>* bTagCorrector = nullptr;
         ScaleFactors* scaleFactors = nullptr;
         if( runtype == "MC" && analyzer != "CalculateBTagSF")
@@ -175,6 +179,27 @@ public:
             tr.registerFunction(commonVariables);
             tr.registerFunction(makeMVAVariables);
             tr.registerFunction(baseline);
+        }
+        else if(analyzer=="TwoLepAnalyzer")
+        {
+            tr.registerFunction(partUnBlind);
+            tr.registerFunction(prep);                   
+            tr.registerFunction(muon);
+            tr.registerFunction(electron);
+            tr.registerFunction(photon);
+            tr.registerFunction(jet);
+            tr.registerFunction(bjet);
+            tr.registerFunction(commonVariables);
+            tr.registerFunction(makeMVAVariables);
+            tr.registerFunction(baseline);
+            tr.registerFunction(deepEventShape);        
+            tr.registerFunction(sgmatch);
+            tr.registerFunction(megajet);
+            if( runtype == "MC")
+            {
+                tr.registerFunction(*bTagCorrector);
+                tr.registerFunction(*scaleFactors);
+            }            
         }
         else
         {
