@@ -148,9 +148,9 @@ Stack_plot: $(ODIR)/Stack_plot.o
 	$(LD) $^ $(LIBS) -o $@ 
 
 link: 
-	ln -s ${CMSSW_BASE}/src/Analyzer/Analyzer/test/$(ODIR) ${CMSSW_BASE}/src/SusyAnaTools/Tools/
+	@makeSoftLink.sh $(CMSSW_BASE)/src/Analyzer/Analyzer/test/ $(ODIR) $(CMSSW_BASE)/src/SusyAnaTools/Tools/
 
 clean:
-	rm -rf $(ODIR)/*.o $(ODIR)/*.so $(ODIR)/*.d $(PROGRAMS) core $(ODIR) && unlink ${CMSSW_BASE}/src/SusyAnaTools/Tools/$(ODIR)
+	@rm -rf $(ODIR)/*.o $(ODIR)/*.so $(ODIR)/*.d $(PROGRAMS) core $(ODIR) && rmSoftLink.sh ${CMSSW_BASE}/src/SusyAnaTools/Tools/$(ODIR)
 
 -include $(ODIR)/*.d
