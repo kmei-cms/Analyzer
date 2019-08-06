@@ -97,7 +97,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         const auto& Electrons           = tr.getVec<TLorentzVector>("Electrons");
         
         const auto& passMadHT           = tr.getVar<bool>("passMadHT");
-        const auto& passBaseline        = tr.getVar<bool>("passBaseline1l_Good");
+        const auto& passBaseline        = tr.getVar<bool>("passBaselineGood");
 
         const auto& GoodMuons           = tr.getVec<bool>("GoodMuons");
         const auto& GoodElectrons       = tr.getVec<bool>("GoodElectrons");
@@ -171,9 +171,6 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         bool passMuonTriggers       = passTriggerGeneral( myMuonTriggers, TriggerNames, TriggerPass );
         bool passElectronTriggers   = passTriggerGeneral( myElectronTriggers, TriggerNames, TriggerPass );
         
-        //Define offline baseline for one lepton analysis
-        bool passOfflineBaseline    = ( JetID && passMadHT && NGoodBJets_pt30 >= 1 && Mbl > 50 && Mbl < 250 && HT_trigger_pt30 > 300 );
-
         bool pass6JetCut            = ( NGoodJets_pt30 >= 6 );
         bool pass5JetCut            = ( NGoodJets_pt30 >= 5 );
         bool pass4JetCut            = ( NGoodJets_pt30 >= 4 );
@@ -191,7 +188,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         
         if( filetag == "2016_Data_SingleMuon" || filetag == "2017_Data_SingleMuon" ) {
             
-            if( !passOfflineBaseline || !atLeastOneGoodMu ) continue;
+            if( !passBaseline || !atLeastOneGoodMu ) continue;
 
             bool foundMuonPt35      = false;
             bool foundMuonPt40      = false;
@@ -217,33 +214,33 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
        
             if( myGoodElectronIndex != -1 ) {
                 const std::map<std::string, bool> cut_map_elTriggers {
-                    {   "el_pt35_trig_1jCut",       passOfflineBaseline && foundMuonPt35 && passMuonTriggers && pass1JetCut }, 
-                    {   "el_pt35_trig_2jCut",       passOfflineBaseline && foundMuonPt35 && passMuonTriggers && pass2JetCut }, 
-                    {   "el_pt35_trig_3jCut",       passOfflineBaseline && foundMuonPt35 && passMuonTriggers && pass3JetCut }, 
-                    {   "el_pt35_trig_4jCut",       passOfflineBaseline && foundMuonPt35 && passMuonTriggers && pass4JetCut }, 
-                    {   "el_pt35_trig_5jCut",       passOfflineBaseline && foundMuonPt35 && passMuonTriggers && pass5JetCut }, 
-                    {   "el_pt35_trig_6jCut",       passOfflineBaseline && foundMuonPt35 && passMuonTriggers && pass6JetCut }, 
+                    {   "el_pt35_trig_1jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass1JetCut }, 
+                    {   "el_pt35_trig_2jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass2JetCut }, 
+                    {   "el_pt35_trig_3jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass3JetCut }, 
+                    {   "el_pt35_trig_4jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass4JetCut }, 
+                    {   "el_pt35_trig_5jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass5JetCut }, 
+                    {   "el_pt35_trig_6jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass6JetCut }, 
                     
-                    {   "el_pt35_noTrig_1jCut",       passOfflineBaseline && foundMuonPt35 && pass1JetCut }, 
-                    {   "el_pt35_noTrig_2jCut",       passOfflineBaseline && foundMuonPt35 && pass2JetCut }, 
-                    {   "el_pt35_noTrig_3jCut",       passOfflineBaseline && foundMuonPt35 && pass3JetCut }, 
-                    {   "el_pt35_noTrig_4jCut",       passOfflineBaseline && foundMuonPt35 && pass4JetCut }, 
-                    {   "el_pt35_noTrig_5jCut",       passOfflineBaseline && foundMuonPt35 && pass5JetCut }, 
-                    {   "el_pt35_noTrig_6jCut",       passOfflineBaseline && foundMuonPt35 && pass6JetCut }, 
+                    {   "el_pt35_noTrig_1jCut",       passBaseline && foundMuonPt35 && pass1JetCut }, 
+                    {   "el_pt35_noTrig_2jCut",       passBaseline && foundMuonPt35 && pass2JetCut }, 
+                    {   "el_pt35_noTrig_3jCut",       passBaseline && foundMuonPt35 && pass3JetCut }, 
+                    {   "el_pt35_noTrig_4jCut",       passBaseline && foundMuonPt35 && pass4JetCut }, 
+                    {   "el_pt35_noTrig_5jCut",       passBaseline && foundMuonPt35 && pass5JetCut }, 
+                    {   "el_pt35_noTrig_6jCut",       passBaseline && foundMuonPt35 && pass6JetCut }, 
                     
-                    {   "el_pt40_trig_1jCut",       passOfflineBaseline && foundMuonPt40 && passMuonTriggers && pass1JetCut }, 
-                    {   "el_pt40_trig_2jCut",       passOfflineBaseline && foundMuonPt40 && passMuonTriggers && pass2JetCut }, 
-                    {   "el_pt40_trig_3jCut",       passOfflineBaseline && foundMuonPt40 && passMuonTriggers && pass3JetCut }, 
-                    {   "el_pt40_trig_4jCut",       passOfflineBaseline && foundMuonPt40 && passMuonTriggers && pass4JetCut }, 
-                    {   "el_pt40_trig_5jCut",       passOfflineBaseline && foundMuonPt40 && passMuonTriggers && pass5JetCut }, 
-                    {   "el_pt40_trig_6jCut",       passOfflineBaseline && foundMuonPt40 && passMuonTriggers && pass6JetCut }, 
+                    {   "el_pt40_trig_1jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass1JetCut }, 
+                    {   "el_pt40_trig_2jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass2JetCut }, 
+                    {   "el_pt40_trig_3jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass3JetCut }, 
+                    {   "el_pt40_trig_4jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass4JetCut }, 
+                    {   "el_pt40_trig_5jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass5JetCut }, 
+                    {   "el_pt40_trig_6jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass6JetCut }, 
                     
-                    {   "el_pt40_noTrig_1jCut",       passOfflineBaseline && foundMuonPt40 && pass1JetCut }, 
-                    {   "el_pt40_noTrig_2jCut",       passOfflineBaseline && foundMuonPt40 && pass2JetCut }, 
-                    {   "el_pt40_noTrig_3jCut",       passOfflineBaseline && foundMuonPt40 && pass3JetCut }, 
-                    {   "el_pt40_noTrig_4jCut",       passOfflineBaseline && foundMuonPt40 && pass4JetCut }, 
-                    {   "el_pt40_noTrig_5jCut",       passOfflineBaseline && foundMuonPt40 && pass5JetCut }, 
-                    {   "el_pt40_noTrig_6jCut",       passOfflineBaseline && foundMuonPt40 && pass6JetCut } 
+                    {   "el_pt40_noTrig_1jCut",       passBaseline && foundMuonPt40 && pass1JetCut }, 
+                    {   "el_pt40_noTrig_2jCut",       passBaseline && foundMuonPt40 && pass2JetCut }, 
+                    {   "el_pt40_noTrig_3jCut",       passBaseline && foundMuonPt40 && pass3JetCut }, 
+                    {   "el_pt40_noTrig_4jCut",       passBaseline && foundMuonPt40 && pass4JetCut }, 
+                    {   "el_pt40_noTrig_5jCut",       passBaseline && foundMuonPt40 && pass5JetCut }, 
+                    {   "el_pt40_noTrig_6jCut",       passBaseline && foundMuonPt40 && pass6JetCut } 
                 };
     
                 for( auto& kv : cut_map_elTriggers ) {
@@ -268,7 +265,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         
         if( filetag == "2016_Data_SingleElectron" || filetag == "2017_Data_SingleElectron" ) {
             
-            if( !passOfflineBaseline  || !atLeastOneGoodEl ) continue;
+            if( !passBaseline  || !atLeastOneGoodEl ) continue;
 
             bool foundElectronPt40      = false;
             
@@ -295,19 +292,19 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         
                 const std::map<std::string, bool> cut_map_muTriggers {
                     
-                    {   "mu_pt40_trig_1jCut",       passOfflineBaseline && foundElectronPt40 && passElectronTriggers && pass1JetCut }, 
-                    {   "mu_pt40_trig_2jCut",       passOfflineBaseline && foundElectronPt40 && passElectronTriggers && pass2JetCut }, 
-                    {   "mu_pt40_trig_3jCut",       passOfflineBaseline && foundElectronPt40 && passElectronTriggers && pass3JetCut }, 
-                    {   "mu_pt40_trig_4jCut",       passOfflineBaseline && foundElectronPt40 && passElectronTriggers && pass4JetCut }, 
-                    {   "mu_pt40_trig_5jCut",       passOfflineBaseline && foundElectronPt40 && passElectronTriggers && pass5JetCut }, 
-                    {   "mu_pt40_trig_6jCut",       passOfflineBaseline && foundElectronPt40 && passElectronTriggers && pass6JetCut }, 
+                    {   "mu_pt40_trig_1jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass1JetCut }, 
+                    {   "mu_pt40_trig_2jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass2JetCut }, 
+                    {   "mu_pt40_trig_3jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass3JetCut }, 
+                    {   "mu_pt40_trig_4jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass4JetCut }, 
+                    {   "mu_pt40_trig_5jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass5JetCut }, 
+                    {   "mu_pt40_trig_6jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass6JetCut }, 
                     
-                    {   "mu_pt40_noTrig_1jCut",       passOfflineBaseline && foundElectronPt40 && pass1JetCut }, 
-                    {   "mu_pt40_noTrig_2jCut",       passOfflineBaseline && foundElectronPt40 && pass2JetCut }, 
-                    {   "mu_pt40_noTrig_3jCut",       passOfflineBaseline && foundElectronPt40 && pass3JetCut }, 
-                    {   "mu_pt40_noTrig_4jCut",       passOfflineBaseline && foundElectronPt40 && pass4JetCut }, 
-                    {   "mu_pt40_noTrig_5jCut",       passOfflineBaseline && foundElectronPt40 && pass5JetCut }, 
-                    {   "mu_pt40_noTrig_6jCut",       passOfflineBaseline && foundElectronPt40 && pass6JetCut }, 
+                    {   "mu_pt40_noTrig_1jCut",       passBaseline && foundElectronPt40 && pass1JetCut }, 
+                    {   "mu_pt40_noTrig_2jCut",       passBaseline && foundElectronPt40 && pass2JetCut }, 
+                    {   "mu_pt40_noTrig_3jCut",       passBaseline && foundElectronPt40 && pass3JetCut }, 
+                    {   "mu_pt40_noTrig_4jCut",       passBaseline && foundElectronPt40 && pass4JetCut }, 
+                    {   "mu_pt40_noTrig_5jCut",       passBaseline && foundElectronPt40 && pass5JetCut }, 
+                    {   "mu_pt40_noTrig_6jCut",       passBaseline && foundElectronPt40 && pass6JetCut }, 
                     
                 };
             
@@ -360,19 +357,19 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
                 if( myGoodMuonIndex != -1 ) { 
                     const std::map<std::string, bool> cut_map_muTriggers {
                         
-                        {   "mu_pt40_trig_1jCut",       passOfflineBaseline && foundElectronPt40 && passElectronTriggers && pass1JetCut }, 
-                        {   "mu_pt40_trig_2jCut",       passOfflineBaseline && foundElectronPt40 && passElectronTriggers && pass2JetCut }, 
-                        {   "mu_pt40_trig_3jCut",       passOfflineBaseline && foundElectronPt40 && passElectronTriggers && pass3JetCut }, 
-                        {   "mu_pt40_trig_4jCut",       passOfflineBaseline && foundElectronPt40 && passElectronTriggers && pass4JetCut }, 
-                        {   "mu_pt40_trig_5jCut",       passOfflineBaseline && foundElectronPt40 && passElectronTriggers && pass5JetCut }, 
-                        {   "mu_pt40_trig_6jCut",       passOfflineBaseline && foundElectronPt40 && passElectronTriggers && pass6JetCut }, 
+                        {   "mu_pt40_trig_1jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass1JetCut }, 
+                        {   "mu_pt40_trig_2jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass2JetCut }, 
+                        {   "mu_pt40_trig_3jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass3JetCut }, 
+                        {   "mu_pt40_trig_4jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass4JetCut }, 
+                        {   "mu_pt40_trig_5jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass5JetCut }, 
+                        {   "mu_pt40_trig_6jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass6JetCut }, 
                         
-                        {   "mu_pt40_noTrig_1jCut",       passOfflineBaseline && foundElectronPt40 && pass1JetCut }, 
-                        {   "mu_pt40_noTrig_2jCut",       passOfflineBaseline && foundElectronPt40 && pass2JetCut }, 
-                        {   "mu_pt40_noTrig_3jCut",       passOfflineBaseline && foundElectronPt40 && pass3JetCut }, 
-                        {   "mu_pt40_noTrig_4jCut",       passOfflineBaseline && foundElectronPt40 && pass4JetCut }, 
-                        {   "mu_pt40_noTrig_5jCut",       passOfflineBaseline && foundElectronPt40 && pass5JetCut }, 
-                        {   "mu_pt40_noTrig_6jCut",       passOfflineBaseline && foundElectronPt40 && pass6JetCut }, 
+                        {   "mu_pt40_noTrig_1jCut",       passBaseline && foundElectronPt40 && pass1JetCut }, 
+                        {   "mu_pt40_noTrig_2jCut",       passBaseline && foundElectronPt40 && pass2JetCut }, 
+                        {   "mu_pt40_noTrig_3jCut",       passBaseline && foundElectronPt40 && pass3JetCut }, 
+                        {   "mu_pt40_noTrig_4jCut",       passBaseline && foundElectronPt40 && pass4JetCut }, 
+                        {   "mu_pt40_noTrig_5jCut",       passBaseline && foundElectronPt40 && pass5JetCut }, 
+                        {   "mu_pt40_noTrig_6jCut",       passBaseline && foundElectronPt40 && pass6JetCut }, 
                         
                     };
                 
@@ -394,7 +391,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
                 
             }
             
-            if( passOfflineBaseline && atLeastOneGoodMu ) {
+            if( passBaseline && atLeastOneGoodMu ) {
     
                 bool foundMuonPt35      = false;
                 bool foundMuonPt40      = false;
@@ -420,33 +417,33 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
             
                 if( myGoodElectronIndex != -1 ) {
                     const std::map<std::string, bool> cut_map_elTriggers {
-                        {   "el_pt35_trig_1jCut",       passOfflineBaseline && foundMuonPt35 && passMuonTriggers && pass1JetCut }, 
-                        {   "el_pt35_trig_2jCut",       passOfflineBaseline && foundMuonPt35 && passMuonTriggers && pass2JetCut }, 
-                        {   "el_pt35_trig_3jCut",       passOfflineBaseline && foundMuonPt35 && passMuonTriggers && pass3JetCut }, 
-                        {   "el_pt35_trig_4jCut",       passOfflineBaseline && foundMuonPt35 && passMuonTriggers && pass4JetCut }, 
-                        {   "el_pt35_trig_5jCut",       passOfflineBaseline && foundMuonPt35 && passMuonTriggers && pass5JetCut }, 
-                        {   "el_pt35_trig_6jCut",       passOfflineBaseline && foundMuonPt35 && passMuonTriggers && pass6JetCut }, 
+                        {   "el_pt35_trig_1jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass1JetCut }, 
+                        {   "el_pt35_trig_2jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass2JetCut }, 
+                        {   "el_pt35_trig_3jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass3JetCut }, 
+                        {   "el_pt35_trig_4jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass4JetCut }, 
+                        {   "el_pt35_trig_5jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass5JetCut }, 
+                        {   "el_pt35_trig_6jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass6JetCut }, 
                         
-                        {   "el_pt35_noTrig_1jCut",       passOfflineBaseline && foundMuonPt35 && pass1JetCut }, 
-                        {   "el_pt35_noTrig_2jCut",       passOfflineBaseline && foundMuonPt35 && pass2JetCut }, 
-                        {   "el_pt35_noTrig_3jCut",       passOfflineBaseline && foundMuonPt35 && pass3JetCut }, 
-                        {   "el_pt35_noTrig_4jCut",       passOfflineBaseline && foundMuonPt35 && pass4JetCut }, 
-                        {   "el_pt35_noTrig_5jCut",       passOfflineBaseline && foundMuonPt35 && pass5JetCut }, 
-                        {   "el_pt35_noTrig_6jCut",       passOfflineBaseline && foundMuonPt35 && pass6JetCut }, 
+                        {   "el_pt35_noTrig_1jCut",       passBaseline && foundMuonPt35 && pass1JetCut }, 
+                        {   "el_pt35_noTrig_2jCut",       passBaseline && foundMuonPt35 && pass2JetCut }, 
+                        {   "el_pt35_noTrig_3jCut",       passBaseline && foundMuonPt35 && pass3JetCut }, 
+                        {   "el_pt35_noTrig_4jCut",       passBaseline && foundMuonPt35 && pass4JetCut }, 
+                        {   "el_pt35_noTrig_5jCut",       passBaseline && foundMuonPt35 && pass5JetCut }, 
+                        {   "el_pt35_noTrig_6jCut",       passBaseline && foundMuonPt35 && pass6JetCut }, 
                         
-                        {   "el_pt40_trig_1jCut",       passOfflineBaseline && foundMuonPt40 && passMuonTriggers && pass1JetCut }, 
-                        {   "el_pt40_trig_2jCut",       passOfflineBaseline && foundMuonPt40 && passMuonTriggers && pass2JetCut }, 
-                        {   "el_pt40_trig_3jCut",       passOfflineBaseline && foundMuonPt40 && passMuonTriggers && pass3JetCut }, 
-                        {   "el_pt40_trig_4jCut",       passOfflineBaseline && foundMuonPt40 && passMuonTriggers && pass4JetCut }, 
-                        {   "el_pt40_trig_5jCut",       passOfflineBaseline && foundMuonPt40 && passMuonTriggers && pass5JetCut }, 
-                        {   "el_pt40_trig_6jCut",       passOfflineBaseline && foundMuonPt40 && passMuonTriggers && pass6JetCut }, 
+                        {   "el_pt40_trig_1jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass1JetCut }, 
+                        {   "el_pt40_trig_2jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass2JetCut }, 
+                        {   "el_pt40_trig_3jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass3JetCut }, 
+                        {   "el_pt40_trig_4jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass4JetCut }, 
+                        {   "el_pt40_trig_5jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass5JetCut }, 
+                        {   "el_pt40_trig_6jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass6JetCut }, 
                         
-                        {   "el_pt40_noTrig_1jCut",       passOfflineBaseline && foundMuonPt40 && pass1JetCut }, 
-                        {   "el_pt40_noTrig_2jCut",       passOfflineBaseline && foundMuonPt40 && pass2JetCut }, 
-                        {   "el_pt40_noTrig_3jCut",       passOfflineBaseline && foundMuonPt40 && pass3JetCut }, 
-                        {   "el_pt40_noTrig_4jCut",       passOfflineBaseline && foundMuonPt40 && pass4JetCut }, 
-                        {   "el_pt40_noTrig_5jCut",       passOfflineBaseline && foundMuonPt40 && pass5JetCut }, 
-                        {   "el_pt40_noTrig_6jCut",       passOfflineBaseline && foundMuonPt40 && pass6JetCut } 
+                        {   "el_pt40_noTrig_1jCut",       passBaseline && foundMuonPt40 && pass1JetCut }, 
+                        {   "el_pt40_noTrig_2jCut",       passBaseline && foundMuonPt40 && pass2JetCut }, 
+                        {   "el_pt40_noTrig_3jCut",       passBaseline && foundMuonPt40 && pass3JetCut }, 
+                        {   "el_pt40_noTrig_4jCut",       passBaseline && foundMuonPt40 && pass4JetCut }, 
+                        {   "el_pt40_noTrig_5jCut",       passBaseline && foundMuonPt40 && pass5JetCut }, 
+                        {   "el_pt40_noTrig_6jCut",       passBaseline && foundMuonPt40 && pass6JetCut } 
                     };
         
                     for( auto& kv : cut_map_elTriggers ) {
