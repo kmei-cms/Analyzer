@@ -12,6 +12,7 @@
 #include <iostream>
 #include <TFile.h>
 #include <TDirectory.h>
+#include <TH1F.h>
 
 Semra_Analyzer::Semra_Analyzer() : inithisto(false) // define inithisto variable
 {
@@ -53,9 +54,9 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
 
     // cut flow absolute numbers 
     // for ge2t
-    my_histos.emplace("h_cutFlow_absolute_ge2t", std::make_shared<TH1D>("h_cutFlow_absolute_ge2t", "h_cutFlow_absolute_ge2t", 9,0,9));
-    // for ge0dRbjets, ge1dRbjets, ge2dRbjets with ge2t
-    my_histos.emplace("h_cutFlow_absolute_ge2t_ge1dRbjets", std::make_shared<TH1D>("h_cutFlow_absolute_ge2t_ge1dRbjets", "h_cutFlow_absolute_ge2t_ge1dRbjets", 9,0,9));
+    my_absoluteCutFlow.emplace("h_cutFlow_absolute_ge2t", std::make_shared<TH1F>("h_cutFlow_absolute_ge2t", "h_cutFlow_absolute_ge2t", 9,0,9));
+    // for ge1dRbjets with ge2t
+    my_absoluteCutFlow.emplace("h_cutFlow_absolute_ge2t_ge1dRbjets", std::make_shared<TH1F>("h_cutFlow_absolute_ge2t_ge1dRbjets", "h_cutFlow_absolute_ge2t_ge1dRbjets", 9,0,9));
 
 
     // Define TEfficiencies if you are doing trigger studies (for proper error bars) or cut flow charts.
@@ -308,30 +309,30 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         // -------------------------------
         // ge2t
          if (pass_general && NGoodLeptons == 0) {
-            my_histos["h_cutFlow_absolute_ge2t"]->AddBinContent(1, weight);
+            my_absoluteCutFlow["h_cutFlow_absolute_ge2t"]->AddBinContent(1, weight);
         } if (pass_general && NGoodLeptons == 0 && pass_HT500) {
-            my_histos["h_cutFlow_absolute_ge2t"]->AddBinContent(2, weight);
+            my_absoluteCutFlow["h_cutFlow_absolute_ge2t"]->AddBinContent(2, weight);
         } if (pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b) {
-            my_histos["h_cutFlow_absolute_ge2t"]->AddBinContent(3, weight);
+            my_absoluteCutFlow["h_cutFlow_absolute_ge2t"]->AddBinContent(3, weight);
         } if (pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b && pass_ge6j) {
-            my_histos["h_cutFlow_absolute_ge2t"]->AddBinContent(4, weight);
+            my_absoluteCutFlow["h_cutFlow_absolute_ge2t"]->AddBinContent(4, weight);
         } if (pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t) {
-            my_histos["h_cutFlow_absolute_ge2t"]->AddBinContent(5, weight);
+            my_absoluteCutFlow["h_cutFlow_absolute_ge2t"]->AddBinContent(5, weight);
         }
         
         // for ge1dRbjets with ge2t
         if (pass_general && NGoodLeptons == 0) {
-            my_histos["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(1, weight);
+            my_absoluteCutFlow["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(1, weight);
         } if (pass_general && NGoodLeptons == 0 && pass_HT500) {
-            my_histos["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(2, weight);
+            my_absoluteCutFlow["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(2, weight);
         } if (pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b) {
-            my_histos["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(3, weight);
+            my_absoluteCutFlow["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(3, weight);
         } if (pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b && pass_ge6j) {
-            my_histos["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(4, weight);
+            my_absoluteCutFlow["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(4, weight);
         } if (pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t) {
-            my_histos["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(5, weight);
+            my_absoluteCutFlow["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(5, weight);
         } if (pass_general && NGoodLeptons == 0 && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t && pass_ge1dRbjets) {
-            my_histos["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(6, weight);
+            my_absoluteCutFlow["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(6, weight);
         }
 
         // --------------------------------------------
@@ -365,18 +366,31 @@ void Semra_Analyzer::WriteHistos(TFile* outfile)
     for (const auto &p : my_histos) {
         p.second->Write();
     }
-    
-    for (const auto &p : my_2d_histos) {
-        p.second->Write();
-    }
+ 
+    // Calculate the efficiency from 2 internal histograms which are called total & passed 
+    TH1* total_ge2t = my_efficiencies["event_sel_weight_ge2t"]->GetCopyTotalHisto();
+    total_ge2t->SetDirectory(outfile);
+    total_ge2t->Write();
 
     TH1* passed_ge2t = my_efficiencies["event_sel_weight_ge2t"]->GetCopyPassedHisto();
     passed_ge2t->SetDirectory(outfile);
-    passed_ge2t->Write();   
+    passed_ge2t->Write();
+
+    TH1* total_ge1dRbjets = my_efficiencies["event_sel_weight_ge1dRbjets"]->GetCopyTotalHisto();
+    total_ge1dRbjets->SetDirectory(outfile);
+    total_ge1dRbjets->Write();
 
     TH1* passed_ge1dRbjets = my_efficiencies["event_sel_weight_ge1dRbjets"]->GetCopyPassedHisto();
     passed_ge1dRbjets->SetDirectory(outfile);
-    passed_ge1dRbjets->Write();
+    passed_ge1dRbjets->Write();  
+    
+    for (const auto &p : my_absoluteCutFlow) {
+        p.second->Write();
+    }
+ 
+    for (const auto &p : my_2d_histos) {
+        p.second->Write();
+    }
 
     for (const auto &p : my_efficiencies) {
         p.second->Write();
