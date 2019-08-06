@@ -114,7 +114,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         //-- Print list of triggers (only if you want to see them)
         //--------------------------------------------------
 
-        //if( tr.getEvtNum() == 1 ) printTriggerList(TriggerNames); 
+        if( tr.getEvtNum() == 1 ) printTriggerList(TriggerNames); 
 
         // ------------------------
         // -- Define weight
@@ -155,13 +155,17 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         }
        
         //Define trigger cuts
-        std::vector<std::string> myMuonTriggers             { "HLT_IsoMu24_v", "HLT_IsoTkMu24_v", "HLT_Mu50_v", "HLT_TkMu50_v" };
-        std::vector<std::string> myElectronTriggers         { "HLT_Ele27_WPTight_Gsf_v", "HLT_Photon175_v", "HLT_Ele115_CaloIdVT_GsfTrkIdT_v" };
+        std::vector<std::string> myMuonTriggers, myElectronTriggers;
+        if (runYear == "2016") {
+            std::vector<std::string> myMuonTriggers             { "HLT_IsoMu24_v", "HLT_IsoTkMu24_v", "HLT_Mu50_v", "HLT_TkMu50_v" };
+            std::vector<std::string> myElectronTriggers         { "HLT_Ele27_WPTight_Gsf_v", "HLT_Photon175_v", "HLT_Ele115_CaloIdVT_GsfTrkIdT_v" };
 
-
-        if( runYear == "2017" ) {
+        } else if( runYear == "2017" ) {
             std::vector<std::string> myMuonTriggers         { "HLT_IsoMu24", "HLT_IsoMu27", "HLT_Mu50", "HLT_TkMu50" };
-            std::vector<std::string> myElectronTriggers     { "HLT_Ele35_WPTight_Gsf", "HLT_Photon200", "HLT_Ele115CaloIdVT_GsfTrkIdT" };
+            std::vector<std::string> myElectronTriggers     { "HLT_Ele35_WPTight_Gsf", "HLT_Photon200", "HLT_Ele115_CaloIdVT_GsfTrkIdT" };
+        } else if (runYear == "2018") {
+            std::vector<std::string> myMuonTriggers         { "HLT_IsoMu24", "HLT_IsoMu27", "HLT_Mu50" };
+            std::vector<std::string> myElectronTriggers     { "HLT_Ele35_WPTight_Gsf", "HLT_Photon200", "HLT_Ele115_CaloIdVT_GsfTrkIdT" };
         }
 
         bool passMuonTriggers       = passTriggerGeneral( myMuonTriggers, TriggerNames, TriggerPass );
