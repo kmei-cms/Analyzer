@@ -16,19 +16,16 @@ class Semra_Analyzer
 {
 public:
     std::map<std::string, std::shared_ptr<TH1D>>  my_histos;
-    std::map<std::string, std::shared_ptr<TH1F>>  my_absoluteCutFlow;
     std::map<std::string, std::shared_ptr<TH2D>>  my_2d_histos;
     std::map<std::string, std::shared_ptr<TEfficiency>>  my_efficiencies;
-
-    bool inithisto; // SEMRA / variable   
+    bool inithisto;
  
     Semra_Analyzer();
     ~Semra_Analyzer(){};
     
     void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false);
-    void InitHistos(const std::map<std::string, bool>& cutmap); // SEMRA / cutmap
-    void WriteHistos(TFile* outfile);
-    
+    void InitHistos(const std::map<std::string, bool>& cutmap);
+    void WriteHistos(TFile* outfile);    
 };
 
 #endif
