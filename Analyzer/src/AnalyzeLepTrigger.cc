@@ -106,14 +106,36 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         // ------------------------
         // -- Define eventweight
         // ------------------------
-        double eventweight = 1.0;
+        double eventweight          = 1.0;
+        double leptonScaleFactor    = 1.0;
+        double bTagScaleFactor      = 1.0;
+        double htDerivedScaleFactor = 1.0;
+        double topPtScaleFactor     = 1.0;
+        double prefiringScaleFactor = 1.0;
+        double puScaleFactor        = 1.0;
+
         if(runtype == "MC")
         {
             if( !passMadHT ) continue; //Make sure not to double count DY events
             // Define Lumi weight
             const auto& Weight  = tr.getVar<double>("Weight");
             const auto& lumi = tr.getVar<double>("Lumi");
-            eventweight = lumi*Weight;
+            const auto& puWeight = tr.getVar<double>("puWeightCorr");
+
+            // Define lepton weight
+            if(NGoodLeptons == 1)
+            {
+                const auto& eleLepWeight = tr.getVar<double>("totGoodElectronSF");
+                const auto& muLepWeight  = tr.getVar<double>("totGoodMuonSF");
+                leptonScaleFactor = (GoodLeptons[0].first == "e") ? eleLepWeight : muLepWeight;
+            }
+
+            const auto& bTagScaleFactor   = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
+            const auto& htDerivedScaleFactor = tr.getVar<double>("htDerivedweight");
+            const auto& topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
+            const auto& prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
+
+            eventweight = lumi*Weight*puWeight;
             
         }
 
