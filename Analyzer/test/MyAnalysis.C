@@ -87,7 +87,7 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
 
         // Define classes/functions that add variables on the fly        
         Config c;
-        c.registerModules(tr);
+        c.setUp(tr);
 
         // Loop over all of the events and fill histos
         a.Loop(tr, 1.0, maxEvts, isQuiet);
