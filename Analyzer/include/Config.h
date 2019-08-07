@@ -23,17 +23,71 @@
 
 class Config
 {
+private:
+    template<typename M> void createMoveandRegister(NTupleReader& tr) const
+    {
+        M m;
+        tr.registerFunction(std::move(m));
+    }
+
+    template<typename M> void createMoveandRegister(NTupleReader& tr, M&& m) const
+    {
+        tr.registerFunction(std::move(m));
+    }
+
+    void registerModules(NTupleReader& tr, const std::vector<std::string>&& modules) const
+    {
+        const auto& runtype         = tr.getVar<std::string>("runtype");
+        const auto& runYear         = tr.getVar<std::string>("runYear");
+        const auto& DeepESMCfg      = tr.getVar<std::string>("DeepESMCfg");
+        const auto& ModelFile       = tr.getVar<std::string>("ModelFile");
+        const auto& leptonFileName  = tr.getVar<std::string>("leptonFileName");
+        const auto& puFileName      = tr.getVar<std::string>("puFileName");
+        const auto& meanFileName    = tr.getVar<std::string>("meanFileName");
+        const auto& bjetFileName    = tr.getVar<std::string>("bjetFileName");
+        const auto& bjetCSVFileName = tr.getVar<std::string>("bjetCSVFileName");
+        const auto& filetag         = tr.getVar<std::string>("filetag");
+        
+        for(const auto& module : modules)
+        {
+            if     (module=="PartialUnBlinding") createMoveandRegister<PartialUnBlinding>(tr);
+            else if(module=="PrepNTupleVars")    createMoveandRegister<PrepNTupleVars>(tr);
+            else if(module=="RunTopTagger")      createMoveandRegister<RunTopTagger>(tr);
+            else if(module=="Muon")              createMoveandRegister<Muon>(tr);
+            else if(module=="Electron")          createMoveandRegister<Electron>(tr);
+            else if(module=="Photon")            createMoveandRegister<Photon>(tr);
+            else if(module=="Jet")               createMoveandRegister<Jet>(tr);
+            else if(module=="BJet")              createMoveandRegister<BJet>(tr);
+            else if(module=="CommonVariables")   createMoveandRegister<CommonVariables>(tr);
+            else if(module=="MakeMVAVariables")  createMoveandRegister<MakeMVAVariables>(tr);
+            else if(module=="Baseline")          createMoveandRegister<Baseline>(tr);
+            else if(module=="StopGenMatch")      createMoveandRegister<StopGenMatch>(tr);
+            else if(module=="MegaJetCombine")    createMoveandRegister<MegaJetCombine>(tr);
+            else if(module=="DeepEventShape")    createMoveandRegister<DeepEventShape>(tr, {DeepESMCfg,ModelFile});
+            if(runtype == "MC")
+            {
+                if     (module=="ScaleFactors")  createMoveandRegister<ScaleFactors>(tr, {runYear, leptonFileName, puFileName, meanFileName});
+                else if(module=="BTagCorrector")
+                {
+                    BTagCorrectorTemplate<double> bTagCorrector(bjetFileName, "", bjetCSVFileName, false, filetag);
+                    bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets", "Jets_bJetTagDeepCSVtotb", "Jets_partonFlavor");
+                    tr.registerFunction(std::move(bTagCorrector));
+                }
+            }
+        }
+    }
+
 public:
-    Config()
+    Config() 
     {
     }
 
-    void registerModules(NTupleReader& tr) const
+    void setUp(NTupleReader& tr) const
     {
         //Get and make needed info
-        const auto& runtype = tr.getVar<std::string>("runtype");
         const auto& filetag = tr.getVar<std::string>("filetag");
         const auto& analyzer = tr.getVar<std::string>("analyzer");
+        const bool isSignal = (filetag.find("_stop") != std::string::npos || filetag.find("_mStop") != std::string::npos) ? true : false;
 
         std::string runYear, puFileName, DeepESMCfg, ModelFile, leptonFileName, bjetFileName, bjetCSVFileName, meanFileName;
         double Lumi, deepCSV_WP_loose, deepCSV_WP_medium, deepCSV_WP_tight;
@@ -83,11 +137,7 @@ public:
             meanFileName = "allInOne_SFMean.root";
         }
 
-        const bool isSignal = (filetag.find("_stop") != std::string::npos || filetag.find("_mStop") != std::string::npos) ? true : false;
-        const bool doQCDCR = false;//bool to determine to use qcd control region
-
         tr.registerDerivedVar("runYear",runYear);
-        tr.registerDerivedVar("etaCut",2.4); 
         tr.registerDerivedVar("Lumi",Lumi);
         tr.registerDerivedVar("deepCSV_WP_loose",deepCSV_WP_loose);
         tr.registerDerivedVar("deepCSV_WP_medium",deepCSV_WP_medium);
@@ -100,125 +150,105 @@ public:
         tr.registerDerivedVar("bjetFileName",bjetFileName);        
         tr.registerDerivedVar("bjetCSVFileName",bjetCSVFileName);        
         tr.registerDerivedVar("meanFileName",meanFileName);        
+        tr.registerDerivedVar("doQCDCR",false); //bool to determine to use qcd control region
+        tr.registerDerivedVar("etaCut",2.4); 
         tr.registerDerivedVar("blind",true);
-        tr.registerDerivedVar("doQCDCR",doQCDCR);
-
-        //Create all possible modules
-        PartialUnBlinding partUnBlind;
-        PrepNTupleVars prep;
-        RunTopTagger rtt;
-        Muon muon;
-        Electron electron;
-        Photon photon;
-        Jet jet;
-        BJet bjet;
-        CommonVariables commonVariables;
-        MakeMVAVariables makeMVAVariables;
-        Baseline baseline;
-        DeepEventShape deepEventShape(DeepESMCfg,ModelFile);
-        StopGenMatch sgmatch;
-        MegaJetCombine megajet;
-        BTagCorrectorTemplate<double>* bTagCorrector = nullptr;
-        ScaleFactors* scaleFactors = nullptr;
-        if( runtype == "MC" && analyzer != "CalculateBTagSF")
-        {
-            bTagCorrector = new BTagCorrectorTemplate<double>(bjetFileName, "", bjetCSVFileName, false, filetag);
-            bTagCorrector->SetVarNames("GenParticles_PdgId", "Jets", "Jets_bJetTagDeepCSVtotb", "Jets_partonFlavor");
-            scaleFactors = new ScaleFactors( runYear, leptonFileName, puFileName, meanFileName );
-        }
 
         //Register Modules that are needed for each Analyzer
         if(analyzer=="Analyze1Lep" || analyzer=="Analyze0Lep" || analyzer=="Semra_Analyzer")
         {
-            tr.registerFunction(partUnBlind);
-            tr.registerFunction(prep);                   
-            tr.registerFunction(rtt);
-            tr.registerFunction(muon);
-            tr.registerFunction(electron);
-            tr.registerFunction(photon);
-            tr.registerFunction(jet);
-            tr.registerFunction(bjet);
-            tr.registerFunction(commonVariables);
-            tr.registerFunction(makeMVAVariables);
-            tr.registerFunction(baseline);
-            tr.registerFunction(deepEventShape);        
-            if( runtype == "MC")
-            {
-                tr.registerFunction(*bTagCorrector);
-                tr.registerFunction(*scaleFactors);
-            }
+            const std::vector<std::string> modulesList = {
+                "PartialUnBlinding",
+                "PrepNTupleVars",
+                "RunTopTagger",
+                "Muon",
+                "Electron",
+                "Photon",
+                "Jet",
+                "BJet",
+                "CommonVariables",
+                "MakeMVAVariables",
+                "Baseline",
+                "DeepEventShape",
+                "BTagCorrector",
+                "ScaleFactors"
+            };
+            registerModules(tr, std::move(modulesList));
         }
         else if(analyzer=="MakeNJetDists")
         {
-            tr.registerFunction(partUnBlind);
-            tr.registerFunction(prep);                   
-            tr.registerFunction(muon);
-            tr.registerFunction(electron);
-            tr.registerFunction(photon);
-            tr.registerFunction(jet);
-            tr.registerFunction(bjet);
-            tr.registerFunction(commonVariables);
-            tr.registerFunction(makeMVAVariables);
-            tr.registerFunction(baseline);
-            tr.registerFunction(deepEventShape);        
-            if( runtype == "MC")
-            {
-                tr.registerFunction(*bTagCorrector);
-                tr.registerFunction(*scaleFactors);
-            }            
+            const std::vector<std::string> modulesList = {
+                "PartialUnBlinding",
+                "PrepNTupleVars",
+                "Muon",
+                "Electron",
+                "Photon",
+                "Jet",
+                "BJet",
+                "CommonVariables",
+                "MakeMVAVariables",
+                "Baseline",
+                "DeepEventShape",
+                "BTagCorrector",
+                "ScaleFactors"
+            };
+            registerModules(tr, std::move(modulesList));
         }
         else if(analyzer=="CalculateBTagSF")
         {
-            tr.registerFunction(partUnBlind);
-            tr.registerFunction(prep);                   
-            tr.registerFunction(muon);
-            tr.registerFunction(electron);
-            tr.registerFunction(photon);
-            tr.registerFunction(jet);
-            tr.registerFunction(bjet);
-            tr.registerFunction(commonVariables);
-            tr.registerFunction(makeMVAVariables);
-            tr.registerFunction(baseline);
+            const std::vector<std::string> modulesList = {
+                "PartialUnBlinding",
+                "PrepNTupleVars",
+                "Muon",
+                "Electron",
+                "Photon",
+                "Jet",
+                "BJet",
+                "CommonVariables",
+                "MakeMVAVariables",
+                "Baseline",
+            };
+            registerModules(tr, std::move(modulesList));
         }
         else if(analyzer=="TwoLepAnalyzer")
         {
-            tr.registerFunction(partUnBlind);
-            tr.registerFunction(prep);                   
-            tr.registerFunction(muon);
-            tr.registerFunction(electron);
-            tr.registerFunction(photon);
-            tr.registerFunction(jet);
-            tr.registerFunction(bjet);
-            tr.registerFunction(commonVariables);
-            tr.registerFunction(makeMVAVariables);
-            tr.registerFunction(baseline);
-            tr.registerFunction(deepEventShape);        
-            tr.registerFunction(sgmatch);
-            tr.registerFunction(megajet);
-            if( runtype == "MC")
-            {
-                tr.registerFunction(*bTagCorrector);
-                tr.registerFunction(*scaleFactors);
-            }            
+            const std::vector<std::string> modulesList = {
+                "PartialUnBlinding",
+                "PrepNTupleVars",
+                "Muon",
+                "Electron",
+                "Photon",
+                "Jet",
+                "BJet",
+                "CommonVariables",
+                "MakeMVAVariables",
+                "Baseline",
+                "DeepEventShape",
+                "StopGenMatch",
+                "MegaJetCombine",
+                "BTagCorrector",
+                "ScaleFactors"
+            };
+            registerModules(tr, std::move(modulesList));
         }
         else
         {
-            tr.registerFunction(partUnBlind);
-            tr.registerFunction(prep);                   
-            tr.registerFunction(muon);
-            tr.registerFunction(electron);
-            tr.registerFunction(photon);
-            tr.registerFunction(jet);
-            tr.registerFunction(bjet);
-            tr.registerFunction(commonVariables);
-            tr.registerFunction(makeMVAVariables);
-            tr.registerFunction(baseline);
-            tr.registerFunction(deepEventShape);        
-            if( runtype == "MC")
-            {
-                tr.registerFunction(*bTagCorrector);
-                tr.registerFunction(*scaleFactors);
-            }            
+            const std::vector<std::string> modulesList = {
+                "PartialUnBlinding",
+                "PrepNTupleVars",
+                "Muon",
+                "Electron",
+                "Photon",
+                "Jet",
+                "BJet",
+                "CommonVariables",
+                "MakeMVAVariables",
+                "Baseline",
+                "DeepEventShape",
+                "BTagCorrector",
+                "ScaleFactors"
+            };
+            registerModules(tr, std::move(modulesList));
         }
     }
 };
