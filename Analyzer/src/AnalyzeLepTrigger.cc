@@ -77,19 +77,15 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         const auto& filetag             = tr.getVar<std::string>("filetag");
         const auto& GoodLeptons         = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
 
-        const auto& JetID               = tr.getVar<bool>("JetID");
         const auto& NGoodLeptons        = tr.getVar<int>("NGoodLeptons");
         const auto& passTriggerMC       = tr.getVar<bool>("passTriggerMC");
-        const auto& NGoodBJets_pt30     = tr.getVar<int>("NGoodBJets_pt30");
-        const auto& Mbl                 = tr.getVar<double>("Mbl");
-        const auto& HT_trigger_pt30     = tr.getVar<double>("HT_trigger_pt30");
         const auto& NGoodJets_pt30      = tr.getVar<int>("NGoodJets_pt30");
 
         const auto& Muons               = tr.getVec<TLorentzVector>("Muons");
         const auto& Electrons           = tr.getVec<TLorentzVector>("Electrons");
         
         const auto& passMadHT           = tr.getVar<bool>("passMadHT");
-        const auto& passBaseline        = tr.getVar<bool>("passBaselineGood");
+        const auto& passBaseline        = tr.getVar<bool>("passBaselineGoodOffline1l");
 
         const auto& GoodMuons           = tr.getVec<bool>("GoodMuons");
         const auto& GoodElectrons       = tr.getVec<bool>("GoodElectrons");
