@@ -32,7 +32,6 @@ void AnalyzeLepTrigger::InitHistos()
     std::vector<std::string> ptTags         { "pt35", "pt40" }; //Pt threshold of other lepton
     std::vector<std::string> trigTags       { "trig", "noTrig" }; //Require other lepton trigger? Used for studies, but conclusion was that it does not affect statistics much so it's okay
     std::vector<std::string> nJetCutTags    { "1", "2", "3", "4", "5", "6" }; //Cutting at 6 jets really killed statistics, but the 1 jet cut region is not representative of our signal region, so look at all intermediate steps as well
-   
  
     //Define binning for the histograms
     const Int_t nPtBins = 6;
@@ -53,17 +52,11 @@ void AnalyzeLepTrigger::InitHistos()
 
                         //Define 2D histograms - use these for the final plots ( i.e., it is easier to get these values and use these to create TEfficiencies later on )
                         my_2d_histos.emplace( "h2_trig_"+effTag+"_"+lepTag+"_"+ptTag+"_"+trigTag+"_"+nJetCutTag+"jCut_wLepPtLepEtaBin", std::make_shared<TH2D>( ( "h2_trig_"+effTag+"_"+lepTag+"_"+ptTag+"_"+trigTag+"_"+nJetCutTag+"jCut_wLepPtLepEtaBin" ).c_str(), ( "h2_trig_"+effTag+"_"+lepTag+"_"+ptTag+"_"+trigTag+"_"+nJetCutTag+"jCut_wLepPtLepEtaBin" ).c_str(), nPtBins, ptBinEdges, nEtaBins, etaBinEdges ) );
-
-                        //Define TEfficincies - use these for sanity checks
-//                        my_efficiencies.emplace( "h_eff_"+effTag+"_"+lepTag+"_"+ptTag+"_"+trigTag+"_"+nJetCutTag+"jCut_wLepPtBin", std::make_shared<TEfficiency>( ( "h_eff_"+effTag+"_"+lepTag+"_"+ptTag+"_"+trigTag+"_"+nJetCutTag+"jCut_wLepPtBin" ).c_str(), ( "h_eff_"+effTag+"_"+lepTag+"_"+ptTag+"_"+trigTag+"_"+nJetCutTag+"jCut_wLepPtBin" ).c_str(), nPtBins, ptBinEdges ) );
-//                        my_efficiencies.emplace( "h_eff_"+effTag+"_"+lepTag+"_"+ptTag+"_"+trigTag+"_"+nJetCutTag+"jCut_wLepEtaBin", std::make_shared<TEfficiency>( ( "h_eff_"+effTag+"_"+lepTag+"_"+ptTag+"_"+trigTag+"_"+nJetCutTag+"jCut_wLepEtaBin" ).c_str(), ( "h_eff_"+effTag+"_"+lepTag+"_"+ptTag+"_"+trigTag+"_"+nJetCutTag+"jCut_wLepEtaBin" ).c_str(), nEtaBins, etaBinEdges ) );
-//                        my_efficiencies.emplace( "h2_eff_"+effTag+"_"+lepTag+"_"+ptTag+"_"+trigTag+"_"+nJetCutTag+"jCut_wLepPtLepEtaBin", std::make_shared<TEfficiency>( ( "h2_eff_"+effTag+"_"+lepTag+"_"+ptTag+"_"+trigTag+"_"+nJetCutTag+"jCut_wLepPtLepEtaBin" ).c_str(), ( "h2_eff_"+effTag+"_"+lepTag+"_"+ptTag+"_"+trigTag+"_"+nJetCutTag+"jCut_wLepPtLepEtaBin" ).c_str(), nPtBins, ptBinEdges, nEtaBins, etaBinEdges ) );
                     }//End of nJetCutTags loop
                 }//End of trigTags loop
             }//End of ptTags loop
         }//End of lepTags loop
     }//End of effTags loop
-
 }
 
 //Put everything you want to do per event here.
@@ -74,7 +67,6 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         //This is added to count the number of events- do not change the next two lines.
         const auto& eventCounter        = tr.getVar<int>("eventCounter");
         my_histos["EventCounter"]->Fill( eventCounter );
-
 
         //Define useful variables here
         const auto& TriggerNames        = tr.getVec<std::string>("TriggerNames");
@@ -109,7 +101,6 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         if(maxevents != -1 && tr.getEvtNum() >= maxevents) break;        
         if( tr.getEvtNum() % 1000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;
 
-
         //--------------------------------------------------
         //-- Print list of triggers (only if you want to see them)
         //--------------------------------------------------
@@ -117,17 +108,9 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         if( tr.getEvtNum() == 1 ) printTriggerList(TriggerNames); 
 
         // ------------------------
-        // -- Define weight
+        // -- Define eventweight
         // ------------------------
-        double weight               = 1.0;
-        double eventweight          = 1.0;
-        double leptonScaleFactor    = 1.0;
-        double bTagScaleFactor      = 1.0;
-        double htDerivedScaleFactor = 1.0;
-        double topPtScaleFactor     = 1.0;
-        double prefiringScaleFactor = 1.0;
-        double puScaleFactor        = 1.0;
-        
+        double eventweight = 1.0;
         if(runtype == "MC")
         {
             if( !passMadHT ) continue; //Make sure not to double count DY events
@@ -136,24 +119,8 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
             const auto& lumi = tr.getVar<double>("Lumi");
             eventweight = lumi*Weight;
             
-            // Define lepton weight
-            if(NGoodLeptons == 1)
-            {
-                const auto& eleLepWeight = tr.getVar<double>("totGoodElectronSF");
-                const auto& muLepWeight  = tr.getVar<double>("totGoodMuonSF");
-                leptonScaleFactor = (GoodLeptons[0].first == "e") ? eleLepWeight : muLepWeight;
-            }
-            
-            //PileupWeight = tr.getVar<double>("_PUweightFactor");
-            bTagScaleFactor   = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
-            htDerivedScaleFactor = tr.getVar<double>("htDerivedweight");
-            topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
-            prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
-            puScaleFactor = tr.getVar<double>("puWeightCorr");
-            
-            weight *= eventweight*leptonScaleFactor*bTagScaleFactor*htDerivedScaleFactor*prefiringScaleFactor*puScaleFactor;
         }
-       
+
         //Define trigger cuts
         std::vector<std::string> myMuonTriggers, myElectronTriggers;
         if (runYear == "2016") {
@@ -178,288 +145,92 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         bool pass2JetCut            = ( NGoodJets_pt30 >= 2 );
         bool pass1JetCut            = ( NGoodJets_pt30 >= 1 ); //A little redundant because we require one good b jet but for symmetry reasons
 
-        bool atLeastOneGoodEl       = ( std::any_of( GoodElectrons.begin(), GoodElectrons.end(), [] ( bool boolEl ) { return boolEl; } ) );
-        bool atLeastOneGoodMu       = ( std::any_of( GoodMuons.begin(), GoodMuons.end(), [] ( bool boolMu ) { return boolMu; } ) );
-
-
-        //------------------------------------------------------
-        //-- Do the Electron Trigger Efficiency on the Single Muon Dataset
-        //------------------------------------------------------
+        //-----------------------------------------------------------------------
+        //-- Do the Electron Trigger Efficiency on the Single Muon Dataset and MC
+        //-----------------------------------------------------------------------
         
-        if( filetag == "2016_Data_SingleMuon" || filetag == "2017_Data_SingleMuon" ) {
+        if( (filetag.find("SingleMuon") != std::string::npos || runtype == "MC") ) {
+
+            bool atLeastOneGoodMu = ( std::any_of( GoodMuons.begin(), GoodMuons.end(), [] ( bool boolMu ) { return boolMu; } ) );
             
-            if( !passBaseline || !atLeastOneGoodMu ) continue;
-
-            bool foundMuonPt35      = false;
-            bool foundMuonPt40      = false;
-            
-            //Require a good muon in the single muon dataset
-            for( unsigned int itMu = 0; itMu < Muons.size(); ++itMu ) {
-                if( !GoodMuons.at( itMu ) ) continue; 
-
-                TLorentzVector myMuon = Muons.at( itMu );
-
-                if( myMuon.Pt() >= 35 && std::fabs( myMuon.Eta() ) < 2.4 )       foundMuonPt35 = true;
-                if( myMuon.Pt() >= 40 && std::fabs( myMuon.Eta() ) < 2.4 )       foundMuonPt40 = true;
-            }
-
-            //Look at the first good electron
-            int myGoodElectronIndex     = -1;
-            for( unsigned int itEl = 0; itEl < Electrons.size(); ++itEl ) {
-                if( !GoodElectrons.at( itEl ) ) continue;
-
-                myGoodElectronIndex = itEl;
-                break;
-            }
-       
-            if( myGoodElectronIndex != -1 ) {
-                const std::map<std::string, bool> cut_map_elTriggers {
-                    {   "el_pt35_trig_1jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass1JetCut }, 
-                    {   "el_pt35_trig_2jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass2JetCut }, 
-                    {   "el_pt35_trig_3jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass3JetCut }, 
-                    {   "el_pt35_trig_4jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass4JetCut }, 
-                    {   "el_pt35_trig_5jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass5JetCut }, 
-                    {   "el_pt35_trig_6jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass6JetCut }, 
-                    
-                    {   "el_pt35_noTrig_1jCut",       passBaseline && foundMuonPt35 && pass1JetCut }, 
-                    {   "el_pt35_noTrig_2jCut",       passBaseline && foundMuonPt35 && pass2JetCut }, 
-                    {   "el_pt35_noTrig_3jCut",       passBaseline && foundMuonPt35 && pass3JetCut }, 
-                    {   "el_pt35_noTrig_4jCut",       passBaseline && foundMuonPt35 && pass4JetCut }, 
-                    {   "el_pt35_noTrig_5jCut",       passBaseline && foundMuonPt35 && pass5JetCut }, 
-                    {   "el_pt35_noTrig_6jCut",       passBaseline && foundMuonPt35 && pass6JetCut }, 
-                    
-                    {   "el_pt40_trig_1jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass1JetCut }, 
-                    {   "el_pt40_trig_2jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass2JetCut }, 
-                    {   "el_pt40_trig_3jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass3JetCut }, 
-                    {   "el_pt40_trig_4jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass4JetCut }, 
-                    {   "el_pt40_trig_5jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass5JetCut }, 
-                    {   "el_pt40_trig_6jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass6JetCut }, 
-                    
-                    {   "el_pt40_noTrig_1jCut",       passBaseline && foundMuonPt40 && pass1JetCut }, 
-                    {   "el_pt40_noTrig_2jCut",       passBaseline && foundMuonPt40 && pass2JetCut }, 
-                    {   "el_pt40_noTrig_3jCut",       passBaseline && foundMuonPt40 && pass3JetCut }, 
-                    {   "el_pt40_noTrig_4jCut",       passBaseline && foundMuonPt40 && pass4JetCut }, 
-                    {   "el_pt40_noTrig_5jCut",       passBaseline && foundMuonPt40 && pass5JetCut }, 
-                    {   "el_pt40_noTrig_6jCut",       passBaseline && foundMuonPt40 && pass6JetCut } 
-                };
-    
-                for( auto& kv : cut_map_elTriggers ) {
-                    if( kv.second ) {
-                        my_histos["h_trig_den_"+kv.first+"_wLepPtBin"]->Fill( Electrons.at( myGoodElectronIndex ).Pt(), eventweight );
-                        my_histos["h_trig_den_"+kv.first+"_wLepEtaBin"]->Fill( Electrons.at( myGoodElectronIndex ).Eta(), eventweight );
-                        my_2d_histos["h2_trig_den_"+kv.first+"_wLepPtLepEtaBin"]->Fill( Electrons.at( myGoodElectronIndex ).Pt(), Electrons.at( myGoodElectronIndex ).Eta(), eventweight );
-    
-                        if( passElectronTriggers ) {
-                            my_histos["h_trig_num_"+kv.first+"_wLepPtBin"]->Fill( Electrons.at( myGoodElectronIndex ).Pt(), eventweight );
-                            my_histos["h_trig_num_"+kv.first+"_wLepEtaBin"]->Fill( Electrons.at( myGoodElectronIndex ).Eta(), eventweight );
-                            my_2d_histos["h2_trig_num_"+kv.first+"_wLepPtLepEtaBin"]->Fill( Electrons.at( myGoodElectronIndex ).Pt(), Electrons.at( myGoodElectronIndex ).Eta(), eventweight );
-                        }
-                    }
-                }
-            }
-        }
-        
-        //------------------------------------------------------
-        //-- Do the Muon Trigger Efficiency on the Single Electron Dataset
-        //------------------------------------------------------
-        
-        if( filetag == "2016_Data_SingleElectron" || filetag == "2017_Data_SingleElectron" ) {
-            
-            if( !passBaseline  || !atLeastOneGoodEl ) continue;
-
-            bool foundElectronPt40      = false;
-            
-            //Require a good electron in the single electron dataset
-            for( unsigned int itEl = 0; itEl < Electrons.size(); ++itEl ) {
-                if( !GoodElectrons.at( itEl ) ) continue; 
-
-                TLorentzVector myElectron = Electrons.at( itEl );
-
-                if( myElectron.Pt() >= 40 && std::fabs( myElectron.Eta() ) < 2.4 )       foundElectronPt40 = true;
-            }
-
-            //Look at the first good muon
-            int myGoodMuonIndex     = -1;
-            for( unsigned int itMu = 0; itMu < Muons.size(); ++itMu ) {
-                if( !GoodMuons.at( itMu ) ) continue;
-
-                myGoodMuonIndex = itMu;
-                //std::cout<<"Iso Muon Pt: "<<Muons.at(itMu).Pt()<<"; Eta: "<<Muons.at(itMu).Eta()<<std::endl;
-                break;
-            }
-            
-            if( myGoodMuonIndex != -1 ) {
-        
-                const std::map<std::string, bool> cut_map_muTriggers {
-                    
-                    {   "mu_pt40_trig_1jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass1JetCut }, 
-                    {   "mu_pt40_trig_2jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass2JetCut }, 
-                    {   "mu_pt40_trig_3jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass3JetCut }, 
-                    {   "mu_pt40_trig_4jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass4JetCut }, 
-                    {   "mu_pt40_trig_5jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass5JetCut }, 
-                    {   "mu_pt40_trig_6jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass6JetCut }, 
-                    
-                    {   "mu_pt40_noTrig_1jCut",       passBaseline && foundElectronPt40 && pass1JetCut }, 
-                    {   "mu_pt40_noTrig_2jCut",       passBaseline && foundElectronPt40 && pass2JetCut }, 
-                    {   "mu_pt40_noTrig_3jCut",       passBaseline && foundElectronPt40 && pass3JetCut }, 
-                    {   "mu_pt40_noTrig_4jCut",       passBaseline && foundElectronPt40 && pass4JetCut }, 
-                    {   "mu_pt40_noTrig_5jCut",       passBaseline && foundElectronPt40 && pass5JetCut }, 
-                    {   "mu_pt40_noTrig_6jCut",       passBaseline && foundElectronPt40 && pass6JetCut }, 
-                    
-                };
-            
-                for( auto& kv : cut_map_muTriggers ) {
-                    if( kv.second ) {
-                        
-                        my_histos["h_trig_den_"+kv.first+"_wLepPtBin"]->Fill( Muons.at( myGoodMuonIndex ).Pt(), eventweight );
-                        my_histos["h_trig_den_"+kv.first+"_wLepEtaBin"]->Fill( Muons.at( myGoodMuonIndex ).Eta(), eventweight );
-                        my_2d_histos["h2_trig_den_"+kv.first+"_wLepPtLepEtaBin"]->Fill( Muons.at( myGoodMuonIndex ).Pt(), Muons.at( myGoodMuonIndex ).Eta(), eventweight );
-                        
-                        if( passMuonTriggers ) {
-                            my_histos["h_trig_num_"+kv.first+"_wLepPtBin"]->Fill( Muons.at( myGoodMuonIndex ).Pt(), eventweight );
-                            my_histos["h_trig_num_"+kv.first+"_wLepEtaBin"]->Fill( Muons.at( myGoodMuonIndex ).Eta(), eventweight );
-                            my_2d_histos["h2_trig_num_"+kv.first+"_wLepPtLepEtaBin"]->Fill( Muons.at( myGoodMuonIndex ).Pt(), Muons.at( myGoodMuonIndex ).Eta(), eventweight );
-                        }
-                    }
-                }
-            }
-        }
-        
-        //------------------------------------------------------
-        //-- Do both trigger efficiencies on the MC
-        //------------------------------------------------------
-        
-        if( runtype == "MC" ) {
-          
-            if( atLeastOneGoodEl ) {
-                //Do the muon studies
-                bool foundElectronPt40      = false;
+            if ( atLeastOneGoodMu ) {
+                bool foundMuonPt35 = containsGoodLepton(Muons, GoodMuons, 35);
+                bool foundMuonPt40 = containsGoodLepton(Muons, GoodMuons, 40);
                 
-                //Require a good electron in the single electron dataset
-                for( unsigned int itEl = 0; itEl < Electrons.size(); ++itEl ) {
-                    if( !GoodElectrons.at( itEl ) ) continue; 
-    
-                    TLorentzVector myElectron = Electrons.at( itEl );
-    
-                    if( myElectron.Pt() >= 40 && std::fabs( myElectron.Eta() ) < 2.4 )       foundElectronPt40 = true;
-                }
-    
-                //Look at the first good muon
-                int myGoodMuonIndex     = -1;
-                for( unsigned int itMu = 0; itMu < Muons.size(); ++itMu ) {
-                    if( !GoodMuons.at( itMu ) ) continue;
-    
-                    myGoodMuonIndex = itMu;
-                    //std::cout<<"MC Iso Muon Pt: "<<Muons.at(itMu).Pt()<<"; Eta: "<<Muons.at(itMu).Eta()<<std::endl;
-                    break;
-                }
-                
-                if( myGoodMuonIndex != -1 ) { 
-                    const std::map<std::string, bool> cut_map_muTriggers {
-                        
-                        {   "mu_pt40_trig_1jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass1JetCut }, 
-                        {   "mu_pt40_trig_2jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass2JetCut }, 
-                        {   "mu_pt40_trig_3jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass3JetCut }, 
-                        {   "mu_pt40_trig_4jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass4JetCut }, 
-                        {   "mu_pt40_trig_5jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass5JetCut }, 
-                        {   "mu_pt40_trig_6jCut",       passBaseline && foundElectronPt40 && passElectronTriggers && pass6JetCut }, 
-                        
-                        {   "mu_pt40_noTrig_1jCut",       passBaseline && foundElectronPt40 && pass1JetCut }, 
-                        {   "mu_pt40_noTrig_2jCut",       passBaseline && foundElectronPt40 && pass2JetCut }, 
-                        {   "mu_pt40_noTrig_3jCut",       passBaseline && foundElectronPt40 && pass3JetCut }, 
-                        {   "mu_pt40_noTrig_4jCut",       passBaseline && foundElectronPt40 && pass4JetCut }, 
-                        {   "mu_pt40_noTrig_5jCut",       passBaseline && foundElectronPt40 && pass5JetCut }, 
-                        {   "mu_pt40_noTrig_6jCut",       passBaseline && foundElectronPt40 && pass6JetCut }, 
-                        
-                    };
-                
-                    for( auto& kv : cut_map_muTriggers ) {
-                        if( kv.second ) {
-                            
-                            my_histos["h_trig_den_"+kv.first+"_wLepPtBin"]->Fill( Muons.at( myGoodMuonIndex ).Pt(), eventweight );
-                            my_histos["h_trig_den_"+kv.first+"_wLepEtaBin"]->Fill( Muons.at( myGoodMuonIndex ).Eta(), eventweight );
-                            my_2d_histos["h2_trig_den_"+kv.first+"_wLepPtLepEtaBin"]->Fill( Muons.at( myGoodMuonIndex ).Pt(), Muons.at( myGoodMuonIndex ).Eta(), eventweight );
-                            
-                            if( passMuonTriggers ) {
-                                my_histos["h_trig_num_"+kv.first+"_wLepPtBin"]->Fill( Muons.at( myGoodMuonIndex ).Pt(), eventweight );
-                                my_histos["h_trig_num_"+kv.first+"_wLepEtaBin"]->Fill( Muons.at( myGoodMuonIndex ).Eta(), eventweight );
-                                my_2d_histos["h2_trig_num_"+kv.first+"_wLepPtLepEtaBin"]->Fill( Muons.at( myGoodMuonIndex ).Pt(), Muons.at( myGoodMuonIndex ).Eta(), eventweight );
-                            }
-                        }
-                    }
-                }
-                
-            }
-            
-            if( passBaseline && atLeastOneGoodMu ) {
-    
-                bool foundMuonPt35      = false;
-                bool foundMuonPt40      = false;
-                
-                //Require a good muon in the single muon dataset
-                for( unsigned int itMu = 0; itMu < Muons.size(); ++itMu ) {
-                    if( !GoodMuons.at( itMu ) ) continue; 
-    
-                    TLorentzVector myMuon = Muons.at( itMu );
-    
-                    if( myMuon.Pt() >= 35 && std::fabs( myMuon.Eta() ) < 2.4 )       foundMuonPt35 = true;
-                    if( myMuon.Pt() >= 40 && std::fabs( myMuon.Eta() ) < 2.4 )       foundMuonPt40 = true;
-                }
-    
                 //Look at the first good electron
-                int myGoodElectronIndex     = -1;
-                for( unsigned int itEl = 0; itEl < Electrons.size(); ++itEl ) {
-                    if( !GoodElectrons.at( itEl ) ) continue;
-    
-                    myGoodElectronIndex = itEl;
-                    break;
-                }
-            
+                int myGoodElectronIndex = goodLeptonIndex(Electrons, GoodElectrons);
+       
                 if( myGoodElectronIndex != -1 ) {
                     const std::map<std::string, bool> cut_map_elTriggers {
-                        {   "el_pt35_trig_1jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass1JetCut }, 
-                        {   "el_pt35_trig_2jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass2JetCut }, 
-                        {   "el_pt35_trig_3jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass3JetCut }, 
-                        {   "el_pt35_trig_4jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass4JetCut }, 
-                        {   "el_pt35_trig_5jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass5JetCut }, 
-                        {   "el_pt35_trig_6jCut",       passBaseline && foundMuonPt35 && passMuonTriggers && pass6JetCut }, 
+                        { "el_pt35_trig_1jCut",   passBaseline && foundMuonPt35 && passMuonTriggers && pass1JetCut }, 
+                        { "el_pt35_trig_2jCut",   passBaseline && foundMuonPt35 && passMuonTriggers && pass2JetCut }, 
+                        { "el_pt35_trig_3jCut",   passBaseline && foundMuonPt35 && passMuonTriggers && pass3JetCut }, 
+                        { "el_pt35_trig_4jCut",   passBaseline && foundMuonPt35 && passMuonTriggers && pass4JetCut }, 
+                        { "el_pt35_trig_5jCut",   passBaseline && foundMuonPt35 && passMuonTriggers && pass5JetCut }, 
+                        { "el_pt35_trig_6jCut",   passBaseline && foundMuonPt35 && passMuonTriggers && pass6JetCut }, 
                         
-                        {   "el_pt35_noTrig_1jCut",       passBaseline && foundMuonPt35 && pass1JetCut }, 
-                        {   "el_pt35_noTrig_2jCut",       passBaseline && foundMuonPt35 && pass2JetCut }, 
-                        {   "el_pt35_noTrig_3jCut",       passBaseline && foundMuonPt35 && pass3JetCut }, 
-                        {   "el_pt35_noTrig_4jCut",       passBaseline && foundMuonPt35 && pass4JetCut }, 
-                        {   "el_pt35_noTrig_5jCut",       passBaseline && foundMuonPt35 && pass5JetCut }, 
-                        {   "el_pt35_noTrig_6jCut",       passBaseline && foundMuonPt35 && pass6JetCut }, 
+                        { "el_pt35_noTrig_1jCut", passBaseline && foundMuonPt35 && pass1JetCut }, 
+                        { "el_pt35_noTrig_2jCut", passBaseline && foundMuonPt35 && pass2JetCut }, 
+                        { "el_pt35_noTrig_3jCut", passBaseline && foundMuonPt35 && pass3JetCut }, 
+                        { "el_pt35_noTrig_4jCut", passBaseline && foundMuonPt35 && pass4JetCut }, 
+                        { "el_pt35_noTrig_5jCut", passBaseline && foundMuonPt35 && pass5JetCut }, 
+                        { "el_pt35_noTrig_6jCut", passBaseline && foundMuonPt35 && pass6JetCut }, 
                         
-                        {   "el_pt40_trig_1jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass1JetCut }, 
-                        {   "el_pt40_trig_2jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass2JetCut }, 
-                        {   "el_pt40_trig_3jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass3JetCut }, 
-                        {   "el_pt40_trig_4jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass4JetCut }, 
-                        {   "el_pt40_trig_5jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass5JetCut }, 
-                        {   "el_pt40_trig_6jCut",       passBaseline && foundMuonPt40 && passMuonTriggers && pass6JetCut }, 
+                        { "el_pt40_trig_1jCut",   passBaseline && foundMuonPt40 && passMuonTriggers && pass1JetCut }, 
+                        { "el_pt40_trig_2jCut",   passBaseline && foundMuonPt40 && passMuonTriggers && pass2JetCut }, 
+                        { "el_pt40_trig_3jCut",   passBaseline && foundMuonPt40 && passMuonTriggers && pass3JetCut }, 
+                        { "el_pt40_trig_4jCut",   passBaseline && foundMuonPt40 && passMuonTriggers && pass4JetCut }, 
+                        { "el_pt40_trig_5jCut",   passBaseline && foundMuonPt40 && passMuonTriggers && pass5JetCut }, 
+                        { "el_pt40_trig_6jCut",   passBaseline && foundMuonPt40 && passMuonTriggers && pass6JetCut }, 
                         
-                        {   "el_pt40_noTrig_1jCut",       passBaseline && foundMuonPt40 && pass1JetCut }, 
-                        {   "el_pt40_noTrig_2jCut",       passBaseline && foundMuonPt40 && pass2JetCut }, 
-                        {   "el_pt40_noTrig_3jCut",       passBaseline && foundMuonPt40 && pass3JetCut }, 
-                        {   "el_pt40_noTrig_4jCut",       passBaseline && foundMuonPt40 && pass4JetCut }, 
-                        {   "el_pt40_noTrig_5jCut",       passBaseline && foundMuonPt40 && pass5JetCut }, 
-                        {   "el_pt40_noTrig_6jCut",       passBaseline && foundMuonPt40 && pass6JetCut } 
+                        { "el_pt40_noTrig_1jCut", passBaseline && foundMuonPt40 && pass1JetCut }, 
+                        { "el_pt40_noTrig_2jCut", passBaseline && foundMuonPt40 && pass2JetCut }, 
+                        { "el_pt40_noTrig_3jCut", passBaseline && foundMuonPt40 && pass3JetCut }, 
+                        { "el_pt40_noTrig_4jCut", passBaseline && foundMuonPt40 && pass4JetCut }, 
+                        { "el_pt40_noTrig_5jCut", passBaseline && foundMuonPt40 && pass5JetCut }, 
+                        { "el_pt40_noTrig_6jCut", passBaseline && foundMuonPt40 && pass6JetCut } 
                     };
+    
+                    fillHistos(cut_map_elTriggers, passElectronTriggers, Electrons.at( myGoodElectronIndex ), eventweight);
+                }
+            }
+        }
         
-                    for( auto& kv : cut_map_elTriggers ) {
-                        if( kv.second ) {
-                            std::cout<<kv.first<<std::endl;
-                            my_histos["h_trig_den_"+kv.first+"_wLepPtBin"]->Fill( Electrons.at( myGoodElectronIndex ).Pt(), eventweight );
-                            my_histos["h_trig_den_"+kv.first+"_wLepEtaBin"]->Fill( Electrons.at( myGoodElectronIndex ).Eta(), eventweight );
-                            my_2d_histos["h2_trig_den_"+kv.first+"_wLepPtLepEtaBin"]->Fill( Electrons.at( myGoodElectronIndex ).Pt(), Electrons.at( myGoodElectronIndex ).Eta(), eventweight );
+        //-----------------------------------------------------------------------
+        //-- Do the Muon Trigger Efficiency on the Single Electron Dataset and MC
+        //-----------------------------------------------------------------------
         
-                            if( passElectronTriggers ) {
-                                my_histos["h_trig_num_"+kv.first+"_wLepPtBin"]->Fill( Electrons.at( myGoodElectronIndex ).Pt(), eventweight );
-                                my_histos["h_trig_num_"+kv.first+"_wLepEtaBin"]->Fill( Electrons.at( myGoodElectronIndex ).Eta(), eventweight );
-                                my_2d_histos["h2_trig_num_"+kv.first+"_wLepPtLepEtaBin"]->Fill( Electrons.at( myGoodElectronIndex ).Pt(), Electrons.at( myGoodElectronIndex ).Eta(), eventweight );
-                            }
-                        }
-                    }
+        if( (filetag.find("SingleElectron") != std::string::npos || filetag.find("EGamma") != std::string::npos || runtype == "MC") ) {
+
+            bool atLeastOneGoodEl = ( std::any_of( GoodElectrons.begin(), GoodElectrons.end(), [] ( bool boolEl ) { return boolEl; } ) );
+
+            if ( atLeastOneGoodEl ) { 
+                bool foundElectronPt40 = containsGoodLepton(Electrons, GoodElectrons, 40);
+                
+                //Look at the first good muon
+                int myGoodMuonIndex = goodLeptonIndex(Muons, GoodMuons);
+                
+                if( myGoodMuonIndex != -1 ) {
+        
+                    const std::map<std::string, bool> cut_map_muTriggers {
+                        
+                        { "mu_pt40_trig_1jCut",  passBaseline && foundElectronPt40 && passElectronTriggers && pass1JetCut }, 
+                        { "mu_pt40_trig_2jCut",  passBaseline && foundElectronPt40 && passElectronTriggers && pass2JetCut }, 
+                        { "mu_pt40_trig_3jCut",  passBaseline && foundElectronPt40 && passElectronTriggers && pass3JetCut }, 
+                        { "mu_pt40_trig_4jCut",  passBaseline && foundElectronPt40 && passElectronTriggers && pass4JetCut }, 
+                        { "mu_pt40_trig_5jCut",  passBaseline && foundElectronPt40 && passElectronTriggers && pass5JetCut }, 
+                        { "mu_pt40_trig_6jCut",  passBaseline && foundElectronPt40 && passElectronTriggers && pass6JetCut }, 
+                        
+                        { "mu_pt40_noTrig_1jCut", passBaseline && foundElectronPt40 && pass1JetCut }, 
+                        { "mu_pt40_noTrig_2jCut", passBaseline && foundElectronPt40 && pass2JetCut }, 
+                        { "mu_pt40_noTrig_3jCut", passBaseline && foundElectronPt40 && pass3JetCut }, 
+                        { "mu_pt40_noTrig_4jCut", passBaseline && foundElectronPt40 && pass4JetCut }, 
+                        { "mu_pt40_noTrig_5jCut", passBaseline && foundElectronPt40 && pass5JetCut }, 
+                        { "mu_pt40_noTrig_6jCut", passBaseline && foundElectronPt40 && pass6JetCut }, 
+                        
+                    };
+                
+                    fillHistos(cut_map_muTriggers, passMuonTriggers, Muons.at( myGoodMuonIndex ), eventweight);
                 }
             }
         }
@@ -482,6 +253,45 @@ void AnalyzeLepTrigger::WriteHistos(TFile* outfile)
         p.second->Write();
     }
     
+}
+
+bool AnalyzeLepTrigger::containsGoodLepton( const std::vector<TLorentzVector>& leptons, const std::vector<bool>& goodLeptons, double ptThreshold, double etaSelection) { 
+    //Require a good muon in the single muon dataset
+    for( unsigned int iLep = 0; iLep < leptons.size(); ++iLep ) {
+        if( !goodLeptons.at( iLep ) ) continue; 
+    
+        TLorentzVector myLepton = leptons.at( iLep );
+    
+        if( myLepton.Pt() >= ptThreshold && std::fabs( myLepton.Eta() ) < etaSelection ) return true;
+    }
+
+    return false;
+}
+
+int AnalyzeLepTrigger::goodLeptonIndex( const std::vector<TLorentzVector>& leptons, const std::vector<bool>& goodLeptons) {
+    for( unsigned int iLep = 0; iLep < leptons.size(); ++iLep ) {
+        if( !goodLeptons.at( iLep ) ) continue;
+
+        return iLep;
+    }
+
+    return -1;
+}
+
+void AnalyzeLepTrigger::fillHistos( const std::map<std::string, bool>& cutMap, bool passLeptonTriggers, const TLorentzVector& lepton, double theWeight ) {
+    for( auto& kv : cutMap ) {
+        if( kv.second ) {
+            my_histos["h_trig_den_"+kv.first+"_wLepPtBin"]->Fill( lepton.Pt(), theWeight );
+            my_histos["h_trig_den_"+kv.first+"_wLepEtaBin"]->Fill( lepton.Eta(), theWeight );
+            my_2d_histos["h2_trig_den_"+kv.first+"_wLepPtLepEtaBin"]->Fill( lepton.Pt(), lepton.Eta(), theWeight );
+
+            if( passLeptonTriggers ) {
+                my_histos["h_trig_num_"+kv.first+"_wLepPtBin"]->Fill( lepton.Pt(), theWeight );
+                my_histos["h_trig_num_"+kv.first+"_wLepEtaBin"]->Fill( lepton.Eta(), theWeight );
+                my_2d_histos["h2_trig_num_"+kv.first+"_wLepPtLepEtaBin"]->Fill( lepton.Pt(), lepton.Eta(), theWeight );
+            }
+        }
+    }
 }
 
 //This is just the general trigger passing function

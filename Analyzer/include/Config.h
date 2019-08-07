@@ -231,6 +231,22 @@ public:
             };
             registerModules(tr, std::move(modulesList));
         }
+        else if (analyzer=="AnalyzeLepTrigger") {
+            const std::vector<std::string> modulesList = {
+                "PartialUnBlinding",
+                "PrepNTupleVars",
+                "Muon",
+                "Electron",
+                "Photon",
+                "Jet",
+                "BJet",
+                "CommonVariables",
+                "Baseline",
+                "BTagCorrector",
+                "ScaleFactors"
+            };
+            registerModules(tr, std::move(modulesList));
+        }
         else
         {
             const std::vector<std::string> modulesList = {
