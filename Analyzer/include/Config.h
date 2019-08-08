@@ -24,17 +24,6 @@
 class Config
 {
 private:
-    template<typename M> void createMoveandRegister(NTupleReader& tr) const
-    {
-        M m;
-        tr.registerFunction(std::move(m));
-    }
-
-    template<typename M> void createMoveandRegister(NTupleReader& tr, M&& m) const
-    {
-        tr.registerFunction(std::move(m));
-    }
-
     void registerModules(NTupleReader& tr, const std::vector<std::string>&& modules) const
     {
         const auto& runtype         = tr.getVar<std::string>("runtype");
@@ -50,28 +39,27 @@ private:
         
         for(const auto& module : modules)
         {
-            if     (module=="PartialUnBlinding") createMoveandRegister<PartialUnBlinding>(tr);
-            else if(module=="PrepNTupleVars")    createMoveandRegister<PrepNTupleVars>(tr);
-            else if(module=="RunTopTagger")      createMoveandRegister<RunTopTagger>(tr);
-            else if(module=="Muon")              createMoveandRegister<Muon>(tr);
-            else if(module=="Electron")          createMoveandRegister<Electron>(tr);
-            else if(module=="Photon")            createMoveandRegister<Photon>(tr);
-            else if(module=="Jet")               createMoveandRegister<Jet>(tr);
-            else if(module=="BJet")              createMoveandRegister<BJet>(tr);
-            else if(module=="CommonVariables")   createMoveandRegister<CommonVariables>(tr);
-            else if(module=="MakeMVAVariables")  createMoveandRegister<MakeMVAVariables>(tr);
-            else if(module=="Baseline")          createMoveandRegister<Baseline>(tr);
-            else if(module=="StopGenMatch")      createMoveandRegister<StopGenMatch>(tr);
-            else if(module=="MegaJetCombine")    createMoveandRegister<MegaJetCombine>(tr);
-            else if(module=="DeepEventShape")    createMoveandRegister<DeepEventShape>(tr, {DeepESMCfg,ModelFile});
+            if     (module=="PartialUnBlinding") tr.emplaceModule<PartialUnBlinding>();
+            else if(module=="PrepNTupleVars")    tr.emplaceModule<PrepNTupleVars>();
+            else if(module=="RunTopTagger")      tr.emplaceModule<RunTopTagger>();
+            else if(module=="Muon")              tr.emplaceModule<Muon>();
+            else if(module=="Electron")          tr.emplaceModule<Electron>();
+            else if(module=="Photon")            tr.emplaceModule<Photon>();
+            else if(module=="Jet")               tr.emplaceModule<Jet>();
+            else if(module=="BJet")              tr.emplaceModule<BJet>();
+            else if(module=="CommonVariables")   tr.emplaceModule<CommonVariables>();
+            else if(module=="MakeMVAVariables")  tr.emplaceModule<MakeMVAVariables>();
+            else if(module=="Baseline")          tr.emplaceModule<Baseline>();
+            else if(module=="StopGenMatch")      tr.emplaceModule<StopGenMatch>();
+            else if(module=="MegaJetCombine")    tr.emplaceModule<MegaJetCombine>();
+            else if(module=="DeepEventShape")    tr.emplaceModule<DeepEventShape>(DeepESMCfg, ModelFile);
             if(runtype == "MC")
             {
-                if     (module=="ScaleFactors")  createMoveandRegister<ScaleFactors>(tr, {runYear, leptonFileName, puFileName, meanFileName});
+                if     (module=="ScaleFactors")  tr.emplaceModule<ScaleFactors>(runYear, leptonFileName, puFileName, meanFileName);
                 else if(module=="BTagCorrector")
                 {
-                    BTagCorrectorTemplate<double> bTagCorrector(bjetFileName, "", bjetCSVFileName, false, filetag);
+                    auto& bTagCorrector = tr.emplaceModule<BTagCorrectorTemplate<double>>(bjetFileName, "", bjetCSVFileName, false, filetag);
                     bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets", "Jets_bJetTagDeepCSVtotb", "Jets_partonFlavor");
-                    tr.registerFunction(std::move(bTagCorrector));
                 }
             }
         }
