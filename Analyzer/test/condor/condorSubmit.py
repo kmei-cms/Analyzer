@@ -69,6 +69,7 @@ def main():
                        environ["CMSSW_BASE"] + "/src/%s/test/DeepCSV_2016LegacySF_V1.csv" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/DeepCSV_94XSF_V4_B_F.csv" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/PileupHistograms_2018_69mb_pm5.root" % repo, 
+                       environ["CMSSW_BASE"] + "/src/%s/test/allInOne_leptonSF_2018.root" % repo, 
                        ]
     
     print "--------------Files to Transfer-----------------"
