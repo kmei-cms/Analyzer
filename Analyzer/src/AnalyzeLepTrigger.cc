@@ -83,6 +83,9 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
 
         const auto& Muons               = tr.getVec<TLorentzVector>("Muons");
         const auto& Electrons           = tr.getVec<TLorentzVector>("Electrons");
+
+        const auto& NGoodMuons          = tr.getVar<int>("NGoodMuons");
+        const auto& NGoodElectrons      = tr.getVar<int>("NGoodElectrons");
         
         const auto& passMadHT           = tr.getVar<bool>("passMadHT");
         const auto& passBaseline        = tr.getVar<bool>("passBaselineGoodOffline1l");
@@ -106,7 +109,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         // ------------------------
         // -- Define eventweight
         // ------------------------
-        double eventweight          = 1.0;
+        double theweight            = 1.0;
         double leptonScaleFactor    = 1.0;
         double bTagScaleFactor      = 1.0;
         double htDerivedScaleFactor = 1.0;
@@ -135,7 +138,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
             const auto& topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
             const auto& prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
 
-            eventweight = lumi*Weight*puWeight;
+            theweight = lumi*Weight*puWeight;
             
         }
 
@@ -169,7 +172,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         
         if( (filetag.find("SingleMuon") != std::string::npos || runtype == "MC") ) {
 
-            bool atLeastOneGoodMu = ( std::any_of( GoodMuons.begin(), GoodMuons.end(), [] ( bool boolMu ) { return boolMu; } ) );
+            bool atLeastOneGoodMu = ( NGoodMuons >= 1 );
             
             if ( atLeastOneGoodMu ) {
                 bool foundMuonPt35 = containsGoodLepton(Muons, GoodMuons, 35);
@@ -209,7 +212,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
                         { "el_pt40_noTrig_6jCut", passBaseline && foundMuonPt40 && pass6JetCut } 
                     };
     
-                    fillHistos(cut_map_elTriggers, passElectronTriggers, Electrons.at( myGoodElectronIndex ), eventweight);
+                    fillHistos(cut_map_elTriggers, passElectronTriggers, Electrons.at( myGoodElectronIndex ), theweight);
                 }
             }
         }
@@ -220,7 +223,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         
         if( (filetag.find("SingleElectron") != std::string::npos || filetag.find("EGamma") != std::string::npos || runtype == "MC") ) {
 
-            bool atLeastOneGoodEl = ( std::any_of( GoodElectrons.begin(), GoodElectrons.end(), [] ( bool boolEl ) { return boolEl; } ) );
+            bool atLeastOneGoodEl = ( NGoodElectrons >= 1 );
 
             if ( atLeastOneGoodEl ) { 
                 bool foundElectronPt40 = containsGoodLepton(Electrons, GoodElectrons, 40);
@@ -248,7 +251,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
                         
                     };
                 
-                    fillHistos(cut_map_muTriggers, passMuonTriggers, Muons.at( myGoodMuonIndex ), eventweight);
+                    fillHistos(cut_map_muTriggers, passMuonTriggers, Muons.at( myGoodMuonIndex ), theweight);
                 }
             }
         }

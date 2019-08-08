@@ -219,7 +219,8 @@ public:
             };
             registerModules(tr, std::move(modulesList));
         }
-        else if (analyzer=="AnalyzeLepTrigger") {
+        else if (analyzer=="AnalyzeLepTrigger")
+        {
             const std::vector<std::string> modulesList = {
                 "PartialUnBlinding",
                 "PrepNTupleVars",
