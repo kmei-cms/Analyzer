@@ -25,9 +25,7 @@ public:
     void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false);
     void InitHistos();
     void WriteHistos(TFile* outfile);
-    bool passTriggerGeneral( std::vector<std::string>& myTriggerVector, const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass );
     void printTriggerList( const std::vector<std::string>& TriggerNames );
-    void doesTriggerExist( std::vector<std::string>& myTrigTestVector, const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass );
     
     bool containsGoodLepton( const std::vector<TLorentzVector>& leptons, const std::vector<bool>& goodLeptons, double ptThreshold, double etaSelection = 2.4 );
     int goodLeptonIndex( const std::vector<TLorentzVector>& leptons, const std::vector<bool>& goodLeptons );

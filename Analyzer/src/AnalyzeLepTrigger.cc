@@ -112,8 +112,6 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         double theweight            = 1.0;
         double leptonScaleFactor    = 1.0;
         double bTagScaleFactor      = 1.0;
-        double htDerivedScaleFactor = 1.0;
-        double topPtScaleFactor     = 1.0;
         double prefiringScaleFactor = 1.0;
         double puScaleFactor        = 1.0;
 
@@ -134,11 +132,9 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
             }
 
             const auto& bTagScaleFactor   = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
-            const auto& htDerivedScaleFactor = tr.getVar<double>("htDerivedweight");
-            const auto& topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
             const auto& prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
 
-            theweight = lumi*Weight*puWeight;
+            theweight = lumi*Weight*puWeight*leptonScaleFactor*bTagScaleFactor*prefiringScaleFactor;
             
         }
 
@@ -158,9 +154,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         
         if( (filetag.find("SingleMuon") != std::string::npos || runtype == "MC") ) {
 
-            bool atLeastOneGoodMu = ( NGoodMuons >= 1 );
-            
-            if ( atLeastOneGoodMu ) {
+            if ( NGoodMuons >= 1 ) {
                 bool foundMuonPt35 = containsGoodLepton(Muons, GoodMuons, 35);
                 bool foundMuonPt40 = containsGoodLepton(Muons, GoodMuons, 40);
                 
@@ -209,9 +203,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         
         if( (filetag.find("SingleElectron") != std::string::npos || filetag.find("EGamma") != std::string::npos || runtype == "MC") ) {
 
-            bool atLeastOneGoodEl = ( NGoodElectrons >= 1 );
-
-            if ( atLeastOneGoodEl ) { 
+            if ( NGoodElectrons >= 1 ) { 
                 bool foundElectronPt40 = containsGoodLepton(Electrons, GoodElectrons, 40);
                 
                 //Look at the first good muon
@@ -301,31 +293,10 @@ void AnalyzeLepTrigger::fillHistos( const std::map<std::string, bool>& cutMap, b
     }
 }
 
-//This is just the general trigger passing function
-bool AnalyzeLepTrigger::passTriggerGeneral( std::vector<std::string>& myTriggerVector, const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass ) {
-    bool passTrigger = false;
-    for( unsigned int i = 0; i < TriggerNames.size(); i++ ) {
-        if( TriggerPass.at(i) != 1 ) continue;
-        std::string trigname = TriggerNames.at(i);
-        
-        //Now comes the fun bit logic
-        if( std::any_of( myTriggerVector.begin(), myTriggerVector.end(), [&] (std::string s) { return trigname.find(s) != std::string::npos; } ) ) {
-            passTrigger = true;
-            break;
-        }
-    }
-    return passTrigger;
-}
-
 //Use this function to print out the entire trigger list in an ntuple (useful when trying to figure out which triggers to use)
 void AnalyzeLepTrigger::printTriggerList( const std::vector<std::string>& TriggerNames ) {
     for( unsigned int i = 0; i < TriggerNames.size(); i++ ) {
         std::string myString = TriggerNames.at(i);
         printf("%s\n", myString.c_str());
     }
-}
-
-//Use this function if you want to make sure a specific trigger exists (sometimes the version number can cause some issues)
-void AnalyzeLepTrigger::doesTriggerExist( std::vector<std::string>& myTrigTestVector, const std::vector<std::string>& TriggerNames, const std::vector<int>& TriggerPass ) {
-    if( passTriggerGeneral( myTrigTestVector, TriggerNames, TriggerPass ) ) printf( "%s\n", "This trigger works and the string comparison comes out valid." );
 }
