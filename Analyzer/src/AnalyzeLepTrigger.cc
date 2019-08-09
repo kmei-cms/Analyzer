@@ -128,8 +128,8 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
             // Define lepton weight
             if(NGoodLeptons == 1)
             {
-                const auto& eleLepWeight = tr.getVar<double>("totGoodElectronSF");
-                const auto& muLepWeight  = tr.getVar<double>("totGoodMuonSF");
+                const auto& eleLepWeight = tr.getVar<double>("noTrigGoodElectronSF");
+                const auto& muLepWeight  = tr.getVar<double>("noTrigGoodMuonSF");
                 leptonScaleFactor = (GoodLeptons[0].first == "e") ? eleLepWeight : muLepWeight;
             }
 
@@ -142,22 +142,8 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
             
         }
 
-        //Define trigger cuts
-        std::vector<std::string> myMuonTriggers, myElectronTriggers;
-        if (runYear == "2016") {
-            std::vector<std::string> myMuonTriggers             { "HLT_IsoMu24_v", "HLT_IsoTkMu24_v", "HLT_Mu50_v", "HLT_TkMu50_v" };
-            std::vector<std::string> myElectronTriggers         { "HLT_Ele27_WPTight_Gsf_v", "HLT_Photon175_v", "HLT_Ele115_CaloIdVT_GsfTrkIdT_v" };
-
-        } else if( runYear == "2017" ) {
-            std::vector<std::string> myMuonTriggers         { "HLT_IsoMu24", "HLT_IsoMu27", "HLT_Mu50", "HLT_TkMu50" };
-            std::vector<std::string> myElectronTriggers     { "HLT_Ele35_WPTight_Gsf", "HLT_Photon200", "HLT_Ele115_CaloIdVT_GsfTrkIdT" };
-        } else if (runYear == "2018") {
-            std::vector<std::string> myMuonTriggers         { "HLT_IsoMu24", "HLT_IsoMu27", "HLT_Mu50" };
-            std::vector<std::string> myElectronTriggers     { "HLT_Ele35_WPTight_Gsf", "HLT_Photon200", "HLT_Ele115_CaloIdVT_GsfTrkIdT" };
-        }
-
-        bool passMuonTriggers       = passTriggerGeneral( myMuonTriggers, TriggerNames, TriggerPass );
-        bool passElectronTriggers   = passTriggerGeneral( myElectronTriggers, TriggerNames, TriggerPass );
+        bool passMuonTriggers       = tr.getVar<bool>("passTriggerMuon");
+        bool passElectronTriggers   = tr.getVar<bool>("passTriggerElectron");
         
         bool pass6JetCut            = ( NGoodJets_pt30 >= 6 );
         bool pass5JetCut            = ( NGoodJets_pt30 >= 5 );
