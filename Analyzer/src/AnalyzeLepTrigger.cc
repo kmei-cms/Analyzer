@@ -107,7 +107,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         if( tr.getEvtNum() == 1 ) printTriggerList(TriggerNames); 
 
         // ------------------------
-        // -- Define eventweight
+        // -- Define theweight
         // ------------------------
         double theweight            = 1.0;
         double leptonScaleFactor    = 1.0;
