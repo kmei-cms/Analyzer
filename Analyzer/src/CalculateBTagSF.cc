@@ -12,7 +12,6 @@
 
 // Calcualte b-tag eff. needed for the scale factor 
 // Info from this Twiki: https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation
-
 CalculateBTagSF::CalculateBTagSF() : initHistos(false)
 {
 }
@@ -39,28 +38,19 @@ void CalculateBTagSF::InitHistos(std::string histoFileTag)
 
     my_2d_histos["n_eff_b_"+histoFileTag]->GetXaxis()->SetTitle( "p_{T} [GeV]" );
     my_2d_histos["n_eff_b_"+histoFileTag]->GetYaxis()->SetTitle( "#eta" );
-    
     my_2d_histos["n_eff_c_"+histoFileTag]->GetXaxis()->SetTitle( "p_{T} [GeV]" );
     my_2d_histos["n_eff_c_"+histoFileTag]->GetYaxis()->SetTitle( "#eta" );
-    
     my_2d_histos["n_eff_udsg_"+histoFileTag]->GetXaxis()->SetTitle( "p_{T} [GeV]" );
     my_2d_histos["n_eff_udsg_"+histoFileTag]->GetYaxis()->SetTitle( "#eta" );
-
 }//END of init histos
 
 void CalculateBTagSF::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
 {
     while( tr.getNextEvent() )
     {
-        const auto& runtype        = tr.getVar<std::string>("runtype");
-        const auto& filetag        = tr.getVar<std::string>("filetag");
-        const auto& passMadHT      = tr.getVar<bool>("passMadHT");
-        
-        const auto& Jets           = tr.getVec<TLorentzVector>("Jets");
-        const auto& GoodJets_pt30  = tr.getVec<bool>("GoodJets_pt30");
-        const auto& recoJetsBtag   = tr.getVec<double>("Jets_bJetTagDeepCSVtotb");
-        const auto& recoJetsFlavor = tr.getVec<int>("Jets_hadronFlavor");
-        const auto& deepCSV_WP_medium = tr.getVar<double>("deepCSV_WP_medium");
+        const auto& filetag      = tr.getVar<std::string>("filetag");
+        const auto& passMadHT    = tr.getVar<bool>("passMadHT");
+        const auto& eventCounter = tr.getVar<int>("eventCounter");
 
         //-----------------------------------
         //-- Initialize Histograms
@@ -80,13 +70,18 @@ void CalculateBTagSF::Loop(NTupleReader& tr, double weight, int maxevents, bool 
         //------------------------------------
         //-- Fill the histo
         //------------------------------------
-        const auto& eventCounter = tr.getVar<int>("eventCounter");
         my_histos["EventCounter"]->Fill(eventCounter);
         
         if( passMadHT )
         {
+            const auto& Jets           = tr.getVec<TLorentzVector>("Jets");
+            const auto& GoodJets_pt30  = tr.getVec<bool>("GoodJets_pt30");
+            const auto& recoJetsBtag   = tr.getVec<double>("Jets_bJetTagDeepCSVtotb");
+            const auto& recoJetsFlavor = tr.getVec<int>("Jets_hadronFlavor");
+            const auto& deepCSV_WP_medium = tr.getVar<double>("deepCSV_WP_medium");
+
             const auto& Weight = tr.getVar<double>("Weight");
-            const auto& Lumi = tr.getVar<double>("Lumi");
+            const auto& Lumi   = tr.getVar<double>("Lumi");
             const double eventweight = Lumi*Weight;
             
             for( unsigned int ij = 0; ij < Jets.size(); ++ij ) 
@@ -98,26 +93,17 @@ void CalculateBTagSF::Loop(NTupleReader& tr, double weight, int maxevents, bool 
                 if( myJetFlavor == 5 ) 
                 {
                     my_2d_histos["d_eff_b_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight );
-                    if( myJetDeepCSV > deepCSV_WP_medium ) 
-                    { 
-                        my_2d_histos["n_eff_b_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight ); 
-                    }
+                    if( myJetDeepCSV > deepCSV_WP_medium ) my_2d_histos["n_eff_b_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight ); 
                 }
                 else if( myJetFlavor == 4 ) 
                 {
                     my_2d_histos["d_eff_c_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight );
-                    if( myJetDeepCSV > deepCSV_WP_medium ) 
-                    { 
-                        my_2d_histos["n_eff_c_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight ); 
-                    }
+                    if( myJetDeepCSV > deepCSV_WP_medium ) my_2d_histos["n_eff_c_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight ); 
                 }
                 else if( myJetFlavor < 4 || myJetFlavor == 21 ) 
                 {
                     my_2d_histos["d_eff_udsg_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight );
-                    if( myJetDeepCSV > deepCSV_WP_medium ) 
-                    { 
-                        my_2d_histos["n_eff_udsg_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight ); 
-                    }
+                    if( myJetDeepCSV > deepCSV_WP_medium ) my_2d_histos["n_eff_udsg_"+filetag]->Fill( Jets.at( ij ).Pt(), Jets.at( ij ).Eta(), eventweight ); 
                 }
             }
         }
@@ -128,17 +114,20 @@ void CalculateBTagSF::WriteHistos( TFile* outfile )
 {
     outfile->cd();
 
-    for (const auto &p : my_histos) {
+    for( const auto& p : my_histos ) 
+    {
         p.second->SetDirectory(outfile);
         p.second->Write();
     }
     
-    for (const auto &p : my_2d_histos) {
+    for( const auto& p : my_2d_histos ) 
+    {
         p.second->SetDirectory(outfile);
         p.second->Write();
     }
     
-    for (const auto &p : my_efficiencies) {
+    for( const auto& p : my_efficiencies ) 
+    {
         p.second->SetDirectory(outfile);
         p.second->Write();
     }   

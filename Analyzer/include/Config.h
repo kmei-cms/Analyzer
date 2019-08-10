@@ -185,7 +185,6 @@ public:
         else if(analyzer=="CalculateBTagSF")
         {
             const std::vector<std::string> modulesList = {
-                "PartialUnBlinding",
                 "PrepNTupleVars",
                 "Muon",
                 "Electron",
@@ -193,7 +192,6 @@ public:
                 "Jet",
                 "BJet",
                 "CommonVariables",
-                "MakeMVAVariables",
                 "Baseline",
             };
             registerModules(tr, std::move(modulesList));
