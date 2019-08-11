@@ -36,18 +36,6 @@
 #include <functional>
 #include <unistd.h>
 
-std::string color(const std::string& text, const std::string& color)
-{
-    std::string c;
-    if(color=="red") c = "31";
-    else if(color=="green") c = "32";
-    else if(color=="yellow") c = "33";
-    else if(color=="blue") c = "34";
-    else if(color=="white") c = "37";
-    
-    return "\033[1;"+c+"m"+ text +"\033[0m";
-}
-
 const std::string getFullPath(const std::string& file)
 {
     char buf[512];

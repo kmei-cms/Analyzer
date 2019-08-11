@@ -2,6 +2,7 @@
 #define Histo_h
 
 #include "SusyAnaTools/Tools/NTupleReader.h"
+#include "Framework/Framework/include/Utility.h"
 #include <iostream>
 #include <string>
 
@@ -70,7 +71,7 @@ protected:
         else if(varType.find("Eta()") != std::string::npos) val = lv.Eta();
         else if(varType.find("M()")   != std::string::npos) val = lv.M();
         else if(varType.find("E()")   != std::string::npos) val = lv.E();
-        else std::cout<<"No option for \""<<varType<<"\" found"<<std::endl;
+        else std::cout<<utility::color("No option for \""+varType+"\" found", "red")<<std::endl;
         return val;
     }
 };
@@ -116,7 +117,7 @@ private:
             else if(type.find("short")          != std::string::npos) vecFill<short>       ( varX, histo, weight, tr );
             else if(type.find("long")           != std::string::npos) vecFill<long>        ( varX, histo, weight, tr );        
             else if(type.find("TLorentzVector") != std::string::npos) vecFilltlv           ( varX, histo, weight, tr );        
-            else std::cout<<"Type \""<<type<<"\" is not an option for vector variable \""<<varX<<"\"";
+            else std::cout<<utility::color("Type \""+type+"\" is not an option for vector variable \""+varX+"\"", "red")<<std::endl;
         }
         else
         {
@@ -134,7 +135,7 @@ private:
                 const std::string&     var = split("first", varX, ".");
                 histo->Fill( tlvGetValue<double>(tr.getVar<TLorentzVector>(var), varType), weight );
             }
-            else std::cout<<"Type \""<<type<<"\" is not an option for variable \""<<varX<<"\"";
+            else std::cout<<utility::color("Type \""+type+"\" is not an option for variable \""+varX+"\"", "red")<<std::endl;
         }
     } 
 
