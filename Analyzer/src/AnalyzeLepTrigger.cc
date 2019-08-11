@@ -96,15 +96,13 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         //--------------------------------------------------
         //-- Print Event Number 
         //--------------------------------------------------
-        
         if(maxevents != -1 && tr.getEvtNum() >= maxevents) break;        
         if( tr.getEvtNum() % 1000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;
 
         //--------------------------------------------------
         //-- Print list of triggers (only if you want to see them)
         //--------------------------------------------------
-
-        if( tr.getEvtNum() == 1 ) printTriggerList(TriggerNames); 
+        //if( tr.getEvtNum() == 1 ) printTriggerList(TriggerNames); 
 
         // ------------------------
         // -- Define theweight
