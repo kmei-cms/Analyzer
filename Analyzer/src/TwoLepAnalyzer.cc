@@ -27,7 +27,7 @@ void TwoLepAnalyzer::InitHistos(const std::map<std::string, bool>& cutmap)
 
 
     	for (const auto& cutVar : cutmap) 
-        { /*
+        { /* //histos for general analysis
 		my_histos.emplace( "h_ntops_"+cutVar.first, std::make_shared<TH1D> ( ("h_ntops_"+cutVar.first).c_str(), ("h_ntops_"+cutVar.first).c_str(), 10, 0, 10 ) );
         	my_histos.emplace( "h_ht_"+cutVar.first, std::make_shared<TH1D> ( ("h_ht_"+cutVar.first).c_sxtr(), ("h_ht_"+cutVar.first).c_str(), 60, 0, 3000 ) );
         	my_histos.emplace( "h_njets_"+cutVar.first, std::make_shared<TH1D> ( ("h_njets_"+cutVar.first).c_str(), ("h_njets_"+cutVar.first).c_str(), 20, 0, 20 ) );
@@ -43,6 +43,7 @@ void TwoLepAnalyzer::InitHistos(const std::map<std::string, bool>& cutmap)
                 my_histos.emplace( "h_Mbl1_"+cutVar.first, std::make_shared<TH1D> ( ("h_Mbl1_"+cutVar.first).c_str(), ("h_Mbl1_"+cutVar.first).c_str(), 100, 0, 500 ) );
                 my_histos.emplace( "h_Mbl2_"+cutVar.first, std::make_shared<TH1D> ( ("h_Mbl2_"+cutVar.first).c_str(), ("h_Mbl2_"+cutVar.first).c_str(), 100, 0, 500 ) );
                 my_histos.emplace( "h_njetsPlus1_"+cutVar.first, std::make_shared<TH1D> ( ("h_njetsPlus1_"+cutVar.first).c_str(), ("h_njetsPlus1_"+cutVar.first).c_str(), 20, 1, 21 ) ); 
+            //Histos for Gen Matching    
                 my_histos.emplace( "h_Stop1Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_Stop1Mass_"+cutVar.first).c_str(), ("h_Stop1Mass_"+cutVar.first).c_str(), 500, 0, 1500 ) );
                 my_histos.emplace( "h_Stop2Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_Stop2Mass_"+cutVar.first).c_str(), ("h_Stop2Mass_"+cutVar.first).c_str(), 500, 0, 1500 ) );
                 my_histos.emplace( "h_StopMT2Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_StopMT2Mass_"+cutVar.first).c_str(), ("h_StopMT2Mass_"+cutVar.first).c_str(), 500, 0, 1500 ) );
@@ -56,9 +57,13 @@ void TwoLepAnalyzer::InitHistos(const std::map<std::string, bool>& cutmap)
                 my_histos.emplace( "h_Single1Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_Single1Mass_"+cutVar.first).c_str(), ("h_Single1Mass_"+cutVar.first).c_str(), 500, 0, 1500 ));
                 my_histos.emplace( "h_Single2Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_Single2Mass_"+cutVar.first).c_str(), ("h_Single2Mass_"+cutVar.first).c_str(), 500,0,  1500 ));
                 my_histos.emplace( "h_Single1GenMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_Single1GenMass_"+cutVar.first).c_str(), ("h_Single1GenMass_"+cutVar.first).c_str(), 500, 0,  1500 ));
-                my_histos.emplace( "h_Single2GenMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_Single2GenMass_"+cutVar.first).c_str(), ("h_Single2GenMass_"+cutVar.first).c_str(), 500, 0,  1500 )); 
-                my_2d_histos.emplace( "h_LepMass_njets_"+cutVar.first, std::make_shared<TH2D>( ("h_LepMass_njets_"+cutVar.first).c_str(), ("h_LepMass_njets_"+cutVar.first).c_str(), 10000, 0, 500, 15, 0, 15 ) );*/
+                my_histos.emplace( "h_Single2GenMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_Single2GenMass_"+cutVar.first).c_str(), ("h_Single2GenMass_"+cutVar.first).c_str(), 500, 0,  1500 )); */
 
+            my_histos.emplace( "h_Gen_RecoStopMassDiff_"+cutVar.first, std::make_shared<TH1D> ( ("h_Gen_RecoStopMassDiff_"+cutVar.first).c_str(), ("h_Gen_RecoStopMassDiff_"+cutVar.first).c_str(), 500, 0, 1500 ) );
+            // my_histos.emplace( "h_fracGenmatched_"+cutVar.first, std::make_shared<TH1D> ( ("h_fracGenMatched_"+cutVar.first).c_str(), ("h_fracGenMatched_"+cutVar.first).c_str(), 100, 0, 1 ) );
+            my_histos.emplace( "h_StopMT2LF_"+cutVar.first, std::make_shared<TH1D> ( ("h_StopMT2LF_"+cutVar.first).c_str(), ("h_StopMT2LF_"+cutVar.first).c_str(), 500, 0, 1500 ) );
+            
+            //histos for mega jet analysis
             my_histos.emplace( "h_RecoStop1_Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_RecoStop1_Mass_"+cutVar.first).c_str(), ("h_RecoStop1_Mass_"+cutVar.first).c_str(), 500, 0,  1500 ));
             my_histos.emplace( "h_RecoStop2_Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_RecoStop2_Mass_"+cutVar.first).c_str(), ("h_RecoStop2_Mass_"+cutVar.first).c_str(), 500, 0,  1500 ));
             my_histos.emplace( "h_RecoStopMT2_"+cutVar.first, std::make_shared<TH1D> ( ("h_RecoStopMT2_"+cutVar.first).c_str(), ("h_RecoStopMT2_"+cutVar.first).c_str(), 500, 0,  1500 ));
@@ -74,9 +79,14 @@ void TwoLepAnalyzer::InitHistos(const std::map<std::string, bool>& cutmap)
             my_2d_histos.emplace( "h_2d_RecoStops_Eta_"+cutVar.first, std::make_shared<TH2D>( ("h_2d_RecoStops_Eta_"+cutVar.first).c_str(), ("h_2d_RecoStops_Eta_"+cutVar.first).c_str(), 50, -6, 6, 50, -6, 6 ) );
             my_2d_histos.emplace( "h_2d_RecoStops_Phi_"+cutVar.first, std::make_shared<TH2D>( ("h_2d_RecoStops_Phi_"+cutVar.first).c_str(), ("h_2d_RecoStops_Phi_"+cutVar.first).c_str(), 50, -4, 4, 50, -4, 4 ) );
             
-            my_histos.emplace( "h_RecoStop_MT2_"+cutVar.first, std::make_shared<TH1D> ( ("h_RecoStop_MT2_"+cutVar.first).c_str(), ("h_RecoStop_MT2_"+cutVar.first).c_str(), 500, 0,  1500 ));
+            my_histos.emplace( "h_RecoStop_MT2_"+cutVar.first, std::make_shared<TH1D> ( ("h_RecoStop_MT2_"+cutVar.first).c_str(), ("h_RecoStop_MT2_"+cutVar.first).c_str(), 500, 0,  1500 )); 
 
-            
+            my_histos.emplace( "h_RecoStopDiff_"+cutVar.first, std::make_shared<TH1D> ( ("h_RecoStopDiff_"+cutVar.first).c_str(), ("h_RecoStopDiff_"+cutVar.first).c_str(), 1000, 0, 500));
+
+            //          my_2d_histos.emplace( "h_LepMass_njets_"+cutVar.first, std::make_shared<TH2D>( ("h_LepMass_njets_"+cutVar.first).c_str(), ("h_LepMass_njets_"+cutVar.first).c_str(), 10000, 0, 500, 15, 0, 15 ) );
+//            my_2d_histos.emplace( "h_Mll_njets_"+cutVar.first, std::make_shared<TH2D>( ("h_Mll_njets_"+cutVar.first).c_str(), ("h_Mll_njets_"+cutVar.first).c_str(), 1000, 20, 150, 15, 0, 15 ) );
+            //          my_2d_histos.emplace( "h_Mbl1_njets_"+cutVar.first, std::make_shared<TH2D>( ("h_Mbl1_njets_"+cutVar.first).c_str(), ("h_Mbl1_njets_"+cutVar.first).c_str(), 1000, 0, 500, 15, 0, 15 ) );
+            // my_2d_histos.emplace( "h_Mbl2_njets_"+cutVar.first, std::make_shared<TH2D>( ("h_Mbl2_njets_"+cutVar.first).c_str(), ("h_Mbl2_njets_"+cutVar.first).c_str(), 1000, 0, 500, 15, 0, 15 ) );
 
 	}
 
@@ -114,7 +124,7 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         
         const auto& passMadHT           = tr.getVar<bool>("passMadHT");
         const auto& passBaseline_1l     = tr.getVar<bool>("passBaseline1l_Good");
-        const auto& ntops               = tr.getVar<int>("ntops");
+//        const auto& ntops               = tr.getVar<int>("ntops");
         const auto& GoodLeptonsCharge   = tr.getVec<int>("GoodLeptonsCharge");
         const auto& Jets                = tr.getVec<TLorentzVector>("Jets");
         const auto& passTrigger         = tr.getVar<bool>("passTrigger");
@@ -131,20 +141,21 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const auto& Mbl1                = tr.getVar<double>("TwoLep_Mbl1");
         const auto& Mbl2                = tr.getVar<double>("TwoLep_Mbl2");
       
-/*        const auto& Stop1Mass           = tr.getVar<double>("Stop1Mass");
-        const auto& Stop2Mass           = tr.getVar<double>("Stop2Mass");
-        const auto& Stop1GenMass        = tr.getVar<double>("Stop1GenMass");
-        const auto& Stop2GenMass        = tr.getVar<double>("Stop2GenMass");
-        const auto& Nlino1Mass          = tr.getVar<double>("Nlino1Mass");
-        const auto& Nlino2Mass          = tr.getVar<double>("Nlino2Mass");
-        const auto& Nlino1GenMass       = tr.getVar<double>("Nlino1GenMass");
-        const auto& Nlino2GenMass       = tr.getVar<double>("Nlino2GenMass");
-        const auto& Single1Mass         = tr.getVar<double>("Single1Mass");
-        const auto& Single2Mass         = tr.getVar<double>("Single2Mass");
-        const auto& Single1GenMass      = tr.getVar<double>("Single1GenMass");
-        const auto& Single2GenMass      = tr.getVar<double>("Single2GenMass");
-        const auto& StopMT2             = tr.getVar<double>("StopMT2");
-        const auto& StopMT2Gen          = tr.getVar<double>("StopGenMT2"); */
+        const auto& Stop1Mass           = tr.getVar<double>("GM_Stop1Mass");
+        const auto& Stop2Mass           = tr.getVar<double>("GM_Stop2Mass");
+        // const auto& Stop1GenMass        = tr.getVar<double>("GM_Stop1GenMass");
+        //const auto& Stop2GenMass        = tr.getVar<double>("GM_Stop2GenMass");
+        // const auto& Nlino1Mass          = tr.getVar<double>("GM_Nlino1Mass");
+        //const auto& Nlino2Mass          = tr.getVar<double>("GM_Nlino2Mass");
+        //const auto& Nlino1GenMass       = tr.getVar<double>("GM_Nlino1GenMass");
+        //const auto& Nlino2GenMass       = tr.getVar<double>("GM_Nlino2GenMass");
+        //const auto& Single1Mass         = tr.getVar<double>("GM_Single1Mass");
+        //const auto& Single2Mass         = tr.getVar<double>("GM_Single2Mass");
+        //const auto& Single1GenMass      = tr.getVar<double>("GM_Single1GenMass");
+        //const auto& Single2GenMass      = tr.getVar<double>("GM_Single2GenMass");
+        const auto& StopMT2             = tr.getVar<double>("GM_StopMT2");
+        //const auto& StopMT2Gen          = tr.getVar<double>("GM_StopGenMT2"); 
+        const auto& fracGenMatched        = tr.getVar<double>("fracGenMatched");
 
         const auto& HT_trigger_pt45     = tr.getVar<double>("HT_trigger_pt45");
         const auto& NGoodBJets_pt45     = tr.getVar<int>("NGoodBJets_pt45");
@@ -217,7 +228,15 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         {
             lepton_sum += GoodLeptons.at(l).second;
         }
-
+        
+        double Gen_RecoStopDiff = -1, RecoStopDiff = -1, Gen_StopMT2LF = -1;
+        if (fracGenMatched > 0.8) 
+        {
+            Gen_RecoStopDiff = Stop1Mass - Stop2Mass;
+            RecoStopDiff = RecoStop1.M() - RecoStop2.M();
+            Gen_StopMT2LF = StopMT2;
+        }
+        
         // cutmap booleans
         bool pass_general =  passMadHT && passBlind;
         bool pass_jgeneral = passMadHT && passBlind && JetID;
@@ -336,6 +355,7 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             {"_2l_HTge200", pass_general && pass_2l_opc && HT_trigger_pt30 >= 200},
             {"_2l_offZ_HTge200", pass_general && pass_2l_opc && !new_onZ && HT_trigger_pt30 >=200}, */
             // combo cuts
+            {"_2l_OffZ_", pass_general && pass_2l_opc && !new_onZ},
             {"_2l_offZ_ge1b_ge4j", pass_jgeneral && pass_2l_opc && !new_onZ && NGoodBJets_pt30 >= 1 && NGoodJets_pt30 >= 4},
             {"_2l_offZ_ge2b_ge4j", pass_jgeneral && pass_2l_opc && !new_onZ && NGoodBJets_pt30 >= 2 && NGoodJets_pt30 >= 4},
             {"_2l_offZ_ge1b_BothMblge25le250", pass_jgeneral && pass_2l_opc && !new_onZ && NGoodBJets_pt30 >= 1 && pass_bothMbl},
@@ -405,10 +425,11 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                         my_histos["h_Single1Mass_"+cutVar.first]->Fill(Single1Mass, weight);
                         my_histos["h_Single2Mass_"+cutVar.first]->Fill(Single2Mass, weight);
                         my_histos["h_Single1GenMass_"+cutVar.first]->Fill(Single1GenMass, weight);
-                        my_histos["h_Single2GenMass_"+cutVar.first]->Fill(Single2GenMass, weight);
-                    */
+                        my_histos["h_Single2GenMass_"+cutVar.first]->Fill(Single2GenMass, weight); */
+                    my_histos["h_Gen_RecoStopMassDiff_"+cutVar.first]->Fill(Gen_RecoStopDiff, weight);
+                    //my_histos["h_fracGenMatched_"+cutVar.first]->Fill(fracGenMatched, weight);
+                    my_histos["h_StopMT2LF_"+cutVar.first]->Fill(Gen_StopMT2LF, weight);
 
-//                    my_2d_histos["h_LepMass_njets_"+cutVar.first]->Fill(lepton_sum.M(), NGoodJets_pt30, weight);
                     my_histos["h_RecoStop1_Mass_"+cutVar.first]->Fill(RecoStop1.M(), weight);
                     my_histos["h_RecoStop2_Mass_"+cutVar.first]->Fill(RecoStop2.M(), weight);
                     my_histos["h_RecoStop1_Pt_"+cutVar.first]->Fill(RecoStop1.Pt(), weight);
@@ -417,13 +438,20 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                     my_histos["h_RecoStop2_Eta_"+cutVar.first]->Fill(RecoStop2.Eta(), weight);
                     my_histos["h_RecoStop1_Phi_"+cutVar.first]->Fill(RecoStop1.Phi(), weight);
                     my_histos["h_RecoStop2_Phi_"+cutVar.first]->Fill(RecoStop2.Phi(), weight);
-                    my_histos["h_RecoStop_MT2_"+cutVar.first]->Fill(RecoStopMT2, weight);
+                    my_histos["h_RecoStop_MT2_"+cutVar.first]->Fill(RecoStopMT2, weight); 
+                    my_histos["h_RecoStopDiff_"+cutVar.first]->Fill(RecoStopDiff, weight);
 
                     my_2d_histos["h_2d_RecoStops_Mass_"+cutVar.first]->Fill(RecoStop1.M(), RecoStop2.M(), weight);
                     my_2d_histos["h_2d_RecoStops_Pt_"+cutVar.first]->Fill(RecoStop1.Pt(), RecoStop2.Pt(), weight);
                     my_2d_histos["h_2d_RecoStops_Eta_"+cutVar.first]->Fill(RecoStop1.Eta(), RecoStop2.Eta(), weight);
                     my_2d_histos["h_2d_RecoStops_Phi_"+cutVar.first]->Fill(RecoStop1.Phi(), RecoStop2.Phi(), weight);
 
+                    //my_2d_histos["h_LepMass_njets_"+cutVar.first]->Fill(lepton_sum.M(), NGoodJets_pt30, weight);
+//                    my_2d_histos["h_Mll_njets_"+cutVar.first]->Fill(new_mll, NGoodJets_pt30, weight);
+                    //                  my_2d_histos["h_Mbl1_njets_"+cutVar.first]->Fill(Mbl1, NGoodJets_pt30, weight);
+                    // my_2d_histos["h_Mbl2_njets_"+cutVar.first]->Fill(Mbl2, NGoodJets_pt30, weight);
+                    
+                    
 		}
 	}
 
