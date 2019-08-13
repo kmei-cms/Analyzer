@@ -196,7 +196,7 @@ public:
             };
             registerModules(tr, std::move(modulesList));
         }
-        else if(analyzer=="TwoLepAnalyzer")
+        else if(analyzer=="TwoLepAnalyzer" || analyzer=="Make2LInputTrees")
         {
             const std::vector<std::string> modulesList = {
                 "PartialUnBlinding",

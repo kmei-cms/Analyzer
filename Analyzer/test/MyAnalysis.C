@@ -24,6 +24,7 @@
 #include "Analyzer/Analyzer/include/Config.h"
 #include "Analyzer/Analyzer/include/Semra_Analyzer.h"
 #include "Analyzer/Analyzer/include/TwoLepAnalyzer.h"
+#include "Analyzer/Analyzer/include/Make2LInputTrees.h"
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -179,7 +180,8 @@ int main(int argc, char *argv[])
         {"AnalyzeNjetsMinusOneCSFillDijetHists", run<AnalyzeNjetsMinusOneCSFillDijetHists>},
         {"AnalyzeNjetsMinusOneCSJetReplacement", run<AnalyzeNjetsMinusOneCSJetReplacement>},
         {"Semra_Analyzer",          run<Semra_Analyzer>},
-        {"TwoLepAnalyzer",          run<TwoLepAnalyzer>}
+        {"TwoLepAnalyzer",          run<TwoLepAnalyzer>},
+        {"Make2LInputTrees",        run<Make2LInputTrees>},
     }; 
 
     try
