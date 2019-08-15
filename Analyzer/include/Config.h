@@ -79,6 +79,7 @@ public:
 
         std::string runYear, puFileName, DeepESMCfg, ModelFile, leptonFileName, bjetFileName, bjetCSVFileName, meanFileName;
         double Lumi, deepCSV_WP_loose, deepCSV_WP_medium, deepCSV_WP_tight;
+        bool doQCDCR;
         if(filetag.find("2016") != std::string::npos)
         {
             runYear = "2016";
@@ -138,7 +139,7 @@ public:
         tr.registerDerivedVar("bjetFileName",bjetFileName);        
         tr.registerDerivedVar("bjetCSVFileName",bjetCSVFileName);        
         tr.registerDerivedVar("meanFileName",meanFileName);        
-        tr.registerDerivedVar("doQCDCR",false); //bool to determine to use qcd control region
+        tr.registerDerivedVar("doQCDCR",true); //bool to determine to use qcd control region
         tr.registerDerivedVar("etaCut",2.4); 
         tr.registerDerivedVar("blind",true);
 

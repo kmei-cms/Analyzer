@@ -29,23 +29,12 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
     {
         const auto& eventCounter        = tr.getVar<int>("eventCounter");
         my_histos["EventCounter"]->Fill( eventCounter );
-
+       
         const auto& runtype             = tr.getVar<std::string>("runtype");
-        const auto& filetag             = tr.getVar<std::string>("filetag");
-
-
-        const auto& passBaseline0l      = tr.getVar<bool>("passBaseline0l_Good");
         const auto& passBaseline1l      = tr.getVar<bool>("passBaseline1l_Good");
+        const auto& passBaseline1lNIM   = tr.getVar<bool>("passBaseline1l_NonIsoMuon");
 
-        const auto& NJets_pt30          = tr.getVar<int>("NGoodJets_pt30");
-        const auto& NJets_pt45          = tr.getVar<int>("NGoodJets_pt45");
-        const auto& NGoodElectrons      = tr.getVar<int>("NGoodElectrons");
-        const auto& NGoodMuons          = tr.getVar<int>("NGoodMuons");
-        
-        const auto& HT                  = tr.getVar<double>("HT");
-        const auto& HT_trigger_pt30     = tr.getVar<double>("HT_trigger_pt30");
-        const auto& passTrigger         = tr.getVar<bool>("passTrigger");
-        const auto& JetID               = tr.getVar<bool>("JetID");
+        const auto& doQCDCR             = tr.getVar<bool>("doQCDCR");
 
         //------------------------------------
         //-- Print Event Number
@@ -64,28 +53,23 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
             "filetag",
             "NGoodJets_pt30",
             "NGoodBJets_pt30",
-            "passTriggerMC",
-            "deepESM_bin1",
-            "deepESM_bin2",
-            "deepESM_bin3",
-            "deepESM_bin4",
             "Mbl",
             "HT_trigger_pt30",
-            "HT",
             "NGoodElectrons",
             "NGoodMuons",
             "MET",
             "NVtx",
             "bTagSF_EventWeightSimple_Central",
             "htDerivedweight",
-            "htDerivedweightFlat2000",
-            "htDerivedweightNJet7",
+            "htDerivedweightMG",
             "prefiringScaleFactor",
             "totGoodMuonSF",
             "totGoodElectronSF",
             "puWeightCorr",
             "Weight",
             "totalEventWeight",
+            "totalEventWeightMG",
+            "totalEventWeightNIM",
         };
         if( runtype != "MC" ) {
             variables = {
@@ -94,14 +78,9 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
             "filetag",
             "NGoodJets_pt30",
             "NGoodBJets_pt30",
-            "deepESM_bin1",
-            "deepESM_bin2",
-            "deepESM_bin3",
-            "deepESM_bin4",
             "Mbl",
             "NVtx",
             "HT_trigger_pt30",
-            "HT",
             "NGoodElectrons",
             "NGoodMuons",
             "MET",
@@ -115,18 +94,10 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
             myMiniTuple->initBranches(tr);
         }
         
-        if( runtype == "MC" ) {
-            const auto& passTriggerMC       = tr.getVar<bool>("passTriggerMC");
-            const auto& passMadHT           = tr.getVar<bool>("passMadHT");
-            const auto& MadHT               = tr.getVar<double>("madHT");
-            
-            if( !passMadHT || !passTriggerMC ) continue; 
-        }
-
         //-----------------------------------
         //-- Fill Histograms Below
         //-----------------------------------
-        if( passBaseline1l ) {
+        if( (doQCDCR && passBaseline1lNIM) || (!doQCDCR && passBaseline1l) ) {
             myMiniTuple->fill();
         }
 
