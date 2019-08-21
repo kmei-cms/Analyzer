@@ -35,6 +35,9 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
         const auto& passBaseline1lNIM   = tr.getVar<bool>("passBaseline1l_NonIsoMuon");
 
         const auto& doQCDCR             = tr.getVar<bool>("doQCDCR");
+        const auto& NGoodJets_pt30      = tr.getVar<int>("NGoodJets_pt30");
+        const auto& NNonIsoMuons        = tr.getVar<int>("NNonIsoMuons");
+
 
         //------------------------------------
         //-- Print Event Number
@@ -57,6 +60,7 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
             "HT_trigger_pt30",
             "NGoodElectrons",
             "NGoodMuons",
+            "NNonIsoMuons",
             "MET",
             "NVtx",
             "bTagSF_EventWeightSimple_Central",
@@ -83,6 +87,7 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
             "HT_trigger_pt30",
             "NGoodElectrons",
             "NGoodMuons",
+            "NNonIsoMuons",
             "MET",
             };
         }
