@@ -143,7 +143,7 @@ public:
         tr.registerDerivedVar("blind",true);
 
         //Register Modules that are needed for each Analyzer
-        if(analyzer=="Analyze1Lep" || analyzer=="Analyze0Lep" || analyzer=="Semra_Analyzer")
+        if(analyzer=="Analyze1Lep" || analyzer=="Analyze0Lep" || analyzer=="Semra_Analyzer" || analyzer=="AnalyzeTopTagger")
         {
             const std::vector<std::string> modulesList = {
                 "PartialUnBlinding",
