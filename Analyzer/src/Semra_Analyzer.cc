@@ -18,7 +18,9 @@ Semra_Analyzer::Semra_Analyzer() : inithisto(false) // define inithisto variable
 {
 }
 
-/// Define histos
+// -------------------
+// -- Define histos
+// -------------------
 void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // define variable map
 {
     TH1::SetDefaultSumw2();
@@ -51,22 +53,22 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
     }
 
     // cut flow absolute numbers 
-    my_histos.emplace( "h_cutFlow_absolute_ge2t_ge1dRbjets", std::make_shared<TH1D>("h_cutFlow_absolute_ge2t_ge1dRbjets", "h_cutFlow_absolute_ge2t_ge1dRbjets", 9,0,9));
+    my_histos.emplace( "h_cutFlow_absolute", std::make_shared<TH1D>("h_cutFlow_absolute", "h_cutFlow_absolute", 9,0,9));
 
-    // Define TEfficiencies if you are doing trigger studies (for proper error bars) or cut flow charts.
-    my_efficiencies.emplace("event_sel_weight_ge2t_ge1dRbjets", std::make_shared<TEfficiency>("event_sel_weight_ge2t_ge1dRbjets","event_sel_weight_ge2t_ge1dRbjets",9,0,9));
 }
 
-/// Put everything you want to do per event 
+// ---------------------------------------------
+// -- Put everything you want to do per event 
+// ---------------------------------------------
 void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
 {
     while( tr.getNextEvent() )
     {
         const auto& eventCounter    = tr.getVar<int>("eventCounter");
 
-        //--------------------------------------------------
+        //-------------------------
         // -- Print Event Number 
-        //--------------------------------------------------
+        //-------------------------
         
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
         if( tr.getEvtNum() & 10000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
@@ -78,19 +80,17 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const auto& NGoodLeptons    = tr.getVar<int>("NGoodLeptons");
         const auto& passTriggerMC   = tr.getVar<bool>("passTriggerMC");
         const auto& NGoodBJets_pt45 = tr.getVar<int>("NGoodBJets_pt45");
-        const auto& Mbl             = tr.getVar<double>("Mbl");
         const auto& HT_trigger_pt45 = tr.getVar<double>("HT_trigger_pt45");
         const auto& NGoodJets_pt45  = tr.getVar<int>("NGoodJets_pt45");
         const auto& passMadHT       = tr.getVar<bool>("passMadHT");
-        const auto& passBaseline    = tr.getVar<bool>("passBaseline1l_Good");
         const auto& MET             = tr.getVar<double>("MET");       
         const auto& Jets            = tr.getVec<TLorentzVector>("Jets");
         const auto& GoodJets_pt45   = tr.getVec<bool>("GoodJets_pt45");
         const auto& GoodBJets_pt45  = tr.getVec<bool>("GoodBJets_pt45");
 
-        // -----------------------------------------------
-        // -- SEMRA / Define Top Tag variables
-        // -----------------------------------------------
+        // ------------------------------
+        // -- Define Top Tag variables
+        // ------------------------------
         const auto& deepESM_val     = tr.getVar<double>("deepESM_val");
         const auto& ntops           = tr.getVar<int>("ntops");
         const auto& ntops_1jet      = tr.getVar<int>("ntops_1jet");
@@ -104,26 +104,25 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const auto& bestTopPt       = tr.getVar<double>("bestTopPt");
         const auto& dR_top1_top2    = tr.getVar<double>("dR_top1_top2");
         const auto& topsLV          = tr.getVec<TLorentzVector>("topsLV");
+        const auto& passBaseline0l  = tr.getVar<bool>("passBaseline0l_Good");
         const bool pass_0l          = NGoodLeptons==0;  
         const bool pass_HT500       = HT_trigger_pt45 > 500;
-        const bool pass_ge6j        = NGoodJets_pt45 >= 6;
-        const bool pass_ge1b        = NGoodBJets_pt45 >= 1;
         const bool pass_ge2b        = NGoodBJets_pt45 >= 2;
+        const bool pass_ge6j        = NGoodJets_pt45 >= 6;
         const bool pass_ge2t        = ntops >= 2;
         const bool pass_ge2t1j      = ntops >= 2 && ntops_3jet == 0 && ntops_2jet==0;
         const bool pass_ge2t3j      = ntops >= 2 && ntops_1jet == 0 && ntops_2jet==0;
         const bool pass_ge2t1j3j    = ntops >= 2 && ntops_1jet >= 1 && ntops_3jet >= 1 && ntops_2jet==0;
-        const bool pass_general     = JetID && passMadHT;
-
-        // ------------------------
+        const bool pass_general     = JetID && passMETFilters && passMadHT;
+    
+        // -------------------
         // -- Define weight
-        // ------------------------
+        // -------------------
         double weight               = 1.0;
         double eventweight          = 1.0;
         double leptonScaleFactor    = 1.0;
         double bTagScaleFactor      = 1.0;
         double htDerivedScaleFactor = 1.0;
-        double topPtScaleFactor     = 1.0;
         double prefiringScaleFactor = 1.0;
         double puScaleFactor        = 1.0;
         if(runtype == "MC")
@@ -143,7 +142,6 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             
             bTagScaleFactor      = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
             htDerivedScaleFactor = tr.getVar<double>("htDerivedweight");
-            topPtScaleFactor     = tr.getVar<double>("topPtScaleFactor");
             prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
             puScaleFactor        = tr.getVar<double>("puWeightCorr");
             
@@ -185,23 +183,23 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         // -------------------------------------------------
         const std::map<std::string, bool>& cutmap
         {
-            {"",                                       true                                                                         },
-            {"0l",                                     pass_general && pass_0l                                                      },
-            {"0l_HT500",                               pass_general && pass_0l && pass_HT500                                        },           
-            {"0l_HT500_ge2b",                          pass_general && pass_0l && pass_HT500 && pass_ge2b                           },     
-            {"0l_HT500_ge2b_ge6j",                     pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j              },
-            {"0l_ge1dRbjets",                          pass_general && pass_0l && pass_ge1dRbjets                                   },
+            {"",                                       true                                                                },
+            {"0l",                                     pass_general && pass_0l                                             },
+            {"0l_HT500",                               pass_general && pass_0l && pass_HT500                               },           
+            {"0l_HT500_ge2b",                          pass_general && pass_0l && pass_HT500 && pass_ge2b                  },     
+            {"0l_HT500_ge2b_ge6j",                     pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j     },
+            {"0l_ge1dRbjets",                          pass_general && pass_0l && pass_ge1dRbjets                          },
                 
             // >= 2 tops
-            {"0l_HT500_ge2b_ge2t",                     pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t                 },
-            {"0l_HT500_ge2b_ge2t1j",                   pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t1j               },
-            {"0l_HT500_ge2b_ge2t3j",                   pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t3j               },
-            {"0l_HT500_ge2b_ge2t1j3j",                 pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t1j3j             },
+            {"0l_HT500_ge2b_ge2t",                     pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t     },
+            {"0l_HT500_ge2b_ge2t1j",                   pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t1j   },
+            {"0l_HT500_ge2b_ge2t3j",                   pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t3j   },
+            {"0l_HT500_ge2b_ge2t1j3j",                 pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t1j3j },
                 
-            {"0l_HT500_ge2b_ge6j_ge2t",                pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t    },
-            {"0l_HT500_ge2b_ge6j_ge2t1j",              pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t1j  },
-            {"0l_HT500_ge2b_ge6j_ge2t3j",              pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t3j  },
-            {"0l_HT500_ge2b_ge6j_ge2t1j3j",            pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t1j3j}, 
+            {"0l_HT500_ge2b_ge6j_ge2t",                passBaseline0l && pass_ge2t   },
+            {"0l_HT500_ge2b_ge6j_ge2t1j",              passBaseline0l && pass_ge2t1j },
+            {"0l_HT500_ge2b_ge6j_ge2t3j",              passBaseline0l pass_ge2t3j    },
+            {"0l_HT500_ge2b_ge6j_ge2t1j3j",            passBaseline0l pass_ge2t1j3j  }, 
                 
             // dR_bjet1_bjet2 >= 1
             {"0l_HT500_ge2b_ge2t_ge1dRbjets",          pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t && pass_ge1dRbjets     },
@@ -209,10 +207,10 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             {"0l_HT500_ge2b_ge2t3j_ge1dRbjets",        pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t3j && pass_ge1dRbjets   },
             {"0l_HT500_ge2b_ge2t1j3j_ge1dRbjets",      pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t1j3j && pass_ge1dRbjets },
                 
-            {"0l_HT500_ge2b_ge6j_ge2t_ge1dRbjets",     pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t && pass_ge1dRbjets     },
-            {"0l_HT500_ge2b_ge6j_ge2t1j_ge1dRbjets",   pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t1j && pass_ge1dRbjets   },
-            {"0l_HT500_ge2b_ge6j_ge2t3j_ge1dRbjets",   pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t3j && pass_ge1dRbjets   },
-            {"0l_HT500_ge2b_ge6j_ge2t1j3j_ge1dRbjets", pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t1j3j && pass_ge1dRbjets },
+            {"0l_HT500_ge2b_ge6j_ge2t_ge1dRbjets",     passBaseline0l && pass_ge2t && pass_ge1dRbjets     },
+            {"0l_HT500_ge2b_ge6j_ge2t1j_ge1dRbjets",   passBaseline0l && pass_ge2t1j && pass_ge1dRbjets   },
+            {"0l_HT500_ge2b_ge6j_ge2t3j_ge1dRbjets",   passBaseline0l && pass_ge2t3j && pass_ge1dRbjets   },
+            {"0l_HT500_ge2b_ge6j_ge2t1j3j_ge1dRbjets", passBaseline0l && pass_ge2t1j3j && pass_ge1dRbjets },
         };
 
         if (!inithisto) {
@@ -230,7 +228,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                 my_histos["h_ntops_"+cutVar.first]->Fill( ntops, weight );
                 my_histos["h_njets_"+cutVar.first]->Fill( NGoodJets_pt45, weight );
                 my_histos["h_nbjets_"+cutVar.first]->Fill( NGoodBJets_pt45, weight );
-                my_histos["h_ht_"+cutVar.first]->Fill( HT_trigger_pt45 );
+                my_histos["h_ht_"+cutVar.first]->Fill( HT_trigger_pt45, weight );
                 my_histos["h_met_"+cutVar.first]->Fill( MET, weight );
         
                 // -----------------------------
@@ -283,26 +281,15 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         // -------------------------------
         // -- Cut flow absolute numbers
         // -------------------------------
-        if(true) my_histos["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(1, weight);
-        if(true && pass_general) my_histos["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(2, weight);  
-        if(true && pass_general && pass_0l) my_histos["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(3, weight);
-        if(true && pass_general && pass_0l && pass_HT500) my_histos["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(4, weight);
-        if(true && pass_general && pass_0l && pass_HT500 && pass_ge2b) my_histos["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(5, weight);
-        if(true && pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j) my_histos["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(6, weight);
-        if(true && pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t) my_histos["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(7, weight);
-        if(true && pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t && pass_ge1dRbjets) my_histos["h_cutFlow_absolute_ge2t_ge1dRbjets"]->AddBinContent(8, weight);        
+        if(true) my_histos["h_cutFlow_absolute"]->Fill(0.5, weight);
+        if(true && pass_general) my_histos["h_cutFlow_absolute"]->Fill(1.5, weight);  
+        if(true && pass_general && pass_0l) my_histos["h_cutFlow_absolute"]->Fill(2.5, weight);
+        if(true && pass_general && pass_0l && pass_HT500) my_histos["h_cutFlow_absolute"]->Fill(3.5, weight);
+        if(true && pass_general && pass_0l && pass_HT500 && pass_ge2b) my_histos["h_cutFlow_absolute"]->Fill(4.5, weight);
+        if(true && pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j) my_histos["h_cutFlow_absolute"]->Fill(5.5, weight);
+        if(true && pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t) my_histos["h_cutFlow_absolute"]->Fill(6.5, weight);
+        if(true && pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t && pass_ge1dRbjets) my_histos["h_cutFlow_absolute"]->Fill(7.5, weight);        
 
-        // --------------------------------------------
-        // -- Cut flow (event selection efficiencies)
-        // --------------------------------------------
-        my_efficiencies["event_sel_weight_ge2t_ge1dRbjets"]->FillWeighted(true, weight, 0);
-        my_efficiencies["event_sel_weight_ge2t_ge1dRbjets"]->FillWeighted(true && pass_general, weight, 1);
-        my_efficiencies["event_sel_weight_ge2t_ge1dRbjets"]->FillWeighted(true && pass_general && pass_0l, weight, 2);
-        my_efficiencies["event_sel_weight_ge2t_ge1dRbjets"]->FillWeighted(true && pass_general && pass_0l && pass_HT500, weight, 3);
-        my_efficiencies["event_sel_weight_ge2t_ge1dRbjets"]->FillWeighted(true && pass_general && pass_0l && pass_HT500 && pass_ge2b , weight, 4);
-        my_efficiencies["event_sel_weight_ge2t_ge1dRbjets"]->FillWeighted(true && pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j, weight, 5);
-        my_efficiencies["event_sel_weight_ge2t_ge1dRbjets"]->FillWeighted(true && pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t, weight, 6);
-        my_efficiencies["event_sel_weight_ge2t_ge1dRbjets"]->FillWeighted(true && pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t && pass_ge1dRbjets, weight, 7);    
     } 
 }
 

@@ -20,6 +20,7 @@
 #include "Framework/Framework/include/PartialUnBlinding.h"
 #include "Framework/Framework/include/StopGenMatch.h"
 #include "Framework/Framework/include/MegaJetCombine.h"
+#include "Framework/Framework/include/MT2Hemispheres.h"
 
 class Config
 {
@@ -39,20 +40,21 @@ private:
         
         for(const auto& module : modules)
         {
-            if     (module=="PartialUnBlinding") tr.emplaceModule<PartialUnBlinding>();
-            else if(module=="PrepNTupleVars")    tr.emplaceModule<PrepNTupleVars>();
-            else if(module=="RunTopTagger")      tr.emplaceModule<RunTopTagger>();
-            else if(module=="Muon")              tr.emplaceModule<Muon>();
-            else if(module=="Electron")          tr.emplaceModule<Electron>();
-            else if(module=="Photon")            tr.emplaceModule<Photon>();
-            else if(module=="Jet")               tr.emplaceModule<Jet>();
-            else if(module=="BJet")              tr.emplaceModule<BJet>();
-            else if(module=="CommonVariables")   tr.emplaceModule<CommonVariables>();
-            else if(module=="MakeMVAVariables")  tr.emplaceModule<MakeMVAVariables>();
-            else if(module=="Baseline")          tr.emplaceModule<Baseline>();
-            else if(module=="StopGenMatch")      tr.emplaceModule<StopGenMatch>();
-            else if(module=="MegaJetCombine")    tr.emplaceModule<MegaJetCombine>();
-            else if(module=="DeepEventShape")    tr.emplaceModule<DeepEventShape>(DeepESMCfg, ModelFile);
+            if     (module=="PartialUnBlinding")       tr.emplaceModule<PartialUnBlinding>();
+            else if(module=="PrepNTupleVars")          tr.emplaceModule<PrepNTupleVars>();
+            else if(module=="RunTopTagger")            tr.emplaceModule<RunTopTagger>();
+            else if(module=="Muon")                    tr.emplaceModule<Muon>();
+            else if(module=="Electron")                tr.emplaceModule<Electron>();
+            else if(module=="Photon")                  tr.emplaceModule<Photon>();
+            else if(module=="Jet")                     tr.emplaceModule<Jet>();
+            else if(module=="BJet")                    tr.emplaceModule<BJet>();
+            else if(module=="CommonVariables")         tr.emplaceModule<CommonVariables>();
+            else if(module=="MakeMVAVariables")        tr.emplaceModule<MakeMVAVariables>();
+            else if(module=="Baseline")                tr.emplaceModule<Baseline>();
+            else if(module=="StopGenMatch")            tr.emplaceModule<StopGenMatch>();
+            else if(module=="MegaJetCombine")          tr.emplaceModule<MegaJetCombine>();
+            else if(module=="MT2Hemispheres")          tr.emplaceModule<MT2Hemispheres>();
+            else if(module=="DeepEventShape")          tr.emplaceModule<DeepEventShape>(DeepESMCfg, ModelFile);
             if(runtype == "MC")
             {
                 if     (module=="ScaleFactors")  tr.emplaceModule<ScaleFactors>(runYear, leptonFileName, puFileName, meanFileName);
@@ -212,6 +214,27 @@ public:
                 "DeepEventShape",
                 "StopGenMatch",
                 "MegaJetCombine",
+                "BTagCorrector",
+                "ScaleFactors"
+            };
+            registerModules(tr, std::move(modulesList));
+        }
+        else if (analyzer=="MakeMT2Hemispheres")
+        {
+            const std::vector<std::string> modulesList = {
+                "PartialUnBlinding",
+                "PrepNTupleVars",
+                "RunTopTagger",
+                "Muon",
+                "Electron",
+                "Photon",
+                "Jet",
+                "BJet",
+                "CommonVariables",
+                "MakeMVAVariables",
+                "Baseline",
+                "DeepEventShape",
+                "MT2Hemispheres"
                 "BTagCorrector",
                 "ScaleFactors"
             };
