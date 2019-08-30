@@ -30,7 +30,7 @@ void AnalyzeTopTagger::InitHistos()
 
 void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
 {
-    TRandom3* rand = new TRandom3(123);
+    TRandom3 rand(123);
    
     while(tr.getNextEvent())
     {
@@ -58,22 +58,22 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         const auto& runtype                = tr.getVar<std::string>("runtype");
         const auto& filetag                = tr.getVar<std::string>("filetag");
         const auto& NGoodLeptons           = tr.getVar<int>("NGoodLeptons");
-        const auto& GoodLeptons            = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons"); 
+        const auto& GoodBJets_pt45         = tr.getVec<bool>("GoodBJets_pt45");
         const auto& NGoodBJets_pt45        = tr.getVar<int>("NGoodBJets_pt45");
-        const auto& GoodBJets_pt45         = tr.getVec<bool>("GoodBJets_pt45"); 
-        const auto& pass_baseline_0l       = tr.getVar<bool>("pass_baseline_0l");  
-     
+        const auto& GoodJets_pt45          = tr.getVec<bool>("GoodJets_pt45");
+        const auto& NGoodJets_pt45         = tr.getVar<int>("NGoodJets_pt45");
+        const auto& ntops                  = tr.getVar<int>("ntops"); 
+        const bool  passBaseline0l         = tr.getVar<bool>("passBaseline0l_Good");     
+        const bool  pass_ge2t              = ntops >= 2;
+ 
         // -------------------
         // -- Define weight
         // -------------------
         double weight               = 1.0;
         double eventweight          = 1.0;
-        double leptonScaleFactor    = 1.0;
         double bTagScaleFactor      = 1.0;
-        double htDerivedScaleFactor = 1.0;
         double prefiringScaleFactor = 1.0;
         double puScaleFactor        = 1.0;
- 
         if(runtype == "MC")
         {
             // Define Lumi weight
@@ -81,47 +81,48 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
             const auto& lumi   = tr.getVar<double>("Lumi");
             eventweight        = lumi*Weight;
 
-            // Define lepton weight
-            if(NGoodLeptons == 1)
-            {
-                const auto& eleLepWeight = tr.getVar<double>("totGoodElectronSF");
-                const auto& muLepWeight  = tr.getVar<double>("totGoodMuonSF");
-                leptonScaleFactor        = (GoodLeptons[0].first == "e") ? eleLepWeight : muLepWeight;
-            }
-
             bTagScaleFactor      = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
-            htDerivedScaleFactor = tr.getVar<double>("htDerivedweight");
             prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
             puScaleFactor        = tr.getVar<double>("puWeightCorr");
 
-            weight *= eventweight*leptonScaleFactor*bTagScaleFactor*htDerivedScaleFactor*prefiringScaleFactor*puScaleFactor;
+            weight *= eventweight*bTagScaleFactor*prefiringScaleFactor*puScaleFactor;
+        }
+
+        // -----------------------------------------------------
+        // -- Create variables for setStealthStopVar function
+        // -----------------------------------------------------
+        auto& goodjets_pt45 = tr.createDerivedVec<TLorentzVector>("GoodJets_pt45_tlv");
+        for (int i = 0; i < Jets.size(); ++i )
+        {
+            if (!GoodJets_pt45[i]) continue;
+            goodjets_pt45.emplace_back(Jets.at(i));            
         }
 
         // --------------------------------------
         // -- Calculate DeltaR between 2 bjets 
         // --------------------------------------
         double dR_bjet1_bjet2 = -1;
-        if (NGoodBJets_pt45 == 2) {
+        if(NGoodBJets_pt45 == 2) 
+        {
             std::vector<TLorentzVector> bjets;
-            for(int ijet = 0; ijet < Jets.size(); ijet++) {
+            for(int ijet = 0; ijet < Jets.size(); ijet++) 
+            {
                 if(!GoodBJets_pt45[ijet]) continue;
-                bjets.push_back(Jets.at(ijet));
+                bjets.emplace_back(Jets.at(ijet));
             }
             dR_bjet1_bjet2 = bjets[0].DeltaR(bjets[1]);
         }
-        double pass_ge1dRbjets = (dR_bjet1_bjet2 >= 1.0); 
+        bool pass_ge1dRbjets = (dR_bjet1_bjet2 >= 1.0); 
 
-
+        // -----------------------------------------
+        // -- Fill the fake rate study histograms 
+        // -----------------------------------------
         std::vector<std::pair<std::string, bool>> ttbarCuts =
         {   
-            {"pass_baseline_0l", pass_baseline_0l && pass_ge1dRbjets},
+            {"passBaseline0l", passBaseline0l && pass_ge2t && pass_ge1dRbjets},
         };
-        hists.fillWithCutFlow(ttbarCuts, tr, weight, rand); 
-
+        hists.fillWithCutFlow(ttbarCuts, tr, weight, &rand); 
     }
-    
-    delete rand;
-
 }
 
 void AnalyzeTopTagger::WriteHistos(TFile* outfile)
