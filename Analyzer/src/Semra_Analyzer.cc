@@ -25,9 +25,9 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
 {
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
-
+    
     my_histos.emplace( "EventCounter", std::make_shared<TH1D>( "EventCounter", "EventCounter", 2, -1.1, 1.1 ) ) ;
-
+    
     for (const auto& cutVar : cutmap) 
     {
         my_histos.emplace( "h_ntops_"+cutVar.first, std::make_shared<TH1D> ( ("h_ntops_"+cutVar.first).c_str(), ("h_ntops_"+cutVar.first).c_str(), 10, 0, 10 ) );
@@ -53,8 +53,7 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
     }
 
     // cut flow absolute numbers 
-    my_histos.emplace( "h_cutFlow_absolute", std::make_shared<TH1D>("h_cutFlow_absolute", "h_cutFlow_absolute", 9,0,9));
-
+    my_histos.emplace( "h_cutFlow_absolute", std::make_shared<TH1D>("h_cutFlow_absolute", "h_cutFlow_absolute", 9,0,9));    
 }
 
 // ---------------------------------------------
@@ -65,7 +64,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
     while( tr.getNextEvent() )
     {
         const auto& eventCounter    = tr.getVar<int>("eventCounter");
-
+        
         //-------------------------
         // -- Print Event Number 
         //-------------------------
@@ -75,7 +74,6 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
 
         const auto& runtype         = tr.getVar<std::string>("runtype");     
         const auto& filetag         = tr.getVar<std::string>("filetag");
-        const auto& GoodLeptons     = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
         const auto& JetID           = tr.getVar<bool>("JetID");
         const auto& NGoodLeptons    = tr.getVar<int>("NGoodLeptons");
         const auto& passTriggerMC   = tr.getVar<bool>("passTriggerMC");
@@ -87,7 +85,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const auto& Jets            = tr.getVec<TLorentzVector>("Jets");
         const auto& GoodJets_pt45   = tr.getVec<bool>("GoodJets_pt45");
         const auto& GoodBJets_pt45  = tr.getVec<bool>("GoodBJets_pt45");
-
+                
         // ------------------------------
         // -- Define Top Tag variables
         // ------------------------------
@@ -105,6 +103,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const auto& dR_top1_top2    = tr.getVar<double>("dR_top1_top2");
         const auto& topsLV          = tr.getVec<TLorentzVector>("topsLV");
         const auto& passBaseline0l  = tr.getVar<bool>("passBaseline0l_Good");
+        const auto& passMETFilters  = tr.getVar<bool>("passMETFilters");
         const bool pass_0l          = NGoodLeptons==0;  
         const bool pass_HT500       = HT_trigger_pt45 > 500;
         const bool pass_ge2b        = NGoodBJets_pt45 >= 2;
@@ -114,15 +113,13 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const bool pass_ge2t3j      = ntops >= 2 && ntops_1jet == 0 && ntops_2jet==0;
         const bool pass_ge2t1j3j    = ntops >= 2 && ntops_1jet >= 1 && ntops_3jet >= 1 && ntops_2jet==0;
         const bool pass_general     = JetID && passMETFilters && passMadHT;
-    
+        
         // -------------------
         // -- Define weight
         // -------------------
         double weight               = 1.0;
         double eventweight          = 1.0;
-        double leptonScaleFactor    = 1.0;
         double bTagScaleFactor      = 1.0;
-        double htDerivedScaleFactor = 1.0;
         double prefiringScaleFactor = 1.0;
         double puScaleFactor        = 1.0;
         if(runtype == "MC")
@@ -131,37 +128,30 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             const auto& Weight = tr.getVar<double>("Weight");
             const auto& lumi   = tr.getVar<double>("Lumi");
             eventweight        = lumi*Weight;
-            
-            // Define lepton weight
-            if(NGoodLeptons == 1)
-            {
-                const auto& eleLepWeight = tr.getVar<double>("totGoodElectronSF");
-                const auto& muLepWeight  = tr.getVar<double>("totGoodMuonSF");
-                leptonScaleFactor = (GoodLeptons[0].first == "e") ? eleLepWeight : muLepWeight;
-            }
-            
+        
             bTagScaleFactor      = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
-            htDerivedScaleFactor = tr.getVar<double>("htDerivedweight");
             prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
             puScaleFactor        = tr.getVar<double>("puWeightCorr");
-            
-            weight *= eventweight*leptonScaleFactor*bTagScaleFactor*htDerivedScaleFactor*prefiringScaleFactor*puScaleFactor;
+        
+            weight *= eventweight*bTagScaleFactor*prefiringScaleFactor*puScaleFactor;
         }
 
         // --------------------------------------
         // -- Calculate DeltaR between 2 bjets
         // --------------------------------------
         double dR_bjet1_bjet2 = -1; 
-        if (NGoodBJets_pt45 == 2) {
+        if (NGoodBJets_pt45 == 2) 
+        {
             std::vector<TLorentzVector> bjets;
-            for(int ijet = 0; ijet < Jets.size(); ijet++) {
+            for(int ijet = 0; ijet < Jets.size(); ijet++) 
+            {
                 if(!GoodBJets_pt45[ijet]) continue;
                 bjets.push_back(Jets.at(ijet));                
             }
             dR_bjet1_bjet2 = bjets[0].DeltaR(bjets[1]);
         }
-        double pass_ge1dRbjets = (dR_bjet1_bjet2 >= 1.0);
-
+        bool pass_ge1dRbjets = (dR_bjet1_bjet2 >= 1.0);
+    
         // ---------------------------------------------
         // -- Calculate DeltaR between tops and bjets
         // ---------------------------------------------
@@ -177,7 +167,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                 dR_top_bjet.push_back(deltaR);
             }
         }
-
+    
         // -------------------------------------------------
         // -- Make cuts and fill histograms here & cutmap
         // -------------------------------------------------
@@ -189,24 +179,24 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             {"0l_HT500_ge2b",                          pass_general && pass_0l && pass_HT500 && pass_ge2b                  },     
             {"0l_HT500_ge2b_ge6j",                     pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j     },
             {"0l_ge1dRbjets",                          pass_general && pass_0l && pass_ge1dRbjets                          },
-                
+            
             // >= 2 tops
             {"0l_HT500_ge2b_ge2t",                     pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t     },
             {"0l_HT500_ge2b_ge2t1j",                   pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t1j   },
             {"0l_HT500_ge2b_ge2t3j",                   pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t3j   },
             {"0l_HT500_ge2b_ge2t1j3j",                 pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t1j3j },
-                
-            {"0l_HT500_ge2b_ge6j_ge2t",                passBaseline0l && pass_ge2t   },
-            {"0l_HT500_ge2b_ge6j_ge2t1j",              passBaseline0l && pass_ge2t1j },
-            {"0l_HT500_ge2b_ge6j_ge2t3j",              passBaseline0l pass_ge2t3j    },
-            {"0l_HT500_ge2b_ge6j_ge2t1j3j",            passBaseline0l pass_ge2t1j3j  }, 
-                
+            
+            {"0l_HT500_ge2b_ge6j_ge2t",                passBaseline0l && pass_ge2t     },
+            {"0l_HT500_ge2b_ge6j_ge2t1j",              passBaseline0l && pass_ge2t1j   },
+            {"0l_HT500_ge2b_ge6j_ge2t3j",              passBaseline0l && pass_ge2t3j   },
+            {"0l_HT500_ge2b_ge6j_ge2t1j3j",            passBaseline0l && pass_ge2t1j3j }, 
+            
             // dR_bjet1_bjet2 >= 1
             {"0l_HT500_ge2b_ge2t_ge1dRbjets",          pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t && pass_ge1dRbjets     },
             {"0l_HT500_ge2b_ge2t1j_ge1dRbjets",        pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t1j && pass_ge1dRbjets   },
             {"0l_HT500_ge2b_ge2t3j_ge1dRbjets",        pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t3j && pass_ge1dRbjets   },
             {"0l_HT500_ge2b_ge2t1j3j_ge1dRbjets",      pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t1j3j && pass_ge1dRbjets },
-                
+            
             {"0l_HT500_ge2b_ge6j_ge2t_ge1dRbjets",     passBaseline0l && pass_ge2t && pass_ge1dRbjets     },
             {"0l_HT500_ge2b_ge6j_ge2t1j_ge1dRbjets",   passBaseline0l && pass_ge2t1j && pass_ge1dRbjets   },
             {"0l_HT500_ge2b_ge6j_ge2t3j_ge1dRbjets",   passBaseline0l && pass_ge2t3j && pass_ge1dRbjets   },
@@ -217,9 +207,9 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             InitHistos(cutmap);
             inithisto = true;
         }
-
+    
         my_histos["EventCounter"]->Fill( eventCounter );
-
+    
         // --------------------------------
         // -- Fill the cutmap histograms
         // --------------------------------     
@@ -230,7 +220,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                 my_histos["h_nbjets_"+cutVar.first]->Fill( NGoodBJets_pt45, weight );
                 my_histos["h_ht_"+cutVar.first]->Fill( HT_trigger_pt45, weight );
                 my_histos["h_met_"+cutVar.first]->Fill( MET, weight );
-        
+            
                 // -----------------------------
                 // -- jets & bjets mass & pT
                 // -----------------------------
@@ -244,18 +234,18 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                     my_histos["h_bjetsPt_"+cutVar.first]->Fill(bjet.Pt(), weight);
                     my_histos["h_bjetsMass_"+cutVar.first]->Fill(bjet.M(), weight);
                 }
-        
+            
                 // --------------------------
                 // -- tops mass & eta & pT
                 // --------------------------
                 for (int itops = 0; itops < topsMass.size(); itops++) {
                     my_histos["h_topsMass_"+cutVar.first]->Fill( topsMass.at(itops), weight );
                 }
-        
+            
                 for (int itops = 0; itops < topsEta.size(); itops++) {
                     my_histos["h_topsEta_"+cutVar.first]->Fill( topsEta.at(itops), weight );
                 }
-                
+            
                 for (int itops = 0; itops < topsPt.size(); itops++) {
                     my_histos["h_topsPt_"+cutVar.first]->Fill( topsPt.at(itops), weight );
                 }       
@@ -289,7 +279,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         if(true && pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j) my_histos["h_cutFlow_absolute"]->Fill(5.5, weight);
         if(true && pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t) my_histos["h_cutFlow_absolute"]->Fill(6.5, weight);
         if(true && pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j && pass_ge2t && pass_ge1dRbjets) my_histos["h_cutFlow_absolute"]->Fill(7.5, weight);        
-
+    
     } 
 }
 
