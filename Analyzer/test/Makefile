@@ -47,7 +47,7 @@ INCLUDESDIRS    += -I$(TENSORFLOW_DIR)/include
 #OBJS       = $(patsubst %, $(ODIR)/%, $(OBJ))
 
 
-PROGRAMS = MyAnalysis plot_0l plot_1l Stack_plot Stack_plot_2l
+PROGRAMS = MyAnalysis plot_0l plot_1l Stack_plot_0l Stack_plot_2l
 
 
 all: mkobj sampPyWrap $(PROGRAMS) link
@@ -145,7 +145,7 @@ plot_1l: $(ODIR)/plot_1l.o
 Stack_plot_2l: $(ODIR)/Stack_plot_2l.o
 	$(LD) $^ $(LIBS) -o $@
 
-Stack_plot: $(ODIR)/Stack_plot_0l.o
+Stack_plot_0l: $(ODIR)/Stack_plot_0l.o
 	$(LD) $^ $(LIBS) -o $@ 
 
 link: 
