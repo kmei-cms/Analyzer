@@ -145,7 +145,7 @@ plot_1l: $(ODIR)/plot_1l.o
 Stack_plot_2l: $(ODIR)/Stack_plot_2l.o
 	$(LD) $^ $(LIBS) -o $@
 
-Stack_plot: $(ODIR)/Stack_plot.o
+Stack_plot: $(ODIR)/Stack_plot_0l.o
 	$(LD) $^ $(LIBS) -o $@ 
 
 link: 
