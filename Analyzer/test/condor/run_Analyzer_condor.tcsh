@@ -71,7 +71,6 @@ printf "\n\n xrdcp root://cmseos.fnal.gov/${file} .\n\n"
 xrdcp root://cmseos.fnal.gov/${file} .
 
 printf "\n\n Attempting to run MyAnalysis executable.\n\n"
-#./MyAnalysis root://cmseos.fnal.gov/${input_fpat} ${output_file} ${weight}
 ./MyAnalysis -A ${analyzer} --condor -D ${dataset} -N ${nfiles} -M ${startfile}
 
 
