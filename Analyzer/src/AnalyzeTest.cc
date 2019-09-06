@@ -25,15 +25,60 @@ void AnalyzeTest::InitHistos()
 
     //This event counter histogram is necessary so that we know that all the condor jobs ran successfully. If not, when you use the hadder script, you will see a discrepancy in red as the files are being hadded.
     my_histos.emplace( "EventCounter", std::make_shared<TH1D>( "EventCounter", "EventCounter", 2, -1.1, 1.1 ) ) ;
+    my_histos.emplace( "h_njets", std::make_shared<TH1D>( "h_njets", "h_njets", 13, 6.5, 19.5 ) ) ;
+    my_histos.emplace( "h_met", std::make_shared<TH1D>( "h_met", "h_met", 720, 0, 1500) ) ;
+    my_histos.emplace( "h_ht", std::make_shared<TH1D>( "h_ht", "h_ht", 720, 300, 5000) ) ;
+    my_histos.emplace( "h_nb", std::make_shared<TH1D>( "h_nb", "h_nb", 15, -0.5, 14.5) ) ;
+    my_histos.emplace( "h_jetptmax", std::make_shared<TH1D>( "h_jetptmax", "h_jetptmax", 1440, 0, 5000) ) ;
+    my_histos.emplace( "h_jetpt", std::make_shared<TH1D>( "h_jetpt", "h_jetpt", 1440, 0, 5000) ) ;
+    my_histos.emplace( "h_lvMET_cm_pt",std::make_shared<TH1D>( "h_lvMET_cm_pt", "h_lvMET_cm_pt", 1440, 0, 1000) ) ;
+    my_histos.emplace( "h_lvMET_cm_eta",std::make_shared<TH1D>( "h_lvMET_cm_eta", "h_lvMET_cm_eta", 1440, -2.5, 2.5) ) ;
+    my_histos.emplace( "h_lvMET_cm_phi",std::make_shared<TH1D>( "h_lvMET_cm_phi", "h_lvMET_cm_phi", 1440, -3.14, 3.14) ) ;
+    my_histos.emplace( "h_lvMET_cm_m",std::make_shared<TH1D>( "h_lvMET_cm_m", "h_lvMET_cm_m", 1440, 0, 1000) ) ;
+    my_histos.emplace( "h_fwm2_top6",std::make_shared<TH1D>( "h_fwm2_top6", "h_fwm2_top6", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_fwm3_top6",std::make_shared<TH1D>( "h_fwm3_top6", "h_fwm3_top6", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_fwm4_top6",std::make_shared<TH1D>( "h_fwm4_top6", "h_fwm4_top6", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_fwm5_top6",std::make_shared<TH1D>( "h_fwm5_top6", "h_fwm5_top6", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_fwm6_top6",std::make_shared<TH1D>( "h_fwm6_top6", "h_fwm6_top6", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_fwm7_top6",std::make_shared<TH1D>( "h_fwm7_top6", "h_fwm7_top6", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_fwm8_top6",std::make_shared<TH1D>( "h_fwm8_top6", "h_fwm8_top6", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_fwm9_top6",std::make_shared<TH1D>( "h_fwm9_top6", "h_fwm9_top6", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_fwm10_top6",std::make_shared<TH1D>( "h_fwm10_top6", "h_fwm10_top6", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_jmt_ev0_top6",std::make_shared<TH1D>( "h_jmt_ev0_top6", "h_jmt_ev0_top6", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_jmt_ev1_top6",std::make_shared<TH1D>( "h_jmt_ev1_top6", "h_jmt_ev1_top6", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_jmt_ev2_top6",std::make_shared<TH1D>( "h_jmt_ev2_top6", "h_jmt_ev2_top6", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_event_beta_z", std::make_shared<TH1D>( "h_beta_z", "h_beta_z", 1440, -1, 1) ) ;
 
-    //Define 1D histograms
-    my_histos.emplace( "h_njets", std::make_shared<TH1D>( "h_njets", "h_njets", 8, 7, 15 ) ) ;
+    my_histos.emplace( "h_njets_HEM", std::make_shared<TH1D>( "h_njets_HEM", "h_njets_HEM", 13, 6.5, 19.5) ) ;
+    my_histos.emplace( "h_met_HEM", std::make_shared<TH1D>( "h_met_HEM", "h_met_HEM", 720, 0, 1500) ) ;
+    my_histos.emplace( "h_ht_HEM", std::make_shared<TH1D>( "h_ht_HEM", "h_ht_HEM", 720, 300, 5000) ) ;
+    my_histos.emplace( "h_nb_HEM", std::make_shared<TH1D>( "h_nb_HEM", "h_nb_HEM", 15, -0.5, 14.5) ) ;
+    my_histos.emplace( "h_jetptmax_HEM", std::make_shared<TH1D>( "h_jetptmax_HEM", "h_jetptmax_HEM", 1440, 0, 5000) ) ;
+    my_histos.emplace( "h_jetpt_HEM", std::make_shared<TH1D>( "h_jetpt_HEM", "h_jetpt_HEM", 1440, 0, 5000) ) ;
+    my_histos.emplace( "h_lvMET_cm_pt_HEM",std::make_shared<TH1D>( "h_lvMET_cm_pt_HEM", "h_lvMET_cm_pt_HEM", 1440, 0, 1000) ) ;
+    my_histos.emplace( "h_lvMET_cm_eta_HEM",std::make_shared<TH1D>( "h_lvMET_cm_eta_HEM", "h_lvMET_cm_eta_HEM", 1440, -2.5, 2.5) ) ;
+    my_histos.emplace( "h_lvMET_cm_phi_HEM",std::make_shared<TH1D>( "h_lvMET_cm_phi_HEM", "h_lvMET_cm_phi_HEM", 1440, -3.14, 3.14) ) ;
+    my_histos.emplace( "h_lvMET_cm_m_HEM",std::make_shared<TH1D>( "h_lvMET_cm_m_HEM", "h_lvMET_cm_m_HEM", 1440, 0, 1000) ) ;
+    my_histos.emplace( "h_fwm2_top6_HEM",std::make_shared<TH1D>( "h_fwm2_top6_HEM", "h_fwm2_top6_HEM", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_fwm3_top6_HEM",std::make_shared<TH1D>( "h_fwm3_top6_HEM", "h_fwm3_top6_HEM", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_fwm4_top6_HEM",std::make_shared<TH1D>( "h_fwm4_top6_HEM", "h_fwm4_top6_HEM", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_fwm5_top6_HEM",std::make_shared<TH1D>( "h_fwm5_top6_HEM", "h_fwm5_top6_HEM", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_fwm6_top6_HEM",std::make_shared<TH1D>( "h_fwm6_top6_HEM", "h_fwm6_top6_HEM", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_fwm7_top6_HEM",std::make_shared<TH1D>( "h_fwm7_top6_HEM", "h_fwm7_top6_HEM", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_fwm8_top6_HEM",std::make_shared<TH1D>( "h_fwm8_top6_HEM", "h_fwm8_top6_HEM", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_fwm9_top6_HEM",std::make_shared<TH1D>( "h_fwm9_top6_HEM", "h_fwm9_top6_HEM", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_fwm10_top6_HEM",std::make_shared<TH1D>( "h_fwm10_top6_HEM", "h_fwm10_top6_HEM", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_jmt_ev0_top6_HEM",std::make_shared<TH1D>( "h_jmt_ev0_top6_HEM", "h_jmt_ev0_top6_HEM", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_jmt_ev1_top6_HEM",std::make_shared<TH1D>( "h_jmt_ev1_top6_HEM", "h_jmt_ev1_top6_HEM", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_jmt_ev2_top6_HEM",std::make_shared<TH1D>( "h_jmt_ev2_top6_HEM", "h_jmt_ev2_top6_HEM", 1440, 0, 1) ) ;
+    my_histos.emplace( "h_event_beta_z_HEM", std::make_shared<TH1D>( "h_beta_z_HEM", "h_beta_z_HEM", 1440, -1, 1) ) ;
 
-    //Define 2D histograms
-    my_2d_histos.emplace( "h_njets_MVA", std::make_shared<TH2D>( "h_njets_MVA", "h_njets_MVA", 8, 7, 15, 15, 0, 1.0 ) );
+    my_2d_histos.emplace( "h_electron_etaphi", std::make_shared<TH2D>( "h_electron_etaphi", "h_electron_etaphi", 1440, -2.5, 2.5, 1440, -3.14, 3.14) );
+    my_2d_histos.emplace( "h_muon_etaphi", std::make_shared<TH2D>( "h_muon_etaphi", "h_muon_etaphi", 1440, -2.5, 2.5, 1440, -3.14, 3.14) );
 
-    //Define TEfficiencies if you are doing trigger studies (for proper error bars) or cut flow charts.
-    my_efficiencies.emplace("event_sel_weight", std::make_shared<TEfficiency>("event_sel_weight","event_sel_weight",9,0,9));
+    my_2d_histos.emplace( "h_electron_etaphi_HEM", std::make_shared<TH2D>( "h_electron_etaphi_HEM", "h_electron_etaphi_HEM", 1440, -2.5, 2.5, 1440, -3.14, 3.14) );
+    my_2d_histos.emplace( "h_muon_etaphi_HEM", std::make_shared<TH2D>( "h_muon_etaphi_HEM", "h_muon_etaphi_HEM", 1440, -2.5, 2.5, 1440, -3.14, 3.14) );
+
 }
 
 //Put everything you want to do per event here.
@@ -55,6 +100,9 @@ void AnalyzeTest::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& runtype             = tr.getVar<std::string>("runtype");     
         const auto& filetag             = tr.getVar<std::string>("filetag");
         const auto& GoodLeptons         = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
+        const auto& Jets                = tr.getVec<TLorentzVector>("Jets");
+        const auto& GoodJets            = tr.getVec<bool>("GoodJets");
+        const auto& NGoodJets           = tr.getVar<int>("NGoodJets");
 
         const auto& JetID               = tr.getVar<bool>("JetID");
         const auto& NGoodLeptons        = tr.getVar<int>("NGoodLeptons");
@@ -63,7 +111,26 @@ void AnalyzeTest::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& Mbl                 = tr.getVar<double>("Mbl");
         const auto& HT_trigger_pt30     = tr.getVar<double>("HT_trigger_pt30");
         const auto& NGoodJets_pt30      = tr.getVar<int>("NGoodJets_pt30");
-        
+        const auto& RunNum              = tr.getVar<unsigned int>("RunNum");
+        const auto& met                 = tr.getVar<double>("MET");
+        const auto& lvMET_cm_pt         = tr.getVar<double>("lvMET_cm_pt");
+        const auto& lvMET_cm_eta        = tr.getVar<double>("lvMET_cm_eta");
+        const auto& lvMET_cm_phi        = tr.getVar<double>("lvMET_cm_phi");
+        const auto& lvMET_cm_m          = tr.getVar<double>("lvMET_cm_m");
+        const auto& fwm2_top6           = tr.getVar<double>("fwm2_top6");
+        const auto& fwm3_top6           = tr.getVar<double>("fwm3_top6");
+        const auto& fwm4_top6           = tr.getVar<double>("fwm4_top6");
+        const auto& fwm5_top6           = tr.getVar<double>("fwm5_top6");
+        const auto& fwm6_top6           = tr.getVar<double>("fwm6_top6");
+        const auto& fwm7_top6           = tr.getVar<double>("fwm7_top6");
+        const auto& fwm8_top6           = tr.getVar<double>("fwm8_top6");
+        const auto& fwm9_top6           = tr.getVar<double>("fwm9_top6");
+        const auto& fwm10_top6          = tr.getVar<double>("fwm10_top6");
+        const auto& jmt_ev0_top6        = tr.getVar<double>("jmt_ev0_top6");
+        const auto& jmt_ev1_top6        = tr.getVar<double>("jmt_ev1_top6");
+        const auto& jmt_ev2_top6        = tr.getVar<double>("jmt_ev2_top6");
+        const auto& event_beta_z        = tr.getVar<double>("event_beta_z");
+
         const auto& passMadHT           = tr.getVar<bool>("passMadHT");
         const auto& passBaseline        = tr.getVar<bool>("passBaseline1l_Good");
        
@@ -107,24 +174,91 @@ void AnalyzeTest::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             
             weight *= eventweight*leptonScaleFactor*bTagScaleFactor*htDerivedScaleFactor*prefiringScaleFactor*puScaleFactor;
         }
-        
+
         //Make cuts and fill histograms here
         if( passBaseline ) {
-            my_histos["h_njets"]->Fill( NGoodJets_pt30, weight ); 
-            my_2d_histos["h_njets_MVA"]->Fill( NGoodJets_pt30, weight );
-        }
 
-        // Example Fill event selection efficiencies
-        my_efficiencies["event_sel_weight"]->SetUseWeightedEvents();
-        my_efficiencies["event_sel_weight"]->FillWeighted(true,eventweight,0);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID,eventweight,1);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1,eventweight,2);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC,eventweight,3);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC && NGoodBJets_pt30 >= 1,eventweight,4);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC && NGoodBJets_pt30 >= 1 && 50 < Mbl && Mbl < 250,eventweight,5);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC && NGoodBJets_pt30 >= 1 && 50 < Mbl && Mbl < 250 && HT_trigger_pt30 > 300,eventweight,6);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC && NGoodBJets_pt30 >= 1 && 50 < Mbl && Mbl < 250 && HT_trigger_pt30 > 300 && NGoodJets_pt30 >= 7,eventweight,7);
-        my_efficiencies["event_sel_weight"]->FillWeighted(true && JetID && NGoodLeptons == 1 && passTriggerMC && NGoodBJets_pt30 >= 1 && 50 < Mbl && Mbl < 250 && HT_trigger_pt30 > 300 && NGoodJets_pt30 >= 7,weight,8);
+            double jetPtMax = 0.0;
+            if ( RunNum < 319077 ) {
+                
+                for (unsigned int goodJet = 0; goodJet < Jets.size(); goodJet++) {
+                    if (!GoodJets[goodJet]) { continue; }
+                        my_histos["h_jetpt"]->Fill(Jets[goodJet].Pt(), weight);
+                    if (Jets[goodJet].Pt() > jetPtMax) { jetPtMax = Jets[goodJet].Pt(); }
+                }
+
+                for (unsigned int goodLep = 0; goodLep < GoodLeptons.size(); goodLep++) {
+                    if (GoodLeptons[goodLep].first == "e") {
+                        my_2d_histos["h_electron_etaphi"]->Fill(GoodLeptons[goodLep].second.Eta(), GoodLeptons[goodLep].second.Phi());
+                    } else {
+                        my_2d_histos["h_muon_etaphi"]->Fill(GoodLeptons[goodLep].second.Eta(), GoodLeptons[goodLep].second.Phi());
+                    }
+                }
+
+                my_histos["h_njets"]->Fill( NGoodJets_pt30, weight); 
+                my_histos["h_ngoodleptons"]->Fill( NGoodLeptons, weight);
+                my_histos["h_met"]->Fill(met, weight);
+                my_histos["h_ht"]->Fill(HT_trigger_pt30, weight);
+                my_histos["h_nb"]->Fill(NGoodBJets_pt30, weight);
+                my_histos["h_jetptmax"]->Fill(jetPtMax, weight);
+                my_histos["h_lvMET_cm_pt"]->Fill(lvMET_cm_pt, weight);
+                my_histos["h_lvMET_cm_eta"]->Fill(lvMET_cm_eta, weight);
+                my_histos["h_lvMET_cm_phi"]->Fill(lvMET_cm_phi, weight);
+                my_histos["h_lvMET_cm_m"]->Fill(lvMET_cm_m, weight);
+                my_histos["h_fwm2_top6"]->Fill(fwm2_top6, weight);
+                my_histos["h_fwm3_top6"]->Fill(fwm3_top6, weight);
+                my_histos["h_fwm4_top6"]->Fill(fwm4_top6, weight);
+                my_histos["h_fwm5_top6"]->Fill(fwm5_top6, weight);
+                my_histos["h_fwm6_top6"]->Fill(fwm6_top6, weight);
+                my_histos["h_fwm7_top6"]->Fill(fwm7_top6, weight);
+                my_histos["h_fwm8_top6"]->Fill(fwm8_top6, weight);
+                my_histos["h_fwm9_top6"]->Fill(fwm9_top6, weight);
+                my_histos["h_fwm10_top6"]->Fill(fwm10_top6, weight);
+                my_histos["h_jmt_ev0_top6"]->Fill(jmt_ev0_top6, weight);
+                my_histos["h_jmt_ev1_top6"]->Fill(jmt_ev1_top6, weight);
+                my_histos["h_jmt_ev2_top6"]->Fill(jmt_ev2_top6, weight);
+                my_histos["h_event_beta_z"]->Fill(event_beta_z, weight);
+
+            } else {
+                for (unsigned int goodJet = 0; goodJet < Jets.size(); goodJet++) {
+                    if (!GoodJets[goodJet]) { continue; }
+                        my_histos["h_jetpt_HEM"]->Fill(Jets[goodJet].Pt(), weight);
+                    if (Jets[goodJet].Pt() > jetPtMax) { jetPtMax = Jets[goodJet].Pt(); }
+                }
+                
+                for (unsigned int goodLep = 0; goodLep < GoodLeptons.size(); goodLep++) {
+                    if (GoodLeptons[goodLep].first == "e") {
+                        my_2d_histos["h_electron_etaphi_HEM"]->Fill(GoodLeptons[goodLep].second.Eta(), GoodLeptons[goodLep].second.Phi());
+                    } else {
+                        my_2d_histos["h_muon_etaphi_HEM"]->Fill(GoodLeptons[goodLep].second.Eta(), GoodLeptons[goodLep].second.Phi()); 
+                    }
+                }
+
+                my_histos["h_njets_HEM"]->Fill( NGoodJets, weight); 
+                my_histos["h_ngoodleptons_HEM"]->Fill( NGoodLeptons, weight);
+                my_histos["h_met_HEM"]->Fill(met, weight);
+                my_histos["h_ht_HEM"]->Fill(HT_trigger_pt30, weight);
+                my_histos["h_nb_HEM"]->Fill(NGoodBJets_pt30, weight);
+                my_histos["h_jetptmax_HEM"]->Fill(jetPtMax, weight);
+                my_histos["h_lvMET_cm_pt_HEM"]->Fill(lvMET_cm_pt, weight);
+                my_histos["h_lvMET_cm_eta_HEM"]->Fill(lvMET_cm_eta, weight);
+                my_histos["h_lvMET_cm_phi_HEM"]->Fill(lvMET_cm_phi, weight);
+                my_histos["h_lvMET_cm_m_HEM"]->Fill(lvMET_cm_m, weight);
+                my_histos["h_fwm2_top6_HEM"]->Fill(fwm2_top6, weight);
+                my_histos["h_fwm3_top6_HEM"]->Fill(fwm3_top6, weight);
+                my_histos["h_fwm4_top6_HEM"]->Fill(fwm4_top6, weight);
+                my_histos["h_fwm5_top6_HEM"]->Fill(fwm5_top6, weight);
+                my_histos["h_fwm6_top6_HEM"]->Fill(fwm6_top6, weight);
+                my_histos["h_fwm7_top6_HEM"]->Fill(fwm7_top6, weight);
+                my_histos["h_fwm8_top6_HEM"]->Fill(fwm8_top6, weight);
+                my_histos["h_fwm9_top6_HEM"]->Fill(fwm9_top6, weight);
+                my_histos["h_fwm10_top6_HEM"]->Fill(fwm10_top6, weight);
+                my_histos["h_jmt_ev0_top6_HEM"]->Fill(jmt_ev0_top6, weight);
+                my_histos["h_jmt_ev1_top6_HEM"]->Fill(jmt_ev1_top6, weight);
+                my_histos["h_jmt_ev2_top6_HEM"]->Fill(jmt_ev2_top6, weight);
+                my_histos["h_event_beta_z_HEM"]->Fill(event_beta_z, weight);
+            }
+        }
     } 
 }
 
