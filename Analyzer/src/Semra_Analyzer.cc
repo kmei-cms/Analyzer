@@ -178,7 +178,6 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             {"0l_HT500",                               pass_general && pass_0l && pass_HT500                               },           
             {"0l_HT500_ge2b",                          pass_general && pass_0l && pass_HT500 && pass_ge2b                  },     
             {"0l_HT500_ge2b_ge6j",                     pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j     },
-            {"0l_ge1dRbjets",                          pass_general && pass_0l && pass_ge1dRbjets                          },
             
             // >= 2 tops
             {"0l_HT500_ge2b_ge2t",                     pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t     },
