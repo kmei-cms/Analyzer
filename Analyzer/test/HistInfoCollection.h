@@ -23,6 +23,7 @@ class histInfo
 public:
     std::string legEntry, histFile, histName, drawOptions;
     int color, rebin;
+    double scale;
     std::shared_ptr<TH1> h;
 
     //helper function to get histogram from file and configure its optional settings
@@ -58,6 +59,7 @@ public:
         h->SetLineWidth(3);
         h->SetMarkerColor(color);
         h->SetMarkerStyle(20);
+        h->Scale(scale);
 
         // rebin the histogram if desired
         if(rebin >0) h->Rebin(rebin);
@@ -104,11 +106,11 @@ public:
         h->SetLineStyle(style);
     }
 
-    histInfo(const std::string& legEntry, const std::string& histFile, const std::string& drawOptions, const int color) : legEntry(legEntry), histFile(histFile), histName(""), drawOptions(drawOptions), color(color), rebin(-1), h(nullptr)
+    histInfo(const std::string& legEntry, const std::string& histFile, const std::string& drawOptions, const int color, const double scale = 1.0) : legEntry(legEntry), histFile(histFile), histName(""), drawOptions(drawOptions), color(color), scale(scale), rebin(-1), h(nullptr)
     {
     }
 
-    histInfo(TH1* h) : legEntry(h->GetName()), histFile(""), histName(h->GetName()), drawOptions(""), color(kWhite), rebin(0), h(h)
+    histInfo(TH1* h) : legEntry(h->GetName()), histFile(""), histName(h->GetName()), drawOptions(""), color(kWhite), scale(1.0), rebin(0), h(h)
     {
     }
 
