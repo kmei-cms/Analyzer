@@ -14,24 +14,21 @@ def makeExeAndFriendsTarball(filestoTransfer, fname, path):
     for fn in filestoTransfer:
         system("cd %s; ln -s %s" % (fname, fn))
         
-    tarallinputs = "tar czvf %s/%s.tar.gz %s --dereference"% (path, fname, fname)
-    print tarallinputs
+    tarallinputs = "tar czf %s/%s.tar.gz %s --dereference"% (path, fname, fname)
     system(tarallinputs)
     system("rm -r %s" % fname)
 
 def main():
     repo = "Analyzer/Analyzer"    
     # Parse command line arguments
-    parser = optparse.OptionParser("usage: %prog [options]\n")
-    
-    parser.add_option ('-n',  dest='numfile', type='int', default = 10, help="number of files per job")
-    parser.add_option ('-d',  dest='datasets', type='string', default = '', help="List of datasets, comma separated")
-    parser.add_option ('-l',  dest='dataCollections', action='store_true', default = False, help="List all datacollections")
-    parser.add_option ('-L',  dest='dataCollectionslong', action='store_true', default = False, help="List all datacollections and sub collections")
-    parser.add_option ('-c',  dest='noSubmit', action='store_true', default = False, help="Do not submit jobs.  Only create condor_submit.txt.")
-    parser.add_option ('--output',   dest='outPath', type='string', default = '.', help="Name of directory where output of each condor job goes")
-    parser.add_option ('--analyze',  dest='analyze', default = 'f', help="AnalyzeBackground, AnalyzeEventSelection, Analyze0Lep, Analyze1Lep, MakeNJetDists")
-    
+    parser = optparse.OptionParser("usage: %prog [options]\n")    
+    parser.add_option ('-n',        dest='numfile',  type='int',                         default = 10,            help="number of files per job")
+    parser.add_option ('-d',        dest='datasets', type='string',                      default = '',            help="List of datasets, comma separated")
+    parser.add_option ('-l',        dest='dataCollections',         action='store_true', default = False,         help="List all datacollections")
+    parser.add_option ('-L',        dest='dataCollectionslong',     action='store_true', default = False,         help="List all datacollections and sub collections")
+    parser.add_option ('-c',        dest='noSubmit',                action='store_true', default = False,         help="Do not submit jobs.  Only create condor_submit.txt.")
+    parser.add_option ('--output',  dest='outPath',  type='string',                      default = '.',           help="Name of directory where output of each condor job goes")
+    parser.add_option ('--analyze', dest='analyze',                                      default = 'Analyze1Lep', help="AnalyzeBackground, AnalyzeEventSelection, Analyze0Lep, Analyze1Lep, MakeNJetDists")    
     options, args = parser.parse_args()
     
     # Prepare the list of files to transfer
@@ -40,9 +37,6 @@ def main():
         for line in meowttcfgFile:
             if "modelFile" in line:
                 mvaFileName = line.split("=")[1].strip().strip("\"")
-                print "------------------------------------------------"            
-                print "TopTagger training:", mvaFileName
-                print "------------------------------------------------"
                 break
     
     filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MyAnalysis" % repo, 
@@ -53,15 +47,22 @@ def main():
                        environ["CMSSW_BASE"] + "/src/%s/test/sampleCollections.cfg" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape_2016.cfg" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape_2017.cfg" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/DeepEventShape_2018.cfg" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/keras_frozen_2016.pb" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/keras_frozen_2017.pb" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/keras_frozen_2018.pb" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/allInOne_BTagEff.root" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/allInOne_SFMean.root" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/allInOne_leptonSF_2016.root" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/allInOne_leptonSF_2017.root" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/allInOne_leptonSF_2018.root" % repo, 
                        environ["CMSSW_BASE"] + "/src/%s/test/PileupHistograms_0121_69p2mb_pm4p6.root" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/pu_ratio.root" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/PileupHistograms_2018_69mb_pm5.root" % repo, 
                        environ["CMSSW_BASE"] + "/src/%s/test/CSVv2_Moriond17_B_H.csv" % repo,
-                       environ["CMSSW_BASE"] + "/src/%s/test/allInOne_SFMean.root" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/DeepCSV_102XSF_V1.csv" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/DeepCSV_2016LegacySF_V1.csv" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/DeepCSV_94XSF_V4_B_F.csv" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/L1prefiring_jetpt_2017BtoF.root" % repo,
                        ]
     
@@ -103,14 +104,12 @@ def main():
     numberOfJobs = 0
     for ds in datasets:
         ds = ds.strip()
-        print ds
         # create the directory
         if not os.path.isdir("%s/output-files/%s" % (options.outPath, ds)):
             os.makedirs("%s/output-files/%s" % (options.outPath, ds))
     
         for s, n, e in sc.sampleList(ds):
-            print "s:", s, ", n:", n, ", e:", e
-            print "\t%s"%n
+            print "SampleSet:", n, ", nEvents:", e
             f = open(s)
             if not f == None:
                 count = 0

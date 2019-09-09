@@ -44,7 +44,7 @@ if privateNtuples:
 
 else:
 
-    prod = "V16"
+    prod = "V17"
     basedir = "/store/user/lpcsusyhad/SusyRA2Analysis2015/Run2Production%s/"%prod
     tempfilename = "tmp.txt"
     fdir = "filelists_Kevin_%s/"%prod
@@ -59,11 +59,11 @@ else:
             if not ".root" in line: continue
             print line
             era = ""
-            if "Run2016" in line or "Summer16" in line or "_2016_" in line: 
+            if "Run2016" in line or "Summer16" in line: 
                 era = "2016_"
-            elif "Run2017" in line or "RunIIFall17MiniAODv2" in line or "_2017_" in line or "Fall17Fast" in line: 
+            elif "Run2017" in line or "Fall17" in line: 
                 era = "2017_"
-            elif "Run2018" in line or "RunIIAutumn18MiniAOD" in line or "_2018_" in line: 
+            elif "Run2018" in line or "Autumn18" in line: 
                 era = "2018_"
             # extract sample name, Summer16_private.TTTT_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8_6_RA2AnalysisTree.root
             # for data: Run2016B-17Jul2018_ver2-v1.SingleMuon_106_RA2AnalysisTree.root

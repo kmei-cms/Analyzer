@@ -1,18 +1,17 @@
-#ifndef Semra_Analyzer_h
-#define Semra_Analyzer_h
+#ifndef TwoLepAnalyzer_h
+#define TwoLepAnalyzer_h
 
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TEfficiency.h>
 #include <TTree.h>
-#include <TH1F.h>
 
 #include <map>
 #include <string>
 
 class NTupleReader;
 
-class Semra_Analyzer 
+class TwoLepAnalyzer 
 {
 public:
     std::map<std::string, std::shared_ptr<TH1D>>  my_histos;
@@ -20,12 +19,13 @@ public:
     std::map<std::string, std::shared_ptr<TEfficiency>>  my_efficiencies;
     bool inithisto;
  
-    Semra_Analyzer();
-    ~Semra_Analyzer(){};
+    TwoLepAnalyzer();
+    ~TwoLepAnalyzer(){};
     
     void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false);
     void InitHistos(const std::map<std::string, bool>& cutmap);
-    void WriteHistos(TFile* outfile);    
+    void WriteHistos(TFile* outfile);
+    
 };
 
 #endif

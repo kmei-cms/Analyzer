@@ -41,6 +41,7 @@ cmsenv
 getTaggerCfg.sh -t DeepCombined_Stealth_RES_T_DeepAK8_T_v1.0.0 -o
 getDeepESMCfg.sh -t Keras_Tensorflow_v1.2.8 -o -s 2016
 getDeepESMCfg.sh -t Keras_Tensorflow_v3.0.4 -o -s 2017
+getDeepESMCfg.sh -t Keras_Tensorflow_v3.0.4 -o -s 2018
 ```
 
 Example of running MyAnalysis interactively

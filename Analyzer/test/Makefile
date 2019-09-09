@@ -46,9 +46,11 @@ INCLUDESDIRS    += -I$(TENSORFLOW_DIR)/include
 
 #OBJS       = $(patsubst %, $(ODIR)/%, $(OBJ))
 
-PROGRAMS = MyAnalysis MySkimAnalysis plot_0l plot_1l
 
-all: mkobj sampPyWrap $(PROGRAMS)
+PROGRAMS = MyAnalysis plot_0l plot_1l Stack_plot Stack_plot_2l
+
+
+all: mkobj sampPyWrap $(PROGRAMS) link
 
 mkobj:
 	@mkdir -p obj
@@ -130,10 +132,7 @@ $(ODIR)/%.o : $(WDIR)/%.cc
 $(ODIR)/%.o : $(WDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
 
-MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/AnalyzeLepTrigger.o $(ODIR)/AnalyzeTest.o $(ODIR)/AnalyzeWControlRegion.o $(ODIR)/MakeMiniTree.o $(ODIR)/MiniTupleMaker.o $(ODIR)/CalculateBTagSF.o $(ODIR)/AnalyzeBTagSF.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/Analyze1Lep.o $(ODIR)/AnalyzeNjetsMinusOneCSFillDijetHists.o $(ODIR)/AnalyzeNjetsMinusOneCSJetReplacement.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o $(ODIR)/EventShapeVariables.o $(ODIR)/histio.o $(ODIR$)/Semra_Analyzer.o
-	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
-
-MySkimAnalysis: $(ODIR)/MySkimAnalysis.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o  $(ODIR)/bdt_350to650_fwm10_jmtev_top6.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o $(ODIR)/EventShapeVariables.o
+MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/AnalyzeLepTrigger.o $(ODIR)/AnalyzeTest.o $(ODIR)/AnalyzeWControlRegion.o $(ODIR)/MakeMiniTree.o $(ODIR)/MiniTupleMaker.o $(ODIR)/CalculateBTagSF.o $(ODIR)/AnalyzeBTagSF.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/Analyze1Lep.o $(ODIR)/AnalyzeNjetsMinusOneCSFillDijetHists.o $(ODIR)/AnalyzeNjetsMinusOneCSJetReplacement.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o $(ODIR)/EventShapeVariables.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o $(ODIR)/histio.o $(ODIR$)/Semra_Analyzer.o $(ODIR)/TwoLepAnalyzer.o $(ODIR)/Make2LInputTrees.o
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
 
 plot_0l: $(ODIR)/plot_0l.o
@@ -142,7 +141,16 @@ plot_0l: $(ODIR)/plot_0l.o
 plot_1l: $(ODIR)/plot_1l.o
 	$(LD) $^ $(LIBS) -o $@
 
+Stack_plot_2l: $(ODIR)/Stack_plot_2l.o
+	$(LD) $^ $(LIBS) -o $@
+
+Stack_plot: $(ODIR)/Stack_plot.o
+	$(LD) $^ $(LIBS) -o $@ 
+
+link: 
+	@makeSoftLink.sh $(CMSSW_BASE)/src/Analyzer/Analyzer/test/ $(ODIR) $(CMSSW_BASE)/src/SusyAnaTools/Tools/
+
 clean:
-	rm -rf $(ODIR)/*.o $(ODIR)/*.so $(ODIR)/*.d $(PROGRAMS) core $(ODIR)
+	@rm -rf $(ODIR)/*.o $(ODIR)/*.so $(ODIR)/*.d $(PROGRAMS) core $(ODIR) && rmSoftLink.sh ${CMSSW_BASE}/src/SusyAnaTools/Tools/$(ODIR)
 
 -include $(ODIR)/*.d

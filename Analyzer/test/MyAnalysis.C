@@ -22,7 +22,9 @@
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 #include "Analyzer/Analyzer/include/CalculateSFMean.h"
 #include "Analyzer/Analyzer/include/Config.h"
-#include "Analyzer/Analyzer/include/Semra_Analyzer.h" // semra
+#include "Analyzer/Analyzer/include/Semra_Analyzer.h"
+#include "Analyzer/Analyzer/include/TwoLepAnalyzer.h"
+#include "Analyzer/Analyzer/include/Make2LInputTrees.h"
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -34,18 +36,6 @@
 #include <string>
 #include <functional>
 #include <unistd.h>
-
-std::string color(const std::string& text, const std::string& color)
-{
-    std::string c;
-    if(color=="red") c = "31";
-    else if(color=="green") c = "32";
-    else if(color=="yellow") c = "33";
-    else if(color=="blue") c = "34";
-    else if(color=="white") c = "37";
-    
-    return "\033[1;"+c+"m"+ text +"\033[0m";
-}
 
 const std::string getFullPath(const std::string& file)
 {
@@ -69,46 +59,30 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
 {
     std::cout << "Initializing..." << std::endl;
     Analyze a;
-    for(const AnaSamples::FileSummary& file : vvf)
+    for(const auto& file : vvf)
     {
         // Define what is needed per sample set
         std::cout << "Running over sample " << file.tag << std::endl;
         TChain* ch = new TChain( (file.treePath).c_str() );
         file.addFilesToChain(ch, startFile, nFiles);
         NTupleReader tr(ch);
-        double weight = file.getWeight(); // not used currently
         const std::string runtype = (file.tag.find("Data") != std::string::npos) ? "Data" : "MC";
-        const std::string runYear = (file.tag.find("2017") != std::string::npos) ? "2017" : "2016";
-        const double Lumi = (runYear == "2016") ? 35900.0 : 41525.0;
-        const bool isSignal = (file.tag.find("_stop") != std::string::npos || file.tag.find("_mStop") != std::string::npos) ? true : false;
-        const std::string DeepESMCfg = (runYear == "2016") ? "DeepEventShape_2016.cfg" : "DeepEventShape_2017.cfg";
-        const std::string ModelFile = (runYear == "2016") ? "keras_frozen_2016.pb" : "keras_frozen_2017.pb";
-        const bool doQCDCR = false;//bool to determine to use qcd control region
+        tr.registerDerivedVar("runtype",runtype);
+        tr.registerDerivedVar("filetag",file.tag);
+        tr.registerDerivedVar("analyzer",analyzer);
 
         std::cout << "Starting loop (in run)" << std::endl;
-        printf( "runtype: %s fileWeight: %f nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),weight,nFiles,startFile,maxEvts ); fflush( stdout );
-        tr.registerDerivedVar("runtype",runtype);
-        tr.registerDerivedVar("runYear",runYear);
-        tr.registerDerivedVar("filetag",file.tag);
-        tr.registerDerivedVar("etaCut",2.4); 
-        tr.registerDerivedVar("Lumi",Lumi);
-        tr.registerDerivedVar("isSignal",isSignal);
-        tr.registerDerivedVar("DeepESMCfg",DeepESMCfg);
-        tr.registerDerivedVar("ModelFile",ModelFile);        
-        tr.registerDerivedVar("blind",false);
-        tr.registerDerivedVar("doQCDCR",doQCDCR);
-        tr.registerDerivedVar("analyzer",analyzer);
+        printf( "runtype: %s nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),nFiles,startFile,maxEvts ); fflush( stdout );
 
         // Define classes/functions that add variables on the fly        
         Config c;
-        c.registerModules(tr);
+        c.setUp(tr);
 
         // Loop over all of the events and fill histos
-        a.Loop(tr, weight, maxEvts, isQuiet);
+        a.Loop(tr, 1.0, maxEvts, isQuiet);
 
         // Cleaning up dynamic memory
-        delete ch;
-            
+        delete ch;            
     }
     std::cout << "Writing histograms..." << std::endl;
     a.WriteHistos(outfile);
@@ -161,7 +135,7 @@ int main(int argc, char *argv[])
         {"numEvts",      required_argument, 0, 'E'},
     };
 
-/// here is the options to run the codes / can add options
+    // here is the options to run the codes / can add options
     while((opt = getopt_long(argc, argv, "cvA:H:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
@@ -205,14 +179,20 @@ int main(int argc, char *argv[])
         {"MakeNJetDists",           run<MakeNJetDists>},
         {"AnalyzeNjetsMinusOneCSFillDijetHists", run<AnalyzeNjetsMinusOneCSFillDijetHists>},
         {"AnalyzeNjetsMinusOneCSJetReplacement", run<AnalyzeNjetsMinusOneCSJetReplacement>},
-	{"Semra_Analyzer",          run<Semra_Analyzer>}, // SEMRA / to run my analyzer
+        {"Semra_Analyzer",          run<Semra_Analyzer>},
+        {"TwoLepAnalyzer",          run<TwoLepAnalyzer>},
+        {"Make2LInputTrees",        run<Make2LInputTrees>},
     }; 
 
     try
     {
         for(auto& pair : AnalyzerPairVec)
         {
-            if(pair.first==analyzer) pair.second(vvf,startFile,nFiles,maxEvts,outfile,isQuiet,analyzer); 
+            if(pair.first==analyzer) 
+            {
+                std::cout<<"Running the " << analyzer << " Analyzer" <<std::endl;
+                pair.second(vvf,startFile,nFiles,maxEvts,outfile,isQuiet,analyzer); 
+            }
         }
 
         outfile->Close();
