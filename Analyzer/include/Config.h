@@ -79,6 +79,7 @@ public:
 
         std::string runYear, puFileName, DeepESMCfg, ModelFile, leptonFileName, bjetFileName, bjetCSVFileName, meanFileName;
         double Lumi, deepCSV_WP_loose, deepCSV_WP_medium, deepCSV_WP_tight;
+        bool blind;
         if(filetag.find("2016") != std::string::npos)
         {
             runYear = "2016";
@@ -93,6 +94,7 @@ public:
             bjetFileName = "allInOne_BTagEff.root";
             bjetCSVFileName = "DeepCSV_2016LegacySF_V1.csv";
             meanFileName = "allInOne_SFMean.root";
+            blind = false;
         }
         else if(filetag.find("2017") != std::string::npos)
         { 
@@ -108,6 +110,7 @@ public:
             bjetFileName = "allInOne_BTagEff.root";
             bjetCSVFileName = "DeepCSV_94XSF_V4_B_F.csv";
             meanFileName = "allInOne_SFMean.root";
+            blind = false;
         }
         else if(filetag.find("2018") != std::string::npos) 
         {
@@ -123,6 +126,7 @@ public:
             bjetFileName = "allInOne_BTagEff.root";
             bjetCSVFileName = "DeepCSV_102XSF_V1.csv";
             meanFileName = "allInOne_SFMean.root";
+            blind = true;
         }
 
         tr.registerDerivedVar("runYear",runYear);
@@ -140,7 +144,7 @@ public:
         tr.registerDerivedVar("meanFileName",meanFileName);        
         tr.registerDerivedVar("doQCDCR",false); //bool to determine to use qcd control region
         tr.registerDerivedVar("etaCut",2.4); 
-        tr.registerDerivedVar("blind",true);
+        tr.registerDerivedVar("blind",blind);
 
         //Register Modules that are needed for each Analyzer
         if(analyzer=="Analyze1Lep" || analyzer=="Analyze0Lep" || analyzer=="Semra_Analyzer")
