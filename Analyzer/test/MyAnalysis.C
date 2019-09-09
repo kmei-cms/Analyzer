@@ -59,7 +59,7 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
 {
     std::cout << "Initializing..." << std::endl;
     Analyze a;
-    for(const AnaSamples::FileSummary& file : vvf)
+    for(const auto& file : vvf)
     {
         // Define what is needed per sample set
         std::cout << "Running over sample " << file.tag << std::endl;
