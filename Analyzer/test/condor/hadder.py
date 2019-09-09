@@ -23,23 +23,23 @@ def checkNumEvents(nEvents, rootFile):
               nNeg = h.GetBinContent(1)
               nPos = h.GetBinContent(2)
               diff = float(nEvents)-(nPos-nNeg)
-              if abs(diff) > 10.0:
+              if abs(diff) > 5.0:
                    print red("------------------------------------------------------------------------------------------------")
                    print red("Num events in \"EventCounter\" doesn't match the number in \"sampleSet.cfg\"")
-                   print "SampleSet nEvents: ", red(nEvents), "EventCounter nEvents: ", red(nPos-nNeg), "=", red(nPos), red(-nNeg)
+                   print red("Error: SampleSet nEvents: "), red(nEvents), red("EventCounter nEvents: "), red(nPos-nNeg), red("="), red(nPos), red(-nNeg)
                    print red("------------------------------------------------------------------------------------------------")
          except:
-              print red("Problem opening and reading from histogram \"EventCounter\"")
+              print red("Error: Problem opening and reading from histogram \"EventCounter\"")
               pass
          f.Close()
     except:
-         print red("Can't open rootFile: %s" % rootFile)
+         print red("Error: Can't open rootFile: %s" % rootFile)
          pass
 
 def getDataSets(inPath):
     l = glob(inPath+"/*")
     print "-------------------------------------------------------------------" 
-    print "No dataset specified: using all directory names in input path"
+    print red("Warning: No dataset specified: using all directory names in input path")
     print "-------------------------------------------------------------------\n" 
     return list(s[len(inPath)+1:] for s in l)
 
@@ -71,11 +71,11 @@ def main():
     overwrite = options.o
     if os.path.exists(outDir):
         if overwrite: 
-            print "Overwriting output directory"
+            print red("Warning: Overwriting output directory")
             shutil.rmtree(outDir)
             os.makedirs(outDir)
         else:
-            print "Failed: Output directory %s already exits" % ('"'+outDir+'"')
+            print red("Error: Output directory %s already exits" % ('"'+outDir+'"'))
             exit(0)    
     else:
         os.makedirs(outDir) 
@@ -115,7 +115,7 @@ def main():
                         process = subprocess.Popen(command, shell=True)
                         process.wait()
                 except:
-                    print "\033[91m Too many files to hadd: using the exception setup \033[0m"
+                    print red("Warning: Too many files to hadd, using the exception setup")
                     command = "hadd %s/%s.root %s/%s/*" % (outDir, sampleCollection, inPath, sampleCollection)
                     if not options.noHadd: system(command)
                     pass
