@@ -191,7 +191,11 @@ int main(int argc, char *argv[])
     {
         for(auto& pair : AnalyzerPairVec)
         {
-            if(pair.first==analyzer) pair.second(vvf,startFile,nFiles,maxEvts,outfile,isQuiet,analyzer); 
+            if(pair.first==analyzer) 
+            {
+                std::cout<<"Running the " << analyzer << " Analyzer" <<std::endl;
+                pair.second(vvf,startFile,nFiles,maxEvts,outfile,isQuiet,analyzer); 
+            }
         }
 
         outfile->Close();
