@@ -11,7 +11,7 @@
 #include <TRandom3.h>
 #include <iostream>
 
-//mandatory includes to use top tagger
+// Mandatory includes to use top tagger
 #include "TopTagger/TopTagger/interface/TopTagger.h"
 #include "TopTagger/TopTagger/interface/TopTaggerResults.h"
 #include "TopTagger/TopTagger/interface/TopTaggerUtilities.h"
@@ -64,7 +64,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         const auto& NGoodJets_pt45         = tr.getVar<int>("NGoodJets_pt45");
         const auto& ntops                  = tr.getVar<int>("ntops"); 
         const bool  passBaseline0l         = tr.getVar<bool>("passBaseline0l_Good");     
-        const bool  pass_ge2t              = ntops >= 2;
+        //const bool  pass_ge2t              = ntops >= 2;
  
         // -------------------
         // -- Define weight
@@ -119,7 +119,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         // -----------------------------------------
         std::vector<std::pair<std::string, bool>> ttbarCuts =
         {   
-            {"passBaseline0l", passBaseline0l && pass_ge2t && pass_ge1dRbjets},
+            {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
         };
         hists.fillWithCutFlow(ttbarCuts, tr, weight, &rand); 
     }
