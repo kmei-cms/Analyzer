@@ -47,7 +47,7 @@ INCLUDESDIRS    += -I$(TENSORFLOW_DIR)/include
 #OBJS       = $(patsubst %, $(ODIR)/%, $(OBJ))
 
 
-PROGRAMS = MyAnalysis plot_0l plot_1l Stack_plot Stack_plot_2l
+PROGRAMS = MyAnalysis plot_0l plot_1l Stack_plot_0l Stack_plot_2l
 
 
 all: mkobj sampPyWrap $(PROGRAMS) link
@@ -132,7 +132,7 @@ $(ODIR)/%.o : $(WDIR)/%.cc
 $(ODIR)/%.o : $(WDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
 
-MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/AnalyzeLepTrigger.o $(ODIR)/AnalyzeTest.o $(ODIR)/AnalyzeWControlRegion.o $(ODIR)/MakeMiniTree.o $(ODIR)/MiniTupleMaker.o $(ODIR)/CalculateBTagSF.o $(ODIR)/AnalyzeBTagSF.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/Analyze1Lep.o $(ODIR)/AnalyzeNjetsMinusOneCSFillDijetHists.o $(ODIR)/AnalyzeNjetsMinusOneCSJetReplacement.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o $(ODIR)/EventShapeVariables.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o $(ODIR)/histio.o $(ODIR$)/Semra_Analyzer.o $(ODIR)/TwoLepAnalyzer.o $(ODIR)/Make2LInputTrees.o
+MyAnalysis: $(ODIR)/MyAnalysis.o $(ODIR)/AnalyzeLepTrigger.o $(ODIR)/AnalyzeTest.o $(ODIR)/AnalyzeWControlRegion.o $(ODIR)/MakeMiniTree.o $(ODIR)/MiniTupleMaker.o $(ODIR)/CalculateBTagSF.o $(ODIR)/AnalyzeBTagSF.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/Analyze1Lep.o $(ODIR)/AnalyzeNjetsMinusOneCSFillDijetHists.o $(ODIR)/AnalyzeNjetsMinusOneCSJetReplacement.o $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o $(ODIR)/EventShapeVariables.o $(ODIR)/SetUpTopTagger.o $(ODIR)/SATException.o $(ODIR)/histio.o $(ODIR$)/Semra_Analyzer.o $(ODIR)/TwoLepAnalyzer.o $(ODIR)/Make2LInputTrees.o $(ODIR)/MT2Hemispheres.o $(ODIR)/Davismt2.o $(ODIR)/StealthHemispheres.o 
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
 
 plot_0l: $(ODIR)/plot_0l.o
@@ -144,7 +144,7 @@ plot_1l: $(ODIR)/plot_1l.o
 Stack_plot_2l: $(ODIR)/Stack_plot_2l.o
 	$(LD) $^ $(LIBS) -o $@
 
-Stack_plot: $(ODIR)/Stack_plot.o
+Stack_plot_0l: $(ODIR)/Stack_plot_0l.o
 	$(LD) $^ $(LIBS) -o $@ 
 
 link: 

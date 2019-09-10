@@ -12,11 +12,9 @@
 #include <iostream>
 #include <algorithm>
 
-
 // -----------------------------------------------------------------------------
 // smartMax FUNCTION: to keep the plot from overlapping with the legend 
 // -----------------------------------------------------------------------------
-
 void smartMax(const TH1 * const h, const TLegend* const l, const TPad* const p, double& gmin, double& gmax, double& gpThreshMax, const bool error)
 {
     const bool isLog  = p->GetLogy();
@@ -46,7 +44,6 @@ void smartMax(const TH1 * const h, const TLegend* const l, const TPad* const p, 
     gmin    = std::min(gmin, min);
 
 }
-
 
 // -----------------------------------------------------------------------------
 // histInfo CLASS: to hold TH1* with various helper functions 
@@ -149,7 +146,6 @@ public:
     }
 };
 
-
 // -----------------------------------------------------------------------------
 // Plotter CLASS: 
 // -----------------------------------------------------------------------------
@@ -176,7 +172,7 @@ public:
     // -------------------------------
     // plot FUNCTION:
     // -------------------------------   
-    void plot(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const std::string& cutlabel = "", const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 39500) // lumi 2016 = 39500, lumi 2017= 41500 
+    void plot(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const std::string& cutlabel = "", const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 41500) // lumi 2016 = 35900, lumi 2017= 41500 
     {
         //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
         TH1::AddDirectory(false);
@@ -368,123 +364,58 @@ public:
     }
 };
 
-
 // -----------------------------------------------------------------------------
 // Main FUNCTION 
 /// -----------------------------------------------------------------------------
-
 int main()
 {
     // entry for data
     // this uses the initializer syntax to initialize the histInfo object
     // 'leg entry'  'root file'     'draw options'  'draw color'
-    histInfo data = {"Data", "condor/hadd_2016_MC_4thSlides_25.07.2019/2016_BG_OTHER.root", "PEX0", kBlack, false};
+    histInfo data = {"Data", "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_BG_OTHER.root", "PEX0", kBlack, false};
     //histInfo data = {"Data", "hadd_OutputFile_2_2017/2017_BG_OTHER.root", "PEX0", kBlack, false}; 
 
-    //vector summarizing background histograms to include in the plot
+    // vector summarizing background histograms to include in the plot
     std::vector<histInfo> bgEntries = {
 
-        {"T#bar{T}",        "condor/hadd_2016_MC_4thSlides_25.07.2019/2016_TT.root",              "hist", kBlue - 7   },
-        {"WJetsToLNu",      "condor/hadd_2016_MC_4thSlides_25.07.2019/2016_WJetsToLNu.root",      "hist", kYellow + 1 },
-        {"DYJetsToLL_M-50", "condor/hadd_2016_MC_4thSlides_25.07.2019/2016_DYJetsToLL_M-50.root", "hist", kOrange + 2 },
-        {"QCD",             "condor/hadd_2016_MC_4thSlides_25.07.2019/2016_QCD.root",             "hist", kGreen + 1  },
-        {"ST",              "condor/hadd_2016_MC_4thSlides_25.07.2019/2016_ST.root",              "hist", kRed + 1    },
-        {"Diboson",         "condor/hadd_2016_MC_4thSlides_25.07.2019/2016_Diboson.root",         "hist", kMagenta + 1},
-        {"TTX",             "condor/hadd_2016_MC_4thSlides_25.07.2019/2016_TTX.root",             "hist", kCyan + 1   },
-        {"Triboson",        "condor/hadd_2016_MC_4thSlides_25.07.2019/2016_Triboson.root",        "hist", kGray       },
-/*
+        {"T#bar{T}",        "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_TT.root",              "hist", kBlue - 7   },
+        {"WJetsToLNu",      "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_WJetsToLNu.root",      "hist", kYellow + 1 },
+        {"DYJetsToLL_M-50", "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_DYJetsToLL_M-50.root", "hist", kOrange + 2 },
+        {"QCD",             "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_QCD.root",             "hist", kGreen + 1  },
+        {"ST",              "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_ST.root",              "hist", kRed + 1    },
+        {"Diboson_nonIncl", "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_Diboson_nonIncl.root", "hist", kMagenta + 1},
+        {"Diboson",         "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_Diboson.root",         "hist", kMagenta    },
+        {"TTX",             "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_TTX.root",             "hist", kCyan + 1   },
+        {"Triboson",        "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_Triboson.root",        "hist", kGray       },
 
-        {"DYJetsToLL_M-50", "condor/hadd_OutputFile_2_2017/2017_DYJetsToLL_M-50.root", "hist", kOrange + 2 },
-        {"QCD",             "condor/hadd_OutputFile_2_2017/2017_QCD.root",             "hist", kGreen + 1  },
-        {"ST",              "condor/hadd_OutputFile_2_2017/2017_ST.root",              "hist", kRed + 1    },
-        {"Diboson",         "condor/hadd_OutputFile_2_2017/2017_Diboson.root",         "hist", kMagenta + 1},
-        {"TTX",             "condor/hadd_OutputFile_2_2017/2017_TTX.root",             "hist", kCyan + 1   },
-        {"Triboson",        "condor/hadd_OutputFile_2_2017/2017_Triboson.root",        "hist", kGray       },           
-*/ 
     };
 
-    //vector summarizing signal histograms to include in the plot
+    // vector summarizing signal histograms to include in the plot
     std::vector<histInfo> sigEntries = { 
  
-        {"RPV m_{#tildet} = 550", "condor/hadd_2016_MC_4thSlides_25.07.2019/2016_RPV_2t6j_mStop-550.root",        "hist", kOrange - 3}, 
-        {"RPV m_{#tildet} = 350", "condor/hadd_2016_MC_4thSlides_25.07.2019/2016_RPV_2t6j_mStop-350.root",        "hist", kGreen + 3 },
-        {"SYY m_{#tildet} = 900", "condor/hadd_2016_MC_4thSlides_25.07.2019/2016_StealthSYY_2t6j_mStop-900.root", "hist", kBlue + 1  },
-/*
-        {"RPV m_{#tildet} = 550", "condor/hadd_OutputFile_2_2017/2017_RPV_2t6j_mStop-550.root",        "hist", kOrange - 3},
-        {"RPV m_{#tildet} = 350", "condor/hadd_OutputFile_2_2017/2017_RPV_2t6j_mStop-350.root",        "hist", kGreen + 3 },
-        {"SYY m_{#tildet} = 900", "condor/hadd_OutputFile_2_2017/2017_StealthSYY_2t6j_mStop-900.root", "hist", kBlue + 1  },    
-*/          
+        {"RPV m_{#tildet} = 550", "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_RPV_2t6j_mStop-550.root",        "hist", kOrange - 3}, 
+        {"RPV m_{#tildet} = 350", "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_RPV_2t6j_mStop-350.root",        "hist", kGreen + 3 },
+        {"SYY m_{#tildet} = 900", "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_StealthSYY_2t6j_mStop-900.root", "hist", kBlue + 1  },
+    
     };
 
-    //make plotter object with the required sources for histograms specified
+    // make plotter object with the required sources for histograms specified
     Plotter plt(std::move(data), std::move(bgEntries), std::move(sigEntries));
 
     std::vector<std::string> cut {
 
         "", "0l", 
-        //"0l_HT500", "0l_ge6j", "0l_ge1b", "0l_ge2b",
         
-        //
-        //"0l_1t", "0l_1t1j", "0l_1t3j", "0l_1t1j3j",
-        //"0l_2t", "0l_2t1j", "0l_2t3j", "0l_2t1j3j",
-        //"0l_ge2t", "0l_ge2t1j", "0l_ge2t3j", "0l_ge2t1t3j", // 0l_ge2t1j3j
-        //"0l_3t", "0l_3t1j", "0l_3t3j", 
-        //"0l_ge3t", "0l_ge3t1j", "0l_ge3t3j",
-        //"0l_1dRbjets", "0l_2dRbjets",
-        "0l_ge1dRbjets", "0l_ge2dRbjets", 
-/*
-        //
-        "0l_HT500_ge6j", "0l_HT500_ge1b", "0l_HT500_ge2b", "0l_HT500_1t", "0l_HT500_2t", 
-        "0l_HT500_1t1j", "0l_HT500_1t3j", "0l_HT500_2t1j", "0l_HT500_2t3j", 
-        "0l_ge6j_1t", "0l_ge6j_2t", "0l_ge6j_1t1j", "0l_ge6j_1t3j", "0l_ge6j_2t1j", "0l_ge6j_2t3j", 
-        "0l_ge1b_ge6j", "0l_ge1b_1t", "0l_ge1b_2t", "0l_ge1b_1t1j", "0l_ge1b_1t3j", "0l_ge1b_2t1j", "0l_ge1b_2t3j",
-        "0l_ge2b_ge6j", "0l_ge2b_1t", "0l_ge2b_2t", "0l_ge2b_1t1j", "0l_ge2b_1t3j", "0l_ge2b_2t1j", "0l_ge2b_2t3j",
-
-        //
-        "0l_HT500_ge1b_ge6j", "0l_HT500_ge2b_ge6j", "0l_HT500_ge1b_2t", 
-        "0l_HT500_ge1b_1t1j", "0l_HT500_ge1b_1t3j", "0l_HT500_ge1b_2t1j", "0l_HT500_ge1b_2t3j",
-        "0l_ge1b_ge6j_1t", "0l_ge1b_ge6j_2t", "0l_ge1b_ge6j_1t1j", "0l_ge1b_ge6j_1t3j", "0l_ge1b_ge6j_2t1j", "0l_ge1b_ge6j_2t3j",
-        "0l_ge2b_ge6j_1t", "0l_ge2b_ge6j_2t", "0l_ge2b_ge6j_1t1j", "0l_ge2b_ge6j_1t3j", "0l_ge2b_ge6j_2t1j", "0l_ge2b_ge6j_2t3j",
-
-        //
-        "0l_HT500_ge1b_ge6j_1t", "0l_HT500_ge1b_ge6j_1t1j", "0l_HT500_ge1b_ge6j_1t3j",
-        "0l_HT500_ge1b_ge6j_2t", "0l_HT500_ge1b_ge6j_2t1j", "0l_HT500_ge1b_ge6j_2t3j",                
-
-        // 1 top    
-        "0l_HT500_ge6j_1t", "0l_HT500_ge6j_1t1j", "0l_HT500_ge6j_1t3j", "0l_HT500_ge6j_1t1j-3j",
-        "0l_HT500_ge2b_1t", "0l_HT500_ge2b_1t1j", "0l_HT500_ge2b_1t3j", "0l_HT500_ge2b_1t1j-3j", 
-        "0l_HT500_ge2b_ge6j_1t", "0l_HT500_ge2b_ge6j_1t1j", "0l_HT500_ge2b_ge6j_1t3j", "0l_HT500_ge2b_ge6j_1t1j-3j",        
-        
-        // 2 tops
-        "0l_HT500_ge6j_2t", "0l_HT500_ge6j_2t1j", "0l_HT500_ge6j_2t3j", "0l_HT500_ge6j_2t1j-3j", 
-        "0l_HT500_ge2b_2t", "0l_HT500_ge2b_2t1j", "0l_HT500_ge2b_2t3j", "0l_HT500_ge2b_2t1j-3j", 
-        "0l_HT500_ge2b_ge6j_2t", "0l_HT500_ge2b_ge6j_2t1j", "0l_HT500_ge2b_ge6j_2t3j", "0l_HT500_ge2b_ge6j_2t1j-3j",
-*/        
-        // >= 2 tops
-        "0l_HT500_ge6j_ge2t", "0l_HT500_ge6j_ge2t1j", "0l_HT500_ge6j_ge2t3j", "0l_HT500_ge6j_ge2t1j-3j", 
-        "0l_HT500_ge2b_ge2t", "0l_HT500_ge2b_ge2t1j", "0l_HT500_ge2b_ge2t3j", "0l_HT500_ge2b_ge2t1j-3j", 
-        "0l_HT500_ge2b_ge6j_ge2t", "0l_HT500_ge2b_ge6j_ge2t1j", "0l_HT500_ge2b_ge6j_ge2t3j", "0l_HT500_ge2b_ge6j_ge2t1j-3j",
-        
-        //"0l_HT500_ge6j_ge2t_1dRbjets", "0l_HT500_ge6j_ge2t1j_1dRbjets", "0l_HT500_ge6j_ge2t3j_1dRbjets", "0l_HT500_ge6j_ge2t1j3j_1dRbjets",
-        //"0l_HT500_ge2b_ge2t_1dRbjets", "0l_HT500_ge2b_ge2t1j_1dRbjets", "0l_HT500_ge2b_ge2t3j_1dRbjets",  "0l_HT500_ge2b_ge2t1j3j_1dRbjets",
-        //"0l_HT500_ge2b_ge6j_ge2t_1dRbjets", "0l_HT500_ge2b_ge6j_ge2t1j_1dRbjets", "0l_HT500_ge2b_ge6j_ge2t3j_1dRbjets", "0l_HT500_ge2b_ge6j_ge2t1j3j_1dRbjets",
-
-        "0l_HT500_ge6j_ge2t_ge1dRbjets", "0l_HT500_ge6j_ge2t1j_ge1dRbjets", "0l_HT500_ge6j_ge2t3j_ge1dRbjets", "0l_HT500_ge6j_ge2t1j3j_ge1dRbjets",
-        "0l_HT500_ge2b_ge2t_ge1dRbjets", "0l_HT500_ge2b_ge2t1j_ge1dRbjets", "0l_HT500_ge2b_ge2t3j_ge1dRbjets",  "0l_HT500_ge2b_ge2t1j3j_ge1dRbjets",
-        "0l_HT500_ge2b_ge6j_ge2t_ge1dRbjets", "0l_HT500_ge2b_ge6j_ge2t1j_ge1dRbjets", "0l_HT500_ge2b_ge6j_ge2t3j_ge1dRbjets", "0l_HT500_ge2b_ge6j_ge2t1j3j_ge1dRbjets",
-        
-        //"0l_HT500_ge6j_ge2t_2dRbjets", "0l_HT500_ge6j_ge2t1j_2dRbjets", "0l_HT500_ge6j_ge2t3j_2dRbjets", "0l_HT500_ge6j_ge2t1j3j_2dRbjets",
-        //"0l_HT500_ge2b_ge2t_2dRbjets", "0l_HT500_ge2b_ge2t1j_2dRbjets", "0l_HT500_ge2b_ge2t3j_2dRbjets",  "0l_HT500_ge2b_ge2t1j3j_2dRbjets",
-        //"0l_HT500_ge2b_ge6j_ge2t_2dRbjets", "0l_HT500_ge2b_ge6j_ge2t1j_2dRbjets", "0l_HT500_ge2b_ge6j_ge2t3j_2dRbjets", "0l_HT500_ge2b_ge6j_ge2t1j3j_2dRbjets",
+        "0l_HT500", "0l_HT500_ge2b", "0l_HT500_ge2b_ge6j", 
  
-        "0l_HT500_ge6j_ge2t_ge2dRbjets", "0l_HT500_ge6j_ge2t1j_ge2dRbjets", "0l_HT500_ge6j_ge2t3j_ge2dRbjets", "0l_HT500_ge6j_ge2t1j3j_ge2dRbjets",
-        "0l_HT500_ge2b_ge2t_ge2dRbjets", "0l_HT500_ge2b_ge2t1j_ge2dRbjets", "0l_HT500_ge2b_ge2t3j_ge2dRbjets",  "0l_HT500_ge2b_ge2t1j3j_ge2dRbjets",
-        "0l_HT500_ge2b_ge6j_ge2t_ge2dRbjets", "0l_HT500_ge2b_ge6j_ge2t1j_ge2dRbjets", "0l_HT500_ge2b_ge6j_ge2t3j_ge2dRbjets", "0l_HT500_ge2b_ge6j_ge2t1j3j_ge2dRbjets",
+        "0l_HT500_ge2b_ge6j_ge2t", "0l_HT500_ge2b_ge6j_ge2t1j", "0l_HT500_ge2b_ge6j_ge2t3j", "0l_HT500_ge2b_ge6j_ge2t1j3j",
+        
+        "0l_HT500_ge2b_ge6j_ge2t_ge1dRbjets", "0l_HT500_ge2b_ge6j_ge2t1j_ge1dRbjets", "0l_HT500_ge2b_ge6j_ge2t3j_ge1dRbjets", "0l_HT500_ge2b_ge6j_ge2t1j3j_ge1dRbjets",
 
     };
 
     for (const auto& cutlabel : cut) {
-/*        plt.plot( "h_ntops_"+cutlabel,          "N_{T}",                "Events", true, cutlabel );
+        plt.plot( "h_ntops_"+cutlabel,          "N_{T}",                "Events", true, cutlabel );
         plt.plot( "h_njets_"+cutlabel,          "N_{J}",                "Events", true, cutlabel );
         plt.plot( "h_nbjets_"+cutlabel,         "N_{BJ}",               "Events", true, cutlabel );
         plt.plot( "h_ht_"+cutlabel,             "HT [GeV]",             "Events", true, cutlabel );
@@ -502,10 +433,11 @@ int main()
         plt.plot( "h_dR_bjet1_bjet2_"+cutlabel, "#DeltaR_{bj1-bj2}",    "Events", true, cutlabel );
         plt.plot( "h_dR_top1_top2_"+cutlabel,   "#DeltaR_{t1-t2}",      "Events", true, cutlabel );
         plt.plot( "h_dR_tops_bjets_"+cutlabel,  "#DeltaR_{tops-bjets}", "Events", true, cutlabel ); 
-*/  
+
+/*
         plt.plot( "h_dR_bjet1_bjet2_"+cutlabel, "#DeltaR_{bj1-bj2}",    "Events", false, cutlabel ); // for log scale 
         plt.plot( "h_dR_top1_top2_"+cutlabel,   "#DeltaR_{t1-t2}",      "Events", false, cutlabel );
         plt.plot( "h_dR_tops_bjets_"+cutlabel,  "#DeltaR_{tops-bjets}", "Events", false, cutlabel );
-    
+*/    
     }
 }
