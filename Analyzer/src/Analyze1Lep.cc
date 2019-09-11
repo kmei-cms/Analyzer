@@ -157,23 +157,15 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             const auto& lumi = tr.getVar<double>("Lumi");
             eventweight = lumi*Weight;
             
-            // Define lepton weight
-            if(NGoodLeptons == 1)
-            {
-                const auto& eleLepWeight = tr.getVar<double>("totGoodElectronSF");
-                const auto& muLepWeight  = tr.getVar<double>("totGoodMuonSF");
-                leptonweight = (GoodLeptons[0].first == "e") ? eleLepWeight : muLepWeight;
-            }
+            const auto& eleLepWeight = tr.getVar<double>("totGoodElectronSF");
+            const auto& muLepWeight  = tr.getVar<double>("totGoodMuonSF");
+            leptonweight = eleLepWeight*muLepWeight;
             
             pileupWeight = tr.getVar<double>("puWeightCorr");
             bTagWeight   = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
             htDerivedweight = tr.getVar<double>("htDerivedweight");
             topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
             prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
-            FSRUp = tr.getVar<double>("PSweight_FSRUp");
-            FSRDown = tr.getVar<double>("PSweight_FSRDown");
-            FSRUp_2 = tr.getVar<double>("PSweight_FSRUp_2");
-            FSRDown_2 = tr.getVar<double>("PSweight_FSRDown_2");
             
             weight *= eventweight*leptonweight*bTagWeight*prefiringScaleFactor*pileupWeight*htDerivedweight;
         }
