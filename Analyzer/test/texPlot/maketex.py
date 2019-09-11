@@ -32,17 +32,22 @@ def write(f,globString,title):
             print plotList[i+1]
 
 def main():    
-    path = "../outputPlots/"
+    paths = [("../outputPlots/FullRun2_2017/","2017"), ("../outputPlots/FullRun2_2018/","2018")]
     f = open("stack_snippet.tex",'w')
 
-    write(f, path+"blind_njets*.pdf",   "NJet - stack plots")
-    write(f, path+"blind_ntops*.pdf",   "NTops - stack plots")
-    write(f, path+"blind_nb*.pdf",      "NBottoms - stack plots")
-    write(f, path+"blind_deepESM*.pdf", "DeepESM - stack plots")
-    write(f, path+"blind_ht*.pdf",      "HT - stack plots")
-    write(f, path+"blind_lPt*.pdf",     "Lepton PT - stack plots")
-    write(f, path+"blind_lEta*.pdf",    "Lepton Eta - stack plots")
-    write(f, path+"blind_mbl*.pdf",     "mbl - stack plots")
+    for path in paths:
+        write(f, path[0]+"h_njets*.pdf",       path[1]+" NJet - stack plots")
+        write(f, path[0]+"blind_ntops*.pdf",   path[1]+" NTops - stack plots")
+        write(f, path[0]+"blind_nb*.pdf",      path[1]+" NBottoms - stack plots")
+        write(f, path[0]+"blind_deepESM*.pdf", path[1]+" DeepESM - stack plots")
+        write(f, path[0]+"blind_deepESMMerged*.pdf", path[1]+" DeepESMMerged - stack plots")
+        write(f, path[0]+"blind_ht*.pdf",      path[1]+" HT - stack plots")
+        write(f, path[0]+"blind_lPt*.pdf",     path[1]+" Lepton PT - stack plots")
+        write(f, path[0]+"blind_lEta*.pdf",    path[1]+" Lepton Eta - stack plots")
+        write(f, path[0]+"blind_mbl*.pdf",     path[1]+" mbl - stack plots")
+        write(f, path[0]+"fisherNorm_h_deepESM*.pdf", path[1]+" Norm DeepESM")
+        write(f, path[0]+"fisherNorm_h_njets*.pdf",   path[1]+" Norm NJets")
+        write(f, path[0]+"fisherRocCompare*.pdf",     path[1]+" Roc Curves")
 
     f.close()
 
