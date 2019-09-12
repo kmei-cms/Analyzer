@@ -93,10 +93,10 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& ntops_1jet         = tr.getVar<int>("ntops_1jet");
         const auto& runtype            = tr.getVar<std::string>("runtype");     
         const auto& filetag            = tr.getVar<std::string>("filetag");
-        const auto& NJets_pt30         = tr.getVar<int>("NJets_pt30");
-        const auto& NJets_pt45         = tr.getVar<int>("NJets_pt45");
-        const auto& NBJets             = tr.getVar<int>("NBJets");
-        const auto& NBJets_pt45        = tr.getVar<int>("NBJets_pt45");
+        const auto& NJets_pt30         = tr.getVar<int>("NGoodJets_pt30");
+        const auto& NJets_pt45         = tr.getVar<int>("NGoodJets_pt45");
+        const auto& NBJets             = tr.getVar<int>("NGoodBJets");
+        const auto& NBJets_pt45        = tr.getVar<int>("NGoodBJets_pt45");
         const auto& NGoodLeptons       = tr.getVar<int>("NGoodLeptons");
         const auto& fisher_bin1        = tr.getVar<bool>("fisher_bin1");
         const auto& fisher_bin2        = tr.getVar<bool>("fisher_bin2");
@@ -104,8 +104,8 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& fisher_bin4        = tr.getVar<bool>("fisher_bin4");
         const auto& eventshape_bdt_val = tr.getVar<double>("eventshape_bdt_val");
         const auto& fisher_val         = tr.getVar<double>("fisher_val");
-        const auto& passBaseline0l     = tr.getVar<bool>("passBaseline0l");
-        const auto& passBlindHad       = tr.getVar<bool>("passBlindHad");
+        const auto& passBaseline0l     = tr.getVar<bool>("passBaseline0l_Good");
+        const auto& passBlindHad       = tr.getVar<bool>("passBlindHad_Good");
         const auto& passTrigger        = tr.getVar<bool>("passTrigger");
         const auto& passMadHT          = tr.getVar<bool>("passMadHT");
 

@@ -39,27 +39,15 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
         if( tr.getEvtNum() & 10000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );        
 
-        const auto& MET                    = tr.getVar<double>("MET");
-        const auto& HT                     = tr.getVar<double>("HT");
-        const auto& NJets                  = tr.getVar<int>("NJets");
-        const auto& ntops_3jet             = tr.getVar<int>("ntops_3jet");
-        const auto& ntops_2jet             = tr.getVar<int>("ntops_2jet");
-        const auto& ntops_1jet             = tr.getVar<int>("ntops_1jet");
-        const auto& Jets                   = tr.getVec<TLorentzVector>("Jets");
-        const auto& Jets_bDiscriminatorCSV = tr.getVec<double>("Jets_bDiscriminatorCSV");
-        const auto* ttr                    = tr.getVar<TopTaggerResults*>("ttr");
-        const auto& hadtopdaughters        = tr.getVec<std::vector<const TLorentzVector*>>("hadtopdaughters");
-        const auto& hadtops                = tr.getVec<TLorentzVector>("hadtops");
-        const auto& neutralinos            = tr.getVec<TLorentzVector>("neutralinos");
-        const auto& singlinos              = tr.getVec<TLorentzVector>("singlinos");
-        const auto& singlets               = tr.getVec<TLorentzVector>("singlets");
-        const auto& hadtops_idx            = tr.getVec<int>("hadtops_idx");
-
         const auto& runtype                = tr.getVar<std::string>("runtype");
         const auto& filetag                = tr.getVar<std::string>("filetag");
         const auto& NGoodLeptons           = tr.getVar<int>("NGoodLeptons");
         const auto& dR_bjets               = tr.getVar<double>("dR_bjets");
+        const auto& Jets                   = tr.getVec<TLorentzVector>("Jets");
         const auto& GoodJets_pt45          = tr.getVec<bool>("GoodJets_pt45");
+        const auto& NGoodJets_pt45         = tr.getVar<int>("NGoodJets_pt45");
+        const auto& GoodBJets_pt45         = tr.getVec<bool>("GoodBJets_pt45");
+        const auto& NGoodBJets_pt45        = tr.getVar<int>("NGoodBJets_pt45");
         const auto& ntops                  = tr.getVar<int>("ntops"); 
         const bool  passBaseline0l         = tr.getVar<bool>("passBaseline0l_Good");     
         const bool  pass_ge1dRbjets        = (dR_bjets >= 1.0); 
