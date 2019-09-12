@@ -58,14 +58,12 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         const auto& runtype                = tr.getVar<std::string>("runtype");
         const auto& filetag                = tr.getVar<std::string>("filetag");
         const auto& NGoodLeptons           = tr.getVar<int>("NGoodLeptons");
-        const auto& GoodBJets_pt45         = tr.getVec<bool>("GoodBJets_pt45");
-        const auto& NGoodBJets_pt45        = tr.getVar<int>("NGoodBJets_pt45");
+        const auto& dR_bjets               = tr.getVar<double>("dR_bjets");
         const auto& GoodJets_pt45          = tr.getVec<bool>("GoodJets_pt45");
-        const auto& NGoodJets_pt45         = tr.getVar<int>("NGoodJets_pt45");
         const auto& ntops                  = tr.getVar<int>("ntops"); 
         const bool  passBaseline0l         = tr.getVar<bool>("passBaseline0l_Good");     
-        //const bool  pass_ge2t              = ntops >= 2;
- 
+        const bool  pass_ge1dRbjets        = (dR_bjets >= 1.0); 
+
         // -------------------
         // -- Define weight
         // -------------------
@@ -97,22 +95,6 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
             if (!GoodJets_pt45[i]) continue;
             goodjets_pt45.emplace_back(Jets.at(i));            
         }
-
-        // --------------------------------------
-        // -- Calculate DeltaR between 2 bjets 
-        // --------------------------------------
-        double dR_bjet1_bjet2 = -1;
-        if(NGoodBJets_pt45 == 2) 
-        {
-            std::vector<TLorentzVector> bjets;
-            for(int ijet = 0; ijet < Jets.size(); ijet++) 
-            {
-                if(!GoodBJets_pt45[ijet]) continue;
-                bjets.emplace_back(Jets.at(ijet));
-            }
-            dR_bjet1_bjet2 = bjets[0].DeltaR(bjets[1]);
-        }
-        bool pass_ge1dRbjets = (dR_bjet1_bjet2 >= 1.0); 
 
         // -----------------------------------------
         // -- Fill the fake rate study histograms 

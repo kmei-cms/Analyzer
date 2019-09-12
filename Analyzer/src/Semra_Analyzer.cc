@@ -85,7 +85,8 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const auto& Jets            = tr.getVec<TLorentzVector>("Jets");
         const auto& GoodJets_pt45   = tr.getVec<bool>("GoodJets_pt45");
         const auto& GoodBJets_pt45  = tr.getVec<bool>("GoodBJets_pt45");
-                
+        const auto& dR_bjets        = tr.getVar<double>("dR_bjets");               
+ 
         // ------------------------------
         // -- Define Top Tag variables
         // ------------------------------
@@ -113,7 +114,8 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const bool pass_ge2t1j      = ntops >= 2 && ntops_3jet == 0 && ntops_2jet==0;
         const bool pass_ge2t3j      = ntops >= 2 && ntops_1jet == 0 && ntops_2jet==0;
         const bool pass_ge2t1j3j    = ntops >= 2 && ntops_1jet >= 1 && ntops_3jet >= 1 && ntops_2jet==0;
-        
+        const bool pass_ge1dRbjets  = dR_bjets >= 1.0;       
+ 
         // -------------------
         // -- Define weight
         // -------------------
@@ -136,22 +138,6 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             weight *= eventweight*bTagScaleFactor*prefiringScaleFactor*puScaleFactor;
         }
 
-        // --------------------------------------
-        // -- Calculate DeltaR between 2 bjets
-        // --------------------------------------
-        double dR_bjet1_bjet2 = -1; 
-        if (NGoodBJets_pt45 == 2) 
-        {
-            std::vector<TLorentzVector> bjets;
-            for(int ijet = 0; ijet < Jets.size(); ijet++) 
-            {
-                if(!GoodBJets_pt45[ijet]) continue;
-                bjets.push_back(Jets.at(ijet));                
-            }
-            dR_bjet1_bjet2 = bjets[0].DeltaR(bjets[1]);
-        }
-        bool pass_ge1dRbjets = (dR_bjet1_bjet2 >= 1.0);
-    
         // ---------------------------------------------
         // -- Calculate DeltaR between tops and bjets
         // ---------------------------------------------
@@ -190,7 +176,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             {"0l_HT500_ge2b_ge6j_ge2t3j",              passBaseline0l && pass_ge2t3j   },
             {"0l_HT500_ge2b_ge6j_ge2t1j3j",            passBaseline0l && pass_ge2t1j3j }, 
             
-            // dR_bjet1_bjet2 >= 1
+            // dR_bjets >= 1
             {"0l_HT500_ge2b_ge2t_ge1dRbjets",          pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t && pass_ge1dRbjets     },
             {"0l_HT500_ge2b_ge2t1j_ge1dRbjets",        pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t1j && pass_ge1dRbjets   },
             {"0l_HT500_ge2b_ge2t3j_ge1dRbjets",        pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge2t3j && pass_ge1dRbjets   },
@@ -252,7 +238,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                 my_histos["h_bestTopMass_"+cutVar.first]->Fill( bestTopMass, weight );
                 my_histos["h_bestTopEta_"+cutVar.first]->Fill( bestTopEta, weight );
                 my_histos["h_bestTopPt_"+cutVar.first]->Fill( bestTopPt, weight );
-                my_histos["h_dR_bjet1_bjet2_"+cutVar.first]->Fill( dR_bjet1_bjet2, weight );
+                my_histos["h_dR_bjet1_bjet2_"+cutVar.first]->Fill( dR_bjets, weight );
                 my_histos["h_dR_top1_top2_"+cutVar.first]->Fill( dR_top1_top2, weight );
         
                 // ---------------------------------
@@ -263,7 +249,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                 }
                         
                 my_2d_histos["h_njets_MVA_"+cutVar.first]->Fill( NGoodJets_pt45, deepESM_val, weight );
-                my_2d_histos["h_njets_dR_bjet1_bjet2_"+cutVar.first]->Fill( dR_bjet1_bjet2, NGoodJets_pt45, weight );
+                my_2d_histos["h_njets_dR_bjet1_bjet2_"+cutVar.first]->Fill( dR_bjets, NGoodJets_pt45, weight );
             }
         }
 
