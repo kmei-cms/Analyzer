@@ -33,7 +33,7 @@ def main():
     
     # Prepare the list of files to transfer
     mvaFileName = ""
-    with file(environ["CMSSW_BASE"] + "/src/%s/test/TopTagger.cfg" % repo) as meowttcfgFile:
+    with file(environ["CMSSW_BASE"] + "/src/%s/test/TopTaggerCfg_2016.cfg" % repo) as meowttcfgFile:
         for line in meowttcfgFile:
             if "modelFile" in line:
                 mvaFileName = line.split("=")[1].strip().strip("\"")
@@ -41,7 +41,9 @@ def main():
     
     filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MyAnalysis" % repo, 
                        environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,mvaFileName),
-                       environ["CMSSW_BASE"] + "/src/%s/test/TopTagger.cfg" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/TopTaggerCfg_2016.cfg" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/TopTaggerCfg_2017.cfg" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/TopTaggerCfg_2018.cfg" % repo,
                        environ["CMSSW_BASE"] + "/src/TopTagger/TopTagger/test/libTopTagger.so",
                        environ["CMSSW_BASE"] + "/src/%s/test/sampleSets.cfg" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/sampleCollections.cfg" % repo,

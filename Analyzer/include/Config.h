@@ -37,12 +37,13 @@ private:
         const auto& bjetFileName    = tr.getVar<std::string>("bjetFileName");
         const auto& bjetCSVFileName = tr.getVar<std::string>("bjetCSVFileName");
         const auto& filetag         = tr.getVar<std::string>("filetag");
+        const auto& TopTaggerCfg    = tr.getVar<std::string>("TopTaggerCfg");
         
         for(const auto& module : modules)
         {
             if     (module=="PartialUnBlinding")  tr.emplaceModule<PartialUnBlinding>();
             else if(module=="PrepNTupleVars")     tr.emplaceModule<PrepNTupleVars>();
-            else if(module=="RunTopTagger")       tr.emplaceModule<RunTopTagger>();
+            else if(module=="RunTopTagger")       tr.emplaceModule<RunTopTagger>(TopTaggerCfg);
             else if(module=="Muon")               tr.emplaceModule<Muon>();
             else if(module=="Electron")           tr.emplaceModule<Electron>();
             else if(module=="Photon")             tr.emplaceModule<Photon>();
@@ -79,7 +80,7 @@ public:
         const auto& analyzer = tr.getVar<std::string>("analyzer");
         const bool isSignal = (filetag.find("_stop") != std::string::npos || filetag.find("_mStop") != std::string::npos) ? true : false;
 
-        std::string runYear, puFileName, DeepESMCfg, ModelFile, leptonFileName, bjetFileName, bjetCSVFileName, meanFileName;
+        std::string runYear, puFileName, DeepESMCfg, ModelFile, leptonFileName, bjetFileName, bjetCSVFileName, meanFileName, TopTaggerCfg;
         double Lumi, deepCSV_WP_loose, deepCSV_WP_medium, deepCSV_WP_tight;
         bool blind;
         if(filetag.find("2016") != std::string::npos)
@@ -97,6 +98,7 @@ public:
             bjetCSVFileName = "DeepCSV_2016LegacySF_V1.csv";
             meanFileName = "allInOne_SFMean.root";
             blind = false;
+            TopTaggerCfg = "TopTaggerCfg_2016.cfg";
         }
         else if(filetag.find("2017") != std::string::npos)
         { 
@@ -113,6 +115,7 @@ public:
             bjetCSVFileName = "DeepCSV_94XSF_V4_B_F.csv";
             meanFileName = "allInOne_SFMean.root";
             blind = false;
+            TopTaggerCfg = "TopTaggerCfg_2017.cfg";
         }
         else if(filetag.find("2018") != std::string::npos) 
         {
@@ -129,6 +132,7 @@ public:
             bjetCSVFileName = "DeepCSV_102XSF_V1.csv";
             meanFileName = "allInOne_SFMean.root";
             blind = true;
+            TopTaggerCfg = "TopTaggerCfg_2018.cfg";
         }
 
         tr.registerDerivedVar("runYear",runYear);
@@ -147,6 +151,7 @@ public:
         tr.registerDerivedVar("doQCDCR",false); //bool to determine to use qcd control region
         tr.registerDerivedVar("etaCut",2.4); 
         tr.registerDerivedVar("blind",blind);
+        tr.registerDerivedVar("TopTaggerCfg", TopTaggerCfg);
 
         //Register Modules that are needed for each Analyzer
         if(analyzer=="Analyze1Lep" || analyzer=="Analyze0Lep" || analyzer=="Semra_Analyzer" || analyzer=="AnalyzeTopTagger")
