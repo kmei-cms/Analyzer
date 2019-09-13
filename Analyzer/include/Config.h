@@ -51,7 +51,7 @@ private:
             else if(module=="BJet")                        tr.emplaceModule<BJet>();
             else if(module=="CommonVariables")             tr.emplaceModule<CommonVariables>();
             else if(module=="MakeMVAVariables")            tr.emplaceModule<MakeMVAVariables>();
-            else if(module=="MakeMVAVariables_NonIsoMuon") tr.emplaceModule<MakeMVAVariables>(false, "", "NonIsoMuons");
+            else if(module=="MakeMVAVariables_NonIsoMuon") tr.emplaceModule<MakeMVAVariables>(false, "", "NonIsoMuonJets_pt30");
             else if(module=="Baseline")                    tr.emplaceModule<Baseline>();
             else if(module=="StopGenMatch")                tr.emplaceModule<StopGenMatch>();
             else if(module=="MegaJetCombine")              tr.emplaceModule<MegaJetCombine>();
