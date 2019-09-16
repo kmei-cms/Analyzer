@@ -40,9 +40,9 @@ void setHistInfo(const std::string& path, std::vector<histInfo>& data, std::vect
     };
 
     sig = {        
-        {"RPV 850", path + "/"+year+"_RPV_2t6j_mStop-850.root",      "hist", kRed     + 2*color  },
         {"RPV 350", path + "/"+year+"_RPV_2t6j_mStop-350.root",      "hist", kCyan    + 2*color  },
         {"RPV 550", path + "/"+year+"_RPV_2t6j_mStop-550.root",      "hist", kMagenta + 2*color  },        
+        {"RPV 850", path + "/"+year+"_RPV_2t6j_mStop-850.root",      "hist", kRed     + 2*color  },
         //{"SYY 550", path + "/"+year+"_StealthSYY_2t6j_mStop-550.root",       "hist", kMagenta  + 2*color  },        
     };
 }
@@ -55,8 +55,8 @@ int main()
 
     std::string path;
     if     (year=="2016") path= "condor/Analyze1Lep_Kerasv1.2.8";
-    else if(year=="2017") path= "condor/Analyze1Lep_Kerasv3.0.4";
-    else if(year=="2018") path= "condor/Analyze1Lep_Kerasv3.0.4_2018";
+    else if(year=="2017") path= "condor/Analyze1Lep_2017_v1.0";
+    else if(year=="2018") path= "condor/Analyze1Lep_2018_v1.0";
 
     std::vector<histInfo> data, bg, sig;
     setHistInfo(path, data, bg, sig, year, 0);
@@ -77,15 +77,11 @@ int main()
 
     std::vector<std::string> mycuts_1l = {
         //"",
-        "_1l",
+        //"_1l",
         //"_1l_ge7j",                        
-        "_1l_ge1b",                       
-        "_1l_ge2b",                       
+        //"_1l_ge1b",                       
+        //"_1l_ge2b",                       
         //"_1e_1m_ge2b_le5j",
-        //"_1l_1t",                          
-        //"_1l_2t",                          
-        //"_1l_ge1t",                        
-        //"_1l_ge2t",                        
         //"_1l_4j_ge1b",
         //"_1l_5j_ge1b",
         //"_1l_6j_ge1b",
@@ -104,8 +100,12 @@ int main()
         //"_1l_8j_ge2b", 
         //"_1l_ge7j_ge1b_noMbl",
         "_1l_ge7j_ge1b",
+        "_1l_ge7j_ge1b_HEM",
+        "_1l_ge7j_ge1b_lBarrel",
+        //"_1l_ge7j_ge1b_lEndCap",
         "_1e_ge7j_ge1b",
         "_1m_ge7j_ge1b",
+        "_passQCDCR",
         //"_1l_0b_ge300ht_50to110mt_ge30MET",
         //"_1l_0b_ge300ht_50to110mt_ge30MET_even",
         //"_1l_0b_ge300ht_50to110mt_ge30MET_odd",
@@ -114,15 +114,6 @@ int main()
         "_1l_ge7j_ge1b_d3",
         "_1l_ge7j_ge1b_d4",
         //"_1l_ge7j_ge2b",                 
-        //"_1l_ge7j_ge1b_1t",
-        //"_1l_ge7j_ge1b_ge1t",                                                    
-        //"_1l_ge7j_ge1b_1t1",               
-        //"_1l_ge7j_ge1b_1t2",               
-        //"_1l_ge7j_ge1b_1t3",               
-        //"_1l_ge7j_ge1b_1t2or3",            
-        //"_1l_ge7j_ge1b_ge1t1",             
-        //"_1l_ge7j_ge1b_ge1t2",             
-        //"_1l_ge7j_ge1b_ge1t3",             
     };
 
     //plt.plotStack("h_njets_1l_ge7j_ge1b",    "N_{J}", "Events", true, -1, false, false);
@@ -132,45 +123,37 @@ int main()
     //plt.plotStack("h_njets_1l_ge7j_ge1b_d4", "N_{J}", "Events", true, -1, false, false);
     for(std::string mycut : mycuts_1l)
     {
-        plt.plotStack( "h_njets"+mycut, "N_{J}" ,              "Events", true, -1, false, true);
-        plt.plotStack( "h_deepESM"+mycut, "DeepESM" ,          "Events", true, 10, false, true);
-        plt.plotStack( "h_deepESMMerged"+mycut, "DeepESM Bin", "Events", true, -1, false, true);
-        plt.plotStack( "h_mbl"+mycut,    "M(l,b) [GeV]",       "Events", true, 10, false, true);
-        plt.plotStack( "h_ht"+mycut,     "H_{T} [GeV]",        "Events", true, 10, false, true);
-        plt.plotStack( "h_lPt"+mycut,    "Lepton P_{T} [GeV]", "Num Leptons", true,  2, false, true, 0, 1000);
-        plt.plotStack( "h_lEta"+mycut,   "Lepton Eta",         "Num Leptons", true,  2, false, true);
-        plt.plotStack( "h_jPt"+mycut,     "Jet P_{T} [GeV]",   "Num Jets", true,  2, false, true, 0, 1000);
-        plt.plotStack( "h_jEta"+mycut,    "Jet Eta",           "Num Jets", true,  2, false, true);
-        plt.plotStack( "h_ntops"+mycut, "N_{T}" ,              "Events", true, -1, false, true);
-        plt.plotStack( "h_nb"   +mycut, "N_{B}" ,              "Events", true, -1, false, true);        
+        plt.plotStack( "h_njets"+mycut,         "N_{J}" ,             "Events",      true, -1, false, true);
+        plt.plotStack( "h_njetsQCDCR"+mycut,    "N_{J}" ,             "Events",      true, -1, false, true);
+        //plt.plotStack( "h_deepESM"+mycut,       "DeepESM" ,           "Events",      true, 10, false, true);
+        //plt.plotStack( "h_deepESMQCDCR"+mycut,  "DeepESM" ,           "Events",      false,10, false, true);
+        //plt.plotStack( "h_deepESMMerged"+mycut, "DeepESM Bin",        "Events",      true, -1, false, true);
+        //plt.plotStack( "h_mbl"+mycut,           "M(l,b) [GeV]",       "Events",      true, 10, false, true);
+        //plt.plotStack( "h_ht"+mycut,            "H_{T} [GeV]",        "Events",      true, 10, false, true);
+        //plt.plotStack( "h_htQCDCR"+mycut,       "H_{T} [GeV]",        "Events",      true, 10, false, true);
+        //plt.plotStack( "h_lPt"+mycut,           "Lepton P_{T} [GeV]", "Num Leptons", true,  2, false, true, 0, 1000);
+        //plt.plotStack( "h_lEta"+mycut,          "Lepton Eta",         "Num Leptons", true,  2, false, true);
+        //plt.plotStack( "h_jPt"+mycut,           "Jet P_{T} [GeV]",    "Num Jets",    true,  2, false, true, 0, 1000);
+        //plt.plotStack( "h_jEta"+mycut,          "Jet Eta",            "Num Jets",    true,  2, false, true);
+        //plt.plotStack( "h_ntops"+mycut,         "N_{T}" ,             "Events",      true, -1, false, true);
+        //plt.plotStack( "h_nb"   +mycut,         "N_{B}" ,             "Events",      true, -1, false, true);        
         ////Need these until we un blind
-        plt.plotStack( "blind_njets"+mycut, "N_{J}" ,              "Events", true, -1, false, true);
-        plt.plotStack( "blind_deepESM"+mycut, "DeepESM" ,          "Events", true, 10, false, true);
-        plt.plotStack( "blind_deepESMMerged"+mycut, "DeepESM Bin", "Events", true, -1, false, true);
-        plt.plotStack( "blind_mbl"+mycut,    "M(l,b) [GeV]",       "Events", true, 10, false, true);
-        plt.plotStack( "blind_ht"+mycut,     "H_{T} [GeV]",        "Events", true, 10, false, true);
-        plt.plotStack( "blind_lPt"+mycut,    "Lepton P_{T} [GeV]", "Num Leptons", true,  2, false, true, 0, 1000);
-        plt.plotStack( "blind_lEta"+mycut,   "Lepton Eta",         "Num Leptons", true,  2, false, true);
-        plt.plotStack( "blind_jPt"+mycut,     "Jet P_{T} [GeV]",   "Num Jets", true,  2, false, true, 0, 1000);
-        plt.plotStack( "blind_jEta"+mycut,    "Jet Eta",           "Num Jets", true,  2, false, true);
-        plt.plotStack( "blind_ntops"+mycut, "N_{T}" ,              "Events", true, -1, false, true);
-        plt.plotStack( "blind_nb"   +mycut, "N_{B}" ,              "Events", true, -1, false, true);        
-        //
-        //// Make Normalized fisher
-        //pltSkim.plotNormFisher("h_fisher_1l"+mycut, "fisher value" , "Events", false, 4);
-    
-        plt.plotNormFisher("h_deepESM"+mycut, "DeepESM" , "Norm", false, 10);
-        
-        plt.plotNormFisher("h_njets"+mycut, "DeepESM" , "Events", false);
-        //plt.plotNormFisher("h_BestComboMass_1l"+mycut, "Average BestCombo Mass [GeV]" , "Events", false, 4);
-        //plt.plotNormFisher("h_BestComboPt_1l"+mycut, "Average BestCombo P_{T} [GeV]" , "Events", false, 4);
-        //plt.plotNormFisher("h_BestComboMassDiff_1l"+mycut, "BestCombo Mass Diff [GeV]" , "Events", false, 2);
-        //plt.plotNormFisher("h_BestComboMassDiffAbs_1l"+mycut, "BestCombo Mass Abs(Diff) [GeV]" , "Events", false, 2);
-        //plt.plotNormFisher("h_BestComboRelDiff_1l"+mycut, "BestCombo Rel Diff" , "Events", false, 2);
-        //plt.plotNormFisher("h_BestComboRelDiffAbs_1l"+mycut, "BestCombo Rel Abs(Diff)" , "Events", false, 2);
-        //
-        // - Make  Roc Curve
-        pltRocCompare.plotRocFisher("h_deepESM"+mycut,"Background","Signal", true, false);        
+        //plt.plotStack( "blind_njets"+mycut,         "N_{J}" ,             "Events",      true, -1, false, true);
+        //plt.plotStack( "blind_deepESM"+mycut,       "DeepESM" ,           "Events",      true, 10, false, true);
+        //plt.plotStack( "blind_deepESMMerged"+mycut, "DeepESM Bin",        "Events",      true, -1, false, true);
+        //plt.plotStack( "blind_mbl"+mycut,           "M(l,b) [GeV]",       "Events",      true, 10, false, true);
+        //plt.plotStack( "blind_ht"+mycut,            "H_{T} [GeV]",        "Events",      true, 10, false, true);
+        //plt.plotStack( "blind_lPt"+mycut,           "Lepton P_{T} [GeV]", "Num Leptons", true,  2, false, true, 0, 1000);
+        //plt.plotStack( "blind_lEta"+mycut,          "Lepton Eta",         "Num Leptons", true,  2, false, true);
+        //plt.plotStack( "blind_jPt"+mycut,           "Jet P_{T} [GeV]",    "Num Jets",    true,  2, false, true, 0, 1000);
+        //plt.plotStack( "blind_jEta"+mycut,          "Jet Eta",            "Num Jets",    true,  2, false, true);
+        //plt.plotStack( "blind_ntops"+mycut,         "N_{T}" ,             "Events",      true, -1, false, true);
+        //plt.plotStack( "blind_nb"   +mycut,         "N_{B}" ,             "Events",      true, -1, false, true);        
+        ////
+        //plt.plotNormFisher("h_deepESM"+mycut, "DeepESM" , "Norm", false, 10);
+        //plt.plotNormFisher("h_njets"+mycut, "DeepESM" , "Events", false);
+        //// - Make  Roc Curve
+        //pltRocCompare.plotRocFisher("h_deepESM"+mycut,"Background","Signal", true, false);        
     }
     //plt.plotStack( "fwm2_top6_1l_ge7j_ge1b",  "FWM2", "Events", true, -1, false, 0, 2);
     //plt.plotStack( "fwm3_top6_1l_ge7j_ge1b",  "FWM3", "Events", true, -1, false, 0, 2);
