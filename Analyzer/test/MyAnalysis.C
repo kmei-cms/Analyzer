@@ -25,6 +25,8 @@
 #include "Analyzer/Analyzer/include/Semra_Analyzer.h"
 #include "Analyzer/Analyzer/include/TwoLepAnalyzer.h"
 #include "Analyzer/Analyzer/include/Make2LInputTrees.h"
+#include "Analyzer/Analyzer/include/StealthHemispheres.h"
+
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -59,7 +61,7 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
 {
     std::cout << "Initializing..." << std::endl;
     Analyze a;
-    for(const AnaSamples::FileSummary& file : vvf)
+    for(const auto& file : vvf)
     {
         // Define what is needed per sample set
         std::cout << "Running over sample " << file.tag << std::endl;
@@ -182,6 +184,7 @@ int main(int argc, char *argv[])
         {"Semra_Analyzer",          run<Semra_Analyzer>},
         {"TwoLepAnalyzer",          run<TwoLepAnalyzer>},
         {"Make2LInputTrees",        run<Make2LInputTrees>},
+        {"StealthHemispheres",      run<StealthHemispheres>},
     }; 
 
     try

@@ -96,8 +96,8 @@ void AnalyzeBTagSF::Loop(NTupleReader& tr, double weight, int maxevents, bool is
         const auto& fisher_bin3         = tr.getVar<bool>("fisher_bin3");
         const auto& fisher_bin4         = tr.getVar<bool>("fisher_bin4");
 
-        const auto& passBlindHad        = tr.getVar<bool>("passBlindHad");
-        const auto& passBlindLep        = tr.getVar<bool>("passBlindLep");
+        const auto& passBlindHad        = tr.getVar<bool>("passBlindHad_Good");
+        const auto& passBlindLep        = tr.getVar<bool>("passBlindLep_Good");
         const auto& passTrigger         = tr.getVar<bool>("passTrigger");
         const auto& passMadHT           = tr.getVar<bool>("passMadHT");
         

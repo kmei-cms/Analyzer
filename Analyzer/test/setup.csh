@@ -1,4 +1,5 @@
 #!/bin/tcsh
+cmsenv
 
 set filelists=root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/filelists/
 set filelists_Kevin=root://cmseos.fnal.gov//store/user/lpcsusyhad/StealthStop/filelists_Kevin/
@@ -14,7 +15,6 @@ echo "|-----------------------------|"
 echo "|      Set up top tagger      |"
 echo "|-----------------------------|"
 echo ""
-cmsenv
 source ${CMSSW_BASE}/src/TopTagger/TopTagger/test/taggerSetup.csh
 echo "sourced taggerSetup"
 

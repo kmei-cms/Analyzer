@@ -27,7 +27,7 @@ Now also check out our repository if not done already:
 ```
 cd $CMSSW_BASE/src
 git clone git@github.com:StealthStop/Framework.git
-git clone git@github.com:susy2015/TopTaggerTools.git
+git -b Stealth clone git@github.com:susy2015/TopTaggerTools.git
 git clone git@github.com:susy2015/SusyAnaTools.git
 git clone git@github.com:StealthStop/Analyzer.git
 cd Analyzer/Analyzer/test
@@ -39,9 +39,9 @@ Last step is to get the cfg and model files for the top tagger and deepESM.
 ```
 cmsenv
 getTaggerCfg.sh -t DeepCombined_Stealth_RES_T_DeepAK8_T_v1.0.0 -o
-getDeepESMCfg.sh -t Keras_Tensorflow_v1.2.8 -o -s 2016
-getDeepESMCfg.sh -t Keras_Tensorflow_v3.0.4 -o -s 2017
-getDeepESMCfg.sh -t Keras_Tensorflow_v3.0.4 -o -s 2018
+getDeepESMCfg.sh -t Keras_Tensorflow_2016_v1.0 -o -s 2016
+getDeepESMCfg.sh -t Keras_Tensorflow_2017_v1.0 -o -s 2017
+getDeepESMCfg.sh -t Keras_Tensorflow_2018_v1.0 -o -s 2018
 ```
 
 Example of running MyAnalysis interactively

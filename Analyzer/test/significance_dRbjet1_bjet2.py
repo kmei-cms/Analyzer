@@ -5,7 +5,7 @@ from ROOT import TFile, gROOT
 
 def main():
     gROOT.SetBatch(True)
-    path = "condor/hadd_2016_MC_5thSlides_08.08.2019/"
+    path = "condor/hadd_2016_MC_AllUpdates.04.09.2019/"
     histoName = "h_njets_dR_bjet1_bjet2_0l_HT500_ge2b_ge2t" # 2D histo from analyzer / x axes is deltaR, y axes is njets
     rebinVal = 20 # 20
 
@@ -15,10 +15,11 @@ def main():
         #"DYJetsToLL_M-50" : info.DataSetInfo(basedir=path, fileName="2016_DYJetsToLL_M-50.root", sys=0.2, label="Background"),
         "QCD"             : info.DataSetInfo(basedir=path, fileName="2016_QCD.root",             sys=0.5, label="Background"), # changed as 0.5 
         #"ST"              : info.DataSetInfo(basedir=path, fileName="2016_ST.root" ,             sys=0.2, label="Background"),
+        #"Diboson_nonIncl" : info.DataSetInfo(basedir=path, fileName="2016_Diboson_nonIncl.root", sys=0.2, label="Background"),
         #"Diboson"         : info.DataSetInfo(basedir=path, fileName="2016_Diboson.root" ,        sys=0.2, label="Background"),
         #"TTX"             : info.DataSetInfo(basedir=path, fileName="2016_TTX.root" ,            sys=0.2, label="Background"),
         #"Triboson"        : info.DataSetInfo(basedir=path, fileName="2016_Triboson.root" ,       sys=0.2, label="Background"),    
-        "Others"          : info.DataSetInfo(basedir=path, fileName="2016_others.root",          sys=0.2, label="Background"),
+        "BG_Others"          : info.DataSetInfo(basedir=path, fileName="2016_BG_OTHER.root",          sys=0.2, label="Background"),
     }
 
     # add uncertainty also for signal for the fake signal that big peak

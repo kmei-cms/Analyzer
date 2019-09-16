@@ -10,6 +10,7 @@
 #include "TGraph.h"
 #include "TF1.h"
 #include "HistInfoCollection.h"
+#include "Framework/Framework/include/Utility.h"
 
 #include <memory>
 #include <vector>
@@ -42,7 +43,7 @@ public:
     //Plotter(std::vector<HistInfoCollection>&& chc) : chc_(chc) {}
     Plotter(std::map< std::string, HistInfoCollection >&& mhc) : mhc_(mhc) {}
 
-    void plotStack(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, int rebin = -1, const bool scale = false, const double xmin = 999.9, const double xmax = -999.9, double lumi = 36100)
+    void plotStack(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, int rebin = -1, const bool scale = false, const bool doFill = true, const double xmin = 999.9, const double xmax = -999.9, double lumi = 36100)
     {
         //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
         TH1::AddDirectory(false);
@@ -62,19 +63,20 @@ public:
         //----------------------------------------
         
         //Create TLegend
-        TLegend *leg = new TLegend(0.22, 0.76, 0.89, 0.88);
+        TLegend *leg = new TLegend(0.15, 0.75, 0.89, 0.88);
         //TLegend *leg = new TLegend(0.50, 0.56, 0.89, 0.88);
+        int nColumns = (hc_.bgVec_.size() >= 3) ? 3 : 1;
         leg->SetFillStyle(0);
         leg->SetBorderSize(0);
         leg->SetLineWidth(1);
-        leg->SetNColumns(3);
+        leg->SetNColumns(nColumns);
         leg->SetTextFont(42);
 
         // ------------------------
         // -  Setup plots
         // ------------------------
         THStack *bgStack = new THStack();
-        hc_.setUpBG(histName, rebin, bgStack, hbgSum_, true, scale);
+        hc_.setUpBG(histName, rebin, bgStack, hbgSum_, doFill, scale);
         hc_.setUpSignal(histName, rebin);
         hc_.setUpData(histName, rebin);
 
@@ -99,9 +101,10 @@ public:
         // -----------------------
         // -  Plot Background
         // -----------------------
+        TString legType = (doFill) ? "F" : "L";
         for(auto& entry : hc_.bgVec_)
         {
-            leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), "F");
+            leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), legType);
         }
         smartMax(hbgSum_.get(), leg, static_cast<TPad*>(gPad), min, max, lmax, false);
         bgStack->Draw("same");
@@ -121,13 +124,34 @@ public:
         // ------------------------
         for(const auto& entry : hc_.dataVec_)
         {
-            leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), entry.drawOptions.c_str());
+            legType = (entry.drawOptions=="hist") ? "L" : entry.drawOptions;
+            leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), legType);
             smartMax(entry.h.get(), leg, static_cast<TPad*>(gPad), min, max, lmax, true);
             entry.draw();
         }
 
         //plot legend
         leg->Draw("same");
+
+        //Calculate simple significance      
+        double sig = 0.0;
+        for(int i = 0; i < hc_.sigVec_.at(0).h->GetNbinsX(); i++)   
+        {
+            const double totBG = hbgSum_->GetBinContent(i);
+            const double nSig = hc_.sigVec_.at(0).h->GetBinContent(i);            
+            if(totBG > 0.0 && nSig > 0.0)
+            { 
+                const double s = nSig / sqrt( totBG + pow ( 0.3*totBG, 2) ) ;
+                sig = utility::addInQuad(sig, s);
+            }
+        }
+
+        TLatex significance;  
+        significance.SetNDC(true);
+        significance.SetTextAlign(11);
+        significance.SetTextFont(52);
+        significance.SetTextSize(0.030);
+        significance.DrawLatex(0.099, 0.92, ("Significance = "+std::to_string(sig)).c_str());
 
         //Draw CMS and lumi lables
         //drawLables(lumi);
@@ -160,13 +184,14 @@ public:
                                          hc_.bgVec_[0].h->GetBinLowEdge(hc_.bgVec_[0].h->GetNbinsX()) + hc_.bgVec_[0].h->GetBinWidth(hc_.bgVec_[0].h->GetNbinsX())));
             ratioDummy.h->GetXaxis()->SetTitle(xAxisLabel.c_str());
             //ratioDummy.h->GetYaxis()->SetTitle(yAxisLabel.c_str());
-            ratioDummy.h->GetYaxis()->SetTitle("Data / BG");
+            //ratioDummy.h->GetYaxis()->SetTitle("Data / BG");
+            ratioDummy.h->GetYaxis()->SetTitle("Ratio");
             ratioDummy.h->GetXaxis()->SetTickLength(0.1);
             ratioDummy.h->GetYaxis()->SetTickLength(0.045);
             ratioDummy.setupAxes(1.2, 0.5, 0.1, 0.1, 0.1, 0.1);
-            ratioDummy.h->GetYaxis()->SetNdivisions(6, 5, 0);
+            ratioDummy.h->GetYaxis()->SetNdivisions(3,5,0);
             ratioDummy.h->GetXaxis()->SetRangeUser(xmin, xmax);
-            ratioDummy.h->GetYaxis()->SetRangeUser(0.75, 1.25);
+            ratioDummy.h->GetYaxis()->SetRangeUser(0.4, 1.6);
             ratioDummy.h->SetStats(0);
             //ratioDummy.h->SetMinimum(0.5);
             //ratioDummy.h->SetMaximum(1.5);

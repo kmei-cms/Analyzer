@@ -21,8 +21,9 @@
 class histInfo
 {
 public:
-    std::string legEntry, histFile, histName, drawOptions;
+    std::string legName, legEntry, histFile, histName, drawOptions;
     int color, rebin;
+    double nEvents, scale; 
     std::shared_ptr<TH1> h;
 
     //helper function to get histogram from file and configure its optional settings
@@ -58,6 +59,11 @@ public:
         h->SetLineWidth(3);
         h->SetMarkerColor(color);
         h->SetMarkerStyle(20);
+        h->Scale(scale);
+        
+        //Get number of events and save it as a member variable
+        nEvents  = h->Integral();
+        legEntry = legName + " ("+std::to_string(int(nEvents))+") ";     
 
         // rebin the histogram if desired
         if(rebin >0) h->Rebin(rebin);
@@ -104,11 +110,11 @@ public:
         h->SetLineStyle(style);
     }
 
-    histInfo(const std::string& legEntry, const std::string& histFile, const std::string& drawOptions, const int color) : legEntry(legEntry), histFile(histFile), histName(""), drawOptions(drawOptions), color(color), rebin(-1), h(nullptr)
+    histInfo(const std::string& legName, const std::string& histFile, const std::string& drawOptions, const int color, const double scale = 1.0) : legName(legName), histFile(histFile), histName(""), drawOptions(drawOptions), color(color), scale(scale), rebin(-1), h(nullptr), nEvents(-1)
     {
     }
 
-    histInfo(TH1* h) : legEntry(h->GetName()), histFile(""), histName(h->GetName()), drawOptions(""), color(kWhite), rebin(0), h(h)
+    histInfo(TH1* h) : legName(h->GetName()), histFile(""), histName(h->GetName()), drawOptions(""), color(kWhite), scale(1.0), rebin(0), h(h), nEvents(-1)
     {
     }
 
