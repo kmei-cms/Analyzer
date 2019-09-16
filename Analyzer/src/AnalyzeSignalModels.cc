@@ -1,4 +1,4 @@
-#define "AnalyzeSignalModels_cxx"
+#define AnalyzeSignalModels_cxx
 #include "Analyzer/Analyzer/include/AnalyzeSignalModels.h"
 #include "Framework/Framework/include/Utility.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"

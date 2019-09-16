@@ -2,6 +2,8 @@
 #include "SusyAnaTools/Tools/NTupleReader.h"
 #include "SusyAnaTools/Tools/MiniTupleMaker.h"
 
+#include "Framework/Framework/include/Utility.h"
+
 #include "TopTagger/CfgParser/include/TTException.h"
 
 #include "Analyzer/Analyzer/include/AnalyzeBackground.h"
@@ -16,6 +18,7 @@
 #include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
 #include "Analyzer/Analyzer/include/AnalyzeHEM.h"
 #include "Analyzer/Analyzer/include/AnalyzeSignalModels.h"
+#include "Analyzer/Analyzer/include/AnalyzeTest.h"
 #include "Analyzer/Analyzer/include/AnalyzeLepTrigger.h"
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
@@ -177,6 +180,7 @@ int main(int argc, char *argv[])
         {"AnalyzeBTagSF",           run<AnalyzeBTagSF>},
         {"AnalyzeHEM",              run<AnalyzeHEM>},
         {"AnalyzeSignalModels",     run<AnalyzeSignalModels>},
+        {"AnalyzeTest",             run<AnalyzeTest>},
         {"CalculateBTagSF",         run<CalculateBTagSF>},
         {"CalculateSFMean",         run<CalculateSFMean>},
         {"MakeMiniTree",            run<MakeMiniTree>},
@@ -191,15 +195,22 @@ int main(int argc, char *argv[])
 
     try
     {
+        bool foundAnalyzer = false;
         for(auto& pair : AnalyzerPairVec)
         {
             if(pair.first==analyzer) 
             {
                 std::cout<<"Running the " << analyzer << " Analyzer" <<std::endl;
                 pair.second(vvf,startFile,nFiles,maxEvts,outfile,isQuiet,analyzer); 
+                foundAnalyzer = true;
             }
         }
 
+        if (!foundAnalyzer)
+        {
+            std::cout << utility::color("ERROR: The analyzer \"" + analyzer + "\" is not an analyzer option! Please add it to the MyAnalysis.C list.", "red") << std::endl; 
+        
+        }
         outfile->Close();
     }
     catch(const std::string e)
