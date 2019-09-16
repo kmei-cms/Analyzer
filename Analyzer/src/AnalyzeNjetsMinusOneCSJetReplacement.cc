@@ -632,7 +632,7 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
                newtr.registerDerivedVar("MET", MET);
                newtr.registerDerivedVar("METPhi", METPhi);
            
-               MakeMVAVariables makeMVAVariables(false,"",false,false);
+               MakeMVAVariables makeMVAVariables(false,"","GoodJets_pt30",false,false);
                makeMVAVariables(newtr);
                DeepEventShape deepEventShape("DeepEventShape.cfg", "keras_frozen.pb", "Info", false);
                deepEventShape(newtr);

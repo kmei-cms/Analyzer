@@ -89,55 +89,57 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
 {
     while( tr.getNextEvent() )
     {
-        const auto& MET                  = tr.getVar<double>("MET");
-        const auto& METPhi               = tr.getVar<double>("METPhi");
-        const auto& ntops                = tr.getVar<int>("ntops");
-        const auto& ntops_3jet           = tr.getVar<int>("ntops_3jet");
-        const auto& ntops_2jet           = tr.getVar<int>("ntops_2jet");
-        const auto& ntops_1jet           = tr.getVar<int>("ntops_1jet");
-        const auto& runtype              = tr.getVar<std::string>("runtype");     
-        const auto& filetag              = tr.getVar<std::string>("filetag");
-        const auto& NJet                 = tr.getVar<int>("NJets");
-        const auto& NGoodJets_pt30       = tr.getVar<int>("NGoodJets_pt30");
-        const auto& Jets                 = tr.getVec<TLorentzVector>("Jets");
-        const auto& GoodJets_pt30        = tr.getVec<bool>("GoodJets_pt30");
-        const auto& NGoodJets_pt45       = tr.getVar<int>("NGoodJets_pt45");
-        const auto& NGoodBJets_pt30      = tr.getVar<int>("NGoodBJets_pt30");
-        const auto& NGoodBJets_pt45      = tr.getVar<int>("NGoodBJets_pt45");
-        const auto& NGoodMuons           = tr.getVar<int>("NGoodMuons");
-        const auto& NGoodElectrons       = tr.getVar<int>("NGoodElectrons");
-        const auto& NGoodLeptons         = tr.getVar<int>("NGoodLeptons");
-        const auto& GoodLeptons          = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
-        const auto& HT_trigger_pt30      = tr.getVar<double>("HT_trigger_pt30");
-        const auto& JetID                = tr.getVar<bool>("JetID");
-        const auto& passTrigger          = tr.getVar<bool>("passTrigger");
-        const auto& passTriggerMC        = tr.getVar<bool>("passTriggerMC");
-        const auto& passMadHT            = tr.getVar<bool>("passMadHT");
-        const auto& passBaseline1l_Good  = tr.getVar<bool>("passBaseline1l_Good");
-        const auto& passBaseline1e1m     = tr.getVar<bool>("passBaseline1e1m_Good");
-        const auto& Mbl                  = tr.getVar<double>("Mbl");
-        const auto& MblVec               = tr.getVec<double>("MblVec");
-        const auto& passBlind            = tr.getVar<bool>("passBlindLep_Good");            
-        const auto& deepESM_val          = tr.getVar<double>("deepESM_val");
-        const auto& deepESM_bin1         = tr.getVar<bool>("deepESM_bin1");
-        const auto& deepESM_bin2         = tr.getVar<bool>("deepESM_bin2");
-        const auto& deepESM_bin3         = tr.getVar<bool>("deepESM_bin3");
-        const auto& deepESM_bin4         = tr.getVar<bool>("deepESM_bin4");
-        const auto& deepESM_binNum       = tr.getVar<int>("deepESM_binNum");
-        const auto& fwm2_top6            = tr.getVar<double>("fwm2_top6");
-        const auto& fwm3_top6            = tr.getVar<double>("fwm3_top6");
-        const auto& fwm4_top6            = tr.getVar<double>("fwm4_top6");
-        const auto& fwm5_top6            = tr.getVar<double>("fwm5_top6");
-        const auto& fwm6_top6            = tr.getVar<double>("fwm6_top6");
-        const auto& fwm7_top6            = tr.getVar<double>("fwm7_top6");
-        const auto& fwm8_top6            = tr.getVar<double>("fwm8_top6");
-        const auto& fwm9_top6            = tr.getVar<double>("fwm9_top6");
-        const auto& fwm10_top6           = tr.getVar<double>("fwm10_top6");
-        const auto& jmt_ev0_top6         = tr.getVar<double>("jmt_ev0_top6");
-        const auto& jmt_ev1_top6         = tr.getVar<double>("jmt_ev1_top6");
-        const auto& jmt_ev2_top6         = tr.getVar<double>("jmt_ev2_top6");
-        const auto& Jets_cm_top6         = tr.getVec<TLorentzVector>("Jets_cm_top6");
-        const auto& eventCounter         = tr.getVar<int>("eventCounter");
+        const auto& MET                       = tr.getVar<double>("MET");
+        const auto& METPhi                    = tr.getVar<double>("METPhi");
+        const auto& ntops                     = tr.getVar<int>("ntops");
+        const auto& runtype                   = tr.getVar<std::string>("runtype");     
+        const auto& filetag                   = tr.getVar<std::string>("filetag");
+        const auto& Jets                      = tr.getVec<TLorentzVector>("Jets");
+        const auto& GoodJets_pt30             = tr.getVec<bool>("GoodJets_pt30");
+        const auto& NJet                      = tr.getVar<int>("NJets");
+        const auto& NGoodJets_pt30            = tr.getVar<int>("NGoodJets_pt30");
+        const auto& NNonIsoMuonJets_pt30      = tr.getVar<int>("NNonIsoMuonJets_pt30");
+        const auto& NGoodBJets_pt30           = tr.getVar<int>("NGoodBJets_pt30");
+        const auto& NGoodMuons                = tr.getVar<int>("NGoodMuons");
+        const auto& NGoodElectrons            = tr.getVar<int>("NGoodElectrons");
+        const auto& NGoodLeptons              = tr.getVar<int>("NGoodLeptons");
+        const auto& GoodLeptons               = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
+        const auto& HT_trigger_pt30           = tr.getVar<double>("HT_trigger_pt30");
+        const auto& HT_NonIsoMuon_pt30        = tr.getVar<double>("HT_NonIsoMuon_pt30");
+        const auto& JetID                     = tr.getVar<bool>("JetID");
+        const auto& passTrigger               = tr.getVar<bool>("passTrigger");
+        const auto& passTriggerMC             = tr.getVar<bool>("passTriggerMC");
+        const auto& passMETFilters            = tr.getVar<bool>("passMETFilters");
+        const auto& passMadHT                 = tr.getVar<bool>("passMadHT");
+        const auto& passBaseline1l_Good       = tr.getVar<bool>("passBaseline1l_Good");
+        const auto& passBaseline1e1m          = tr.getVar<bool>("passBaseline1e1m_Good");
+        const auto& passBaselineGoodOffline1l = tr.getVar<bool>("passBaselineGoodOffline1l");
+        const auto& passBaseline1l_NonIsoMuon = tr.getVar<bool>("passBaseline1l_NonIsoMuon");
+        const auto& passHEMVeto               = tr.getVar<bool>("passHEMVeto");
+        const auto& Mbl                       = tr.getVar<double>("Mbl");
+        const auto& MblVec                    = tr.getVec<double>("MblVec");
+        const auto& passBlind                 = tr.getVar<bool>("passBlindLep_Good");            
+        const auto& deepESM_val               = tr.getVar<double>("deepESM_val");
+        const auto& deepESM_valNonIsoMuon     = tr.getVar<double>("deepESM_valNonIsoMuon");
+        const auto& deepESM_bin1              = tr.getVar<bool>("deepESM_bin1");
+        const auto& deepESM_bin2              = tr.getVar<bool>("deepESM_bin2");
+        const auto& deepESM_bin3              = tr.getVar<bool>("deepESM_bin3");
+        const auto& deepESM_bin4              = tr.getVar<bool>("deepESM_bin4");
+        const auto& deepESM_binNum            = tr.getVar<int>("deepESM_binNum");
+        const auto& fwm2_top6                 = tr.getVar<double>("fwm2_top6");
+        const auto& fwm3_top6                 = tr.getVar<double>("fwm3_top6");
+        const auto& fwm4_top6                 = tr.getVar<double>("fwm4_top6");
+        const auto& fwm5_top6                 = tr.getVar<double>("fwm5_top6");
+        const auto& fwm6_top6                 = tr.getVar<double>("fwm6_top6");
+        const auto& fwm7_top6                 = tr.getVar<double>("fwm7_top6");
+        const auto& fwm8_top6                 = tr.getVar<double>("fwm8_top6");
+        const auto& fwm9_top6                 = tr.getVar<double>("fwm9_top6");
+        const auto& fwm10_top6                = tr.getVar<double>("fwm10_top6");
+        const auto& jmt_ev0_top6              = tr.getVar<double>("jmt_ev0_top6");
+        const auto& jmt_ev1_top6              = tr.getVar<double>("jmt_ev1_top6");
+        const auto& jmt_ev2_top6              = tr.getVar<double>("jmt_ev2_top6");
+        const auto& Jets_cm_top6              = tr.getVec<TLorentzVector>("Jets_cm_top6");
+        const auto& eventCounter              = tr.getVar<int>("eventCounter");
 
         // ------------------------
         // -- Print event number
@@ -148,7 +150,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // ------------------------
         // -- Define weight
         // ------------------------
-        double weight = 1.0, eventweight = 1.0, leptonweight = 1.0, bTagWeight = 1.0, prefiringScaleFactor = 1.0, pileupWeight = 1.0, htDerivedweight = 1.0;
+        double weight = 1.0, weightNoHT = 1.0, eventweight = 1.0, leptonweight = 1.0, bTagWeight = 1.0, prefiringScaleFactor = 1.0, pileupWeight = 1.0, htDerivedweight = 1.0;
         double topPtScaleFactor = 1.0, FSRUp = 1.0, FSRDown = 1.0, FSRUp_2 = 1.0, FSRDown_2 = 1.0;
         if(runtype == "MC")
         {
@@ -167,6 +169,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
             prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
             
+            weightNoHT *= eventweight*leptonweight*bTagWeight*prefiringScaleFactor*pileupWeight;
             weight *= eventweight*leptonweight*bTagWeight*prefiringScaleFactor*pileupWeight*htDerivedweight;
         }
 
@@ -188,69 +191,36 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // -------------------------------
         // -- Define cuts
         // -------------------------------
-        bool pass_general         = passTriggerMC && passTrigger && passMadHT && passBlind;
-        bool pass_0l              = NGoodLeptons == 0;
-        bool pass_1l              = NGoodLeptons == 1;
-        bool pass_ht              = HT_trigger_pt30 > 300;
-        bool pass_MBL             = (50 < Mbl && Mbl < 250);
-        bool pass_1e_1m = false;
-        if(NGoodLeptons == 2)
-            pass_1e_1m = GoodLeptons[0].first != GoodLeptons[1].first;
-        bool pass_njet_pt30       = NGoodJets_pt30 >= 7;
-        bool pass_njet_pt30_1btag = NGoodBJets_pt30 >= 1;
-        bool pass_njet_pt30_2btag = NGoodBJets_pt30 >= 2;
-        bool pass_1e              = false;
-        bool pass_1m              = false;
+        bool pass_general    = passTriggerMC && passTrigger && passMadHT && passBlind && passMETFilters;
+        bool pass_0l         = NGoodLeptons == 0;
+        bool pass_1l         = NGoodLeptons == 1;
+        bool pass_ht         = HT_trigger_pt30 > 300;
+        bool pass_MBL        = (50 < Mbl && Mbl < 250);
+        bool pass_1e_1m      = (NGoodLeptons == 2) ? GoodLeptons[0].first != GoodLeptons[1].first : false;
+        bool pass_njet_pt30  = NGoodJets_pt30 >= 7;
+        bool pass_1btag_pt30 = NGoodBJets_pt30 >= 1;
+        bool pass_2btag_pt30 = NGoodBJets_pt30 >= 2;
+        bool pass_1e         = false;
+        bool pass_1m         = false;
+        bool pass_lBarrel    = false;
         if(pass_1l)
         { 
             if(GoodLeptons[0].first == "e") pass_1e = true;
             if(GoodLeptons[0].first == "m") pass_1m = true;
+            pass_lBarrel = abs( GoodLeptons[0].second.Eta() ) <= 1.2;
         }
         bool pass_5to6njet_pt30 = (NGoodJets_pt30 == 5 || NGoodJets_pt30 == 6);
 
-        bool passBaseline1l_AllJets = JetID                   &&
-                                      HT_trigger_pt30 > 300   &&
-                                      passMadHT               &&
-                                      passTrigger             &&
-                                      passTriggerMC           &&
-                                      passBlind               &&
-                                      NGoodBJets_pt30 >= 1    &&
-                                      (50 < Mbl && Mbl < 250) &&
+        bool passBaseline1l_AllJets = passBaselineGoodOffline1l &&
+                                      passTrigger               &&
+                                      passTriggerMC             &&
+                                      passBlind                 &&
             (
                 ((runtype != "Data" || filetag.find("Data_SingleMuon")     != std::string::npos) && NGoodMuons == 1     && NGoodElectrons == 0)
                                                                                      ||
                 ((runtype != "Data" || filetag.find("Data_SingleElectron") != std::string::npos) && NGoodElectrons == 1 && NGoodMuons == 0)
             );
         
-        // ---------------------------
-        // --    1 Top selection
-        // ---------------------------
-        //exactly selections
-        bool pass_1t    = ntops==1;
-        bool pass_1t_d1 = pass_1t && deepESM_bin1, pass_1t_d2 = pass_1t && deepESM_bin2, pass_1t_d3 = pass_1t && deepESM_bin3, pass_1t_d4 = pass_1t && deepESM_bin4;
-
-        bool pass_1t1 = pass_1t && ntops_1jet==1;
-        bool pass_1t2 = pass_1t && ntops_2jet==1;
-        bool pass_1t3 = pass_1t && ntops_3jet==1;
-        bool pass_1t2or3 = pass_1t2 or pass_1t3;
-
-        bool pass_1t1_d1 = pass_1t1 && deepESM_bin1, pass_1t1_d2 = pass_1t1 && deepESM_bin2, pass_1t1_d3 = pass_1t1 && deepESM_bin3, pass_1t1_d4 = pass_1t1 && deepESM_bin4;
-        bool pass_1t2_d1 = pass_1t2 && deepESM_bin1, pass_1t2_d2 = pass_1t2 && deepESM_bin2, pass_1t2_d3 = pass_1t2 && deepESM_bin3, pass_1t2_d4 = pass_1t2 && deepESM_bin4;
-        bool pass_1t3_d1 = pass_1t3 && deepESM_bin1, pass_1t3_d2 = pass_1t3 && deepESM_bin2, pass_1t3_d3 = pass_1t3 && deepESM_bin3, pass_1t3_d4 = pass_1t3 && deepESM_bin4;
-        bool pass_1t2or3_d1 = pass_1t2or3 && deepESM_bin1, pass_1t2or3_d2 = pass_1t2or3 && deepESM_bin2, pass_1t2or3_d3 = pass_1t2or3 && deepESM_bin3, pass_1t2or3_d4 = pass_1t2or3 && deepESM_bin4;
-
-        //at least selections
-        bool pass_ge1t    = ntops>=1;
-        bool pass_ge1t_d1 = pass_ge1t && deepESM_bin1, pass_ge1t_d2 = pass_ge1t && deepESM_bin2, pass_ge1t_d3 = pass_ge1t && deepESM_bin3, pass_ge1t_d4 = pass_ge1t && deepESM_bin4;
-
-        bool pass_ge1t1 = pass_ge1t && ntops_1jet>=1;
-        bool pass_ge1t2 = pass_ge1t && ntops_2jet>=1;
-        bool pass_ge1t3 = pass_ge1t && ntops_3jet>=1;
-
-        bool pass_ge1t1_d1 = pass_ge1t1 && deepESM_bin1, pass_ge1t1_d2 = pass_ge1t1 && deepESM_bin2, pass_ge1t1_d3 = pass_ge1t1 && deepESM_bin3, pass_ge1t1_d4 = pass_ge1t1 && deepESM_bin4;
-        bool pass_ge1t2_d1 = pass_ge1t2 && deepESM_bin1, pass_ge1t2_d2 = pass_ge1t2 && deepESM_bin2, pass_ge1t2_d3 = pass_ge1t2 && deepESM_bin3, pass_ge1t2_d4 = pass_ge1t2 && deepESM_bin4;
-        bool pass_ge1t3_d1 = pass_ge1t3 && deepESM_bin1, pass_ge1t3_d2 = pass_ge1t3 && deepESM_bin2, pass_ge1t3_d3 = pass_ge1t3 && deepESM_bin3, pass_ge1t3_d4 = pass_ge1t3 && deepESM_bin4;
-
         // ------------------------------------------------
         // --  Temporary Home of the W+Jets Control Region
         // ------------------------------------------------
@@ -303,17 +273,14 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {""                                , pass_general                                                                             },
             {"_1l"                             , pass_general && pass_1l && pass_ht                                                       },
             {"_1l_ge7j"                        , pass_general && pass_1l && pass_ht && pass_njet_pt30 && JetID                            },
-            {"_1l_ge1b"                        , pass_general && pass_1l && pass_ht && pass_njet_pt30_1btag && JetID                      },
-            {"_1l_ge2b"                        , pass_general && pass_1l && pass_ht && pass_njet_pt30_2btag && JetID                      },
-            {"_1l_0b_ge300ht_50to110mt_ge30MET", pass_general && passBaseline1l_WCR                                                       },
-            {"_1l_0b_ge300ht_50to110mt_ge30MET_even", pass_general && passBaseline1l_WCR && evenEvent                                     },
-            {"_1l_0b_ge300ht_50to110mt_ge30MET_odd" , pass_general && passBaseline1l_WCR && !evenEvent                                    },
-            {"_1e_1m_ge2b_le5j"                , pass_general && passBaseline1e1m                                                         },
-            {"_1l_1t"                          , pass_general && pass_1l && pass_ht && pass_1t && JetID                                   },
-            {"_1l_ge1t"                        , pass_general && pass_1l && pass_ht && pass_ge1t && JetID                                 },
-            {"_1l_ge7j_ge2b"                   , pass_general && passBaseline1l_AllJets && pass_njet_pt30_2btag                           },
-            {"_1l_ge7j_ge1b_noMbl"             , pass_general && pass_1l && pass_ht && pass_njet_pt30 && pass_njet_pt30_1btag && JetID    },
+            {"_1l_ge1b"                        , pass_general && pass_1l && pass_ht && pass_1btag_pt30 && JetID                           },
+            {"_1l_ge2b"                        , pass_general && pass_1l && pass_ht && pass_2btag_pt30 && JetID                           },
+            {"_1l_ge7j_ge2b"                   , pass_general && passBaseline1l_AllJets && pass_2btag_pt30                                },
+            {"_1l_ge7j_ge1b_noMbl"             , pass_general && pass_1l && pass_ht && pass_njet_pt30 && pass_1btag_pt30 && JetID         },
             {"_1l_ge7j_ge1b"                   , pass_general && passBaseline1l_Good                                                      },                         
+            {"_1l_ge7j_ge1b_HEM"               , pass_general && passBaseline1l_Good && passHEMVeto                                       },
+            {"_1l_ge7j_ge1b_lBarrel"           , pass_general && passBaseline1l_Good && pass_lBarrel                                      },
+            {"_1l_ge7j_ge1b_lEndCap"           , pass_general && passBaseline1l_Good && !pass_lBarrel                                     },
             {"_1e_ge7j_ge1b"                   , pass_general && passBaseline1l_Good && pass_1e                                           },                         
             {"_1m_ge7j_ge1b"                   , pass_general && passBaseline1l_Good && pass_1m                                           },                         
             {"_1l_ge7j_ge1b_d1"                , pass_general && passBaseline1l_Good && deepESM_bin1                                      },                         
@@ -335,103 +302,67 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"_1l_13j_ge1b"                    , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 13                              },
             {"_1l_14j_ge1b"                    , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 14                              },
             {"_1l_15j_ge1b"                    , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 15                              },
-            {"_1l_ge7j_ge1b_1t"                , pass_general && passBaseline1l_Good && pass_1t                                           },
-            {"_1l_ge7j_ge1b_1t_d1"             , pass_general && passBaseline1l_Good && pass_1t_d1                                        },
-            {"_1l_ge7j_ge1b_1t_d2"             , pass_general && passBaseline1l_Good && pass_1t_d2                                        }, 
-            {"_1l_ge7j_ge1b_1t_d3"             , pass_general && passBaseline1l_Good && pass_1t_d3                                        }, 
-            {"_1l_ge7j_ge1b_1t_d4"             , pass_general && passBaseline1l_Good && pass_1t_d4                                        },
-            {"_1l_ge7j_ge1b_ge1t"              , pass_general && passBaseline1l_Good && pass_ge1t                                         },
-            {"_1l_ge7j_ge1b_ge1t_d1"           , pass_general && passBaseline1l_Good && pass_ge1t_d1                                      },
-            {"_1l_ge7j_ge1b_ge1t_d2"           , pass_general && passBaseline1l_Good && pass_ge1t_d2                                      }, 
-            {"_1l_ge7j_ge1b_ge1t_d3"           , pass_general && passBaseline1l_Good && pass_ge1t_d3                                      }, 
-            {"_1l_ge7j_ge1b_ge1t_d4"           , pass_general && passBaseline1l_Good && pass_ge1t_d4                                      },
             {"_1l_5j_ge1b_htCorr"              , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 5                            },
             {"_1l_6j_ge1b_htCorr"              , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 6                            },
             {"_1l_7j_ge1b_htCorr"              , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 7                               },
-            
-            {"_1l_ge7j_ge1b_1t1"               , pass_general && passBaseline1l_Good && pass_1t1                                          },
-            {"_1l_ge7j_ge1b_1t2"               , pass_general && passBaseline1l_Good && pass_1t2                                          },
-            {"_1l_ge7j_ge1b_1t3"               , pass_general && passBaseline1l_Good && pass_1t3                                          },
-            {"_1l_ge7j_ge1b_1t2or3"            , pass_general && passBaseline1l_Good && pass_1t2or3                                       },
-            {"_1l_ge7j_ge1b_1t1_d1"            , pass_general && passBaseline1l_Good && pass_1t1_d1                                       },
-            {"_1l_ge7j_ge1b_1t1_d2"            , pass_general && passBaseline1l_Good && pass_1t1_d2                                       },
-            {"_1l_ge7j_ge1b_1t1_d3"            , pass_general && passBaseline1l_Good && pass_1t1_d3                                       },
-            {"_1l_ge7j_ge1b_1t1_d4"            , pass_general && passBaseline1l_Good && pass_1t1_d4                                       },
-            {"_1l_ge7j_ge1b_1t2_d1"            , pass_general && passBaseline1l_Good && pass_1t2_d1                                       },
-            {"_1l_ge7j_ge1b_1t2_d2"            , pass_general && passBaseline1l_Good && pass_1t2_d2                                       },
-            {"_1l_ge7j_ge1b_1t2_d3"            , pass_general && passBaseline1l_Good && pass_1t2_d3                                       },
-            {"_1l_ge7j_ge1b_1t2_d4"            , pass_general && passBaseline1l_Good && pass_1t2_d4                                       },
-            {"_1l_ge7j_ge1b_1t3_d1"            , pass_general && passBaseline1l_Good && pass_1t3_d1                                       },
-            {"_1l_ge7j_ge1b_1t3_d2"            , pass_general && passBaseline1l_Good && pass_1t3_d2                                       },
-            {"_1l_ge7j_ge1b_1t3_d3"            , pass_general && passBaseline1l_Good && pass_1t3_d3                                       },
-            {"_1l_ge7j_ge1b_1t3_d4"            , pass_general && passBaseline1l_Good && pass_1t3_d4                                       },
-            {"_1l_ge7j_ge1b_1t2or3_d1"         , pass_general && passBaseline1l_Good && pass_1t2or3_d1                                    },
-            {"_1l_ge7j_ge1b_1t2or3_d2"         , pass_general && passBaseline1l_Good && pass_1t2or3_d2                                    },
-            {"_1l_ge7j_ge1b_1t2or3_d3"         , pass_general && passBaseline1l_Good && pass_1t2or3_d3                                    },
-            {"_1l_ge7j_ge1b_1t2or3_d4"         , pass_general && passBaseline1l_Good && pass_1t2or3_d4                                    },
-            {"_1l_ge7j_ge1b_ge1t1"             , pass_general && passBaseline1l_Good && pass_ge1t1                                        },
-            {"_1l_ge7j_ge1b_ge1t2"             , pass_general && passBaseline1l_Good && pass_ge1t2                                        },
-            {"_1l_ge7j_ge1b_ge1t3"             , pass_general && passBaseline1l_Good && pass_ge1t3                                        },
-            {"_1l_ge7j_ge1b_ge1t1_d1"          , pass_general && passBaseline1l_Good && pass_ge1t1_d1                                     },
-            {"_1l_ge7j_ge1b_ge1t1_d2"          , pass_general && passBaseline1l_Good && pass_ge1t1_d2                                     },
-            {"_1l_ge7j_ge1b_ge1t1_d3"          , pass_general && passBaseline1l_Good && pass_ge1t1_d3                                     },
-            {"_1l_ge7j_ge1b_ge1t1_d4"          , pass_general && passBaseline1l_Good && pass_ge1t1_d4                                     },
-            {"_1l_ge7j_ge1b_ge1t2_d1"          , pass_general && passBaseline1l_Good && pass_ge1t2_d1                                     },
-            {"_1l_ge7j_ge1b_ge1t2_d2"          , pass_general && passBaseline1l_Good && pass_ge1t2_d2                                     },
-            {"_1l_ge7j_ge1b_ge1t2_d3"          , pass_general && passBaseline1l_Good && pass_ge1t2_d3                                     },
-            {"_1l_ge7j_ge1b_ge1t2_d4"          , pass_general && passBaseline1l_Good && pass_ge1t2_d4                                     },
-            {"_1l_ge7j_ge1b_ge1t3_d1"          , pass_general && passBaseline1l_Good && pass_ge1t3_d1                                     },
-            {"_1l_ge7j_ge1b_ge1t3_d2"          , pass_general && passBaseline1l_Good && pass_ge1t3_d2                                     },
-            {"_1l_ge7j_ge1b_ge1t3_d3"          , pass_general && passBaseline1l_Good && pass_ge1t3_d3                                     },
-            {"_1l_ge7j_ge1b_ge1t3_d4"          , pass_general && passBaseline1l_Good && pass_ge1t3_d4                                     },                                                 
+            {"_1l_8j_ge1b_htCorr"              , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 8                               },
+
+            {"_1l_0b_ge300ht_50to110mt_ge30MET"     , pass_general && passBaseline1l_WCR                                                  },
+            {"_1l_0b_ge300ht_50to110mt_ge30MET_even", pass_general && passBaseline1l_WCR && evenEvent                                     },
+            {"_1l_0b_ge300ht_50to110mt_ge30MET_odd" , pass_general && passBaseline1l_WCR && !evenEvent                                    },
+            {"_1e_1m_ge2b_le5j"                     , pass_general && passBaseline1e1m                                                    },
+            {"_passQCDCR"                           , passBaseline1l_NonIsoMuon                                                           },
         };
 
         std::vector<TH1DInfo> histInfos = {
-            {    "h_njets",         20,   0.0,   20.0},
-            {"blind_njets",         20,   0.0,   20.0},
-            {"h_ngjets",            20,   0.0,   20.0},
-            {"h_ngjets_pt30",       20,   0.0,   20.0},
-            {    "h_ntops",         10,   0.0,   10.0},
-            {"blind_ntops",         10,   0.0,   10.0},
-            {    "h_nb",            10,   0.0,   10.0},
-            {"blind_nb",            10,   0.0,   10.0},
-            {    "h_deepESM",      200,   0.0,    1.0},
-            {"blind_deepESM",      200,   0.0,    1.0},
-            {    "h_deepESMMerged",  4,   0.5,    4.5},
-            {"blind_deepESMMerged",  4,   0.5,    4.5},
-            {    "h_ht",           300,   0.0, 3000.0},
-            {"blind_ht",           300,   0.0, 3000.0},
-            {    "h_mbl",          300,   0.0,  300.0},
-            {"blind_mbl",          300,   0.0,  300.0},
-            {    "h_lPt",          200,   0.0, 2000.0},
-            {"blind_lPt",          200,   0.0, 2000.0},
-            {    "h_lEta",         100,  -6.0,    6.0},
-            {"blind_lEta",         100,  -6.0,    6.0},
-            {    "h_jPt",          200,   0.0, 2000.0},
-            {"blind_jPt",          200,   0.0, 2000.0},
-            {    "h_jEta",         100,  -6.0,    6.0},
-            {"blind_jEta",         100,  -6.0,    6.0},
-            {    "h_allMbl",       300,   0.0,  300.0},            
-            {"blind_allMbl",       300,   0.0,  300.0},
-            {"h_weight",               200,  -5.0, 5.0},
-            {"h_leptonweight",         200,  -5.0, 5.0},
-            {"h_pileupWeight",         200,  -5.0, 5.0},
-            {"h_bTagWeight",           200,  -5.0, 5.0},
-            {"h_htDerivedweight",      200,  -5.0, 5.0},
-            {"h_prefiringScaleFactor", 200,  -5.0, 5.0},
-            {"h_FSRUp",                200,  -5.0, 5.0},
-            {"h_FSRUp_2",              200,  -5.0, 5.0},
-            {"h_FSRDown",              200,  -5.0, 5.0},
-            {"h_FSRDown_2",            200,  -5.0, 5.0},
+            {    "h_njets",             20,   0.0,   20.0},
+            {"blind_njets",             20,   0.0,   20.0},
+            {    "h_njetsQCDCR",        20,   0.0,   20.0},
+            {    "h_ngjets",            20,   0.0,   20.0},
+            {    "h_ngjets_pt30",       20,   0.0,   20.0},
+            {    "h_ntops",             10,   0.0,   10.0},
+            {"blind_ntops",             10,   0.0,   10.0},
+            {    "h_nb",                10,   0.0,   10.0},
+            {"blind_nb",                10,   0.0,   10.0},
+            {    "h_deepESM",          200,   0.0,    1.0},
+            {"blind_deepESM",          200,   0.0,    1.0},
+            {    "h_deepESMQCDCR",     200,   0.0,    1.0},
+            {    "h_deepESMMerged",      4,   0.5,    4.5},
+            {"blind_deepESMMerged",      4,   0.5,    4.5},
+            {    "h_ht",               300,   0.0, 3000.0},
+            {    "h_htQCDCR",          300,   0.0, 3000.0},
+            {"blind_ht",               300,   0.0, 3000.0},
+            {    "h_mbl",              300,   0.0,  300.0},
+            {"blind_mbl",              300,   0.0,  300.0},
+            {    "h_lPt",              200,   0.0, 2000.0},
+            {"blind_lPt",              200,   0.0, 2000.0},
+            {    "h_lEta",             200,  -6.0,    6.0},
+            {"blind_lEta",             200,  -6.0,    6.0},
+            {    "h_jPt",              200,   0.0, 2000.0},
+            {"blind_jPt",              200,   0.0, 2000.0},
+            {    "h_jEta",             200,  -6.0,    6.0},
+            {"blind_jEta",             200,  -6.0,    6.0},
+            {    "h_allMbl",           300,   0.0,  300.0},            
+            {"blind_allMbl",           300,   0.0,  300.0},
+            {"h_weight",               200,  -5.0,    5.0},
+            {"h_leptonweight",         200,  -5.0,    5.0},
+            {"h_pileupWeight",         200,  -5.0,    5.0},
+            {"h_bTagWeight",           200,  -5.0,    5.0},
+            {"h_htDerivedweight",      200,  -5.0,    5.0},
+            {"h_prefiringScaleFactor", 200,  -5.0,    5.0},
         };
 
         std::vector<TH2DInfo> hist2DInfos = {
-            {    "h_njets_deepESM", 15, 0,   15, 200,  0.0, 1.0},
-            {"blind_njets_deepESM", 15, 0,   15, 200,  0.0, 1.0},
-            {    "h_njets_mbl",     15, 0,   15, 300,  0.0, 300},
-            {"blind_njets_mbl",     15, 0,   15, 300,  0.0, 300},
-            {    "h_ht_deepESM",   300, 0, 3000, 200,  0.0, 1.0},
-            {"blind_ht_deepESM",   300, 0, 3000, 200,  0.0, 1.0},
+            {    "h_njets_deepESM", 15,    0,   15, 200,   0.0,   1.0},
+            {"blind_njets_deepESM", 15,    0,   15, 200,   0.0,   1.0},
+            {    "h_njets_mbl",     15,    0,   15, 300,   0.0, 300.0},
+            {"blind_njets_mbl",     15,    0,   15, 300,   0.0, 300.0},
+            {    "h_ht_deepESM",   300,    0, 3000, 200,   0.0,   1.0},
+            {"blind_ht_deepESM",   300,    0, 3000, 200,   0.0,   1.0},
+            {    "h_lEta_lPhi",    200, -6.0,  6.0, 200,  -3.2,   3.2},
+            {"blind_lEta_lPhi",    200, -6.0,  6.0, 200,  -3.2,   3.2},
+            {    "h_jEta_jPhi",    200, -6.0,  6.0, 200,  -3.2,   3.2},
+            {"blind_jEta_jPhi",    200, -6.0,  6.0, 200,  -3.2,   3.2},
         };
 
         std::vector<TH2DProfileInfo> hist2DProfileInfos = {
@@ -452,15 +383,18 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             if(kv.second)
             {
                 double w = weight;
-                if(kv.first.find("50to110mt") != std::string::npos) w = eventweight*leptonweight*bTagWeight*prefiringScaleFactor*pileupWeight;
+                if(kv.first.find("50to110mt") != std::string::npos || kv.first.find("htCorr") != std::string::npos) w = weightNoHT;
                 my_histos["h_njets"               +kv.first]->Fill(NGoodJets_pt30, w);
                 my_histos["h_ngjets"              +kv.first]->Fill(NGenJets, eventweight);
                 my_histos["h_ngjets_pt30"         +kv.first]->Fill(NGenJets_pt30, eventweight);
+                my_histos["h_njetsQCDCR"          +kv.first]->Fill(NNonIsoMuonJets_pt30, weightNoHT);
                 my_histos["h_ntops"               +kv.first]->Fill(ntops, w);
                 my_histos["h_nb"                  +kv.first]->Fill(NGoodBJets_pt30, w);
                 my_histos["h_deepESM"             +kv.first]->Fill(deepESM_val, w);
+                my_histos["h_deepESMQCDCR"        +kv.first]->Fill(deepESM_valNonIsoMuon, weightNoHT);
                 my_histos["h_deepESMMerged"       +kv.first]->Fill(deepESM_binNum, w);
                 my_histos["h_ht"                  +kv.first]->Fill(HT_trigger_pt30, w);
+                my_histos["h_htQCDCR"             +kv.first]->Fill(HT_NonIsoMuon_pt30, weightNoHT);
                 my_histos["h_mbl"                 +kv.first]->Fill(Mbl, w);
                 my_histos["h_weight"              +kv.first]->Fill(weight, w);
                 my_histos["h_leptonweight"        +kv.first]->Fill(leptonweight, w);
@@ -468,14 +402,11 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_histos["h_bTagWeight"          +kv.first]->Fill(bTagWeight, w);
                 my_histos["h_htDerivedweight"     +kv.first]->Fill(htDerivedweight, w);
                 my_histos["h_prefiringScaleFactor"+kv.first]->Fill(prefiringScaleFactor, w);
-                my_histos["h_FSRUp"               +kv.first]->Fill(FSRUp);
-                my_histos["h_FSRDown"             +kv.first]->Fill(FSRDown);
-                my_histos["h_FSRUp_2"             +kv.first]->Fill(FSRUp_2);
-                my_histos["h_FSRDown_2"           +kv.first]->Fill(FSRDown_2);
                 for(const auto& l : GoodLeptons)
                 {
                     my_histos["h_lPt"+kv.first]->Fill(l.second.Pt(), w);
                     my_histos["h_lEta"+kv.first]->Fill(l.second.Eta(), w);
+                    my_2d_histos["h_lEta_lPhi"+kv.first]->Fill(l.second.Eta(), l.second.Phi(), w);
                 }
                 for(const auto& mbl : MblVec)
                 {
@@ -486,6 +417,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                     if(!GoodJets_pt30[j]) continue;
                     my_histos["h_jPt"+kv.first]->Fill(Jets.at(j).Pt(), w);
                     my_histos["h_jEta"+kv.first]->Fill(Jets.at(j).Eta(), w);
+                    my_2d_histos["h_jEta_jPhi"+kv.first]->Fill(Jets.at(j).Eta(), Jets.at(j).Phi(), w);
                 }
                 my_2d_histos["h_njets_deepESM"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, w);
                 my_2d_histos["h_njets_mbl"+kv.first]->Fill(NGoodJets_pt30, Mbl, w);
@@ -505,6 +437,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                     {
                         my_histos["blind_lPt"+kv.first]->Fill(l.second.Pt(), w);
                         my_histos["blind_lEta"+kv.first]->Fill(l.second.Eta(), w);
+                        my_2d_histos["blind_lEta_lPhi"+kv.first]->Fill(l.second.Eta(), l.second.Phi(), w);
                     }
                     for(const auto& mbl : MblVec)
                     {
@@ -515,6 +448,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                         if(!GoodJets_pt30[j]) continue;
                         my_histos["blind_jPt"+kv.first]->Fill(Jets.at(j).Pt(), w);
                         my_histos["blind_jEta"+kv.first]->Fill(Jets.at(j).Eta(), w);
+                        my_2d_histos["blind_jEta_jPhi"+kv.first]->Fill(Jets.at(j).Eta(), Jets.at(j).Phi(), w);
                     }
                     my_2d_histos["blind_njets_deepESM"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, w);
                     my_2d_histos["blind_njets_mbl"+kv.first]->Fill(NGoodJets_pt30, Mbl, w);

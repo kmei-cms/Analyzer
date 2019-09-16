@@ -10,6 +10,7 @@
 #include "TGraph.h"
 #include "TF1.h"
 #include "HistInfoCollection.h"
+#include "Framework/Framework/include/Utility.h"
 
 #include <memory>
 #include <vector>
@@ -62,7 +63,7 @@ public:
         //----------------------------------------
         
         //Create TLegend
-        TLegend *leg = new TLegend(0.22, 0.76, 0.89, 0.88);
+        TLegend *leg = new TLegend(0.15, 0.75, 0.89, 0.88);
         //TLegend *leg = new TLegend(0.50, 0.56, 0.89, 0.88);
         int nColumns = (hc_.bgVec_.size() >= 3) ? 3 : 1;
         leg->SetFillStyle(0);
@@ -131,6 +132,26 @@ public:
 
         //plot legend
         leg->Draw("same");
+
+        //Calculate simple significance      
+        double sig = 0.0;
+        for(int i = 0; i < hc_.sigVec_.at(0).h->GetNbinsX(); i++)   
+        {
+            const double totBG = hbgSum_->GetBinContent(i);
+            const double nSig = hc_.sigVec_.at(0).h->GetBinContent(i);            
+            if(totBG > 0.0 && nSig > 0.0)
+            { 
+                const double s = nSig / sqrt( totBG + pow ( 0.3*totBG, 2) ) ;
+                sig = utility::addInQuad(sig, s);
+            }
+        }
+
+        TLatex significance;  
+        significance.SetNDC(true);
+        significance.SetTextAlign(11);
+        significance.SetTextFont(52);
+        significance.SetTextSize(0.030);
+        significance.DrawLatex(0.099, 0.92, ("Significance = "+std::to_string(sig)).c_str());
 
         //Draw CMS and lumi lables
         //drawLables(lumi);
