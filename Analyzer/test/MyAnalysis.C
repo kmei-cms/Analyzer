@@ -14,7 +14,8 @@
 #include "Analyzer/Analyzer/include/AnalyzeNjetsMinusOneCSFillDijetHists.h"
 #include "Analyzer/Analyzer/include/AnalyzeNjetsMinusOneCSJetReplacement.h"
 #include "Analyzer/Analyzer/include/AnalyzeStealthTopTagger.h"
-#include "Analyzer/Analyzer/include/AnalyzeTest.h"
+#include "Analyzer/Analyzer/include/AnalyzeHEM.h"
+#include "Analyzer/Analyzer/include/AnalyzeSignalModels.h"
 #include "Analyzer/Analyzer/include/AnalyzeLepTrigger.h"
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
@@ -174,7 +175,8 @@ int main(int argc, char *argv[])
         {"AnalyzeLepTrigger",       run<AnalyzeLepTrigger>},
         {"AnalyzeStealthTopTagger", run<AnalyzeStealthTopTagger>},
         {"AnalyzeBTagSF",           run<AnalyzeBTagSF>},
-        {"AnalyzeTest",             run<AnalyzeTest>},
+        {"AnalyzeHEM",              run<AnalyzeHEM>},
+        {"AnalyzeSignalModels",     run<AnalyzeSignalModels>},
         {"CalculateBTagSF",         run<CalculateBTagSF>},
         {"CalculateSFMean",         run<CalculateSFMean>},
         {"MakeMiniTree",            run<MakeMiniTree>},
