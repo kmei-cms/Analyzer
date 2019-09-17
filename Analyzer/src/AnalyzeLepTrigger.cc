@@ -199,7 +199,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         //-- Do the Muon Trigger Efficiency on the Single Electron Dataset and MC
         //-----------------------------------------------------------------------
         
-        if( (filetag.find("SingleElectron") != std::string::npos || filetag.find("EGamma") != std::string::npos || runtype == "MC") ) {
+        if( (filetag.find("SingleElectron") != std::string::npos || runtype == "MC") ) {
 
             if ( NGoodElectrons >= 1 ) { 
                 bool foundElectronPt40 = containsGoodLepton(Electrons, GoodElectrons, 40);
