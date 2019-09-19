@@ -18,7 +18,7 @@
 #include "TopTagger/CfgParser/include/TTException.h"
 #include "Framework/Framework/include/SetUpTopTagger.h"
 
-AnalyzeTopTagger::AnalyzeTopTagger() : hists("histos") 
+AnalyzeTopTagger::AnalyzeTopTagger() : hists("histos"), histNjet7("Njet7"), histNjet8("Njet8"), histNjet9("Njet9"), histNjet10("Njet10"), histNjet11("Njet11"), histNjet12("Njet12"), histNjet13("Njet13"), histNjet14("Njet14"), histNjet15("Njet15") 
 {
     InitHistos();
 }
@@ -87,11 +87,105 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         // -----------------------------------------
         // -- Fill the fake rate study histograms 
         // -----------------------------------------
+        // ----------------
+        // -- baseline cuts
+        // ----------------
         std::vector<std::pair<std::string, bool>> ttbarCuts =
         {   
             {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
         };
-        hists.fillWithCutFlow(ttbarCuts, tr, weight, &rand); 
+        hists.fillWithCutFlow(ttbarCuts, tr, weight, &rand);
+
+        // -----------------------------
+        // -- baseline cuts + Njets == 7
+        // -----------------------------
+        std::vector<std::pair<std::string, bool>> Njets7 =
+        {
+            {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
+            {"Njet7"         , NGoodJets_pt45 == 7},
+        };
+        histNjet7.fillWithCutFlow(Njets7, tr, weight, &rand);
+
+        // -----------------------------
+        // -- baseline cuts + Njets == 8
+        // -----------------------------
+        std::vector<std::pair<std::string, bool>> Njets8 =
+        {
+            {"passBaseline0l", passBaseline0l && pass_ge1dRbjets}, 
+            {"Njet8"         , NGoodJets_pt45 == 8},
+        };
+        histNjet8.fillWithCutFlow(Njets8, tr, weight, &rand);
+
+        // -----------------------------
+        // -- baseline cuts + Njets == 9
+        // -----------------------------
+        std::vector<std::pair<std::string, bool>> Njets9 =
+        {
+            {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
+            {"Njet9"         , NGoodJets_pt45 == 9},
+        };
+        histNjet9.fillWithCutFlow(Njets9, tr, weight, &rand);        
+        
+        // ------------------------------
+        // -- baseline cuts + Njets == 10
+        // ------------------------------
+        std::vector<std::pair<std::string, bool>> Njets10 =
+        {
+            {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
+            {"Njet10"        , NGoodJets_pt45 == 10},
+        };
+        histNjet10.fillWithCutFlow(Njets10, tr, weight, &rand);
+
+        // ------------------------------
+        // -- baseline cuts + Njets == 11
+        // ------------------------------    
+        std::vector<std::pair<std::string, bool>> Njets11 =
+        {
+            {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
+            {"Njet11"        , NGoodJets_pt45 == 11},
+        };
+        histNjet11.fillWithCutFlow(Njets11, tr, weight, &rand);
+
+        // ------------------------------
+        // -- baseline cuts + Njets == 12
+        // ------------------------------
+        std::vector<std::pair<std::string, bool>> Njets12 =
+        {
+            {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
+            {"Njet12"        , NGoodJets_pt45 == 12},
+        };
+        histNjet12.fillWithCutFlow(Njets12, tr, weight, &rand);
+
+        // ------------------------------
+        // -- baseline cuts + Njets == 13
+        // ------------------------------
+        std::vector<std::pair<std::string, bool>> Njets13 =
+        {
+            {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
+            {"Njet13"        , NGoodJets_pt45 == 13},
+        };
+        histNjet13.fillWithCutFlow(Njets13, tr, weight, &rand);   
+ 
+        // ------------------------------    
+        // -- baseline cuts + Njets == 14
+        // ------------------------------
+        std::vector<std::pair<std::string, bool>> Njets14 =
+        {
+            {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
+            {"Njet10"        , NGoodJets_pt45 == 14},
+        };
+        histNjet14.fillWithCutFlow(Njets14, tr, weight, &rand);
+        
+        // ------------------------------
+        // -- baseline cuts + Njets == 15
+        // ------------------------------
+        std::vector<std::pair<std::string, bool>> Njets14 =
+        {
+            {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
+            {"Njet15"        , NGoodJets_pt45 == 15},
+        };
+        histNjet14.fillWithCutFlow(Njets14, tr, weight, &rand);
+
     }
 }
 
