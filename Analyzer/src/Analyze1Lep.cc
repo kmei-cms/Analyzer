@@ -94,6 +94,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& ntops                     = tr.getVar<int>("ntops");
         const auto& runtype                   = tr.getVar<std::string>("runtype");     
         const auto& filetag                   = tr.getVar<std::string>("filetag");
+        const auto& RunNum                    = tr.getVar<UInt_t>("RunNum");
         const auto& Jets                      = tr.getVec<TLorentzVector>("Jets");
         const auto& GoodJets_pt30             = tr.getVec<bool>("GoodJets_pt30");
         const auto& NJet                      = tr.getVar<int>("NJets");
@@ -150,8 +151,8 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // ------------------------
         // -- Define weight
         // ------------------------
-        double weight = 1.0, weightNoHT = 1.0, eventweight = 1.0, leptonweight = 1.0, bTagWeight = 1.0, prefiringScaleFactor = 1.0, pileupWeight = 1.0, htDerivedweight = 1.0;
-        double topPtScaleFactor = 1.0, FSRUp = 1.0, FSRDown = 1.0, FSRUp_2 = 1.0, FSRDown_2 = 1.0;
+        double weight=1.0, weightNoHT=1.0, weightQCDCR=1.0, eventweight=1.0, leptonweight=1.0, bTagWeight=1.0, prefiringScaleFactor=1.0, pileupWeight=1.0, htDerivedweight=1.0;
+        double topPtScaleFactor=1.0, FSRUp=1.0, FSRDown=1.0, FSRUp_2=1.0, FSRDown_2=1.0;
         if(runtype == "MC")
         {
             // Define Lumi weight
@@ -161,6 +162,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             
             const auto& eleLepWeight = tr.getVar<double>("totGoodElectronSF");
             const auto& muLepWeight  = tr.getVar<double>("totGoodMuonSF");
+            const auto& muNonIso     = tr.getVar<double>("totNonIsoMuonSF");
             leptonweight = eleLepWeight*muLepWeight;
             
             pileupWeight = tr.getVar<double>("puWeightCorr");
@@ -169,6 +171,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
             prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
             
+            weightQCDCR *= eventweight*muNonIso*prefiringScaleFactor*pileupWeight;
             weightNoHT *= eventweight*leptonweight*bTagWeight*prefiringScaleFactor*pileupWeight;
             weight *= eventweight*leptonweight*bTagWeight*prefiringScaleFactor*pileupWeight*htDerivedweight;
         }
@@ -210,7 +213,8 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             pass_lBarrel = abs( GoodLeptons[0].second.Eta() ) <= 1.2;
         }
         bool pass_5to6njet_pt30 = (NGoodJets_pt30 == 5 || NGoodJets_pt30 == 6);
-
+        bool pass_workingHEMRuns = (runtype == "Data") ? (RunNum < 319077) : true;
+        
         bool passBaseline1l_AllJets = passBaselineGoodOffline1l &&
                                       passTrigger               &&
                                       passTriggerMC             &&
@@ -270,48 +274,54 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // -------------------                        
         const std::map<std::string, bool> cut_map_1l 
         {
-            {""                                , pass_general                                                                             },
-            {"_1l"                             , pass_general && pass_1l && pass_ht                                                       },
-            {"_1l_ge7j"                        , pass_general && pass_1l && pass_ht && pass_njet_pt30 && JetID                            },
-            {"_1l_ge1b"                        , pass_general && pass_1l && pass_ht && pass_1btag_pt30 && JetID                           },
-            {"_1l_ge2b"                        , pass_general && pass_1l && pass_ht && pass_2btag_pt30 && JetID                           },
-            {"_1l_ge7j_ge2b"                   , pass_general && passBaseline1l_AllJets && pass_2btag_pt30                                },
-            {"_1l_ge7j_ge1b_noMbl"             , pass_general && pass_1l && pass_ht && pass_njet_pt30 && pass_1btag_pt30 && JetID         },
-            {"_1l_ge7j_ge1b"                   , pass_general && passBaseline1l_Good                                                      },                         
-            {"_1l_ge7j_ge1b_HEM"               , pass_general && passBaseline1l_Good && passHEMVeto                                       },
-            {"_1l_ge7j_ge1b_lBarrel"           , pass_general && passBaseline1l_Good && pass_lBarrel                                      },
-            {"_1l_ge7j_ge1b_lEndCap"           , pass_general && passBaseline1l_Good && !pass_lBarrel                                     },
-            {"_1e_ge7j_ge1b"                   , pass_general && passBaseline1l_Good && pass_1e                                           },                         
-            {"_1m_ge7j_ge1b"                   , pass_general && passBaseline1l_Good && pass_1m                                           },                         
-            {"_1l_ge7j_ge1b_d1"                , pass_general && passBaseline1l_Good && deepESM_bin1                                      },                         
-            {"_1l_ge7j_ge1b_d2"                , pass_general && passBaseline1l_Good && deepESM_bin2                                      },                         
-            {"_1l_ge7j_ge1b_d3"                , pass_general && passBaseline1l_Good && deepESM_bin3                                      },                         
-            {"_1l_ge7j_ge1b_d4"                , pass_general && passBaseline1l_Good && deepESM_bin4                                      },                         
-            {"_1l_1j_ge1b"                     , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 1                            },
-            {"_1l_2j_ge1b"                     , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 2                            },
-            {"_1l_3j_ge1b"                     , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 3                            },
-            {"_1l_4j_ge1b"                     , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 4                            },
-            {"_1l_5j_ge1b"                     , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 5                            },
-            {"_1l_6j_ge1b"                     , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 6                            },
-            {"_1l_7j_ge1b"                     , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 7                               },
-            {"_1l_8j_ge1b"                     , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 8                               },
-            {"_1l_9j_ge1b"                     , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 9                               },
-            {"_1l_10j_ge1b"                    , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 10                              },
-            {"_1l_11j_ge1b"                    , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 11                              },
-            {"_1l_12j_ge1b"                    , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 12                              },
-            {"_1l_13j_ge1b"                    , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 13                              },
-            {"_1l_14j_ge1b"                    , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 14                              },
-            {"_1l_15j_ge1b"                    , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 15                              },
-            {"_1l_5j_ge1b_htCorr"              , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 5                            },
-            {"_1l_6j_ge1b_htCorr"              , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 6                            },
-            {"_1l_7j_ge1b_htCorr"              , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 7                               },
-            {"_1l_8j_ge1b_htCorr"              , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 8                               },
+            {""                                      , pass_general                                                                             },
+            {"_1l_HT300"                             , pass_general && pass_1l && pass_ht                                                       },
+            {"_1l_HT300_ge7j"                        , pass_general && pass_1l && pass_ht && pass_njet_pt30  && JetID                           },
+            {"_1l_HT300_ge1b"                        , pass_general && pass_1l && pass_ht && pass_1btag_pt30 && JetID                           },
+            {"_1l_HT300_ge2b"                        , pass_general && pass_1l && pass_ht && pass_2btag_pt30 && JetID                           },
+            {"_1l_HT300_ge7j_ge1b"                   , pass_general && pass_1l && pass_ht && pass_njet_pt30  && pass_1btag_pt30 && JetID        },
+            {"_1l_HT300_ge1b_Mbl"                    , pass_general && passBaseline1l_AllJets                                                   },
+            {"_1l_HT300_ge7j_ge1b_Mbl"               , pass_general && passBaseline1l_Good                                                      },                         
+            {"_1l_HT300_ge7j_ge2b_Mbl"               , pass_general && passBaseline1l_Good && pass_2btag_pt30                                   },
+            {"_1l_HT300_ge7j_ge1b_Mbl_HEM"           , pass_general && passBaseline1l_Good && passHEMVeto                                       },
+            {"_1l_HT300_ge7j_ge1b_Mbl_wHEM"          , pass_general && passBaseline1l_Good && pass_workingHEMRuns                               },
+            {"_1l_HT300_ge7j_ge1b_Mbl_nwHEM"         , pass_general && passBaseline1l_Good && !pass_workingHEMRuns                              },
+            {"_1l_HT300_ge7j_ge1b_Mbl_HEM_wHEM"      , pass_general && passBaseline1l_Good && passHEMVeto && pass_workingHEMRuns                },
+            {"_1l_HT300_ge7j_ge1b_Mbl_HEM_nwHEM"     , pass_general && passBaseline1l_Good && passHEMVeto && !pass_workingHEMRuns               },
+            {"_1l_HT300_ge7j_ge1b_Mbl_lBarrel"       , pass_general && passBaseline1l_Good && pass_lBarrel                                      },
+            {"_1l_HT300_ge7j_ge1b_Mbl_lEndCap"       , pass_general && passBaseline1l_Good && !pass_lBarrel                                     },
+            {"_1e_HT300_ge7j_ge1b_Mbl"               , pass_general && passBaseline1l_Good && pass_1e                                           },                         
+            {"_1m_HT300_ge7j_ge1b_Mbl"               , pass_general && passBaseline1l_Good && pass_1m                                           },                         
+            {"_1l_HT300_ge7j_ge1b_Mbl_d1"            , pass_general && passBaseline1l_Good && deepESM_bin1                                      },                         
+            {"_1l_HT300_ge7j_ge1b_Mbl_d2"            , pass_general && passBaseline1l_Good && deepESM_bin2                                      },                         
+            {"_1l_HT300_ge7j_ge1b_Mbl_d3"            , pass_general && passBaseline1l_Good && deepESM_bin3                                      },                         
+            {"_1l_HT300_ge7j_ge1b_Mbl_d4"            , pass_general && passBaseline1l_Good && deepESM_bin4                                      },                         
+            {"_1l_HT300_1j_ge1b_Mbl"                 , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 1                            },
+            {"_1l_HT300_2j_ge1b_Mbl"                 , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 2                            },
+            {"_1l_HT300_3j_ge1b_Mbl"                 , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 3                            },
+            {"_1l_HT300_4j_ge1b_Mbl"                 , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 4                            },
+            {"_1l_HT300_5j_ge1b_Mbl"                 , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 5                            },
+            {"_1l_HT300_6j_ge1b_Mbl"                 , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 6                            },
+            {"_1l_HT300_7j_ge1b_Mbl"                 , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 7                               },
+            {"_1l_HT300_8j_ge1b_Mbl"                 , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 8                               },
+            {"_1l_HT300_9j_ge1b_Mbl"                 , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 9                               },
+            {"_1l_HT300_10j_ge1b_Mbl"                , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 10                              },
+            {"_1l_HT300_11j_ge1b_Mbl"                , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 11                              },
+            {"_1l_HT300_12j_ge1b_Mbl"                , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 12                              },
+            {"_1l_HT300_13j_ge1b_Mbl"                , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 13                              },
+            {"_1l_HT300_14j_ge1b_Mbl"                , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 14                              },
+            {"_1l_HT300_15j_ge1b_Mbl"                , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 15                              },
+            {"_1l_HT300_5j_ge1b_Mbl_htCorr"          , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 5                            },
+            {"_1l_HT300_6j_ge1b_Mbl_htCorr"          , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 == 6                            },
+            {"_1l_HT300_7j_ge1b_Mbl_htCorr"          , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 7                               },
+            {"_1l_HT300_8j_ge1b_Mbl_htCorr"          , pass_general && passBaseline1l_Good && NGoodJets_pt30 == 8                               },
 
-            {"_1l_0b_ge300ht_50to110mt_ge30MET"     , pass_general && passBaseline1l_WCR                                                  },
-            {"_1l_0b_ge300ht_50to110mt_ge30MET_even", pass_general && passBaseline1l_WCR && evenEvent                                     },
-            {"_1l_0b_ge300ht_50to110mt_ge30MET_odd" , pass_general && passBaseline1l_WCR && !evenEvent                                    },
-            {"_1e_1m_ge2b_le5j"                     , pass_general && passBaseline1e1m                                                    },
-            {"_passQCDCR"                           , passBaseline1l_NonIsoMuon                                                           },
+            {"_1l_0b_ge300ht_50to110mt_ge30MET"      , pass_general && passBaseline1l_WCR                                                       },
+            {"_1l_0b_ge300ht_50to110mt_ge30MET_even" , pass_general && passBaseline1l_WCR && evenEvent                                          },
+            {"_1l_0b_ge300ht_50to110mt_ge30MET_odd"  , pass_general && passBaseline1l_WCR && !evenEvent                                         },
+            {"_1e_1m_ge2b_le5j"                      , pass_general && passBaseline1e1m                                                         },
+            {"_passQCDCR"                            , passBaseline1l_NonIsoMuon                                                                },
+            {"_passQCDCR_noEle"                      , passBaseline1l_NonIsoMuon &&  NGoodElectrons == 0                                        },
         };
 
         std::vector<TH1DInfo> histInfos = {
@@ -384,17 +394,18 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {
                 double w = weight;
                 if(kv.first.find("50to110mt") != std::string::npos || kv.first.find("htCorr") != std::string::npos) w = weightNoHT;
+                if(kv.first.find("passQCDCR")) w = weightQCDCR;
                 my_histos["h_njets"               +kv.first]->Fill(NGoodJets_pt30, w);
                 my_histos["h_ngjets"              +kv.first]->Fill(NGenJets, eventweight);
                 my_histos["h_ngjets_pt30"         +kv.first]->Fill(NGenJets_pt30, eventweight);
-                my_histos["h_njetsQCDCR"          +kv.first]->Fill(NNonIsoMuonJets_pt30, weightNoHT);
+                my_histos["h_njetsQCDCR"          +kv.first]->Fill(NNonIsoMuonJets_pt30, w);
                 my_histos["h_ntops"               +kv.first]->Fill(ntops, w);
                 my_histos["h_nb"                  +kv.first]->Fill(NGoodBJets_pt30, w);
                 my_histos["h_deepESM"             +kv.first]->Fill(deepESM_val, w);
-                my_histos["h_deepESMQCDCR"        +kv.first]->Fill(deepESM_valNonIsoMuon, weightNoHT);
+                my_histos["h_deepESMQCDCR"        +kv.first]->Fill(deepESM_valNonIsoMuon, w);
                 my_histos["h_deepESMMerged"       +kv.first]->Fill(deepESM_binNum, w);
                 my_histos["h_ht"                  +kv.first]->Fill(HT_trigger_pt30, w);
-                my_histos["h_htQCDCR"             +kv.first]->Fill(HT_NonIsoMuon_pt30, weightNoHT);
+                my_histos["h_htQCDCR"             +kv.first]->Fill(HT_NonIsoMuon_pt30, w);
                 my_histos["h_mbl"                 +kv.first]->Fill(Mbl, w);
                 my_histos["h_weight"              +kv.first]->Fill(weight, w);
                 my_histos["h_leptonweight"        +kv.first]->Fill(leptonweight, w);
