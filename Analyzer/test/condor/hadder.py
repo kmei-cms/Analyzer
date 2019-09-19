@@ -15,7 +15,7 @@ def red(string):
      CEND = "\033[0m"
      return CRED + str(string) + CEND
 
-def checkNumEvents(nEvents, rootFile):
+def checkNumEvents(nEvents, rootFile, sampleCollection, log):
     try:
          f = ROOT.TFile.Open(rootFile)
          try:
@@ -24,9 +24,11 @@ def checkNumEvents(nEvents, rootFile):
               nPos = h.GetBinContent(2)
               diff = float(nEvents)-(nPos-nNeg)
               if abs(diff) > 5.0:
+                   message = "Error: SampleSet: "+sampleCollection+" nEvents:  "+nEvents+" EventCounter nEvents: "+str(nPos-nNeg)+" = "+str(nPos)+" "+str(-nNeg)
+                   log.append(message)
                    print red("------------------------------------------------------------------------------------------------")
                    print red("Num events in \"EventCounter\" doesn't match the number in \"sampleSet.cfg\"")
-                   print red("Error: SampleSet nEvents: "), red(nEvents), red("EventCounter nEvents: "), red(nPos-nNeg), red("="), red(nPos), red(-nNeg)
+                   print red(message)
                    print red("------------------------------------------------------------------------------------------------")
          except:
               print red("Error: Problem opening and reading from histogram \"EventCounter\"")
@@ -35,6 +37,8 @@ def checkNumEvents(nEvents, rootFile):
     except:
          print red("Error: Can't open rootFile: %s" % rootFile)
          pass
+
+    return log
 
 def getDataSets(inPath):
     l = glob(inPath+"/*")
@@ -81,6 +85,7 @@ def main():
         os.makedirs(outDir) 
     
     # Loop over all sample options to find files to hadd
+    log = []
     sc = SampleCollection("../sampleSets.cfg", "../sampleCollections.cfg")
     scl = sc.sampleCollectionList()
     for sampleCollection in scl:
@@ -99,7 +104,7 @@ def main():
                     outfile = "%s/%s.root" % (outDir,sample[1])
                     command = "hadd %s/%s.root %s" % (outDir, sample[1], files)
                     if not options.noHadd: system(command)
-                    checkNumEvents(nEvents=sample[2], rootFile=outfile)
+                    log = checkNumEvents(nEvents=sample[2], rootFile=outfile, sampleCollection=sampleCollection, log=log)
     
             # hadd other condor jobs
             else:
@@ -107,7 +112,7 @@ def main():
                 for sample in sl:
                     files += " " + " ".join(glob("%s/%s/MyAnalysis_%s_*.root" % (inPath, directory, sample[1])))
                     nEvents+=sample[2]
-
+    
                 outfile = "%s/%s.root" % (outDir,sampleCollection)
                 command = "hadd %s %s" % (outfile, files)
                 try:
@@ -119,9 +124,17 @@ def main():
                     command = "hadd %s/%s.root %s/%s/*" % (outDir, sampleCollection, inPath, sampleCollection)
                     if not options.noHadd: system(command)
                     pass
-
-                checkNumEvents(nEvents=nEvents, rootFile=outfile)
     
+                log = checkNumEvents(nEvents=nEvents, rootFile=outfile, sampleCollection=sampleCollection, log=log)
+    
+    #Print log of hadd at the end
+    if len(log) > 0:
+         print red("--------------------------------------------------------------------------------------")
+         print red("There was some jobs that didn't match the epected number of events: see summary below")
+         for l in log:
+              print red(l)
+         print red("--------------------------------------------------------------------------------------")
+
     if options.haddOther:
         # Hack to make the BG_OTHER.root file
         sigNttbar_old = ["AllSignal", "TT", "TTJets", "Data_SingleMuon", "Data_SingleElectron"]
