@@ -12,6 +12,8 @@
 #include <iostream>
 #include <algorithm>
 
+#include "Framework/Framework/include/Utility.h"
+
 // -----------------------------------------------------------------------------
 // smartMax FUNCTION: to keep the plot from overlapping with the legend 
 // -----------------------------------------------------------------------------
@@ -123,6 +125,12 @@ public:
         h->Draw(((noSame?"":"same " + drawOptions + " " + additionalOptions)).c_str());
     }
 
+    // add for signal plot line style
+    void setLineStyle(int style = 1)
+    {
+        h->SetLineStyle(style);
+    }
+
     // -------------------------------
     // setFillColor FUNCTION:
     // -------------------------------
@@ -172,7 +180,7 @@ public:
     // -------------------------------
     // plot FUNCTION:
     // -------------------------------   
-    void plot(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const std::string& cutlabel = "", const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 41500) // lumi 2016 = 35900, lumi 2017= 41500 
+    void plot(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const std::string& cutlabel = "", const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 59740) // lumi 2016 = 35900, lumi 2017 = 41500, lumi 2018 = 59740
     {
         //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
         TH1::AddDirectory(false);
@@ -241,6 +249,7 @@ public:
             entry.histName = histName;
             entry.rebin    = rebin;
             entry.retrieveHistogram();
+            entry.setLineStyle(2);
 
             //add histograms to TLegend
             leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), "L"); 
@@ -340,10 +349,18 @@ public:
         mark.SetTextSize(0.030);
         mark.DrawLatex(0.51, 0.89, cutlabel.c_str()); 
 
-        //Calculate simple significance      
-        const double totBG = hbgSum->Integral();
-        const double nSig = sigEntries_.at(0).nEvents;          
-        const double sig = nSig / sqrt( totBG + pow ( 0.2*totBG, 2) ) ;
+        // calculate significance bin by bin
+        double sig = 0.0;
+        for(int i = 0; i < sigEntries_.at(0).h->GetNbinsX(); i++)
+        {
+            const double totBG = hbgSum->GetBinContent(i);
+            const double nSig = sigEntries_.at(0).h->GetBinContent(i);
+            if(totBG > 0.0 && nSig > 0.0)
+            {
+                const double s = nSig / sqrt( totBG + pow ( 0.3*totBG, 2) ) ;
+                sig = utility::addInQuad(sig, s);
+            }
+        }
 
         TLatex significance;  
         significance.SetNDC(true);
@@ -366,36 +383,36 @@ public:
 
 // -----------------------------------------------------------------------------
 // Main FUNCTION 
-/// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 int main()
 {
     // entry for data
     // this uses the initializer syntax to initialize the histInfo object
     // 'leg entry'  'root file'     'draw options'  'draw color'
-    histInfo data = {"Data", "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_BG_OTHER.root", "PEX0", kBlack, false};
-    //histInfo data = {"Data", "hadd_OutputFile_2_2017/2017_BG_OTHER.root", "PEX0", kBlack, false}; 
+    histInfo data = {"Data", "condor/hadd_2018_MC_wholeTT_10thSlides_18.09.2019/2018_BG_OTHER.root", "PEX0", kBlack, false};
+    //histInfo data = {"Data", "hadd_OutputFile_2_2018/2018_BG_OTHER.root", "PEX0", kBlack, false}; 
 
     // vector summarizing background histograms to include in the plot
     std::vector<histInfo> bgEntries = {
 
-        {"T#bar{T}",        "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_TT.root",              "hist", kBlue - 7   },
-        {"WJetsToLNu",      "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_WJetsToLNu.root",      "hist", kYellow + 1 },
-        {"DYJetsToLL_M-50", "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_DYJetsToLL_M-50.root", "hist", kOrange + 2 },
-        {"QCD",             "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_QCD.root",             "hist", kGreen + 1  },
-        {"ST",              "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_ST.root",              "hist", kRed + 1    },
-        {"Diboson_nonIncl", "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_Diboson_nonIncl.root", "hist", kMagenta + 1},
-        {"Diboson",         "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_Diboson.root",         "hist", kMagenta    },
-        {"TTX",             "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_TTX.root",             "hist", kCyan + 1   },
-        {"Triboson",        "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_Triboson.root",        "hist", kGray       },
+        {"T#bar{T}",        "condor/hadd_2018_MC_wholeTT_10thSlides_18.09.2019/2018_TT.root",              "hist", kBlue - 6   },
+        {"WJetsToLNu",      "condor/hadd_2018_MC_wholeTT_10thSlides_18.09.2019/2018_WJetsToLNu.root",      "hist", kYellow + 1 },
+        {"DYJetsToLL_M-50", "condor/hadd_2018_MC_wholeTT_10thSlides_18.09.2019/2018_DYJetsToLL_M-50.root", "hist", kOrange + 2 },
+        {"QCD",             "condor/hadd_2018_MC_wholeTT_10thSlides_18.09.2019/2018_QCD.root",             "hist", kGreen + 1  },
+        {"ST",              "condor/hadd_2018_MC_wholeTT_10thSlides_18.09.2019/2018_ST.root",              "hist", kRed + 1    },
+        {"Diboson",         "condor/hadd_2018_MC_wholeTT_10thSlides_18.09.2019/2018_Diboson.root",         "hist", kMagenta + 1},
+        {"TTX",             "condor/hadd_2018_MC_wholeTT_10thSlides_18.09.2019/2018_TTX.root",             "hist", kCyan + 1   },
+        {"Triboson",        "condor/hadd_2018_MC_wholeTT_10thSlides_18.09.2019/2018_Triboson.root",        "hist", kGray       },
 
     };
 
     // vector summarizing signal histograms to include in the plot
     std::vector<histInfo> sigEntries = { 
- 
-        {"RPV m_{#tildet} = 550", "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_RPV_2t6j_mStop-550.root",        "hist", kOrange - 3}, 
-        {"RPV m_{#tildet} = 350", "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_RPV_2t6j_mStop-350.root",        "hist", kGreen + 3 },
-        {"SYY m_{#tildet} = 900", "condor/hadd_2017_MC_AllUpdates.04.09.2019/2017_StealthSYY_2t6j_mStop-900.root", "hist", kBlue + 1  },
+
+        {"RPV m_{#tildet} = 350", "condor/hadd_2018_MC_wholeTT_10thSlides_18.09.2019/2018_RPV_2t6j_mStop-350.root",        "hist", kCyan    }, 
+        {"RPV m_{#tildet} = 550", "condor/hadd_2018_MC_wholeTT_10thSlides_18.09.2019/2018_RPV_2t6j_mStop-550.root",        "hist", kMagenta },
+        {"RPV m_{#tildet} = 850", "condor/hadd_2018_MC_wholeTT_10thSlides_18.09.2019/2018_RPV_2t6j_mStop-850.root",        "hist", kRed     }, 
+        //{"SYY m_{#tildet} = 900", "condor/hadd_2018_MC_wholeTT_10thSlides_18.09.2019/2018_StealthSYY_2t6j_mStop-900.root", "hist", kRed    },
     
     };
 
@@ -404,11 +421,11 @@ int main()
 
     std::vector<std::string> cut {
 
-        "", "0l", 
+        //"", "0l", 
         
-        "0l_HT500", "0l_HT500_ge2b", "0l_HT500_ge2b_ge6j", 
+        //"0l_HT500", "0l_HT500_ge2b", "0l_HT500_ge2b_ge6j", 
  
-        "0l_HT500_ge2b_ge6j_ge2t", "0l_HT500_ge2b_ge6j_ge2t1j", "0l_HT500_ge2b_ge6j_ge2t3j", "0l_HT500_ge2b_ge6j_ge2t1j3j",
+        //"0l_HT500_ge2b_ge6j_ge2t", "0l_HT500_ge2b_ge6j_ge2t1j", "0l_HT500_ge2b_ge6j_ge2t3j", "0l_HT500_ge2b_ge6j_ge2t1j3j",
         
         "0l_HT500_ge2b_ge6j_ge2t_ge1dRbjets", "0l_HT500_ge2b_ge6j_ge2t1j_ge1dRbjets", "0l_HT500_ge2b_ge6j_ge2t3j_ge1dRbjets", "0l_HT500_ge2b_ge6j_ge2t1j3j_ge1dRbjets",
 
@@ -434,10 +451,8 @@ int main()
         plt.plot( "h_dR_top1_top2_"+cutlabel,   "#DeltaR_{t1-t2}",      "Events", true, cutlabel );
         plt.plot( "h_dR_tops_bjets_"+cutlabel,  "#DeltaR_{tops-bjets}", "Events", true, cutlabel ); 
 
-/*
-        plt.plot( "h_dR_bjet1_bjet2_"+cutlabel, "#DeltaR_{bj1-bj2}",    "Events", false, cutlabel ); // for log scale 
-        plt.plot( "h_dR_top1_top2_"+cutlabel,   "#DeltaR_{t1-t2}",      "Events", false, cutlabel );
-        plt.plot( "h_dR_tops_bjets_"+cutlabel,  "#DeltaR_{tops-bjets}", "Events", false, cutlabel );
-*/    
+        //plt.plot( "h_dR_bjet1_bjet2_"+cutlabel, "#DeltaR_{bj1-bj2}",    "Events", false, cutlabel ); // for log scale 
+        //plt.plot( "h_dR_top1_top2_"+cutlabel,   "#DeltaR_{t1-t2}",      "Events", false, cutlabel );
+        //plt.plot( "h_dR_tops_bjets_"+cutlabel,  "#DeltaR_{tops-bjets}", "Events", false, cutlabel );
     }
 }
