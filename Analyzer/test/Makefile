@@ -47,7 +47,7 @@ INCLUDESDIRS    += -I$(TENSORFLOW_DIR)/include
 #OBJS       = $(patsubst %, $(ODIR)/%, $(OBJ))
 
 
-PROGRAMS = MyAnalysis plot_0l plot_1l Stack_plot_0l Stack_plot_1l Stack_plot_2l
+PROGRAMS = MyAnalysis plot_1l Stack_plot_0l Stack_plot_1l Stack_plot_2l
 
 ANALYZERS = $(ODIR)/MiniTupleMaker.o $(ODIR)/CalculateBTagSF.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/MakeMiniTree.o $(ODIR)/AnalyzeLepTrigger.o $(ODIR)/AnalyzeTest.o $(ODIR)/AnalyzeWControlRegion.o $(ODIR)/MakeMiniTree.o $(ODIR)/MiniTupleMaker.o $(ODIR)/CalculateBTagSF.o $(ODIR)/AnalyzeBTagSF.o $(ODIR)/BTagCalibrationStandalone.o $(ODIR)/AnalyzeBackground.o $(ODIR)/AnalyzeTopTagger.o $(ODIR)/AnalyzeEventSelection.o $(ODIR)/AnalyzeEventShape.o $(ODIR)/Analyze0Lep.o $(ODIR)/Analyze1Lep.o $(ODIR)/AnalyzeNjetsMinusOneCSFillDijetHists.o $(ODIR)/AnalyzeNjetsMinusOneCSJetReplacement.o $(ODIR)/Semra_Analyzer.o $(ODIR)/TwoLepAnalyzer.o $(ODIR)/AnalyzeHEM.o $(ODIR)/AnalyzeSignalModels.o
 
@@ -137,9 +137,6 @@ $(ODIR)/%.o : $(WDIR)/%.cpp
 
 MyAnalysis: $(ODIR)/MyAnalysis.o $(HELPERS) $(ANALYZERS)
 	$(LD) $^ $(LIBSTOPTAGGER) $(LIBS) -o $@
-
-plot_0l: $(ODIR)/plot_0l.o
-	$(LD) $^ $(LIBS) -o $@
 
 plot_1l: $(ODIR)/plot_1l.o
 	$(LD) $^ $(LIBS) -o $@

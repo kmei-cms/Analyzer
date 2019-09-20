@@ -321,7 +321,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"_1l_0b_ge300ht_50to110mt_ge30MET_odd"  , pass_general && passBaseline1l_WCR && !evenEvent                                         },
             {"_1e_1m_ge2b_le5j"                      , pass_general && passBaseline1e1m                                                         },
             {"_passQCDCR"                            , passBaseline1l_NonIsoMuon                                                                },
-            {"_passQCDCR_noEle"                      , passBaseline1l_NonIsoMuon &&  NGoodElectrons == 0                                        },
         };
 
         std::vector<TH1DInfo> histInfos = {
@@ -339,9 +338,9 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {    "h_deepESMQCDCR",     200,   0.0,    1.0},
             {    "h_deepESMMerged",      4,   0.5,    4.5},
             {"blind_deepESMMerged",      4,   0.5,    4.5},
-            {    "h_ht",               300,   0.0, 3000.0},
-            {    "h_htQCDCR",          300,   0.0, 3000.0},
-            {"blind_ht",               300,   0.0, 3000.0},
+            {    "h_ht",               500,   0.0, 5000.0},
+            {    "h_htQCDCR",          500,   0.0, 5000.0},
+            {"blind_ht",               500,   0.0, 5000.0},
             {    "h_mbl",              300,   0.0,  300.0},
             {"blind_mbl",              300,   0.0,  300.0},
             {    "h_lPt",              200,   0.0, 2000.0},
