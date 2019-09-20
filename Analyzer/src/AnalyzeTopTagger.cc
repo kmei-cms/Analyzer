@@ -18,7 +18,8 @@
 #include "TopTagger/CfgParser/include/TTException.h"
 #include "Framework/Framework/include/SetUpTopTagger.h"
 
-AnalyzeTopTagger::AnalyzeTopTagger() : hists("histos"), histNjet7("Njet7"), histNjet8("Njet8"), histNjet9("Njet9"), histNjet10("Njet10"), histNjet11("Njet11"), histNjet12("Njet12"), histNjet13("Njet13"), histNjet14("Njet14"), histNjet15("Njet15") 
+AnalyzeTopTagger::AnalyzeTopTagger() : hists("histos"), histNjet7("Njet7"), histNjet8("Njet8"), histNjet9("Njet9"), histNjet10("Njet10"), histNjet11("Njet11"), 
+                                                        histNjet12("Njet12"), histNjet13("Njet13"), histNjet14("Njet14"), histNjet15("Njet15") 
 {
     InitHistos();
 }
@@ -96,6 +97,8 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         };
         hists.fillWithCutFlow(ttbarCuts, tr, weight, &rand);
 
+
+        // for MVA score distribution as a function of Njets
         // -----------------------------
         // -- baseline cuts + Njets == 7
         // -----------------------------
@@ -179,7 +182,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         // ------------------------------
         // -- baseline cuts + Njets == 15
         // ------------------------------
-        std::vector<std::pair<std::string, bool>> Njets14 =
+        std::vector<std::pair<std::string, bool>> Njets15 =
         {
             {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
             {"Njet15"        , NGoodJets_pt45 == 15},
@@ -204,6 +207,15 @@ void AnalyzeTopTagger::WriteHistos(TFile* outfile)
     }
    
     hists.save(outfile);
+    histNjet7.save(outfile);
+    histNjet8.save(outfile);
+    histNjet9.save(outfile);
+    histNjet10.save(outfile);
+    histNjet11.save(outfile);
+    histNjet12.save(outfile);
+    histNjet13.save(outfile);
+    histNjet14.save(outfile);
+    histNjet15.save(outfile);
     outfile->Write();
     outfile->Close();
 }
