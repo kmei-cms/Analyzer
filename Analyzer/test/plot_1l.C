@@ -102,7 +102,7 @@ int main()
         "_1l_ge7j_ge1b",
         "_1l_ge7j_ge1b_HEM",
         "_1l_ge7j_ge1b_lBarrel",
-        //"_1l_ge7j_ge1b_lEndCap",
+        "_1l_ge7j_ge1b_lEndCap",
         "_1e_ge7j_ge1b",
         "_1m_ge7j_ge1b",
         "_passQCDCR",
@@ -125,35 +125,35 @@ int main()
     {
         plt.plotStack( "h_njets"+mycut,         "N_{J}" ,             "Events",      true, -1, false, true);
         plt.plotStack( "h_njetsQCDCR"+mycut,    "N_{J}" ,             "Events",      true, -1, false, true);
-        //plt.plotStack( "h_deepESM"+mycut,       "DeepESM" ,           "Events",      true, 10, false, true);
-        //plt.plotStack( "h_deepESMQCDCR"+mycut,  "DeepESM" ,           "Events",      false,10, false, true);
-        //plt.plotStack( "h_deepESMMerged"+mycut, "DeepESM Bin",        "Events",      true, -1, false, true);
-        //plt.plotStack( "h_mbl"+mycut,           "M(l,b) [GeV]",       "Events",      true, 10, false, true);
-        //plt.plotStack( "h_ht"+mycut,            "H_{T} [GeV]",        "Events",      true, 10, false, true);
-        //plt.plotStack( "h_htQCDCR"+mycut,       "H_{T} [GeV]",        "Events",      true, 10, false, true);
-        //plt.plotStack( "h_lPt"+mycut,           "Lepton P_{T} [GeV]", "Num Leptons", true,  2, false, true, 0, 1000);
-        //plt.plotStack( "h_lEta"+mycut,          "Lepton Eta",         "Num Leptons", true,  2, false, true);
-        //plt.plotStack( "h_jPt"+mycut,           "Jet P_{T} [GeV]",    "Num Jets",    true,  2, false, true, 0, 1000);
-        //plt.plotStack( "h_jEta"+mycut,          "Jet Eta",            "Num Jets",    true,  2, false, true);
-        //plt.plotStack( "h_ntops"+mycut,         "N_{T}" ,             "Events",      true, -1, false, true);
-        //plt.plotStack( "h_nb"   +mycut,         "N_{B}" ,             "Events",      true, -1, false, true);        
-        ////Need these until we un blind
-        //plt.plotStack( "blind_njets"+mycut,         "N_{J}" ,             "Events",      true, -1, false, true);
-        //plt.plotStack( "blind_deepESM"+mycut,       "DeepESM" ,           "Events",      true, 10, false, true);
-        //plt.plotStack( "blind_deepESMMerged"+mycut, "DeepESM Bin",        "Events",      true, -1, false, true);
-        //plt.plotStack( "blind_mbl"+mycut,           "M(l,b) [GeV]",       "Events",      true, 10, false, true);
-        //plt.plotStack( "blind_ht"+mycut,            "H_{T} [GeV]",        "Events",      true, 10, false, true);
-        //plt.plotStack( "blind_lPt"+mycut,           "Lepton P_{T} [GeV]", "Num Leptons", true,  2, false, true, 0, 1000);
-        //plt.plotStack( "blind_lEta"+mycut,          "Lepton Eta",         "Num Leptons", true,  2, false, true);
-        //plt.plotStack( "blind_jPt"+mycut,           "Jet P_{T} [GeV]",    "Num Jets",    true,  2, false, true, 0, 1000);
-        //plt.plotStack( "blind_jEta"+mycut,          "Jet Eta",            "Num Jets",    true,  2, false, true);
-        //plt.plotStack( "blind_ntops"+mycut,         "N_{T}" ,             "Events",      true, -1, false, true);
-        //plt.plotStack( "blind_nb"   +mycut,         "N_{B}" ,             "Events",      true, -1, false, true);        
-        ////
-        //plt.plotNormFisher("h_deepESM"+mycut, "DeepESM" , "Norm", false, 10);
-        //plt.plotNormFisher("h_njets"+mycut, "DeepESM" , "Events", false);
-        //// - Make  Roc Curve
-        //pltRocCompare.plotRocFisher("h_deepESM"+mycut,"Background","Signal", true, false);        
+        plt.plotStack( "h_deepESM"+mycut,       "DeepESM" ,           "Events",      true, 10, false, true);
+        plt.plotStack( "h_deepESMQCDCR"+mycut,  "DeepESM" ,           "Events",      false,10, false, true);
+        plt.plotStack( "h_deepESMMerged"+mycut, "DeepESM Bin",        "Events",      true, -1, false, true);
+        plt.plotStack( "h_mbl"+mycut,           "M(l,b) [GeV]",       "Events",      true, 10, false, true);
+        plt.plotStack( "h_ht"+mycut,            "H_{T} [GeV]",        "Events",      true, 10, false, true);
+        plt.plotStack( "h_htQCDCR"+mycut,       "H_{T} [GeV]",        "Events",      true, 10, false, true);
+        plt.plotStack( "h_lPt"+mycut,           "Lepton P_{T} [GeV]", "Num Leptons", true,  2, false, true, 0, 1000);
+        plt.plotStack( "h_lEta"+mycut,          "Lepton Eta",         "Num Leptons", true,  2, false, true);
+        plt.plotStack( "h_jPt"+mycut,           "Jet P_{T} [GeV]",    "Num Jets",    true,  2, false, true, 0, 1000);
+        plt.plotStack( "h_jEta"+mycut,          "Jet Eta",            "Num Jets",    true,  2, false, true);
+        plt.plotStack( "h_ntops"+mycut,         "N_{T}" ,             "Events",      true, -1, false, true);
+        plt.plotStack( "h_nb"   +mycut,         "N_{B}" ,             "Events",      true, -1, false, true);        
+        //Need these until we un blind
+        plt.plotStack( "blind_njets"+mycut,         "N_{J}" ,             "Events",      true, -1, false, true);
+        plt.plotStack( "blind_deepESM"+mycut,       "DeepESM" ,           "Events",      true, 10, false, true);
+        plt.plotStack( "blind_deepESMMerged"+mycut, "DeepESM Bin",        "Events",      true, -1, false, true);
+        plt.plotStack( "blind_mbl"+mycut,           "M(l,b) [GeV]",       "Events",      true, 10, false, true);
+        plt.plotStack( "blind_ht"+mycut,            "H_{T} [GeV]",        "Events",      true, 10, false, true);
+        plt.plotStack( "blind_lPt"+mycut,           "Lepton P_{T} [GeV]", "Num Leptons", true,  2, false, true, 0, 1000);
+        plt.plotStack( "blind_lEta"+mycut,          "Lepton Eta",         "Num Leptons", true,  2, false, true);
+        plt.plotStack( "blind_jPt"+mycut,           "Jet P_{T} [GeV]",    "Num Jets",    true,  2, false, true, 0, 1000);
+        plt.plotStack( "blind_jEta"+mycut,          "Jet Eta",            "Num Jets",    true,  2, false, true);
+        plt.plotStack( "blind_ntops"+mycut,         "N_{T}" ,             "Events",      true, -1, false, true);
+        plt.plotStack( "blind_nb"   +mycut,         "N_{B}" ,             "Events",      true, -1, false, true);        
+        //
+        plt.plotNormFisher("h_deepESM"+mycut, "DeepESM" , "Norm", false, 10);
+        plt.plotNormFisher("h_njets"+mycut, "DeepESM" , "Events", false);
+        // - Make  Roc Curve
+        pltRocCompare.plotRocFisher("h_deepESM"+mycut,"Background","Signal", true, false);        
     }
     //plt.plotStack( "fwm2_top6_1l_ge7j_ge1b",  "FWM2", "Events", true, -1, false, 0, 2);
     //plt.plotStack( "fwm3_top6_1l_ge7j_ge1b",  "FWM3", "Events", true, -1, false, 0, 2);

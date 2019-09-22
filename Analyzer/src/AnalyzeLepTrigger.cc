@@ -75,6 +75,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         const auto& runtype             = tr.getVar<std::string>("runtype");
         const auto& runYear             = tr.getVar<std::string>("runYear");
         const auto& filetag             = tr.getVar<std::string>("filetag");
+        const auto& etaCut              = tr.getVar<double>("etaCut");
         const auto& GoodLeptons         = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
 
         const auto& NGoodLeptons        = tr.getVar<int>("NGoodLeptons");
@@ -153,8 +154,8 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         if( (filetag.find("SingleMuon") != std::string::npos || runtype == "MC") ) {
 
             if ( NGoodMuons >= 1 ) {
-                bool foundMuonPt35 = containsGoodLepton(Muons, GoodMuons, 35);
-                bool foundMuonPt40 = containsGoodLepton(Muons, GoodMuons, 40);
+                bool foundMuonPt35 = containsGoodLepton(Muons, GoodMuons, 35, etaCut);
+                bool foundMuonPt40 = containsGoodLepton(Muons, GoodMuons, 40, etaCut);
                 
                 //Look at the first good electron
                 int myGoodElectronIndex = goodLeptonIndex(Electrons, GoodElectrons);
@@ -202,7 +203,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         if( (filetag.find("SingleElectron") != std::string::npos || runtype == "MC") ) {
 
             if ( NGoodElectrons >= 1 ) { 
-                bool foundElectronPt40 = containsGoodLepton(Electrons, GoodElectrons, 40);
+                bool foundElectronPt40 = containsGoodLepton(Electrons, GoodElectrons, 40, etaCut);
                 
                 //Look at the first good muon
                 int myGoodMuonIndex = goodLeptonIndex(Muons, GoodMuons);

@@ -228,8 +228,7 @@ public:
             entry.histName = histName;
             entry.rebin = rebin;
             entry.retrieveHistogram();
-            entry.setLineStyle(2);
-    
+            entry.setLineStyle(2);    
         }
     }
 
