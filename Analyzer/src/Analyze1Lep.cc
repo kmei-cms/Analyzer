@@ -83,6 +83,8 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap, const st
                                                                  h2dProfile.nBinsX, h2dProfile.lowX, h2dProfile.highX, h2dProfile.nBinsY, h2dProfile.lowY, h2dProfile.highY, h2dProfile.lowZ, h2dProfile.highZ));
         }
     }
+
+    my_histos.emplace( "h_cutFlow", std::make_shared<TH1D>("h_cutFlow", "h_cutFlow", 9,0,9));    
 }
 
 void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
@@ -503,6 +505,19 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_2d_histos["Jet_cm_m_"+std::to_string(i+1)+"_njets_1l_ge7j_ge1b"]->Fill(NGoodJets_pt30, Jets_cm_top6.at(i).M(), weight);
             }
         }
+
+        // ------------
+        // -- Cut flow
+        // ------------
+        if(true) my_histos["h_cutFlow"]->Fill(0.5, weight);
+        if(true && pass_general) my_histos["h_cutFlow"]->Fill(1.5, weight);  
+        if(true && pass_general && pass_1l) my_histos["h_cutFlow"]->Fill(2.5, weight);
+        if(true && pass_general && pass_1l && pass_ht) my_histos["h_cutFlow"]->Fill(3.5, weight);
+        if(true && pass_general && pass_1l && pass_ht && JetID) my_histos["h_cutFlow"]->Fill(4.5, weight);
+        if(true && pass_general && pass_1l && pass_ht && JetID && pass_1btag_pt30) my_histos["h_cutFlow"]->Fill(5.5, weight);
+        if(true && pass_general && pass_1l && pass_ht && JetID && pass_1btag_pt30 && pass_MBL) my_histos["h_cutFlow"]->Fill(6.5, weight);
+        if(true && pass_general && pass_1l && pass_ht && JetID && pass_1btag_pt30 && pass_MBL && pass_njet_pt30) my_histos["h_cutFlow"]->Fill(7.5, weight);
+        if(true && pass_general && pass_1l && pass_ht && JetID && pass_1btag_pt30 && pass_MBL && pass_njet_pt30 && passHEMVeto) my_histos["h_cutFlow"]->Fill(8.5, weight);   
     } // end of event loop
 }
 
