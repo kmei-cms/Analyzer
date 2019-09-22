@@ -18,18 +18,19 @@ def red(string):
 def checkNumEvents(nEvents, rootFile, sampleCollection, log):
     try:
          f = ROOT.TFile.Open(rootFile)
+         f.cd()
          try:
               h = f.Get("EventCounter")
               nNeg = h.GetBinContent(1)
               nPos = h.GetBinContent(2)
-              diff = float(nEvents)-(nPos-nNeg)
+              diff = nEvents-(nPos-nNeg)
               if abs(diff) > 5.0:
-                   message = "Error: SampleSet: "+sampleCollection+" nEvents:  "+nEvents+" EventCounter nEvents: "+str(nPos-nNeg)+" = "+str(nPos)+" "+str(-nNeg)
+                   message = "Error: Sample: "+sampleCollection+" Expected nEvents:  "+str(nEvents)+" EventCounter nEvents: "+str(nPos-nNeg)+" = "+str(nPos)+" "+str(-nNeg)
                    log.append(message)
-                   print red("------------------------------------------------------------------------------------------------")
+                   print red("----------------------------------------------------------------------------------------------------------")
                    print red("Num events in \"EventCounter\" doesn't match the number in \"sampleSet.cfg\"")
                    print red(message)
-                   print red("------------------------------------------------------------------------------------------------")
+                   print red("----------------------------------------------------------------------------------------------------------")
          except:
               print red("Error: Problem opening and reading from histogram \"EventCounter\"")
               pass
@@ -42,9 +43,9 @@ def checkNumEvents(nEvents, rootFile, sampleCollection, log):
 
 def getDataSets(inPath):
     l = glob(inPath+"/*")
-    print "-------------------------------------------------------------------" 
+    print "-----------------------------------------------------------------------------" 
     print red("Warning: No dataset specified: using all directory names in input path")
-    print "-------------------------------------------------------------------\n" 
+    print "-----------------------------------------------------------------------------\n" 
     return list(s[len(inPath)+1:] for s in l)
 
 def main():
@@ -98,20 +99,21 @@ def main():
             print "-----------------------------------------------------------"
             
             # hadd signal root files
-            if sampleCollection == "AllSignal" or sampleCollection == "2016_AllSignal" or sampleCollection == "2017_AllSignal" or sampleCollection == "2018_AllSignal":
+            sampleSetsToHadd = ["AllSignal", "2016_AllSignal", "2017_AllSignal", "2018_AllSignal"]
+            if sampleCollection in sampleSetsToHadd:
                 for sample in sl:
                     files = " " + " ".join(glob("%s/%s/MyAnalysis_%s_*.root" % (inPath, directory, sample[1])))
                     outfile = "%s/%s.root" % (outDir,sample[1])
                     command = "hadd %s/%s.root %s" % (outDir, sample[1], files)
                     if not options.noHadd: system(command)
-                    log = checkNumEvents(nEvents=sample[2], rootFile=outfile, sampleCollection=sampleCollection, log=log)
+                    log = checkNumEvents(nEvents=float(sample[2]), rootFile=outfile, sampleCollection=sample[1], log=log)
     
             # hadd other condor jobs
             else:
-                nEvents=0
+                nEvents=0.0
                 for sample in sl:
                     files += " " + " ".join(glob("%s/%s/MyAnalysis_%s_*.root" % (inPath, directory, sample[1])))
-                    nEvents+=sample[2]
+                    nEvents+=float(sample[2])
     
                 outfile = "%s/%s.root" % (outDir,sampleCollection)
                 command = "hadd %s %s" % (outfile, files)
@@ -129,11 +131,11 @@ def main():
     
     #Print log of hadd at the end
     if len(log) > 0:
-         print red("--------------------------------------------------------------------------------------")
-         print red("There was some jobs that didn't match the epected number of events: see summary below")
+         print red("------------------------------------------------------------------------------------------------")
+         print red("There was some jobs that didn't match the epected number of events, see summary below")
          for l in log:
               print red(l)
-         print red("--------------------------------------------------------------------------------------")
+         print red("------------------------------------------------------------------------------------------------")
 
     if options.haddOther:
         # Hack to make the BG_OTHER.root file
