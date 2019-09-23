@@ -349,10 +349,14 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"blind_lPt",              200,   0.0, 2000.0},
             {    "h_lEta",             200,  -6.0,    6.0},
             {"blind_lEta",             200,  -6.0,    6.0},
+            {    "h_lPhi",             200,  -4.0,    4.0},
+            {"blind_lPhi",             200,  -4.0,    4.0},
             {    "h_jPt",              200,   0.0, 2000.0},
             {"blind_jPt",              200,   0.0, 2000.0},
             {    "h_jEta",             200,  -6.0,    6.0},
             {"blind_jEta",             200,  -6.0,    6.0},
+            {    "h_jPhi",             200,  -4.0,    4.0},
+            {"blind_jPhi",             200,  -4.0,    4.0},
             {    "h_allMbl",           300,   0.0,  300.0},            
             {"blind_allMbl",           300,   0.0,  300.0},
             {"h_weight",               200,  -5.0,    5.0},
@@ -418,6 +422,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 {
                     my_histos["h_lPt"+kv.first]->Fill(l.second.Pt(), w);
                     my_histos["h_lEta"+kv.first]->Fill(l.second.Eta(), w);
+                    my_histos["h_lPhi"+kv.first]->Fill(l.second.Phi(), w);
                     my_2d_histos["h_lEta_lPhi"+kv.first]->Fill(l.second.Eta(), l.second.Phi(), w);
                 }
                 for(const auto& mbl : MblVec)
@@ -429,6 +434,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                     if(!GoodJets_pt30[j]) continue;
                     my_histos["h_jPt"+kv.first]->Fill(Jets.at(j).Pt(), w);
                     my_histos["h_jEta"+kv.first]->Fill(Jets.at(j).Eta(), w);
+                    my_histos["h_jPhi"+kv.first]->Fill(Jets.at(j).Phi(), w);
                     my_2d_histos["h_jEta_jPhi"+kv.first]->Fill(Jets.at(j).Eta(), Jets.at(j).Phi(), w);
                 }
                 my_2d_histos["h_njets_deepESM"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, w);
@@ -449,6 +455,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                     {
                         my_histos["blind_lPt"+kv.first]->Fill(l.second.Pt(), w);
                         my_histos["blind_lEta"+kv.first]->Fill(l.second.Eta(), w);
+                        my_histos["blind_lPhi"+kv.first]->Fill(l.second.Phi(), w);
                         my_2d_histos["blind_lEta_lPhi"+kv.first]->Fill(l.second.Eta(), l.second.Phi(), w);
                     }
                     for(const auto& mbl : MblVec)
@@ -460,6 +467,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                         if(!GoodJets_pt30[j]) continue;
                         my_histos["blind_jPt"+kv.first]->Fill(Jets.at(j).Pt(), w);
                         my_histos["blind_jEta"+kv.first]->Fill(Jets.at(j).Eta(), w);
+                        my_histos["blind_jPhi"+kv.first]->Fill(Jets.at(j).Phi(), w);
                         my_2d_histos["blind_jEta_jPhi"+kv.first]->Fill(Jets.at(j).Eta(), Jets.at(j).Phi(), w);
                     }
                     my_2d_histos["blind_njets_deepESM"+kv.first]->Fill(NGoodJets_pt30, deepESM_val, w);
