@@ -85,6 +85,7 @@ public:
         std::string runYear, puFileName, DeepESMCfg, DeepESMCfg_NonIsoMuon, ModelFile, leptonFileName, bjetFileName, bjetCSVFileName, meanFileName;
         double Lumi, deepCSV_WP_loose, deepCSV_WP_medium, deepCSV_WP_tight;
         bool blind;
+
         if(filetag.find("2016") != std::string::npos)
         {
             runYear = "2016";
@@ -98,7 +99,7 @@ public:
             ModelFile = "keras_frozen_2016.pb";
             leptonFileName = "allInOne_leptonSF_2016.root";
             bjetFileName = "allInOne_BTagEff.root";
-            bjetCSVFileName = "DeepCSV_2016LegacySF_V1.csv";
+            bjetCSVFileName = "DeepCSV_2016LegacySF_WP_V1.csv";
             meanFileName = "allInOne_SFMean.root";
             blind = false;
         }
@@ -115,7 +116,7 @@ public:
             ModelFile = "keras_frozen_2017.pb";
             leptonFileName = "allInOne_leptonSF_2017.root";
             bjetFileName = "allInOne_BTagEff.root";
-            bjetCSVFileName = "DeepCSV_94XSF_V4_B_F.csv";
+            bjetCSVFileName = "DeepCSV_94XSF_WP_V4_B_F.csv";
             meanFileName = "allInOne_SFMean.root";
             blind = false;
         }
@@ -132,7 +133,7 @@ public:
             ModelFile = "keras_frozen_2018.pb";
             leptonFileName = "allInOne_leptonSF_2018.root";
             bjetFileName = "allInOne_BTagEff.root";
-            bjetCSVFileName = "DeepCSV_102XSF_V1.csv";
+            bjetCSVFileName = "DeepCSV_102XSF_WP_V1.csv";
             meanFileName = "allInOne_SFMean.root";
             blind = true;
         }

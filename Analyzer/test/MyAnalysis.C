@@ -71,13 +71,12 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
         std::cout << "Running over sample " << file.tag << std::endl;
         TChain* ch = new TChain( (file.treePath).c_str() );
         file.addFilesToChain(ch, startFile, nFiles);
-        NTupleReader tr(ch);
+        NTupleReader tr(ch, {"RunNum"});
         const std::string runtype = (file.tag.find("Data") != std::string::npos) ? "Data" : "MC";
         tr.registerDerivedVar("runtype",runtype);
         tr.registerDerivedVar("filetag",file.tag);
         tr.registerDerivedVar("analyzer",analyzer);
 
-        std::cout << "Starting loop (in run)" << std::endl;
         printf( "runtype: %s nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),nFiles,startFile,maxEvts ); fflush( stdout );
 
         // Define classes/functions that add variables on the fly        
@@ -85,6 +84,7 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
         c.setUp(tr);
 
         // Loop over all of the events and fill histos
+        std::cout << "Starting event loop (in run)" << std::endl;
         a.Loop(tr, 1.0, maxEvts, isQuiet);
 
         // Cleaning up dynamic memory
