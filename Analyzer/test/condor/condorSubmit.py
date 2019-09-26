@@ -63,9 +63,9 @@ def main():
                        environ["CMSSW_BASE"] + "/src/%s/test/pu_ratio.root" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/PileupHistograms_2018_69mb_pm5.root" % repo, 
                        environ["CMSSW_BASE"] + "/src/%s/test/CSVv2_Moriond17_B_H.csv" % repo,
-                       environ["CMSSW_BASE"] + "/src/%s/test/DeepCSV_102XSF_V1.csv" % repo,
-                       environ["CMSSW_BASE"] + "/src/%s/test/DeepCSV_2016LegacySF_V1.csv" % repo,
-                       environ["CMSSW_BASE"] + "/src/%s/test/DeepCSV_94XSF_V4_B_F.csv" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/DeepCSV_102XSF_WP_V1.csv" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/DeepCSV_2016LegacySF_WP_V1.csv" % repo,
+                       environ["CMSSW_BASE"] + "/src/%s/test/DeepCSV_94XSF_WP_V4_B_F.csv" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/L1prefiring_jetpt_2017BtoF.root" % repo,
                        ]
     
