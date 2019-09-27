@@ -61,6 +61,8 @@ def doOptions(histo, histoName, theMap):
                 else: histo.RebinY(options["rebin"])
             if "min" in options and "max" in options: histo.GetYaxis().SetRangeUser(options["min"],options["max"])
             if "title" in options: histo.GetYaxis().SetTitle(options["title"])
+        if axis == "Z":
+            if "min" in options and "max" in options: histo.GetZaxis().SetRangeUser(options["min"],options["max"])
 
 def prettyHisto(histo,magicFactor=1.0,magicFactor2=1.0):
     histo.GetYaxis().SetLabelSize(magicFactor*0.055); histo.GetYaxis().SetTitleSize(magicFactor*0.08); histo.GetYaxis().SetTitleOffset(0.6/magicFactor)
@@ -142,7 +144,7 @@ if __name__ == '__main__':
             data1.SetTitle(""); data2.SetTitle("")
             data1.SetContour(255); data2.SetContour(255)
 
-            data1.Draw("COLZ")
+            data1.Draw("COLZ TEXT E")
 
             c1.SaveAs("%s/%s_HEM.pdf"%(outpath,name))
 
@@ -153,7 +155,7 @@ if __name__ == '__main__':
             ROOT.gPad.SetLeftMargin(magicMargins["L"])
             ROOT.gPad.SetRightMargin(magicMargins["R"])
 
-            data2.Draw("COLZ")
+            data2.Draw("COLZ TEXT E")
 
             c2.SaveAs("%s/%s_NOHEM.pdf"%(outpath,name))
 
@@ -171,9 +173,9 @@ if __name__ == '__main__':
 
                 data1.Divide(data2)
 
-                data1.GetZaxis().SetRangeUser(0.6,2.0)
+                data1.GetZaxis().SetRangeUser(0.5,2.0)
                 
-                data1.Draw("COLZ E TEXT")
+                data1.Draw("COLZ TEXT E")
                 c1.SaveAs("%s/%s_ratio.pdf"%(outpath,name))
 
         elif "TH1" in mapPFAhistos.values()[0][name].ClassName():
@@ -184,7 +186,7 @@ if __name__ == '__main__':
                 PadFactor = (YMax-YMin) / (RatioYMax-RatioYMin)
 
                 c1 = ROOT.TCanvas("%s"%(name), "%s"%(name), XCANVAS, YCANVAS); 
-                c1.Divide(1,2); c1.cd(1); ROOT.gPad.SetLogz(); ROOT.gPad.SetPad(XMin, YMin, XMax, YMax)
+                c1.Divide(1,2); c1.cd(1); ROOT.gPad.SetLogy(); ROOT.gPad.SetLogz(); ROOT.gPad.SetPad(XMin, YMin, XMax, YMax)
 
                 ROOT.gPad.SetGridy(); ROOT.gPad.SetGridx()
                 ROOT.gPad.SetTopMargin(0.03)
@@ -215,7 +217,7 @@ if __name__ == '__main__':
                 data1.Scale(1./data1.Integral())
                 data2.Scale(1./data2.Integral())
 
-                data1.GetYaxis().SetRangeUser(data1.GetMinimum(),1.1*data1.GetMaximum())
+                data1.GetYaxis().SetRangeUser(0.001,1.1*data1.GetMaximum())
 
                 data1.GetXaxis().SetLabelSize(0)
 
