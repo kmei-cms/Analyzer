@@ -104,9 +104,7 @@ void AnalyzeHEM::Loop(NTupleReader& tr, double weight, int maxevents, bool isQui
         const auto& filetag             = tr.getVar<std::string>("filetag");
         const auto& GoodLeptons         = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
         const auto& Jets                = tr.getVec<TLorentzVector>("Jets");
-        const auto& GoodJets            = tr.getVec<bool>("GoodJets");
-        const auto& NGoodJets           = tr.getVar<int>("NGoodJets");
-
+        const auto& GoodJets_pt30       = tr.getVec<bool>("GoodJets_pt30");
         const auto& JetID               = tr.getVar<bool>("JetID");
         const auto& NGoodLeptons        = tr.getVar<int>("NGoodLeptons");
         const auto& passTriggerMC       = tr.getVar<bool>("passTriggerMC");
@@ -133,7 +131,6 @@ void AnalyzeHEM::Loop(NTupleReader& tr, double weight, int maxevents, bool isQui
         const auto& jmt_ev1_top6        = tr.getVar<double>("jmt_ev1_top6");
         const auto& jmt_ev2_top6        = tr.getVar<double>("jmt_ev2_top6");
         const auto& event_beta_z        = tr.getVar<double>("event_beta_z");
-
         const auto& passMadHT           = tr.getVar<bool>("passMadHT");
         const auto& passBaseline        = tr.getVar<bool>("passBaseline1l_Good");
      
@@ -185,7 +182,7 @@ void AnalyzeHEM::Loop(NTupleReader& tr, double weight, int maxevents, bool isQui
             if ( RunNum < 319077 ) {
                
                 for (unsigned int goodJet = 0; goodJet < Jets.size(); goodJet++) {
-                    if (!GoodJets[goodJet]) { continue; }
+                    if (!GoodJets_pt30[goodJet]) { continue; }
                         my_histos["h_jetpt"]->Fill(Jets[goodJet].Pt(), weight);
                     if (Jets[goodJet].Pt() > jetPtMax) { jetPtMax = Jets[goodJet].Pt(); }
                 }
@@ -224,7 +221,7 @@ void AnalyzeHEM::Loop(NTupleReader& tr, double weight, int maxevents, bool isQui
 
             } else {
                 for (unsigned int goodJet = 0; goodJet < Jets.size(); goodJet++) {
-                    if (!GoodJets[goodJet]) { continue; }
+                    if (!GoodJets_pt30[goodJet]) { continue; }
                         my_histos["h_jetpt_HEM"]->Fill(Jets[goodJet].Pt(), weight);
                     if (Jets[goodJet].Pt() > jetPtMax) { jetPtMax = Jets[goodJet].Pt(); }
                 }
