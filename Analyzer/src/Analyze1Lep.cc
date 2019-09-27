@@ -107,6 +107,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& NGoodElectrons            = tr.getVar<int>("NGoodElectrons");
         const auto& NGoodLeptons              = tr.getVar<int>("NGoodLeptons");
         const auto& GoodLeptons               = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
+        const auto& GoodNonIsoMuons           = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodNonIsoMuons");
         const auto& HT_trigger_pt30           = tr.getVar<double>("HT_trigger_pt30");
         const auto& HT_NonIsoMuon_pt30        = tr.getVar<double>("HT_NonIsoMuon_pt30");
         const auto& JetID                     = tr.getVar<bool>("JetID");
@@ -155,6 +156,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // ------------------------
         double weight=1.0, weightNoHT=1.0, weightQCDCR=1.0, eventweight=1.0, leptonweight=1.0, bTagWeight=1.0, prefiringScaleFactor=1.0, pileupWeight=1.0, htDerivedweight=1.0;
         double topPtScaleFactor=1.0, FSRUp=1.0, FSRDown=1.0, FSRUp_2=1.0, FSRDown_2=1.0;
+        double weightNoLepton=1.0;
         if(runtype == "MC")
         {
             // Define Lumi weight
@@ -175,6 +177,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             
             weightQCDCR *= eventweight*muNonIso*prefiringScaleFactor*pileupWeight;
             weightNoHT *= eventweight*leptonweight*bTagWeight*prefiringScaleFactor*pileupWeight;
+            weightNoLepton *= eventweight*bTagWeight*prefiringScaleFactor*pileupWeight*htDerivedweight;
             weight *= eventweight*leptonweight*bTagWeight*prefiringScaleFactor*pileupWeight*htDerivedweight;
         }
 
@@ -196,7 +199,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // -------------------------------
         // -- Define cuts
         // -------------------------------
-        bool pass_general    = passTriggerMC && passTrigger && passMadHT && passBlind && passMETFilters;
+        bool pass_general    = passTriggerMC && passTrigger && passMadHT && passBlind && passMETFilters && passHEMVeto;
         bool pass_0l         = NGoodLeptons == 0;
         bool pass_1l         = NGoodLeptons == 1;
         bool pass_ht         = HT_trigger_pt30 > 300;
@@ -284,12 +287,10 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"_1l_HT300_ge7j_ge1b"                   , pass_general && pass_1l && pass_ht && pass_njet_pt30  && pass_1btag_pt30 && JetID        },
             {"_1l_HT300_ge1b_Mbl"                    , pass_general && passBaseline1l_AllJets                                                   },
             {"_1l_HT300_ge7j_ge1b_Mbl"               , pass_general && passBaseline1l_Good                                                      },                         
+            {"_1l_HT300_ge7j_ge1b_Mbl_noLepWeight"   , pass_general && passBaseline1l_Good                                                      },                         
             {"_1l_HT300_ge7j_ge2b_Mbl"               , pass_general && passBaseline1l_Good && pass_2btag_pt30                                   },
-            {"_1l_HT300_ge7j_ge1b_Mbl_HEM"           , pass_general && passBaseline1l_Good && passHEMVeto                                       },
             {"_1l_HT300_ge7j_ge1b_Mbl_wHEM"          , pass_general && passBaseline1l_Good && pass_workingHEMRuns                               },
             {"_1l_HT300_ge7j_ge1b_Mbl_nwHEM"         , pass_general && passBaseline1l_Good && !pass_workingHEMRuns                              },
-            {"_1l_HT300_ge7j_ge1b_Mbl_HEM_wHEM"      , pass_general && passBaseline1l_Good && passHEMVeto && pass_workingHEMRuns                },
-            {"_1l_HT300_ge7j_ge1b_Mbl_HEM_nwHEM"     , pass_general && passBaseline1l_Good && passHEMVeto && !pass_workingHEMRuns               },
             {"_1l_HT300_ge7j_ge1b_Mbl_lBarrel"       , pass_general && passBaseline1l_Good && pass_lBarrel                                      },
             {"_1l_HT300_ge7j_ge1b_Mbl_lEndCap"       , pass_general && passBaseline1l_Good && !pass_lBarrel                                     },
             {"_1e_HT300_ge7j_ge1b_Mbl"               , pass_general && passBaseline1l_Good && pass_1e                                           },                         
@@ -351,6 +352,9 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"blind_lEta",             200,  -6.0,    6.0},
             {    "h_lPhi",             200,  -4.0,    4.0},
             {"blind_lPhi",             200,  -4.0,    4.0},
+            {    "h_isomPt",           200,   0.0, 2000.0},
+            {    "h_isomEta",          200,  -6.0,    6.0},
+            {    "h_isomPhi",          200,  -4.0,    4.0},
             {    "h_jPt",              200,   0.0, 2000.0},
             {"blind_jPt",              200,   0.0, 2000.0},
             {    "h_jEta",             200,  -6.0,    6.0},
@@ -361,10 +365,11 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"blind_allMbl",           300,   0.0,  300.0},
             {"h_weight",               200,  -5.0,    5.0},
             {"h_leptonweight",         200,  -5.0,    5.0},
-            {"h_pileupWeight",         200,  -5.0,    5.0},
-            {"h_bTagWeight",           200,  -5.0,    5.0},
+            {"h_pileupWeight",         200,  -5.0,   20.0},
+            {"h_bTagWeight",           200,  -5.0,   20.0},
             {"h_htDerivedweight",      200,  -5.0,    5.0},
             {"h_prefiringScaleFactor", 200,  -5.0,    5.0},
+            {"h_eventweight",          200,-100.0,  100.0},            
         };
 
         std::vector<TH2DInfo> hist2DInfos = {
@@ -378,6 +383,8 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"blind_lEta_lPhi",    200, -6.0,  6.0, 200,  -3.2,   3.2},
             {    "h_jEta_jPhi",    200, -6.0,  6.0, 200,  -3.2,   3.2},
             {"blind_jEta_jPhi",    200, -6.0,  6.0, 200,  -3.2,   3.2},
+            {    "h_lEta_nb",      200, -6.0,  6.0,  10,   0.0,  10.0},
+            {"blind_lEta_nb",      200, -6.0,  6.0,  10,   0.0,  10.0},
         };
 
         std::vector<TH2DProfileInfo> hist2DProfileInfos = {
@@ -398,8 +405,9 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             if(kv.second)
             {
                 double w = weight;
-                if(kv.first.find("50to110mt") != std::string::npos || kv.first.find("htCorr") != std::string::npos) w = weightNoHT;
-                if(kv.first.find("passQCDCR")) w = weightQCDCR;
+                if(kv.first.find("50to110mt")   != std::string::npos || kv.first.find("htCorr") != std::string::npos) w = weightNoHT;
+                if(kv.first.find("passQCDCR")   != std::string::npos) w = weightQCDCR;
+                if(kv.first.find("noLepWeight") != std::string::npos) w = weightNoLepton;
                 my_histos["h_njets"               +kv.first]->Fill(NGoodJets_pt30, w);
                 my_histos["h_ngjets"              +kv.first]->Fill(NGenJets, eventweight);
                 my_histos["h_ngjets_pt30"         +kv.first]->Fill(NGenJets_pt30, eventweight);
@@ -418,12 +426,20 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_histos["h_bTagWeight"          +kv.first]->Fill(bTagWeight, w);
                 my_histos["h_htDerivedweight"     +kv.first]->Fill(htDerivedweight, w);
                 my_histos["h_prefiringScaleFactor"+kv.first]->Fill(prefiringScaleFactor, w);
+                my_histos["h_eventweight"         +kv.first]->Fill(eventweight, w);
                 for(const auto& l : GoodLeptons)
                 {
                     my_histos["h_lPt"+kv.first]->Fill(l.second.Pt(), w);
                     my_histos["h_lEta"+kv.first]->Fill(l.second.Eta(), w);
                     my_histos["h_lPhi"+kv.first]->Fill(l.second.Phi(), w);
                     my_2d_histos["h_lEta_lPhi"+kv.first]->Fill(l.second.Eta(), l.second.Phi(), w);
+                    my_2d_histos["h_lEta_nb"+kv.first]->Fill(l.second.Eta(), NGoodBJets_pt30, w);
+                }
+                for(const auto& isoMuon : GoodNonIsoMuons)
+                {
+                    my_histos["h_isomPt"+kv.first]->Fill(isoMuon.second.Pt(), w);
+                    my_histos["h_isomEta"+kv.first]->Fill(isoMuon.second.Eta(), w);
+                    my_histos["h_isomPhi"+kv.first]->Fill(isoMuon.second.Phi(), w);
                 }
                 for(const auto& mbl : MblVec)
                 {
@@ -457,6 +473,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                         my_histos["blind_lEta"+kv.first]->Fill(l.second.Eta(), w);
                         my_histos["blind_lPhi"+kv.first]->Fill(l.second.Phi(), w);
                         my_2d_histos["blind_lEta_lPhi"+kv.first]->Fill(l.second.Eta(), l.second.Phi(), w);
+                        my_2d_histos["blind_lEta_nb"+kv.first]->Fill(l.second.Eta(), NGoodBJets_pt30, w);
                     }
                     for(const auto& mbl : MblVec)
                     {
@@ -526,6 +543,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         if(true && pass_general && pass_1l && pass_ht && JetID && pass_1btag_pt30 && pass_MBL) my_histos["h_cutFlow"]->Fill(6.5, weight);
         if(true && pass_general && pass_1l && pass_ht && JetID && pass_1btag_pt30 && pass_MBL && pass_njet_pt30) my_histos["h_cutFlow"]->Fill(7.5, weight);
         if(true && pass_general && pass_1l && pass_ht && JetID && pass_1btag_pt30 && pass_MBL && pass_njet_pt30 && passHEMVeto) my_histos["h_cutFlow"]->Fill(8.5, weight);   
+
     } // end of event loop
 }
 

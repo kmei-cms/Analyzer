@@ -120,17 +120,34 @@ public:
             meanFileName = "allInOne_SFMean.root";
             blind = false;
         }
-        else if(filetag.find("2018") != std::string::npos) 
+        else if(filetag.find("2018pre") != std::string::npos) 
         {
-            runYear = "2018";
-            Lumi = 59740.0;
+            runYear = "2018pre";
+            Lumi = 21071.0;
             deepCSV_WP_loose  = 0.1241;
             deepCSV_WP_medium = 0.4184;       
             deepCSV_WP_tight  = 0.7527;
             puFileName = "PileupHistograms_2018_69mb_pm5.root";
-            DeepESMCfg = "DeepEventShape_2018.cfg";
-            DeepESMCfg_NonIsoMuon = "DeepEventShape_NonIsoMuon_2018.cfg";
-            ModelFile = "keras_frozen_2018.pb";
+            DeepESMCfg = "DeepEventShape_2018pre.cfg";
+            DeepESMCfg_NonIsoMuon = "DeepEventShape_NonIsoMuon_2018pre.cfg";
+            ModelFile = "keras_frozen_2018pre.pb";
+            leptonFileName = "allInOne_leptonSF_2018.root";
+            bjetFileName = "allInOne_BTagEff.root";
+            bjetCSVFileName = "DeepCSV_102XSF_WP_V1.csv";
+            meanFileName = "allInOne_SFMean.root";
+            blind = true;
+        }
+        else if(filetag.find("2018post") != std::string::npos) 
+        {
+            runYear = "2018post";
+            Lumi = 38654.0;
+            deepCSV_WP_loose  = 0.1241;
+            deepCSV_WP_medium = 0.4184;       
+            deepCSV_WP_tight  = 0.7527;
+            puFileName = "PileupHistograms_2018_69mb_pm5.root";
+            DeepESMCfg = "DeepEventShape_2018post.cfg";
+            DeepESMCfg_NonIsoMuon = "DeepEventShape_NonIsoMuon_2018post.cfg";
+            ModelFile = "keras_frozen_2018post.pb";
             leptonFileName = "allInOne_leptonSF_2018.root";
             bjetFileName = "allInOne_BTagEff.root";
             bjetCSVFileName = "DeepCSV_102XSF_WP_V1.csv";
