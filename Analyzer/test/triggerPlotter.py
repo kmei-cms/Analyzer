@@ -136,7 +136,7 @@ def make2DRatioPlot(dataNum, dataDen, mcNum, mcDen, aName, outputFile):
     dataMcRatio.Divide(dataRatio, mcRatio)
     dataMcRatio.SetTitle("")
 
-    #dataRatio.GetZaxis().SetRangeUser(0.55,1.05)
+    dataRatio.GetZaxis().SetRangeUser(0.75,1.1)
     dataRatio.SetTitle(""); mcRatio.SetTitle("")
     dataRatio.GetYaxis().SetTitle("#eta"); dataRatio.GetXaxis().SetTitle("p_{T} [GeV]")
     dataRatio.GetYaxis().SetTitleSize(YTitleSize); dataRatio.GetXaxis().SetTitleSize(XTitleSize)
@@ -144,7 +144,7 @@ def make2DRatioPlot(dataNum, dataDen, mcNum, mcDen, aName, outputFile):
     dataRatio.GetYaxis().SetTitleOffset(YTitleOffset); dataRatio.GetXaxis().SetTitleOffset(XTitleOffset)
     dataRatio.SetContour(255)
 
-    #mcRatio.GetZaxis().SetRangeUser(0.55,1.05)
+    mcRatio.GetZaxis().SetRangeUser(0.75,1.1)
     mcRatio.SetTitle(""); mcRatio.SetTitle("")
     mcRatio.GetYaxis().SetTitle("#eta"); mcRatio.GetXaxis().SetTitle("p_{T} [GeV]")
     mcRatio.GetYaxis().SetTitleSize(YTitleSize); mcRatio.GetXaxis().SetTitleSize(XTitleSize)
@@ -152,7 +152,7 @@ def make2DRatioPlot(dataNum, dataDen, mcNum, mcDen, aName, outputFile):
     mcRatio.GetYaxis().SetTitleOffset(YTitleOffset); mcRatio.GetXaxis().SetTitleOffset(XTitleOffset)
     mcRatio.SetContour(255)
 
-    #dataMcRatio.GetZaxis().SetRangeUser(0.5,1.05)
+    dataMcRatio.GetZaxis().SetRangeUser(0.75,1.1)
     dataMcRatio.SetTitle(""); dataMcRatio.SetTitle("")
     dataMcRatio.GetYaxis().SetTitle("#eta"); dataMcRatio.GetXaxis().SetTitle("p_{T} [GeV]")
     dataMcRatio.GetYaxis().SetTitleSize(YTitleSize); dataMcRatio.GetXaxis().SetTitleSize(XTitleSize)
@@ -162,9 +162,10 @@ def make2DRatioPlot(dataNum, dataDen, mcNum, mcDen, aName, outputFile):
 
     setMinimumErrors(dataMcRatio)
 
-    outputFile.cd()
-    dataMcRatio.SetName(aName)
-    dataMcRatio.Write(aName)
+    if "5jCut" in aName and "trig" in aName:
+        outputFile.cd()
+        dataMcRatio.SetName(aName)
+        dataMcRatio.Write(aName)
 
     theName = dataNum.GetName().replace("num","ratio")[3:]
 
@@ -210,9 +211,9 @@ if __name__ == '__main__':
     effTags      = [ "den", "num" ] 
     lepTags      = [ "el", "mu" ]
     binTags      = [ "Eta", "Pt" ]
-    ptTags       = [ "pt35", "pt40" ]
-    trigTags     = [ "trig", "noTrig" ] 
-    nJetCutTags  = [ "4", "5", "6" ]
+    ptTags       = [ "pt40" ]
+    trigTags     = [ "trig" ] 
+    nJetCutTags  = [ "5", "6" ]
 
     mcFile = ROOT.TFile.Open(arg.mc)
     dataFile = ROOT.TFile.Open(arg.data)
