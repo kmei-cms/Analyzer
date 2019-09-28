@@ -182,8 +182,8 @@ public:
             MakeMVAVariables makeMVAVariables(false, myVarSuffix);
             Baseline baseline(myVarSuffix);
             DeepEventShape deepEventShape(DeepESMCfg, ModelFile, "Info", true, myVarSuffix);
-            BTagCorrector bTagCorrector(bjetFileName, "", bjetCSVFileName, false, filetag);
-            bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets"+myVarSuffix, "Jets"+myVarSuffix+"_bJetTagDeepCSVtotb", "Jets"+myVarSuffix+"_partonFlavor", myVarSuffix);
+            BTagCorrector bTagCorrector(bjetFileName, "", bjetCSVFileName, filetag);
+            bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets"+myVarSuffix, "GoodJets_pt30"+myVarSuffix, "Jets"+myVarSuffix+"_bJetTagDeepCSVtotb", "Jets"+myVarSuffix+"_partonFlavor", myVarSuffix);
             ScaleFactors scaleFactors( runYear, leptonFileName, puFileName, meanFileName, myVarSuffix);
         
             tr.registerFunction(muon);
