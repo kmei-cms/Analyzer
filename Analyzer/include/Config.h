@@ -1,8 +1,6 @@
 #ifndef Confg_h
 #define Confg_h
 
-#include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
-#include "SusyAnaTools/Tools/BTagCorrector.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
 
 #include "Framework/Framework/include/PrepNTupleVars.h"
@@ -16,6 +14,7 @@
 #include "Framework/Framework/include/MakeMVAVariables.h"
 #include "Framework/Framework/include/Baseline.h"
 #include "Framework/Framework/include/DeepEventShape.h"
+#include "Framework/Framework/include/BTagCorrector.h"
 #include "Framework/Framework/include/ScaleFactors.h"
 #include "Framework/Framework/include/PartialUnBlinding.h"
 #include "Framework/Framework/include/StopGenMatch.h"
@@ -63,8 +62,8 @@ private:
                 if     (module=="ScaleFactors")  tr.emplaceModule<ScaleFactors>(runYear, leptonFileName, puFileName, meanFileName);
                 else if(module=="BTagCorrector")
                 {
-                    auto& bTagCorrector = tr.emplaceModule<BTagCorrectorTemplate<double>>(bjetFileName, "", bjetCSVFileName, false, filetag);
-                    bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets", "Jets_bJetTagDeepCSVtotb", "Jets_partonFlavor");
+                    auto& bTagCorrector = tr.emplaceModule<BTagCorrector>(bjetFileName, "", bjetCSVFileName, filetag);
+                    bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets", "GoodJets_pt30", "Jets_bJetTagDeepCSVtotb", "Jets_partonFlavor");
                 }
             }
         }
