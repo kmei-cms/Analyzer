@@ -99,7 +99,7 @@ def main():
             print "-----------------------------------------------------------"
             
             # hadd signal root files
-            sampleSetsToHadd = ["AllSignal", "2016_AllSignal", "2017_AllSignal", "2018_AllSignal"]
+            sampleSetsToHadd = ["2016_AllSignal", "2017_AllSignal", "2018pre_AllSignal", "2018post_AllSignal"]
             if sampleCollection in sampleSetsToHadd:
                 for sample in sl:
                     files = " " + " ".join(glob("%s/%s/MyAnalysis_%s_*.root" % (inPath, directory, sample[1])))
