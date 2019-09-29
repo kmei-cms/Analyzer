@@ -142,8 +142,9 @@ def main():
         sigNttbar_old = ["AllSignal", "TT", "TTJets", "Data_SingleMuon", "Data_SingleElectron"]
         sigNttbar_2016 = ["2016_AllSignal", "2016_TT", "2016_TTJets", "2016_Data_SingleMuon", "2016_Data_SingleElectron","2016_TT_isrUp", "2016_TT_isrDown", "2016_TT_fsrUp", "2016_TT_fsrDown", "2016_TTX" , "2016_QCD"]
         sigNttbar_2017 = ["2017_AllSignal", "2017_TT", "2017_TTJets", "2017_Data_SingleMuon", "2017_Data_SingleElectron", "2017_TTX", "2017_QCD"]
-        sigNttbar_2018 = ["2018_AllSignal", "2018_TT", "2018_TTJets", "2018_Data_SingleMuon", "2018_Data_SingleElectron", "2018_TTX", "2018_QCD"]
-        sigNttbar = sigNttbar_old+sigNttbar_2016+sigNttbar_2017+sigNttbar_2018
+        sigNttbar_2018pre  = ["2018pre_AllSignal", "2018pre_TT", "2018pre_TTJets", "2018pre_Data_SingleMuon", "2018pre_Data_SingleElectron", "2018pre_TTX", "2018pre_QCD"]
+        sigNttbar_2018post = ["2018post_AllSignal", "2018post_TT", "2018post_TTJets", "2018post_Data_SingleMuon", "2018post_Data_SingleElectron", "2018post_TTX", "2018post_QCD"]
+        sigNttbar = sigNttbar_old+sigNttbar_2016+sigNttbar_2017+sigNttbar_2018pre+sigNttbar_2018post
         files = ""
         for sampleCollection in scl:
             sl = sc.sampleList(sampleCollection)
@@ -165,7 +166,8 @@ def main():
         dataFiles = ["Data_SingleMuon.root", "Data_SingleElectron.root", 
                      "2016_Data_SingleMuon.root", "2016_Data_SingleElectron.root", 
                      "2017_Data_SingleMuon.root", "2017_Data_SingleElectron.root",
-                     "2018_Data_SingleMuon.root", "2018_Data_SingleElectron.root"]
+                     "2018pre_Data_SingleMuon.root", "2018pre_Data_SingleElectron.root",
+                     "2018post_Data_SingleMuon.root", "2018post_Data_SingleElectron.root"]
         if options.year:
             command = "hadd %s/%s_Data.root " % (outDir,options.year)
         else:
