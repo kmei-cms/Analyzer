@@ -111,6 +111,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& HT_trigger_pt30           = tr.getVar<double>("HT_trigger_pt30");
         const auto& HT_NonIsoMuon_pt30        = tr.getVar<double>("HT_NonIsoMuon_pt30");
         const auto& JetID                     = tr.getVar<bool>("JetID");
+        const auto& correct2018Split          = tr.getVar<bool>("correct2018Split");
         const auto& passTrigger               = tr.getVar<bool>("passTrigger");
         const auto& passTriggerMC             = tr.getVar<bool>("passTriggerMC");
         const auto& passMETFilters            = tr.getVar<bool>("passMETFilters");
@@ -199,7 +200,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // -------------------------------
         // -- Define cuts
         // -------------------------------
-        bool pass_general    = passTriggerMC && passTrigger && passMadHT && passBlind && passMETFilters && passHEMVeto;
+        bool pass_general    = passTriggerMC && passTrigger && passMadHT && passBlind && passMETFilters && passHEMVeto && correct2018Split;
         bool pass_0l         = NGoodLeptons == 0;
         bool pass_1l         = NGoodLeptons == 1;
         bool pass_ht         = HT_trigger_pt30 > 300;
