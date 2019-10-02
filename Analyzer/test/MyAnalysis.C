@@ -94,7 +94,7 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
     a.WriteHistos(outfile);
 }
 
-std::set<AnaSamples::FileSummary> setFS(const std::string& dataSets, const bool& isCondor)
+std::set<AnaSamples::FileSummary> setFS(const std::string& dataSets, const bool isCondor)
 {
     AnaSamples::SampleSet        ss("sampleSets.cfg", isCondor);
     AnaSamples::SampleCollection sc("sampleCollections.cfg", ss);
@@ -118,7 +118,8 @@ std::set<AnaSamples::FileSummary> setFS(const std::string& dataSets, const bool&
         }
     }
     std::set<AnaSamples::FileSummary> vvf;
-    for(auto& fsVec : fileMap) for(auto& fs : fsVec.second) vvf.insert(fs);
+    for(auto& fsVec : fileMap) for(auto& fs : fsVec.second) vvf.insert(fs);    
+    if(vvf.size() == 0) std::cout<< utility::color("No samples for \""+std::string(dataSets)+"\" in the sampleSet.cfg","red") <<std::endl;
 
     return vvf;
 }
@@ -208,8 +209,7 @@ int main(int argc, char *argv[])
 
         if (!foundAnalyzer)
         {
-            std::cout << utility::color("ERROR: The analyzer \"" + analyzer + "\" is not an analyzer option! Please add it to the MyAnalysis.C list.", "red") << std::endl; 
-        
+            std::cout << utility::color("ERROR: The analyzer \"" + analyzer + "\" is not an analyzer option! Please add it to the MyAnalysis.C list.", "red") << std::endl;        
         }
         outfile->Close();
     }
