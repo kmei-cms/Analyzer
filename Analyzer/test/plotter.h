@@ -139,7 +139,7 @@ public:
         {
             const double totBG = hbgSum_->GetBinContent(i);
             const double nSig = hc_.sigVec_.at(0).h->GetBinContent(i);            
-            if(totBG > 0.0 && nSig > 0.0)
+            if(totBG > 1.0 && nSig > 1.0)
             { 
                 const double s = nSig / sqrt( totBG + pow ( 0.3*totBG, 2) ) ;
                 sig = utility::addInQuad(sig, s);
