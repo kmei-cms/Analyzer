@@ -179,7 +179,7 @@ public:
         tr.registerDerivedVar("TopTaggerCfg", TopTaggerCfg);
 
         //Register Modules that are needed for each Analyzer
-        if(analyzer=="Analyze0Lep" || analyzer=="Semra_Analyzer" || analyzer=="AnalyzeTopTagger")
+        if(analyzer=="Analyze0Lep" || analyzer=="AnalyzeTopTagger")
         {
             const std::vector<std::string> modulesList = {
                 "PartialUnBlinding",
@@ -253,7 +253,7 @@ public:
             };
             registerModules(tr, std::move(modulesList));
         }
-        else if(analyzer=="StealthHemispheres")
+        else if(analyzer=="StealthHemispheres" || analyzer=="Semra_Analyzer")
         {
             const std::vector<std::string> modulesList = {
                 "PartialUnBlinding",
@@ -268,9 +268,9 @@ public:
                 "MakeMVAVariables",
                 "Baseline",
                 "DeepEventShape",
-                "MakeMT2Hemispheres"
                 "BTagCorrector",
-                "ScaleFactors"
+                "ScaleFactors",
+                "MakeMT2Hemispheres",
             };
             registerModules(tr, std::move(modulesList));
         }

@@ -48,12 +48,14 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
         my_histos.emplace( "h_dR_bjet1_bjet2_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_bjet1_bjet2_"+cutVar.first).c_str(), ("h_dR_bjet1_bjet2_"+cutVar.first).c_str(), 50, 0, 10 ) );
         my_histos.emplace( "h_dR_top1_top2_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_top1_top2_"+cutVar.first).c_str(), ("h_dR_top1_top2_"+cutVar.first).c_str(), 50, 0, 10 ) );
         my_histos.emplace( "h_dR_tops_bjets_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_tops_bjets_"+cutVar.first).c_str(), ("h_dR_tops_bjets_"+cutVar.first).c_str(), 50, 0, 10 ) );
+         my_histos.emplace( "h_stopMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_stopMass_"+cutVar.first).c_str(), ("h_stopMass_"+cutVar.first).c_str(), 5000, 0, 5000) );
         my_2d_histos.emplace( "h_njets_MVA_"+cutVar.first, std::make_shared<TH2D>( ("h_njets_MVA_"+cutVar.first).c_str(), ("h_njets_MVA_"+cutVar.first).c_str(), 8, 7, 15, 50, 0, 1.0 ) );
         my_2d_histos.emplace( "h_njets_dR_bjet1_bjet2_"+cutVar.first, std::make_shared<TH2D>( ("h_njets_dR_bjet1_bjet2_"+cutVar.first).c_str(), ("h_njets_dR_bjet1_bjet2_"+cutVar.first).c_str(), 1000, 0, 10, 20, 0, 20 ) ); // for cut optimization of dR_bjet1_bjet2 cut
     }
 
     // cut flow absolute numbers 
     my_histos.emplace( "h_cutFlow_absolute", std::make_shared<TH1D>("h_cutFlow_absolute", "h_cutFlow_absolute", 9,0,9));    
+
 }
 
 // ---------------------------------------------
@@ -115,7 +117,12 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const bool pass_ge2t3j      = ntops >= 2 && ntops_1jet == 0 && ntops_2jet==0;
         const bool pass_ge2t1j3j    = ntops >= 2 && ntops_1jet >= 1 && ntops_3jet >= 1 && ntops_2jet==0;
         const bool pass_ge1dRbjets  = dR_bjets >= 1.0;       
- 
+    
+        // -------------------------------
+        // -- MT2 hemispheres variables
+        // -------------------------------
+        const auto& stopMass        = tr.getVar<double>("stopMass"); 
+
         // -------------------
         // -- Define weight
         // -------------------
@@ -205,7 +212,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                 my_histos["h_nbjets_"+cutVar.first]->Fill( NGoodBJets_pt45, weight );
                 my_histos["h_ht_"+cutVar.first]->Fill( HT_trigger_pt45, weight );
                 my_histos["h_met_"+cutVar.first]->Fill( MET, weight );
-            
+                
                 // -----------------------------
                 // -- jets & bjets mass & pT
                 // -----------------------------
@@ -247,7 +254,8 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                 for (int idR = 0; idR < dR_top_bjet.size(); idR++) {
                     my_histos["h_dR_tops_bjets_"+cutVar.first]->Fill( dR_top_bjet.at(idR), weight );        
                 }
-                        
+               
+                my_histos["h_stopMass_"+cutVar.first]->Fill( stopMass, weight );         
                 my_2d_histos["h_njets_MVA_"+cutVar.first]->Fill( NGoodJets_pt45, deepESM_val, weight );
                 my_2d_histos["h_njets_dR_bjet1_bjet2_"+cutVar.first]->Fill( dR_bjets, NGoodJets_pt45, weight );
             }
