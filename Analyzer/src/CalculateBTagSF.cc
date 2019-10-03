@@ -21,8 +21,8 @@ void CalculateBTagSF::InitHistos(std::string histoFileTag)
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
 
-    const std::vector<double> ptBins  = { 20, 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500, 600, 800, 1000 };
-    const std::vector<double> etaBins = { 0.0, 0.8, 1.6, 2.4 };
+    const std::vector<double> ptBins  = { 20, 30, 45, 60, 75, 90, 120, 160, 210, 260, 320, 400, 500, 700, 1000 };
+    const std::vector<double> etaBins = { -2.4, -1.4, 0.0, 1.4, 2.4 };
     const int nPtBins = ptBins.size() - 1;
     const int nEtaBins = etaBins.size() - 1;
 

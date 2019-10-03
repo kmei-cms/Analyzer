@@ -5,8 +5,6 @@
 #include "Analyzer/Analyzer/include/Histo.h"
 
 #include "SusyAnaTools/Tools/NTupleReader.h"
-#include "SusyAnaTools/Tools/BTagCorrector.h"
-#include "SusyAnaTools/Tools/PileupWeights.h"
 
 #include "Framework/Framework/include/RunTopTagger.h"
 #include "Framework/Framework/include/Muon.h"
@@ -18,6 +16,7 @@
 #include "Framework/Framework/include/MakeMVAVariables.h"
 #include "Framework/Framework/include/Baseline.h"
 #include "Framework/Framework/include/DeepEventShape.h"
+#include "Framework/Framework/include/BTagCorrector.h"
 #include "Framework/Framework/include/ScaleFactors.h"
 
 #include <TH1D.h>
@@ -183,8 +182,8 @@ public:
             MakeMVAVariables makeMVAVariables(false, myVarSuffix);
             Baseline baseline(myVarSuffix);
             DeepEventShape deepEventShape(DeepESMCfg, ModelFile, "Info", true, myVarSuffix);
-            BTagCorrectorTemplate<double> bTagCorrector(bjetFileName, "", bjetCSVFileName, false, filetag);
-            bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets"+myVarSuffix, "Jets"+myVarSuffix+"_bJetTagDeepCSVtotb", "Jets"+myVarSuffix+"_partonFlavor", myVarSuffix);
+            BTagCorrector bTagCorrector(bjetFileName, "", bjetCSVFileName, filetag);
+            bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets"+myVarSuffix, "GoodJets_pt30"+myVarSuffix, "Jets"+myVarSuffix+"_bJetTagDeepCSVtotb", "Jets"+myVarSuffix+"_partonFlavor", myVarSuffix);
             ScaleFactors scaleFactors( runYear, leptonFileName, puFileName, meanFileName, myVarSuffix);
         
             tr.registerFunction(muon);

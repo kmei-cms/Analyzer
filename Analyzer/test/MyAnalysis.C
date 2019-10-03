@@ -71,13 +71,12 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
         std::cout << "Running over sample " << file.tag << std::endl;
         TChain* ch = new TChain( (file.treePath).c_str() );
         file.addFilesToChain(ch, startFile, nFiles);
-        NTupleReader tr(ch);
+        NTupleReader tr(ch, {"RunNum"});
         const std::string runtype = (file.tag.find("Data") != std::string::npos) ? "Data" : "MC";
         tr.registerDerivedVar("runtype",runtype);
         tr.registerDerivedVar("filetag",file.tag);
         tr.registerDerivedVar("analyzer",analyzer);
 
-        std::cout << "Starting loop (in run)" << std::endl;
         printf( "runtype: %s nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),nFiles,startFile,maxEvts ); fflush( stdout );
 
         // Define classes/functions that add variables on the fly        
@@ -85,6 +84,7 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
         c.setUp(tr);
 
         // Loop over all of the events and fill histos
+        std::cout << "Starting event loop (in run)" << std::endl;
         a.Loop(tr, 1.0, maxEvts, isQuiet);
 
         // Cleaning up dynamic memory
@@ -94,7 +94,7 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
     a.WriteHistos(outfile);
 }
 
-std::set<AnaSamples::FileSummary> setFS(const std::string& dataSets, const bool& isCondor)
+std::set<AnaSamples::FileSummary> setFS(const std::string& dataSets, const bool isCondor)
 {
     AnaSamples::SampleSet        ss("sampleSets.cfg", isCondor);
     AnaSamples::SampleCollection sc("sampleCollections.cfg", ss);
@@ -118,7 +118,8 @@ std::set<AnaSamples::FileSummary> setFS(const std::string& dataSets, const bool&
         }
     }
     std::set<AnaSamples::FileSummary> vvf;
-    for(auto& fsVec : fileMap) for(auto& fs : fsVec.second) vvf.insert(fs);
+    for(auto& fsVec : fileMap) for(auto& fs : fsVec.second) vvf.insert(fs);    
+    if(vvf.size() == 0) std::cout<< utility::color("No samples for \""+std::string(dataSets)+"\" in the sampleSet.cfg","red") <<std::endl;
 
     return vvf;
 }
@@ -208,8 +209,7 @@ int main(int argc, char *argv[])
 
         if (!foundAnalyzer)
         {
-            std::cout << utility::color("ERROR: The analyzer \"" + analyzer + "\" is not an analyzer option! Please add it to the MyAnalysis.C list.", "red") << std::endl; 
-        
+            std::cout << utility::color("ERROR: The analyzer \"" + analyzer + "\" is not an analyzer option! Please add it to the MyAnalysis.C list.", "red") << std::endl;        
         }
         outfile->Close();
     }

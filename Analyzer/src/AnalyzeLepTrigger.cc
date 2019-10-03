@@ -34,10 +34,10 @@ void AnalyzeLepTrigger::InitHistos()
     std::vector<std::string> nJetCutTags    { "1", "2", "3", "4", "5", "6" }; //Cutting at 6 jets really killed statistics, but the 1 jet cut region is not representative of our signal region, so look at all intermediate steps as well
  
     //Define binning for the histograms
-    const Int_t nPtBins = 6;
-    Double_t ptBinEdges[ nPtBins + 1 ] = { 30, 40, 50, 60, 70, 120, 200 };
-    const Int_t nEtaBins = 6;
-    Double_t etaBinEdges[ nEtaBins + 1 ] = { -2.4, -1.8, -1.0, 0, 1.0, 1.8, 2.4 };
+    const Int_t nPtBins = 5;
+    Double_t ptBinEdges[ nPtBins + 1 ] = { 30.0, 45.0, 60.0, 85.0, 120, 200 };
+    const Int_t nEtaBins = 4;
+    Double_t etaBinEdges[ nEtaBins + 1 ] = { -2.4, -1.4, 0, 1.4, 2.4 };
 
     for( std::string effTag : effTags ) {
         for( std::string lepTag : lepTags ) {

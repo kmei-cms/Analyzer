@@ -1,8 +1,6 @@
 #ifndef Confg_h
 #define Confg_h
 
-#include "SusyAnaTools/Tools/BTagCalibrationStandalone.h"
-#include "SusyAnaTools/Tools/BTagCorrector.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
 
 #include "Framework/Framework/include/PrepNTupleVars.h"
@@ -16,6 +14,7 @@
 #include "Framework/Framework/include/MakeMVAVariables.h"
 #include "Framework/Framework/include/Baseline.h"
 #include "Framework/Framework/include/DeepEventShape.h"
+#include "Framework/Framework/include/BTagCorrector.h"
 #include "Framework/Framework/include/ScaleFactors.h"
 #include "Framework/Framework/include/PartialUnBlinding.h"
 #include "Framework/Framework/include/StopGenMatch.h"
@@ -65,8 +64,8 @@ private:
                 if     (module=="ScaleFactors")  tr.emplaceModule<ScaleFactors>(runYear, leptonFileName, puFileName, meanFileName);
                 else if(module=="BTagCorrector")
                 {
-                    auto& bTagCorrector = tr.emplaceModule<BTagCorrectorTemplate<double>>(bjetFileName, "", bjetCSVFileName, false, filetag);
-                    bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets", "Jets_bJetTagDeepCSVtotb", "Jets_partonFlavor");
+                    auto& bTagCorrector = tr.emplaceModule<BTagCorrector>(bjetFileName, "", bjetCSVFileName, filetag);
+                    bTagCorrector.SetVarNames("GenParticles_PdgId", "Jets", "GoodJets_pt30", "Jets_bJetTagDeepCSVtotb", "Jets_partonFlavor");
                 }
             }
         }
@@ -88,6 +87,7 @@ public:
         
         double Lumi, deepCSV_WP_loose, deepCSV_WP_medium, deepCSV_WP_tight;
         bool blind;
+
         if(filetag.find("2016") != std::string::npos)
         {
             runYear = "2016";
@@ -101,7 +101,7 @@ public:
             ModelFile = "keras_frozen_2016.pb";
             leptonFileName = "allInOne_leptonSF_2016.root";
             bjetFileName = "allInOne_BTagEff.root";
-            bjetCSVFileName = "DeepCSV_2016LegacySF_V1.csv";
+            bjetCSVFileName = "DeepCSV_2016LegacySF_WP_V1.csv";
             meanFileName = "allInOne_SFMean.root";
             blind = false;
             TopTaggerCfg = "TopTaggerCfg_2016.cfg";
@@ -119,25 +119,42 @@ public:
             ModelFile = "keras_frozen_2017.pb";
             leptonFileName = "allInOne_leptonSF_2017.root";
             bjetFileName = "allInOne_BTagEff.root";
-            bjetCSVFileName = "DeepCSV_94XSF_V4_B_F.csv";
+            bjetCSVFileName = "DeepCSV_94XSF_WP_V4_B_F.csv";
             meanFileName = "allInOne_SFMean.root";
             blind = false;
             TopTaggerCfg = "TopTaggerCfg_2017.cfg";
         }
-        else if(filetag.find("2018") != std::string::npos) 
+        else if(filetag.find("2018pre") != std::string::npos) 
         {
-            runYear = "2018";
-            Lumi = 59740.0;
+            runYear = "2018pre";
+            Lumi = 21071.0;
             deepCSV_WP_loose  = 0.1241;
             deepCSV_WP_medium = 0.4184;       
             deepCSV_WP_tight  = 0.7527;
             puFileName = "PileupHistograms_2018_69mb_pm5.root";
-            DeepESMCfg = "DeepEventShape_2018.cfg";
-            DeepESMCfg_NonIsoMuon = "DeepEventShape_NonIsoMuon_2018.cfg";
-            ModelFile = "keras_frozen_2018.pb";
+            DeepESMCfg = "DeepEventShape_2018pre.cfg";
+            DeepESMCfg_NonIsoMuon = "DeepEventShape_NonIsoMuon_2018pre.cfg";
+            ModelFile = "keras_frozen_2018pre.pb";
             leptonFileName = "allInOne_leptonSF_2018.root";
             bjetFileName = "allInOne_BTagEff.root";
-            bjetCSVFileName = "DeepCSV_102XSF_V1.csv";
+            bjetCSVFileName = "DeepCSV_102XSF_WP_V1.csv";
+            meanFileName = "allInOne_SFMean.root";
+            blind = true;
+        }
+        else if(filetag.find("2018post") != std::string::npos) 
+        {
+            runYear = "2018post";
+            Lumi = 38654.0;
+            deepCSV_WP_loose  = 0.1241;
+            deepCSV_WP_medium = 0.4184;       
+            deepCSV_WP_tight  = 0.7527;
+            puFileName = "PileupHistograms_2018_69mb_pm5.root";
+            DeepESMCfg = "DeepEventShape_2018post.cfg";
+            DeepESMCfg_NonIsoMuon = "DeepEventShape_NonIsoMuon_2018post.cfg";
+            ModelFile = "keras_frozen_2018post.pb";
+            leptonFileName = "allInOne_leptonSF_2018.root";
+            bjetFileName = "allInOne_BTagEff.root";
+            bjetCSVFileName = "DeepCSV_102XSF_WP_V1.csv";
             meanFileName = "allInOne_SFMean.root";
             blind = true;
             TopTaggerCfg = "TopTaggerCfg_2018.cfg";
