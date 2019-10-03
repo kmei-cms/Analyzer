@@ -86,7 +86,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         }
 
         // -----------------------------------------
-        // -- Fill the fake rate study histograms 
+        // -- Fill the histograms 
         // -----------------------------------------
         // ----------------
         // -- baseline cuts
@@ -97,11 +97,11 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         };
         hists.fillWithCutFlow(ttbarCuts, tr, weight, &rand);
 
-
+        // -------------------------------------------------
         // for MVA score distribution as a function of Njets
-        // -----------------------------
-        // -- baseline cuts + Njets == 7
-        // -----------------------------
+        // -------------------------------------------------
+        
+        // baseline cuts + Njets == 7
         std::vector<std::pair<std::string, bool>> Njets7 =
         {
             {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
@@ -109,9 +109,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         };
         histNjet7.fillWithCutFlow(Njets7, tr, weight, &rand);
 
-        // -----------------------------
-        // -- baseline cuts + Njets == 8
-        // -----------------------------
+        // baseline cuts + Njets == 8
         std::vector<std::pair<std::string, bool>> Njets8 =
         {
             {"passBaseline0l", passBaseline0l && pass_ge1dRbjets}, 
@@ -119,9 +117,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         };
         histNjet8.fillWithCutFlow(Njets8, tr, weight, &rand);
 
-        // -----------------------------
-        // -- baseline cuts + Njets == 9
-        // -----------------------------
+        // baseline cuts + Njets == 9
         std::vector<std::pair<std::string, bool>> Njets9 =
         {
             {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
@@ -129,9 +125,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         };
         histNjet9.fillWithCutFlow(Njets9, tr, weight, &rand);        
         
-        // ------------------------------
-        // -- baseline cuts + Njets == 10
-        // ------------------------------
+        // baseline cuts + Njets == 10
         std::vector<std::pair<std::string, bool>> Njets10 =
         {
             {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
@@ -139,9 +133,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         };
         histNjet10.fillWithCutFlow(Njets10, tr, weight, &rand);
 
-        // ------------------------------
-        // -- baseline cuts + Njets == 11
-        // ------------------------------    
+        // baseline cuts + Njets == 11
         std::vector<std::pair<std::string, bool>> Njets11 =
         {
             {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
@@ -149,9 +141,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         };
         histNjet11.fillWithCutFlow(Njets11, tr, weight, &rand);
 
-        // ------------------------------
-        // -- baseline cuts + Njets == 12
-        // ------------------------------
+        // baseline cuts + Njets == 12
         std::vector<std::pair<std::string, bool>> Njets12 =
         {
             {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
@@ -159,9 +149,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         };
         histNjet12.fillWithCutFlow(Njets12, tr, weight, &rand);
 
-        // ------------------------------
-        // -- baseline cuts + Njets == 13
-        // ------------------------------
+        // baseline cuts + Njets == 13
         std::vector<std::pair<std::string, bool>> Njets13 =
         {
             {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
@@ -169,9 +157,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         };
         histNjet13.fillWithCutFlow(Njets13, tr, weight, &rand);   
  
-        // ------------------------------    
-        // -- baseline cuts + Njets == 14
-        // ------------------------------
+        // baseline cuts + Njets == 14
         std::vector<std::pair<std::string, bool>> Njets14 =
         {
             {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
@@ -179,9 +165,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         };
         histNjet14.fillWithCutFlow(Njets14, tr, weight, &rand);
         
-        // ------------------------------
-        // -- baseline cuts + Njets == 15
-        // ------------------------------
+        // baseline cuts + Njets == 15
         std::vector<std::pair<std::string, bool>> Njets15 =
         {
             {"passBaseline0l", passBaseline0l && pass_ge1dRbjets},
