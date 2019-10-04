@@ -144,7 +144,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& jmt_ev1_top6              = tr.getVar<double>("jmt_ev1_top6");
         const auto& jmt_ev2_top6              = tr.getVar<double>("jmt_ev2_top6");
         const auto& Jets_cm_top6              = tr.getVec<TLorentzVector>("Jets_cm_top6");
-        //const auto& stopMass                  = tr.getVar<double>("stopMass");
+        //const auto& stopMass                  = tr.getVar<double>("stopMass_1l");
         const auto& eventCounter              = tr.getVar<int>("eventCounter");
 
         // ------------------------
