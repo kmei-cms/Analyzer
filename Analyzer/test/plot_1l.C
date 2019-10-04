@@ -86,6 +86,7 @@ int main(int argc, char *argv[])
     std::string path;
     if     (year=="2016") path= "condor/Analyze1Lep_2016_v1.0";
     else if(year=="2017") path= "condor/Analyze1Lep_2017_v1.0";
+    else if(year=="2018") path= "condor/Analyze1Lep_2018_v1.0";
     else if(year=="2018pre") path= "condor/Analyze1Lep_2018pre_v1.0";
     else if(year=="2018post") path= "condor/Analyze1Lep_2018post_v1.0";
 
