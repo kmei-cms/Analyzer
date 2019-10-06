@@ -17,11 +17,12 @@ class DataSetInfo:
         self.lumiSys = lumiSys
         self.scale = scale
 
-    def getHisto(self, name, scale=-1):
+    def getHisto(self, name, rebinx=-1.0, rebiny=-1.0, xmin=None, xmax=None):
         histo = self.file.Get(name)
-        if(self.scale != -1.0):
-            #print self.scale
-            histo.Scale(self.scale)
+        if(self.scale != -1.0): histo.Scale(self.scale)
+        if(rebinx != -1.0): histo.RebinX(rebinx)
+        if(rebiny != -1.0): histo.RebinY(rebiny)
+        if(xmin != None): histo.GetXaxis().SetRangeUser(xmin, xmax)
         return histo
 
     def getFile(self):
