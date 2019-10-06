@@ -111,6 +111,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& HT_trigger_pt30           = tr.getVar<double>("HT_trigger_pt30");
         const auto& HT_NonIsoMuon_pt30        = tr.getVar<double>("HT_NonIsoMuon_pt30");
         const auto& JetID                     = tr.getVar<bool>("JetID");
+        const auto& correct2018Split          = tr.getVar<bool>("correct2018Split");
         const auto& passTrigger               = tr.getVar<bool>("passTrigger");
         const auto& passTriggerMC             = tr.getVar<bool>("passTriggerMC");
         const auto& passMETFilters            = tr.getVar<bool>("passMETFilters");
@@ -143,6 +144,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& jmt_ev1_top6              = tr.getVar<double>("jmt_ev1_top6");
         const auto& jmt_ev2_top6              = tr.getVar<double>("jmt_ev2_top6");
         const auto& Jets_cm_top6              = tr.getVec<TLorentzVector>("Jets_cm_top6");
+        //const auto& stopMass                  = tr.getVar<double>("stopMass_1l");
         const auto& eventCounter              = tr.getVar<int>("eventCounter");
 
         // ------------------------
@@ -154,7 +156,8 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // ------------------------
         // -- Define weight
         // ------------------------
-        double weight=1.0, weightNoHT=1.0, weightQCDCR=1.0, eventweight=1.0, leptonweight=1.0, bTagWeight=1.0, prefiringScaleFactor=1.0, pileupWeight=1.0, htDerivedweight=1.0;
+        double weight=1.0, weightNoHT=1.0, weightQCDCR=1.0, weightNoBTag=1.0;
+        double eventweight=1.0, leptonweight=1.0, bTagWeight=1.0, prefiringScaleFactor=1.0, pileupWeight=1.0, htDerivedweight=1.0;
         double topPtScaleFactor=1.0, FSRUp=1.0, FSRDown=1.0, FSRUp_2=1.0, FSRDown_2=1.0;
         double weightNoLepton=1.0;
         if(runtype == "MC")
@@ -178,6 +181,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             weightQCDCR *= eventweight*muNonIso*prefiringScaleFactor*pileupWeight;
             weightNoHT *= eventweight*leptonweight*bTagWeight*prefiringScaleFactor*pileupWeight;
             weightNoLepton *= eventweight*bTagWeight*prefiringScaleFactor*pileupWeight*htDerivedweight;
+            weightNoBTag *= eventweight*leptonweight*prefiringScaleFactor*pileupWeight*htDerivedweight;
             weight *= eventweight*leptonweight*bTagWeight*prefiringScaleFactor*pileupWeight*htDerivedweight;
         }
 
@@ -199,7 +203,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // -------------------------------
         // -- Define cuts
         // -------------------------------
-        bool pass_general    = passTriggerMC && passTrigger && passMadHT && passBlind && passMETFilters && passHEMVeto;
+        bool pass_general    = passTriggerMC && passTrigger && passMadHT && passBlind && passMETFilters && passHEMVeto && correct2018Split;
         bool pass_0l         = NGoodLeptons == 0;
         bool pass_1l         = NGoodLeptons == 1;
         bool pass_ht         = HT_trigger_pt30 > 300;
@@ -218,7 +222,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             pass_lBarrel = abs( GoodLeptons[0].second.Eta() ) <= 1.2;
         }
         bool pass_5to6njet_pt30 = (NGoodJets_pt30 == 5 || NGoodJets_pt30 == 6);
-        bool pass_workingHEMRuns = (runtype == "Data") ? (RunNum < 319077) : true;
         
         bool passBaseline1l_AllJets = passBaselineGoodOffline1l &&
                                       passTrigger               &&
@@ -286,15 +289,22 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"_1l_HT300_ge2b"                        , pass_general && pass_1l && pass_ht && pass_2btag_pt30 && JetID                           },
             {"_1l_HT300_ge7j_ge1b"                   , pass_general && pass_1l && pass_ht && pass_njet_pt30  && pass_1btag_pt30 && JetID        },
             {"_1l_HT300_ge1b_Mbl"                    , pass_general && passBaseline1l_AllJets                                                   },
+            {"_1l_HT300_ge4j_ge1b_Mbl"               , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 >= 4                            },
+            {"_1e_HT300_ge4j_ge1b_Mbl"               , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 >= 4 && pass_1e                 },
+            {"_1m_HT300_ge4j_ge1b_Mbl"               , pass_general && passBaseline1l_AllJets && NGoodJets_pt30 >= 4 && pass_1m                 },
             {"_1l_HT300_ge7j_ge1b_Mbl"               , pass_general && passBaseline1l_Good                                                      },                         
-            {"_1l_HT300_ge7j_ge1b_Mbl_noLepWeight"   , pass_general && passBaseline1l_Good                                                      },                         
-            {"_1l_HT300_ge7j_ge2b_Mbl"               , pass_general && passBaseline1l_Good && pass_2btag_pt30                                   },
-            {"_1l_HT300_ge7j_ge1b_Mbl_wHEM"          , pass_general && passBaseline1l_Good && pass_workingHEMRuns                               },
-            {"_1l_HT300_ge7j_ge1b_Mbl_nwHEM"         , pass_general && passBaseline1l_Good && !pass_workingHEMRuns                              },
-            {"_1l_HT300_ge7j_ge1b_Mbl_lBarrel"       , pass_general && passBaseline1l_Good && pass_lBarrel                                      },
-            {"_1l_HT300_ge7j_ge1b_Mbl_lEndCap"       , pass_general && passBaseline1l_Good && !pass_lBarrel                                     },
             {"_1e_HT300_ge7j_ge1b_Mbl"               , pass_general && passBaseline1l_Good && pass_1e                                           },                         
-            {"_1m_HT300_ge7j_ge1b_Mbl"               , pass_general && passBaseline1l_Good && pass_1m                                           },                         
+            {"_1m_HT300_ge7j_ge1b_Mbl"               , pass_general && passBaseline1l_Good && pass_1m                                           },   
+            {"_1l_HT300_ge7j_ge1b_Mbl_noHTWeight"    , pass_general && passBaseline1l_Good                                                      }, 
+            {"_1l_HT300_ge7j_ge1b_Mbl_noLepWeight"   , pass_general && passBaseline1l_Good                                                      },                         
+            {"_1l_HT300_ge7j_ge1b_Mbl_noBTagWeight"  , pass_general && passBaseline1l_Good                                                      },                         
+            {"_1l_HT300_ge7j_ge2b_Mbl"               , pass_general && passBaseline1l_Good && pass_2btag_pt30                                   },
+            {"_1l_HT300_ge7j_ge1b_Mbl_lBarrel"       , pass_general && passBaseline1l_Good && pass_lBarrel                                      },
+            {"_1e_HT300_ge7j_ge1b_Mbl_lBarrel"       , pass_general && passBaseline1l_Good && pass_lBarrel && pass_1e                           },
+            {"_1m_HT300_ge7j_ge1b_Mbl_lBarrel"       , pass_general && passBaseline1l_Good && pass_lBarrel && pass_1m                           },
+            {"_1l_HT300_ge7j_ge1b_Mbl_lEndCap"       , pass_general && passBaseline1l_Good && !pass_lBarrel                                     },
+            {"_1e_HT300_ge7j_ge1b_Mbl_lEndCap"       , pass_general && passBaseline1l_Good && !pass_lBarrel && pass_1e                          },
+            {"_1m_HT300_ge7j_ge1b_Mbl_lEndCap"       , pass_general && passBaseline1l_Good && !pass_lBarrel && pass_1m                          },
             {"_1l_HT300_ge7j_ge1b_Mbl_d1"            , pass_general && passBaseline1l_Good && deepESM_bin1                                      },                         
             {"_1l_HT300_ge7j_ge1b_Mbl_d2"            , pass_general && passBaseline1l_Good && deepESM_bin2                                      },                         
             {"_1l_HT300_ge7j_ge1b_Mbl_d3"            , pass_general && passBaseline1l_Good && deepESM_bin3                                      },                         
@@ -363,6 +373,8 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             {"blind_jPhi",             200,  -4.0,    4.0},
             {    "h_allMbl",           300,   0.0,  300.0},            
             {"blind_allMbl",           300,   0.0,  300.0},
+            //{    "h_stopMass",        5000,   0.0, 5000.0},
+            //{"blind_stopMass",        5000,   0.0, 5000.0},
             {"h_weight",               200,  -5.0,    5.0},
             {"h_leptonweight",         200,  -5.0,    5.0},
             {"h_pileupWeight",         200,  -5.0,   20.0},
@@ -405,9 +417,12 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             if(kv.second)
             {
                 double w = weight;
-                if(kv.first.find("50to110mt")   != std::string::npos || kv.first.find("htCorr") != std::string::npos) w = weightNoHT;
+                if(kv.first.find("50to110mt")  != std::string::npos || 
+                   kv.first.find("htCorr")     != std::string::npos || 
+                   kv.first.find("noHTWeight") != std::string::npos) w = weightNoHT;
                 if(kv.first.find("passQCDCR")   != std::string::npos) w = weightQCDCR;
                 if(kv.first.find("noLepWeight") != std::string::npos) w = weightNoLepton;
+                if(kv.first.find("noBTagWeight") != std::string::npos) w = weightNoBTag;
                 my_histos["h_njets"               +kv.first]->Fill(NGoodJets_pt30, w);
                 my_histos["h_ngjets"              +kv.first]->Fill(NGenJets, eventweight);
                 my_histos["h_ngjets_pt30"         +kv.first]->Fill(NGenJets_pt30, eventweight);
@@ -420,6 +435,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 my_histos["h_ht"                  +kv.first]->Fill(HT_trigger_pt30, w);
                 my_histos["h_htQCDCR"             +kv.first]->Fill(HT_NonIsoMuon_pt30, w);
                 my_histos["h_mbl"                 +kv.first]->Fill(Mbl, w);
+                //my_histos["h_stopMass"            +kv.first]->Fill(stopMass, w);
                 my_histos["h_weight"              +kv.first]->Fill(weight, w);
                 my_histos["h_leptonweight"        +kv.first]->Fill(leptonweight, w);
                 my_histos["h_pileupWeight"        +kv.first]->Fill(pileupWeight, w);
@@ -467,6 +483,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                     my_histos["blind_deepESMMerged" +kv.first]->Fill(deepESM_binNum, w);
                     my_histos["blind_ht"            +kv.first]->Fill(HT_trigger_pt30, w);
                     my_histos["blind_mbl"           +kv.first]->Fill(Mbl, w);
+                    //my_histos["blind_stopMass"      +kv.first]->Fill(stopMass, w);
                     for(const auto l : GoodLeptons)
                     {
                         my_histos["blind_lPt"+kv.first]->Fill(l.second.Pt(), w);

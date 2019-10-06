@@ -37,11 +37,11 @@ private:
     //std::vector<HistInfoCollection> chc_;
     std::map< std::string, HistInfoCollection > mhc_;
     std::vector<std::shared_ptr<TH1>> hbgSumVec_;
+    std::string outpath_;
 
 public:
-    Plotter(HistInfoCollection&& hc) : hc_(hc) {}
-    //Plotter(std::vector<HistInfoCollection>&& chc) : chc_(chc) {}
-    Plotter(std::map< std::string, HistInfoCollection >&& mhc) : mhc_(mhc) {}
+    Plotter(HistInfoCollection&& hc, const std::string& outpath = "outputPlots") : hc_(hc), outpath_(outpath){}
+    Plotter(std::map< std::string, HistInfoCollection >&& mhc, const std::string& outpath = "outputPlots") : mhc_(mhc), outpath_(outpath) {}
 
     void plotStack(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, int rebin = -1, const bool scale = false, const bool doFill = true, const double xmin = 999.9, const double xmax = -999.9, double lumi = 36100)
     {
@@ -139,7 +139,7 @@ public:
         {
             const double totBG = hbgSum_->GetBinContent(i);
             const double nSig = hc_.sigVec_.at(0).h->GetBinContent(i);            
-            if(totBG > 0.0 && nSig > 0.0)
+            if(totBG > 1.0 && nSig > 1.0)
             { 
                 const double s = nSig / sqrt( totBG + pow ( 0.3*totBG, 2) ) ;
                 sig = utility::addInQuad(sig, s);
@@ -221,8 +221,7 @@ public:
         //----------------------------------------
         
         //save new plot to file
-        c->Print(("outputPlots/" + histName + ".pdf").c_str());
-        //c->Print(("outputPlots/" + histName + ".png").c_str());
+        c->Print((outpath_ + "/" + histName + ".pdf").c_str());
 
         //clean up dynamic memory
         delete c;
@@ -321,8 +320,7 @@ public:
         //drawLables(lumi);
 
         //save new plot to file
-        c->Print(("outputPlots/fisherNorm_" + histName + ".pdf").c_str());
-        //c->Print(("outputPlots/fisherNorm_" + histName + ".png").c_str());
+        c->Print((outpath_ + "/fisherNorm_" + histName + ".pdf").c_str());
 
         //clean up dynamic memory
         delete c;
@@ -413,15 +411,12 @@ public:
         //save new plot to file
         if(firstOnly) 
         {
-            c->Print(("outputPlots/fisherRocCompare_" + histName + ".pdf").c_str());
-            //c->Print(("outputPlots/fisherRocCompare_" + histName + ".png").c_str());
+            c->Print((outpath_ + "/fisherRocCompare_" + histName + ".pdf").c_str());
         }
         else
         {
-            c->Print(("outputPlots/fisherRoc_" + histName + ".pdf").c_str());
-            //c->Print(("outputPlots/fisherRoc_" + histName + ".png").c_str());
+            c->Print((outpath_ + "/fisherRoc_" + histName + ".pdf").c_str());
         }
-        //c->Print("test.pdf");
 
         //clean up dynamic memory
         delete c;
@@ -543,8 +538,7 @@ public:
         //drawLables(lumi);
 
         //save new plot to file
-        c->Print( ("outputPlots/"+name+"_" + histTitle + ".pdf").c_str() );
-        //c->Print( ("outputPlots/"+name+"_" + histTitle + ".png").c_str() );
+        c->Print( (outpath_ + "/" + name + "_" + histTitle + ".pdf").c_str() );
 
         //clean up dynamic memory
         delete c;
@@ -670,8 +664,7 @@ public:
         //drawLables(lumi);
 
         //save new plot to file
-        c->Print( ("outputPlots/"+name+"Ratio_" + histTitle + ".pdf").c_str() );
-        //c->Print( ("outputPlots/"+name+"Ratio_" + histTitle + ".png").c_str() );
+        c->Print( (outpath_+"/"+name+"Ratio_" + histTitle + ".pdf").c_str() );
 
         //clean up dynamic memory
         delete c;
