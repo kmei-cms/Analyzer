@@ -20,6 +20,7 @@
 #include "Analyzer/Analyzer/include/AnalyzeSignalModels.h"
 #include "Analyzer/Analyzer/include/AnalyzeTest.h"
 #include "Analyzer/Analyzer/include/AnalyzeLepTrigger.h"
+#include "Analyzer/Analyzer/include/AnalyzeNonIsoMuonTrigger.h"
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
 #include "Analyzer/Analyzer/include/MakeMiniTree.h"
@@ -176,6 +177,7 @@ int main(int argc, char *argv[])
         {"Analyze0Lep",             run<Analyze0Lep>},
         {"Analyze1Lep",             run<Analyze1Lep>},
         {"AnalyzeLepTrigger",       run<AnalyzeLepTrigger>},
+        {"AnalyzeNonIsoMuonTrigger",run<AnalyzeNonIsoMuonTrigger>},
         {"AnalyzeStealthTopTagger", run<AnalyzeStealthTopTagger>},
         {"AnalyzeBTagSF",           run<AnalyzeBTagSF>},
         {"AnalyzeHEM",              run<AnalyzeHEM>},
