@@ -269,10 +269,9 @@ public:
                 "MakeMVAVariables",
                 "Baseline",
                 "DeepEventShape",
-                "MakeMT2Hemispheres_0l"
+                "MakeMT2Hemispheres_0l",
                 "BTagCorrector",
                 "ScaleFactors",
-                "MakeMT2Hemispheres",
             };
             registerModules(tr, std::move(modulesList));
         }

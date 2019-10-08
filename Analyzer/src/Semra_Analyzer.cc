@@ -48,9 +48,29 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
         my_histos.emplace( "h_dR_bjet1_bjet2_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_bjet1_bjet2_"+cutVar.first).c_str(), ("h_dR_bjet1_bjet2_"+cutVar.first).c_str(), 50, 0, 10 ) );
         my_histos.emplace( "h_dR_top1_top2_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_top1_top2_"+cutVar.first).c_str(), ("h_dR_top1_top2_"+cutVar.first).c_str(), 50, 0, 10 ) );
         my_histos.emplace( "h_dR_tops_bjets_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_tops_bjets_"+cutVar.first).c_str(), ("h_dR_tops_bjets_"+cutVar.first).c_str(), 50, 0, 10 ) );
-         my_histos.emplace( "h_stopMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_stopMass_"+cutVar.first).c_str(), ("h_stopMass_"+cutVar.first).c_str(), 5000, 0, 5000) );
+
+        // stop MT2 hemispheres 
+        my_histos.emplace( "h_stopMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_stopMass_"+cutVar.first).c_str(), ("h_stopMass_"+cutVar.first).c_str(), 500, 0, 1500) );
+        my_histos.emplace( "h_hemi1Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_hemi1Mass_"+cutVar.first).c_str(), ("h_hemi1Mass_"+cutVar.first).c_str(), 500, 0, 1500) );
+        my_histos.emplace( "h_hemi1Eta_"+cutVar.first, std::make_shared<TH1D> ( ("h_hemi1Eta_"+cutVar.first).c_str(), ("h_hemi1Eta_"+cutVar.first).c_str(), 100, -6, 6 ) );
+        my_histos.emplace( "h_hemi1Phi_"+cutVar.first, std::make_shared<TH1D> ( ("h_hemi1Phi_"+cutVar.first).c_str(), ("h_hemi1Phi_"+cutVar.first).c_str(), 80, -4, 4 ) );
+        my_histos.emplace( "h_hemi1Pt_"+cutVar.first, std::make_shared<TH1D> ( ("h_hemi1Pt_"+cutVar.first).c_str(), ("h_hemi1Pt_"+cutVar.first).c_str(), 100, 0, 1000 ) ); 
+        my_histos.emplace( "h_hemi2Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_hemi2Mass_"+cutVar.first).c_str(), ("h_hemi2Mass_"+cutVar.first).c_str(), 500, 0, 1500) );
+        my_histos.emplace( "h_hemi2Eta_"+cutVar.first, std::make_shared<TH1D> ( ("h_hemi2Eta_"+cutVar.first).c_str(), ("h_hemi2Eta_"+cutVar.first).c_str(), 100, -6, 6 ) );
+        my_histos.emplace( "h_hemi2Phi_"+cutVar.first, std::make_shared<TH1D> ( ("h_hemi2Phi_"+cutVar.first).c_str(), ("h_hemi2Phi_"+cutVar.first).c_str(), 80, -4, 4 ) );
+        my_histos.emplace( "h_hemi2Pt_"+cutVar.first, std::make_shared<TH1D> ( ("h_hemi2Pt_"+cutVar.first).c_str(), ("h_hemi2Pt_"+cutVar.first).c_str(), 100, 0, 1000 ) );
+        my_histos.emplace( "h_dR_hemi1hemi2_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_hemi1hemi2_"+cutVar.first).c_str(), ("h_dR_hemi1hemi2_"+cutVar.first).c_str(), 50, 0, 10 ) );
+        my_histos.emplace( "h_dPhi_hemi1hemi2_"+cutVar.first, std::make_shared<TH1D> ( ("h_dPhi_hemi1hemi2_"+cutVar.first).c_str(), ("h_dPhi_hemi1hemi2_"+cutVar.first).c_str(), 50, 0, 10 ) );
+        my_2d_histos.emplace( "h_Mass_hemi1vshemi2_"+cutVar.first, std::make_shared<TH2D>( ("h_Mass_hemi1vshemi2_"+cutVar.first).c_str(), ("h_Mass_hemi1vshemi2_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
+        my_2d_histos.emplace( "h_Eta_hemi1vshemi2_"+cutVar.first, std::make_shared<TH2D>( ("h_Eta_hemi1vshemi2_"+cutVar.first).c_str(), ("h_Eta_hemi1vshemi2_"+cutVar.first).c_str(), 100, -6, 6, 100, -6, 6 ) );
+        my_2d_histos.emplace( "h_Phi_hemi1vshemi2_"+cutVar.first, std::make_shared<TH2D>( ("h_Phi_hemi1vshemi2_"+cutVar.first).c_str(), ("h_Phi_hemi1vshemi2_"+cutVar.first).c_str(), 80, -4, 4, 80, -4, 4 ) );
+        my_2d_histos.emplace( "h_Pt_hemi1vshemi2_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt_hemi1vshemi2_"+cutVar.first).c_str(), ("h_Pt_hemi1vshemi2_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000 ) );
+        my_2d_histos.emplace( "h_stopMassVsNJets_"+cutVar.first, std::make_shared<TH2D> ( ("h_stopMassVsNJets_"+cutVar.first).c_str(), ("h_stopMassVsNJets_"+cutVar.first).c_str(), 500, 0, 1500, 20, 0, 20 ) );  
+        my_2d_histos.emplace( "h_stopMassVshemi1Mass_"+cutVar.first, std::make_shared<TH2D> ( ("h_stopMassVshemi1Mass_"+cutVar.first).c_str(), ("h_stopMassVshemi1Mass_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
+        my_2d_histos.emplace( "h_stopMassVshemi2Mass_"+cutVar.first, std::make_shared<TH2D> ( ("h_stopMassVshemi2Mass_"+cutVar.first).c_str(), ("h_stopMassVshemi2Mass_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
+
         my_2d_histos.emplace( "h_njets_MVA_"+cutVar.first, std::make_shared<TH2D>( ("h_njets_MVA_"+cutVar.first).c_str(), ("h_njets_MVA_"+cutVar.first).c_str(), 8, 7, 15, 50, 0, 1.0 ) );
-        my_2d_histos.emplace( "h_njets_dR_bjet1_bjet2_"+cutVar.first, std::make_shared<TH2D>( ("h_njets_dR_bjet1_bjet2_"+cutVar.first).c_str(), ("h_njets_dR_bjet1_bjet2_"+cutVar.first).c_str(), 1000, 0, 10, 20, 0, 20 ) ); // for cut optimization of dR_bjet1_bjet2 cut
+        my_2d_histos.emplace( "h_njets_dR_bjets_"+cutVar.first, std::make_shared<TH2D>( ("h_njets_dR_bjets_"+cutVar.first).c_str(), ("h_njets_dR_bjets_"+cutVar.first).c_str(), 1000, 0, 10, 20, 0, 20 ) ); // for cut optimization of dR_bjets cut
     }
 
     // cut flow absolute numbers 
@@ -121,7 +141,17 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         // -------------------------------
         // -- MT2 hemispheres variables
         // -------------------------------
-        const auto& stopMass        = tr.getVar<double>("stopMass"); 
+        const auto& stopMass        = tr.getVar<double>("stopMass_0l"); 
+        const auto& hemi1Mass       = tr.getVar<double>("hemi1Mass_0l");
+        const auto& hemi1Eta        = tr.getVar<double>("hemi1Eta_0l");
+        const auto& hemi1Phi        = tr.getVar<double>("hemi1Phi_0l");
+        const auto& hemi1Pt         = tr.getVar<double>("hemi1Pt_0l");
+        const auto& hemi2Mass       = tr.getVar<double>("hemi2Mass_0l");
+        const auto& hemi2Eta        = tr.getVar<double>("hemi2Eta_0l");
+        const auto& hemi2Phi        = tr.getVar<double>("hemi2Phi_0l");
+        const auto& hemi2Pt         = tr.getVar<double>("hemi2Pt_0l");
+        const auto& dR_hemi1hemi2   = tr.getVar<double>("dR_hemi1hemi2_0l");
+        const auto& dPhi_hemi1hemi2 = tr.getVar<double>("dPhi_hemi1hemi2_0l");
 
         // -------------------
         // -- Define weight
@@ -160,7 +190,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                 dR_top_bjet.push_back(deltaR);
             }
         }
-    
+   
         // -------------------------------------------------
         // -- Make cuts and fill histograms here & cutmap
         // -------------------------------------------------
@@ -254,10 +284,49 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                 for (int idR = 0; idR < dR_top_bjet.size(); idR++) {
                     my_histos["h_dR_tops_bjets_"+cutVar.first]->Fill( dR_top_bjet.at(idR), weight );        
                 }
-               
-                my_histos["h_stopMass_"+cutVar.first]->Fill( stopMass, weight );         
+              
+                // --------------------------
+                // -- stop MT2 hemispheres 
+                // --------------------------
+                my_histos["h_stopMass_"+cutVar.first]->Fill( stopMass, weight );
+                my_histos["h_hemi1Mass_"+cutVar.first]->Fill( hemi1Mass, weight );
+                my_histos["h_hemi1Eta_"+cutVar.first]->Fill( hemi1Eta, weight );
+                my_histos["h_hemi1Phi_"+cutVar.first]->Fill( hemi1Phi, weight );
+                my_histos["h_hemi1Pt_"+cutVar.first]->Fill( hemi1Pt, weight );
+                my_histos["h_hemi2Mass_"+cutVar.first]->Fill( hemi2Mass, weight );
+                my_histos["h_hemi2Eta_"+cutVar.first]->Fill( hemi2Eta, weight );
+                my_histos["h_hemi2Phi_"+cutVar.first]->Fill( hemi2Phi, weight );
+                my_histos["h_hemi2Pt_"+cutVar.first]->Fill( hemi2Pt, weight );
+                my_histos["h_dR_hemi1hemi2_"+cutVar.first]->Fill( dR_hemi1hemi2, weight );
+                my_histos["h_dPhi_hemi1hemi2_"+cutVar.first]->Fill( dPhi_hemi1hemi2, weight );
+                my_2d_histos["h_Mass_hemi1vshemi2_"+cutVar.first]->Fill( hemi1Mass, hemi2Mass, weight );
+                my_2d_histos["h_Mass_hemi1vshemi2_"+cutVar.first]->GetXaxis()->SetTitle("M_{hemi1} [GeV]");
+                my_2d_histos["h_Mass_hemi1vshemi2_"+cutVar.first]->GetYaxis()->SetTitle("M_{hemi2} [GeV]");
+                my_2d_histos["h_Eta_hemi1vshemi2_"+cutVar.first]->Fill( hemi1Eta, hemi2Eta, weight );
+                my_2d_histos["h_Eta_hemi1vshemi2_"+cutVar.first]->GetXaxis()->SetTitle("#eta_{hemi1}");
+                my_2d_histos["h_Eta_hemi1vshemi2_"+cutVar.first]->GetYaxis()->SetTitle("#eta_{hemi2}");
+                my_2d_histos["h_Phi_hemi1vshemi2_"+cutVar.first]->Fill( hemi1Phi, hemi2Phi, weight );
+                my_2d_histos["h_Phi_hemi1vshemi2_"+cutVar.first]->GetXaxis()->SetTitle("#phi_{hemi1}");
+                my_2d_histos["h_Phi_hemi1vshemi2_"+cutVar.first]->GetYaxis()->SetTitle("#phi_{hemi2}");
+                my_2d_histos["h_Pt_hemi1vshemi2_"+cutVar.first]->Fill( hemi1Pt, hemi2Pt, weight );
+                my_2d_histos["h_Pt_hemi1vshemi2_"+cutVar.first]->GetXaxis()->SetTitle("pT_{hemi1}");
+                my_2d_histos["h_Pt_hemi1vshemi2_"+cutVar.first]->GetYaxis()->SetTitle("pT_{hemi2}");
+                my_2d_histos["h_stopMassVsNJets_"+cutVar.first]->Fill( stopMass,  NGoodJets_pt45, weight );
+                my_2d_histos["h_stopMassVsNJets_"+cutVar.first]->GetXaxis()->SetTitle("M_{#tildet}");
+                my_2d_histos["h_stopMassVsNJets_"+cutVar.first]->GetYaxis()->SetTitle("N_{J}");
+                my_2d_histos["h_stopMassVshemi1Mass_"+cutVar.first]->Fill( stopMass, hemi1Mass, weight );
+                my_2d_histos["h_stopMassVshemi1Mass_"+cutVar.first]->GetXaxis()->SetTitle("M_{#tildet}");
+                my_2d_histos["h_stopMassVshemi1Mass_"+cutVar.first]->GetYaxis()->SetTitle("M_{hemi1} [GeV]");
+                my_2d_histos["h_stopMassVshemi2Mass_"+cutVar.first]->Fill( stopMass, hemi2Mass, weight );
+                my_2d_histos["h_stopMassVshemi2Mass_"+cutVar.first]->GetXaxis()->SetTitle("M_{#tildet}");
+                my_2d_histos["h_stopMassVshemi2Mass_"+cutVar.first]->GetYaxis()->SetTitle("M_{hemi2} [GeV]");
+
                 my_2d_histos["h_njets_MVA_"+cutVar.first]->Fill( NGoodJets_pt45, deepESM_val, weight );
-                my_2d_histos["h_njets_dR_bjet1_bjet2_"+cutVar.first]->Fill( dR_bjets, NGoodJets_pt45, weight );
+                my_2d_histos["h_njets_MVA_"+cutVar.first]->GetXaxis()->SetTitle("N_{J}");
+                my_2d_histos["h_njets_MVA_"+cutVar.first]->GetYaxis()->SetTitle("MVA");
+                my_2d_histos["h_njets_dR_bjets_"+cutVar.first]->Fill( dR_bjets, NGoodJets_pt45, weight );
+                my_2d_histos["h_njets_dR_bjets_"+cutVar.first]->GetXaxis()->SetTitle("#DeltaR_{bjets}");
+                my_2d_histos["h_njets_dR_bjets_"+cutVar.first]->GetYaxis()->SetTitle("N_{J}");
             }
         }
 
