@@ -180,7 +180,7 @@ public:
     // -------------------------------
     // plot FUNCTION:
     // -------------------------------   
-    void plot(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const std::string& cutlabel = "", const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 59740) // lumi 2016 = 35900, lumi 2017 = 41500, lumi 2018 = 59740
+    void plot(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const std::string& cutlabel = "", const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 35900) // lumi 2016 = 35900, lumi 2017 = 41500, lumi 2018 = 59740
     {
         //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
         TH1::AddDirectory(false);
@@ -389,28 +389,29 @@ int main()
     // entry for data
     // this uses the initializer syntax to initialize the histInfo object
     // 'leg entry'  'root file'     'draw options'  'draw color'
-    histInfo data = {"Data", "condor/hadd_2018_MC_baseline_wholeTTwp0.96/2018_BG_OTHER.root", "PEX0", kBlack, false};
+    histInfo data = {"Data", "condor/hadd_2016_MC_MT2_seed2_Assc3_wp0.98/2016_BG_OTHER.root", "PEX0", kBlack, false};
 
     // vector summarizing background histograms to include in the plot
     std::vector<histInfo> bgEntries = {
 
-        {"T#bar{T}",        "condor/hadd_2018_MC_baseline_wholeTTwp0.96/2018_TT.root",              "hist", kBlue - 6   },
-        {"WJets",           "condor/hadd_2018_MC_baseline_wholeTTwp0.96/2018_WJets.root",           "hist", kYellow + 1 },
-        {"DYJetsToLL_M-50", "condor/hadd_2018_MC_baseline_wholeTTwp0.96/2018_DYJetsToLL_M-50.root", "hist", kOrange + 2 },
-        {"QCD",             "condor/hadd_2018_MC_baseline_wholeTTwp0.96/2018_QCD.root",             "hist", kGreen + 1  },
-        {"ST",              "condor/hadd_2018_MC_baseline_wholeTTwp0.96/2018_ST.root",              "hist", kRed + 1    },
-        {"Diboson",         "condor/hadd_2018_MC_baseline_wholeTTwp0.96/2018_Diboson.root",         "hist", kMagenta + 1},
-        {"TTX",             "condor/hadd_2018_MC_baseline_wholeTTwp0.96/2018_TTX.root",             "hist", kCyan + 1   },
-        {"Triboson",        "condor/hadd_2018_MC_baseline_wholeTTwp0.96/2018_Triboson.root",        "hist", kGray       },
+        {"T#bar{T}",        "condor/hadd_2016_MC_MT2_seed2_Assc3_wp0.98/2016_TT.root",              "hist", kBlue - 6   },
+        {"WJets",           "condor/hadd_2016_MC_MT2_seed2_Assc3_wp0.98/2016_WJets.root",           "hist", kYellow + 1 },
+        {"DYJetsToLL_M-50", "condor/hadd_2016_MC_MT2_seed2_Assc3_wp0.98/2016_DYJetsToLL_M-50.root", "hist", kOrange + 2 },
+        {"QCD",             "condor/hadd_2016_MC_MT2_seed2_Assc3_wp0.98/2016_QCD.root",             "hist", kGreen + 1  },
+        {"ST",              "condor/hadd_2016_MC_MT2_seed2_Assc3_wp0.98/2016_ST.root",              "hist", kRed + 1    },
+        {"Diboson",         "condor/hadd_2016_MC_MT2_seed2_Assc3_wp0.98/2016_Diboson.root",         "hist", kMagenta + 1},
+        {"TTX",             "condor/hadd_2016_MC_MT2_seed2_Assc3_wp0.98/2016_TTX.root",             "hist", kCyan + 1   },
+        {"Triboson",        "condor/hadd_2016_MC_MT2_seed2_Assc3_wp0.98/2016_Triboson.root",        "hist", kGray       },
 
     };
 
     // vector summarizing signal histograms to include in the plot
     std::vector<histInfo> sigEntries = { 
 
-        {"RPV m_{#tildet} = 350", "condor/hadd_2018_MC_baseline_wholeTTwp0.96/2018_RPV_2t6j_mStop-350.root",        "hist", kCyan    }, 
-        {"RPV m_{#tildet} = 550", "condor/hadd_2018_MC_baseline_wholeTTwp0.96/2018_RPV_2t6j_mStop-550.root",        "hist", kMagenta },
-        //{"SYY m_{#tildet} = 900", "condor/hadd_2018_MC_baseline_wholeTTwp0.96/2018_StealthSYY_2t6j_mStop-900.root", "hist", kRed    },
+        {"RPV m_{#tildet} = 350", "condor/hadd_2016_MC_MT2_seed2_Assc3_wp0.98/2016_RPV_2t6j_mStop-350.root",        "hist", kCyan    }, 
+        {"RPV m_{#tildet} = 550", "condor/hadd_2016_MC_MT2_seed2_Assc3_wp0.98/2016_RPV_2t6j_mStop-550.root",        "hist", kMagenta },
+        {"RPV m_{#tildet} = 900", "condor/hadd_2016_MC_MT2_seed2_Assc3_wp0.98/2016_RPV_2t6j_mStop-900.root",        "hist", kRed },
+        //{"SYY m_{#tildet} = 900", "condor/hadd_2016_MC_MT2_seed2_Assc3_wp0.98/2016_StealthSYY_2t6j_mStop-900.root", "hist", kRed    },
     
     };
 
@@ -419,7 +420,7 @@ int main()
 
     std::vector<std::string> cut {
 
-        //"", "0l", 
+        "", "0l", 
         
         //"0l_HT500", "0l_HT500_ge2b", "0l_HT500_ge2b_ge6j", 
  
@@ -429,9 +430,10 @@ int main()
 
     };
 
-    for (const auto& cutlabel : cut) {
+    for (const auto& cutlabel : cut) 
+    {
         //plt.plot( "h_ntops_"+cutlabel,          "N_{T}",                "Events", true, cutlabel );
-        plt.plot( "h_njets_"+cutlabel,          "N_{J}",                "Events", true, cutlabel );
+        //plt.plot( "h_njets_"+cutlabel,          "N_{J}",                "Events", true, cutlabel );
         //plt.plot( "h_nbjets_"+cutlabel,         "N_{BJ}",               "Events", true, cutlabel );
         //plt.plot( "h_ht_"+cutlabel,             "HT [GeV]",             "Events", true, cutlabel );
         //plt.plot( "h_met_"+cutlabel,            "MET [GeV]",            "Events", true, cutlabel );
@@ -452,5 +454,26 @@ int main()
         //plt.plot( "h_dR_bjet1_bjet2_"+cutlabel, "#DeltaR_{bj1-bj2}",    "Events", false, cutlabel ); // for log scale 
         //plt.plot( "h_dR_top1_top2_"+cutlabel,   "#DeltaR_{t1-t2}",      "Events", false, cutlabel );
         //plt.plot( "h_dR_tops_bjets_"+cutlabel,  "#DeltaR_{tops-bjets}", "Events", false, cutlabel );
+
+        // stop MT2 hemispheres 
+        //plt.plot( "h_MT2_"+cutlabel,             "MT2",                "Events", true, cutlabel, 0, 500, 5 );
+        plt.plot( "h_stop1Mass_"+cutlabel,       "M_{#tildet}_{1}",    "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_stop1Eta_"+cutlabel,        "#eta_{#tildet}_{1}", "Events", true, cutlabel, 5 );
+        //plt.plot( "h_stop1Phi_"+cutlabel,        "#phi_{#tildet}_{1}", "Events", true, cutlabel, 5 );
+        //plt.plot( "h_stop1Pt_"+cutlabel,         "#pT_{#tildet}_{1}",  "Events", true, cutlabel, 0, 1500, 5 );
+        plt.plot( "h_stop2Mass_"+cutlabel,       "M_{#tildet}_{2}",    "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_stop2Eta_"+cutlabel,        "#eta_{#tildet}_{2}", "Events", true, cutlabel, 5 );
+        //plt.plot( "h_stop2Phi_"+cutlabel,        "#phi_{#tildet}_{2}", "Events", true, cutlabel, 5 );
+        //plt.plot( "h_stop2Pt_"+cutlabel,         "#pT_{#tildet}_{2}",  "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_dR_stop1stop2_"+cutlabel,   "#DeltaR",            "Events", true, cutlabel, 5 );
+        //plt.plot( "h_dPhi_stop1stop2_"+cutlabel, "#Delta#phi",         "Events", true, cutlabel, 0, 4 );
+
+        //plt.plot( "h_MT2_baseline_1l"+cutlabel,             "MT2",                "Events", true, cutlabel, 0, 500, 5 );
+        //plt.plot( "h_stop1Mass_baseline_1l"+cutlabel,       "M_{#tildet}_{1}",    "Events", true, cutlabel, 1000 );
+        //plt.plot( "h_stop2Mass_baseline_1l"+cutlabel,       "M_{#tildet}_{2}",    "Events", true, cutlabel, 1000 );
+        //plt.plot( "h_MT2_baseline_2l"+cutlabel,             "MT2",                "Events", true, cutlabel, 0, 500, 5 );
+        //plt.plot( "h_stop1Mass_baseline_2l"+cutlabel,       "M_{#tildet}_{1}",    "Events", true, cutlabel, 1000 );
+        //plt.plot( "h_stop2Mass_baseline_2l"+cutlabel,       "M_{#tildet}_{2}",    "Events", true, cutlabel, 1000 );    
+
     }
 }
