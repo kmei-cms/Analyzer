@@ -57,7 +57,7 @@ void setHistInfo(const std::string& path, std::vector<histInfo>& data, std::vect
     }
 
     sig = {        
-        {"RPV 350", path + "/"+year+"_RPV_2t6j_mStop-350.root",      "hist", kCyan    + 2*color  },
+        {"RPV 300", path + "/"+year+"_RPV_2t6j_mStop-300.root",      "hist", kCyan    + 2*color  },
         {"RPV 550", path + "/"+year+"_RPV_2t6j_mStop-550.root",      "hist", kMagenta + 2*color  },        
         {"RPV 850", path + "/"+year+"_RPV_2t6j_mStop-850.root",      "hist", kRed     + 2*color  },
         //{"SYY 550", path + "/"+year+"_StealthSYY_2t6j_mStop-550.root",       "hist", kMagenta  + 2*color  },        
@@ -119,11 +119,19 @@ int main(int argc, char *argv[])
         "_1l_HT300_ge2b",
         "_1l_HT300_ge7j_ge1b",
         "_1l_HT300_ge1b_Mbl",
+        "_1l_HT300_ge4j_ge1b_Mbl",
+        "_1e_HT300_ge4j_ge1b_Mbl",
+        "_1m_HT300_ge4j_ge1b_Mbl",
         "_1l_HT300_ge7j_ge1b_Mbl",
         "_1l_HT300_ge7j_ge1b_Mbl_noLepWeight",
         "_1l_HT300_ge7j_ge2b_Mbl",
         "_1l_HT300_ge7j_ge1b_Mbl_lBarrel",
+        "_1e_HT300_ge7j_ge1b_Mbl_lBarrel",
+        "_1m_HT300_ge7j_ge1b_Mbl_lBarrel",
         "_1l_HT300_ge7j_ge1b_Mbl_lEndCap",
+        "_1e_HT300_ge7j_ge1b_Mbl_lEndCap",
+        "_1m_HT300_ge7j_ge1b_Mbl_lEndCap",
+        "_1l_HT300_ge7j_ge1b_Mbl_noHTWeight",
         "_1e_HT300_ge7j_ge1b_Mbl",
         "_1m_HT300_ge7j_ge1b_Mbl",
         "_1l_HT300_ge7j_ge1b_Mbl_d1",
