@@ -25,6 +25,7 @@ public:
     std::map<std::string, std::shared_ptr<TEfficiency>>  my_efficiencies;
 
     void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false);
+    void InitHistos(const std::map<std::string, bool>& cutmap);
     void WriteHistos(TFile* outfile);
     StealthHemispheres();
 };
