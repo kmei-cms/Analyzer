@@ -39,10 +39,10 @@ Last step is to get the cfg and model files for the top tagger and deepESM.
 ```
 cmsenv
 getTaggerCfg.sh -t DeepCombined_Stealth_RES_T_DeepAK8_T_v1.0.0 -o
-getDeepESMCfg.sh -t Keras_Tensorflow_2016_v1.0 -o -s 2016
-getDeepESMCfg.sh -t Keras_Tensorflow_2017_v1.0 -o -s 2017
-getDeepESMCfg.sh -t Keras_Tensorflow_2018_v1.0 -o -s 2018pre
-getDeepESMCfg.sh -t Keras_Tensorflow_2018_v1.0 -o -s 2018post
+getDeepESMCfg.sh -t Keras_Tensorflow_2016_v1.1 -o -s 2016
+getDeepESMCfg.sh -t Keras_Tensorflow_2017_v1.1 -o -s 2017
+getDeepESMCfg.sh -t Keras_Tensorflow_2018pre_v1.0 -o -s 2018pre
+getDeepESMCfg.sh -t Keras_Tensorflow_2018post_v1.0 -o -s 2018post
 ```
 
 Example of running MyAnalysis interactively
