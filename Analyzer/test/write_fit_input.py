@@ -221,6 +221,10 @@ if __name__ == "__main__":
     outputDataCard = options.dataCard
 
     # I hadd my MakeN files into TT.root, TTX, and OTHER, then take QCD from control region
+    Data = {
+        "data" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_Data.root", label="data", processName="data", process="1", rate=False, lumiSys="-", scale=-1.0)
+    }
+
     bgData = {
         "TT"    : info.DataSetInfo(basedir=basedir, fileName=options.year+"_TT.root",      label="TT",    processName="bkg_tt",    process="1", rate=False, lumiSys="-", scale=options.scaleB),
         "QCD"   : info.DataSetInfo(basedir=basedir, fileName=options.year+"_QCD.root",     label="QCD",   processName="bkg_qcd",   process="2", rate=False, lumiSys="-", scale=options.scaleB),
@@ -228,51 +232,51 @@ if __name__ == "__main__":
         "OTHER" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_BG_OTHER.root",label="OTHER", processName="bkg_other", process="4", rate=True,  lumiSys="-", scale=options.scaleB),
     }
 
+    sgData = {
+        #"SYY_300" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSYY_2t6j_mStop-300.root", label="SYY_300", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SYY_350" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSYY_2t6j_mStop-350.root", label="SYY_350", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SYY_400" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSYY_2t6j_mStop-400.root", label="SYY_400", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SYY_450" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSYY_2t6j_mStop-450.root", label="SYY_450", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SYY_500" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSYY_2t6j_mStop-500.root", label="SYY_500", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SYY_550" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSYY_2t6j_mStop-550.root", label="SYY_550", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SYY_600" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSYY_2t6j_mStop-600.root", label="SYY_600", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SYY_650" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSYY_2t6j_mStop-650.root", label="SYY_650", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SYY_700" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSYY_2t6j_mStop-700.root", label="SYY_700", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SYY_750" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSYY_2t6j_mStop-750.root", label="SYY_750", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SYY_800" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSYY_2t6j_mStop-800.root", label="SYY_800", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SYY_850" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSYY_2t6j_mStop-850.root", label="SYY_850", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SYY_900" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSYY_2t6j_mStop-900.root", label="SYY_900", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #
+        #"SHH_300" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSHH_2t4b_mStop-300.root", label="SHH_300", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SHH_350" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSHH_2t4b_mStop-350.root", label="SHH_350", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SHH_400" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSHH_2t4b_mStop-400.root", label="SHH_400", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SHH_450" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSHH_2t4b_mStop-450.root", label="SHH_450", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SHH_500" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSHH_2t4b_mStop-500.root", label="SHH_500", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SHH_550" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSHH_2t4b_mStop-550.root", label="SHH_550", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SHH_600" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSHH_2t4b_mStop-600.root", label="SHH_600", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SHH_650" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSHH_2t4b_mStop-650.root", label="SHH_650", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SHH_700" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSHH_2t4b_mStop-700.root", label="SHH_700", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SHH_750" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSHH_2t4b_mStop-750.root", label="SHH_750", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SHH_800" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSHH_2t4b_mStop-800.root", label="SHH_800", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SHH_850" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSHH_2t4b_mStop-850.root", label="SHH_850", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        #"SHH_900" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_StealthSHH_2t4b_mStop-900.root", label="SHH_900", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        
+        "RPV_300" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_RPV_2t6j_mStop-300.root",        label="RPV_300", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        "RPV_350" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_RPV_2t6j_mStop-350.root",        label="RPV_350", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        "RPV_400" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_RPV_2t6j_mStop-400.root",        label="RPV_400", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        "RPV_450" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_RPV_2t6j_mStop-450.root",        label="RPV_450", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        "RPV_500" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_RPV_2t6j_mStop-500.root",        label="RPV_500", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        "RPV_550" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_RPV_2t6j_mStop-550.root",        label="RPV_550", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        "RPV_600" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_RPV_2t6j_mStop-600.root",        label="RPV_600", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        "RPV_650" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_RPV_2t6j_mStop-650.root",        label="RPV_650", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        "RPV_700" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_RPV_2t6j_mStop-700.root",        label="RPV_700", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        "RPV_750" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_RPV_2t6j_mStop-750.root",        label="RPV_750", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        "RPV_800" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_RPV_2t6j_mStop-800.root",        label="RPV_800", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        "RPV_850" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_RPV_2t6j_mStop-850.root",        label="RPV_850", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        "RPV_900" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_RPV_2t6j_mStop-900.root",        label="RPV_900", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS),
+        }
+
     if options.year == "2016":
-        sgData = {
-            "SYY_300" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSYY_2t6j_mStop-300.root", label="SYY_300", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17424),
-            "SYY_350" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSYY_2t6j_mStop-350.root", label="SYY_350", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16727),
-            "SYY_400" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSYY_2t6j_mStop-400.root", label="SYY_400", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17143),
-            "SYY_450" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSYY_2t6j_mStop-450.root", label="SYY_450", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17047),
-            "SYY_500" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSYY_2t6j_mStop-500.root", label="SYY_500", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17459),
-            "SYY_550" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSYY_2t6j_mStop-550.root", label="SYY_550", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17179),
-            "SYY_600" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSYY_2t6j_mStop-600.root", label="SYY_600", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17412),
-            "SYY_650" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSYY_2t6j_mStop-650.root", label="SYY_650", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16773),
-            "SYY_700" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSYY_2t6j_mStop-700.root", label="SYY_700", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16783),
-            "SYY_750" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSYY_2t6j_mStop-750.root", label="SYY_750", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.15897),
-            "SYY_800" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSYY_2t6j_mStop-800.root", label="SYY_800", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.15057),
-            "SYY_850" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSYY_2t6j_mStop-850.root", label="SYY_850", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.13917),
-            "SYY_900" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSYY_2t6j_mStop-900.root", label="SYY_900", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.12495),
-
-            "SHH_300" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSHH_2t4b_mStop-300.root", label="SHH_300", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17424),
-            "SHH_350" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSHH_2t4b_mStop-350.root", label="SHH_350", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16727),
-            "SHH_400" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSHH_2t4b_mStop-400.root", label="SHH_400", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17143),
-            "SHH_450" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSHH_2t4b_mStop-450.root", label="SHH_450", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17047),
-            "SHH_500" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSHH_2t4b_mStop-500.root", label="SHH_500", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17459),
-            "SHH_550" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSHH_2t4b_mStop-550.root", label="SHH_550", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17179),
-            "SHH_600" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSHH_2t4b_mStop-600.root", label="SHH_600", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17412),
-            "SHH_650" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSHH_2t4b_mStop-650.root", label="SHH_650", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16773),
-            "SHH_700" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSHH_2t4b_mStop-700.root", label="SHH_700", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16783),
-            "SHH_750" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSHH_2t4b_mStop-750.root", label="SHH_750", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.15897),
-            "SHH_800" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSHH_2t4b_mStop-800.root", label="SHH_800", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.15057),
-            "SHH_850" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSHH_2t4b_mStop-850.root", label="SHH_850", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.13917),
-            "SHH_900" : info.DataSetInfo(basedir=basedir, fileName="2016_StealthSHH_2t4b_mStop-900.root", label="SHH_900", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.12495),
-
-            "RPV_300" : info.DataSetInfo(basedir=basedir, fileName="2016_RPV_2t6j_mStop-300.root",        label="RPV_300", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17424),
-            "RPV_350" : info.DataSetInfo(basedir=basedir, fileName="2016_RPV_2t6j_mStop-350.root",        label="RPV_350", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16727),
-            "RPV_400" : info.DataSetInfo(basedir=basedir, fileName="2016_RPV_2t6j_mStop-400.root",        label="RPV_400", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17143),
-            "RPV_450" : info.DataSetInfo(basedir=basedir, fileName="2016_RPV_2t6j_mStop-450.root",        label="RPV_450", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17047),
-            "RPV_500" : info.DataSetInfo(basedir=basedir, fileName="2016_RPV_2t6j_mStop-500.root",        label="RPV_500", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17459),
-            "RPV_550" : info.DataSetInfo(basedir=basedir, fileName="2016_RPV_2t6j_mStop-550.root",        label="RPV_550", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17179),
-            "RPV_600" : info.DataSetInfo(basedir=basedir, fileName="2016_RPV_2t6j_mStop-600.root",        label="RPV_600", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17412),
-            "RPV_650" : info.DataSetInfo(basedir=basedir, fileName="2016_RPV_2t6j_mStop-650.root",        label="RPV_650", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16773),
-            "RPV_700" : info.DataSetInfo(basedir=basedir, fileName="2016_RPV_2t6j_mStop-700.root",        label="RPV_700", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16783),
-            "RPV_750" : info.DataSetInfo(basedir=basedir, fileName="2016_RPV_2t6j_mStop-750.root",        label="RPV_750", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.15897),
-            "RPV_800" : info.DataSetInfo(basedir=basedir, fileName="2016_RPV_2t6j_mStop-800.root",        label="RPV_800", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.15057),
-            "RPV_850" : info.DataSetInfo(basedir=basedir, fileName="2016_RPV_2t6j_mStop-850.root",        label="RPV_850", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.13917),
-            "RPV_900" : info.DataSetInfo(basedir=basedir, fileName="2016_RPV_2t6j_mStop-900.root",        label="RPV_900", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.12495),
-            }
-
         binDicData = {
             "D1" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0], 
             "D2" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0],
@@ -288,50 +292,6 @@ if __name__ == "__main__":
         }
 
     elif options.year== "2017":
-        sgData = {
-            "SYY_300" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSYY_2t6j_mStop-300.root", label="SYY_300", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17424),
-            "SYY_350" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSYY_2t6j_mStop-350.root", label="SYY_350", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16727),
-            "SYY_400" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSYY_2t6j_mStop-400.root", label="SYY_400", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17143),
-            "SYY_450" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSYY_2t6j_mStop-450.root", label="SYY_450", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17047),
-            "SYY_500" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSYY_2t6j_mStop-500.root", label="SYY_500", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17459),
-            "SYY_550" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSYY_2t6j_mStop-550.root", label="SYY_550", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17179),
-            "SYY_600" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSYY_2t6j_mStop-600.root", label="SYY_600", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17412),
-            "SYY_650" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSYY_2t6j_mStop-650.root", label="SYY_650", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16773),
-            "SYY_700" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSYY_2t6j_mStop-700.root", label="SYY_700", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16783),
-            "SYY_750" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSYY_2t6j_mStop-750.root", label="SYY_750", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.15897),
-            "SYY_800" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSYY_2t6j_mStop-800.root", label="SYY_800", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.15057),
-            "SYY_850" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSYY_2t6j_mStop-850.root", label="SYY_850", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.13917),
-            "SYY_900" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSYY_2t6j_mStop-900.root", label="SYY_900", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.12495),
-
-            "SHH_300" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSHH_2t4b_mStop-300.root", label="SHH_300", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17424),
-            "SHH_350" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSHH_2t4b_mStop-350.root", label="SHH_350", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16727),
-            "SHH_400" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSHH_2t4b_mStop-400.root", label="SHH_400", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17143),
-            "SHH_450" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSHH_2t4b_mStop-450.root", label="SHH_450", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17047),
-            "SHH_500" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSHH_2t4b_mStop-500.root", label="SHH_500", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17459),
-            "SHH_550" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSHH_2t4b_mStop-550.root", label="SHH_550", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17179),
-            "SHH_600" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSHH_2t4b_mStop-600.root", label="SHH_600", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17412),
-            "SHH_650" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSHH_2t4b_mStop-650.root", label="SHH_650", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16773),
-            "SHH_700" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSHH_2t4b_mStop-700.root", label="SHH_700", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16783),
-            "SHH_750" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSHH_2t4b_mStop-750.root", label="SHH_750", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.15897),
-            "SHH_800" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSHH_2t4b_mStop-800.root", label="SHH_800", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.15057),
-            "SHH_850" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSHH_2t4b_mStop-850.root", label="SHH_850", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.13917),
-            "SHH_900" : info.DataSetInfo(basedir=basedir, fileName="2017_StealthSHH_2t4b_mStop-900.root", label="SHH_900", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.12495),
-
-            "RPV_300" : info.DataSetInfo(basedir=basedir, fileName="2017_RPV_2t6j_mStop-300.root",        label="RPV_300", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17424),
-            "RPV_350" : info.DataSetInfo(basedir=basedir, fileName="2017_RPV_2t6j_mStop-350.root",        label="RPV_350", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16727),
-            "RPV_400" : info.DataSetInfo(basedir=basedir, fileName="2017_RPV_2t6j_mStop-400.root",        label="RPV_400", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17143),
-            "RPV_450" : info.DataSetInfo(basedir=basedir, fileName="2017_RPV_2t6j_mStop-450.root",        label="RPV_450", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17047),
-            "RPV_500" : info.DataSetInfo(basedir=basedir, fileName="2017_RPV_2t6j_mStop-500.root",        label="RPV_500", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17459),
-            "RPV_550" : info.DataSetInfo(basedir=basedir, fileName="2017_RPV_2t6j_mStop-550.root",        label="RPV_550", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17179),
-            "RPV_600" : info.DataSetInfo(basedir=basedir, fileName="2017_RPV_2t6j_mStop-600.root",        label="RPV_600", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.17412),
-            "RPV_650" : info.DataSetInfo(basedir=basedir, fileName="2017_RPV_2t6j_mStop-650.root",        label="RPV_650", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16773),
-            "RPV_700" : info.DataSetInfo(basedir=basedir, fileName="2017_RPV_2t6j_mStop-700.root",        label="RPV_700", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.16783),
-            "RPV_750" : info.DataSetInfo(basedir=basedir, fileName="2017_RPV_2t6j_mStop-750.root",        label="RPV_750", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.15897),
-            "RPV_800" : info.DataSetInfo(basedir=basedir, fileName="2017_RPV_2t6j_mStop-800.root",        label="RPV_800", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.15057),
-            "RPV_850" : info.DataSetInfo(basedir=basedir, fileName="2017_RPV_2t6j_mStop-850.root",        label="RPV_850", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.13917),
-            "RPV_900" : info.DataSetInfo(basedir=basedir, fileName="2017_RPV_2t6j_mStop-900.root",        label="RPV_900", processName="signal", process="0", rate=True, lumiSys="1.05", scale=options.scaleS*1.12495),
-            }
-
         binDicData = {
             "D1" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,2.0], 
             "D2" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,2.0],
@@ -339,9 +299,21 @@ if __name__ == "__main__":
             "D4" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0],
         }
 
-    Data = {
-        "data" : info.DataSetInfo(basedir=basedir, fileName=options.year+"_Data.root", label="data", processName="data", process="1", rate=False, lumiSys="-", scale=-1.0)
-    }
+    elif options.year== "2018pre":
+        binDicData = {
+            "D1" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,2.0], 
+            "D2" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,2.0],
+            "D3" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0],
+            "D4" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0],
+        }
+
+    elif options.year== "2018post":
+        binDicData = {
+            "D1" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,2.0], 
+            "D2" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,2.0],
+            "D3" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0],
+            "D4" : [-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,0.0],
+        }
 
     dicNoD4 = {
         "D1" : [   -1.0,  -1.0,  -1.0, -1.0, -1.0, -1.0, -1.0, -1.0], 
