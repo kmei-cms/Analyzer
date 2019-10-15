@@ -39,10 +39,10 @@ Last step is to get the cfg and model files for the top tagger and deepESM.
 ```
 cmsenv
 getTaggerCfg.sh -t DeepCombined_Stealth_RES_T_DeepAK8_T_v1.0.0 -o
-getDeepESMCfg.sh -t Keras_Tensorflow_2016_v1.0 -o -s 2016
-getDeepESMCfg.sh -t Keras_Tensorflow_2017_v1.0 -o -s 2017
-getDeepESMCfg.sh -t Keras_Tensorflow_2018_v1.0 -o -s 2018pre
-getDeepESMCfg.sh -t Keras_Tensorflow_2018_v1.0 -o -s 2018post
+getDeepESMCfg.sh -t Keras_Tensorflow_2016_v1.1 -o -s 2016
+getDeepESMCfg.sh -t Keras_Tensorflow_2017_v1.1 -o -s 2017
+getDeepESMCfg.sh -t Keras_Tensorflow_2018pre_v1.0 -o -s 2018pre
+getDeepESMCfg.sh -t Keras_Tensorflow_2018post_v1.0 -o -s 2018post
 ```
 
 Example of running MyAnalysis interactively
@@ -90,16 +90,20 @@ Running the condor jobs to produce the input histograms for the fit.
 
 ```
 cd $CMSSW_BASE/src/Analyzer/Analyzer/test/condor
-python condorSubmit.py --analyze MakeNJetDists -d 2016_Data_SingleElectron,2016_Data_SingleMuon,2016_TT,2016_TT_fsrUp,2016_TT_fsrDown,2016_TT_isrUp,2016_TT_isrDown,2016_WJetsToLNu,2016_DYJetsToLL_M-50,2016_ST,2016_Diboson,2016_Triboson,2016_TTX,2016_AllSignal -n 10 --output CondorOutput_Keras1.2.8_Final
-python condorSubmit.py --analyze MakeNJetDists -d 2017_Data_SingleElectron,2017_Data_SingleMuon,2017_TT,2017_WJetsToLNu,2017_DYJetsToLL_M-50,2017_ST,2017_Diboson,2017_Triboson,2017_TTX,2017_AllSignal -n 10 --output CondorOutput_Keras3.0.4_Final
+python condorSubmit.py --analyze MakeNJetDists -d 2016_Data_SingleElectron,2016_Data_SingleMuon,2016_TT,2016_TT_fsrUp,2016_TT_fsrDown,2016_TT_isrUp,2016_TT_isrDown,2016_WJets,2016_DYJetsToLL_M-50,2016_QCD,2016_ST,2016_Diboson,2016_Triboson,2016_TTX,2016_AllSignal -n 15 --output CondorOutput_2016_v1.1
+python condorSubmit.py --analyze MakeNJetDists -d 2017_Data_SingleElectron,2017_Data_SingleMuon,2017_TT,2017_WJets,2017_DYJetsToLL_M-50,2017_QCD,2017_ST,2017_Diboson,2017_Triboson,2017_TTX,2017_AllSignal                                                             -n 15 --output CondorOutput_2017_v1.1
+python condorSubmit.py --analyze MakeNJetDists -d 2018pre_Data_SingleElectron,2018pre_Data_SingleMuon,2018pre_TT,2018pre_WJets,2018pre_DYJetsToLL_M-50,2018pre_QCD,2018pre_ST,2018pre_Diboson,2018pre_Triboson,2018pre_TTX,2018pre_AllSignal                            -n 15 --output CondorOutput_2018pre_v1.0
+python condorSubmit.py --analyze MakeNJetDists -d 2018post_Data_SingleElectron,2018post_Data_SingleMuon,2018post_TT,2018post_WJets,2018post_DYJetsToLL_M-50,2018post_QCD,2018post_ST,2018post_Diboson,2018post_Triboson,2018post_TTX,2018post_AllSignal                 -n 15 --output CondorOutput_2018post_v1.0
 ```
 
 Now hadd the outputs when the jobs are done.
 
 ```
 cd $CMSSW_BASE/src/Analyzer/Analyzer/test/condor
-python hadder.py -d 2016_Data_SingleElectron,2016_Data_SingleMuon,2016_TT,2016_TT_fsrUp,2016_TT_fsrDown,2016_TT_isrUp,2016_TT_isrDown,2016_WJetsToLNu,2016_DYJetsToLL_M-50,2016_ST,2016_Diboson,2016_Triboson,2016_TTX,2016_AllSignal -H MakeNJetsDists_Kerasv1.2.8_Final -p CondorOutput_Keras1.2.8_Final/output-files -y 2016 --haddOther --haddData
-python hadder.py -d 2017_Data_SingleElectron,2017_Data_SingleMuon,2017_TT,2017_WJetsToLNu,2017_DYJetsToLL_M-50,2017_ST,2017_Diboson,2017_Triboson,2017_TTX,2017_AllSignal -H MakeNJetsDists_Kerasv3.0.4_Final -p CondorOutput_Keras3.0.4_Final/output-files -y 2017 --haddOther --haddData
+python hadder.py -d  2016_Data_SingleElectron,2016_Data_SingleMuon,2016_TT,2016_TT_fsrUp,2016_TT_fsrDown,2016_TT_isrUp,2016_TT_isrDown,2016_WJets,2016_DYJetsToLL_M-50,2016_QCD,2016_ST,2016_Diboson,2016_Triboson,2016_TTX,2016_AllSignal  -H MakeNJetsDists_2016_v1.1     -p CondorOutput_2016_v1.1/output-files     -y 2016     --haddOther --haddData
+python hadder.py -d  2017_Data_SingleElectron,2017_Data_SingleMuon,2017_TT,2017_WJets,2017_DYJetsToLL_M-50,2017_QCD,2017_ST,2017_Diboson,2017_Triboson,2017_TTX,2017_AllSignal                                                              -H MakeNJetsDists_2017_v1.1     -p CondorOutput_2017_v1.1/output-files     -y 2017     --haddOther --haddData
+python hadder.py -d  2018pre_Data_SingleElectron,2018pre_Data_SingleMuon,2018pre_TT,2018pre_WJets,2018pre_DYJetsToLL_M-50,2018pre_QCD,2018pre_ST,2018pre_Diboson,2018pre_Triboson,2018pre_TTX,2018pre_AllSignal                             -H MakeNJetsDists_2018pre_v1.0  -p CondorOutput_2018pre_v1.0/output-files  -y 2018pre  --haddOther --haddData
+python hadder.py -d  2018post_Data_SingleElectron,2018post_Data_SingleMuon,2018post_TT,2018post_WJets,2018post_DYJetsToLL_M-50,2018post_QCD,2018post_ST,2018post_Diboson,2018post_Triboson,2018post_TTX,2018post_AllSignal                  -H MakeNJetsDists_2018post_v1.0 -p CondorOutput_2018post_v1.0/output-files -y 2018post --haddOther --haddData
 ```
 
 If there are missing jobs you should see a message in red after each sample is hadded.
@@ -107,6 +111,8 @@ After hadding now put all the samples together into one file for the fit input.
 
 ```
 cd $CMSSW_BASE/src/Analyzer/Analyzer/test/
-python write_fit_input.py -d condor/MakeNJetsDists_Kerasv1.2.8_Final -H FitInput/Keras_V1.2.8_Final -y 2016
-python write_fit_input.py -d condor/MakeNJetsDists_Kerasv3.0.4_Final -H FitInput/Keras_V3.0.4_Final -y 2017
+python write_fit_input.py -d condor/MakeNJetsDists_2016_v1.1     -H FitInput/Keras_2016_v1.1     -y 2016
+python write_fit_input.py -d condor/MakeNJetsDists_2017_v1.1     -H FitInput/Keras_2017_v1.1     -y 2017
+python write_fit_input.py -d condor/MakeNJetsDists_2018pre_v1.0  -H FitInput/Keras_2018pre_v1.0  -y 2018pre
+python write_fit_input.py -d condor/MakeNJetsDists_2018post_v1.0 -H FitInput/Keras_2018post_v1.0 -y 2018post
 ```
