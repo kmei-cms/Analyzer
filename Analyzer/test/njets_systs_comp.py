@@ -1,20 +1,38 @@
 import ROOT
 import plot
 import math
+import sys
 
-#version = "Keras_V1.2.8_Approval_SepOther_StatErrPlusFullDev"
-version = "Keras_V3.0.4_Approval_SepOther_StatErrPlusFullDev"
+ROOT.gROOT.SetBatch(True)
 
-fitversion = "Approval_With12JetFix_2017"
+year = str(sys.argv[1])
+
+version = ""; fitversion = ""
+inputfilename = "/uscms_data/d3/jhiltb/susy/CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit/"
+if year == "2016":
+    version = "Keras_V1.2.8_Approval_StatErrPlusFullDev_12JetFix"
+    inputfilename += "Keras_2016_v1.1" 
+elif year == "2017":
+    version = "Keras_V3.0.4_Approval_StatErrPlusFullDev_12JetFix"
+    inputfilename += "Keras_2017_v1.1" 
+elif year == "2018pre":
+    version = "Keras_V3.0.4_Approval_StatErrPlusFullDev_12JetFix"
+    inputfilename += "Keras_2018pre_v1.0" 
+elif year == "2018post":
+    version = "Keras_V3.0.4_Approval_StatErrPlusFullDev_12JetFix"
+    inputfilename += "Keras_2018post_v1.0" 
+else:
+    print "Year \"%s\" is not valid!"%(year)
+    print "Exiting..."
+    quit()
+ 
+inputfilename += "/njets_for_Aron.root"
+fitversion = "Approval_With12JetFix_%s"%(year)
 #fitversion = "GL_2017"
 #fitversion = "FS2017"
 #GL_2016_nom_shared
 
-year = 2017
-
-#inputfilename = "~cmadrid/nobackup/ana/SUSY/Stealth/AnaNTuples/CMSSW_9_3_3/src/Analyzer/Analyzer/test/FitInput/Keras_V1.2.4/njets_for_Aron.root"
-#inputfilename = "~cmadrid/nobackup/ana/SUSY/Stealth/AnaNTuples/CMSSW_9_3_3/src/Analyzer/Analyzer/test/FitInput/%s/njets_for_Aron.root"%version
-inputfilename = "/uscms_data/d3/nstrobbe/StealthRPV/FitRepo/CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit/%s/njets_for_Aron.root"%version
+print "Opening root file \"%s\""%(inputfilename)
 inputfile = ROOT.TFile.Open(inputfilename)
 
 ROOT.gStyle.SetOptStat(0)
@@ -40,7 +58,7 @@ systs = ["",
          "_puUp",
          "_puDown"
 ]
-if year == 2017:
+if "2017" in year:
     systs.extend([
          "_isrUp",
          "_isrDown",
@@ -73,6 +91,7 @@ histos = {}
 for mva in mvas: 
     # get all histograms
     #print mva
+    print base
     histnames = [mva+"_"+base+syst for syst in systs]
     #print histnames
     Dhistos = [inputfile.Get(histname) for histname in histnames]
@@ -319,7 +338,7 @@ if "2017" in fitversion:
 #         h.Write()
 
 # Look at results from Aron's fits -- update with my own background-only fits
-fitdir = "/uscms_data/d3/nstrobbe/StealthRPV/FitRepo/CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit/"
+fitdir = "/uscms_data/d3/jhiltb/susy/CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit"
 
 #*(1) Fit with a0, a1, a2 shared across MVA bins, fitting to pseudo-data composed of nominal samples*
 #Results are here:
