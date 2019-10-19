@@ -20,6 +20,7 @@
 #include "Analyzer/Analyzer/include/AnalyzeSignalModels.h"
 #include "Analyzer/Analyzer/include/AnalyzeTest.h"
 #include "Analyzer/Analyzer/include/AnalyzeLepTrigger.h"
+#include "Analyzer/Analyzer/include/AnalyzeEENoise.h"
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
 #include "Analyzer/Analyzer/include/MakeMiniTree.h"
@@ -180,6 +181,7 @@ int main(int argc, char *argv[])
         {"AnalyzeStealthTopTagger", run<AnalyzeStealthTopTagger>},
         {"AnalyzeBTagSF",           run<AnalyzeBTagSF>},
         {"AnalyzeHEM",              run<AnalyzeHEM>},
+        {"AnalyzeEENoise",          run<AnalyzeEENoise>},
         {"AnalyzeSignalModels",     run<AnalyzeSignalModels>},
         {"AnalyzeTest",             run<AnalyzeTest>},
         {"CalculateBTagSF",         run<CalculateBTagSF>},
