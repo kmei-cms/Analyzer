@@ -217,7 +217,7 @@ if __name__ == '__main__':
                 data1.Scale(1./data1.Integral())
                 data2.Scale(1./data2.Integral())
 
-                data1.GetYaxis().SetRangeUser(0.001,1.1*data1.GetMaximum())
+                #data1.GetYaxis().SetRangeUser(0.001,1.1*data1.GetMaximum())
 
                 data1.GetXaxis().SetLabelSize(0)
 
