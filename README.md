@@ -35,10 +35,18 @@ source setup.csh
 make -j4
 ```
 
-Last step is to get the cfg and model files for the top tagger and deepESM.
+We set up the top tagger cfg files for per year, because per year has different b-tagger working points (WPs). Also, we use 2 different top tagger WPs for 0 lepton case which are 0.96 and 0.98. We can get the cfg files for top tagger: 
+```
+getTaggerCfg.sh -t StealthStop_DeepCSV_DeepResolved_DeepAK8_wp0.96_2016_v1
+getTaggerCfg.sh -t StealthStop_DeepCSV_DeepResolved_DeepAK8_wp0.96_2017_v1
+getTaggerCfg.sh -t StealthStop_DeepCSV_DeepResolved_DeepAK8_wp0.96_2018_v1
+getTaggerCfg.sh -t StealthStop_DeepCSV_DeepResolved_DeepAK8_wp0.98_2016_v1
+getTaggerCfg.sh -t StealthStop_DeepCSV_DeepResolved_DeepAK8_wp0.98_2017_v1
+getTaggerCfg.sh -t StealthStop_DeepCSV_DeepResolved_DeepAK8_wp0.98_2018_v1
+```
+Last step is to get the cfg and model files for the deepESM.
 ```
 cmsenv
-getTaggerCfg.sh -t DeepCombined_Stealth_RES_T_DeepAK8_T_v1.0.0 -o
 getDeepESMCfg.sh -t Keras_Tensorflow_2016_v1.1 -o -s 2016
 getDeepESMCfg.sh -t Keras_Tensorflow_2017_v1.1 -o -s 2017
 getDeepESMCfg.sh -t Keras_Tensorflow_2018pre_v1.0 -o -s 2018pre
