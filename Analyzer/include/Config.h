@@ -141,6 +141,7 @@ public:
             bjetCSVFileName = "DeepCSV_102XSF_WP_V1.csv";
             meanFileName = "allInOne_SFMean.root";
             blind = true;
+            TopTaggerCfg = "TopTaggerCfg_2018.cfg";
         }
         else if(filetag.find("2018post") != std::string::npos) 
         {
