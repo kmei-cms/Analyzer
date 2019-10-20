@@ -39,9 +39,6 @@ We set up the top tagger cfg files for per year, because per year has different 
 Last step is to get the cfg and model files for the top tagger and deepESM.
 ```
 cmsenv
-getTaggerCfg.sh -t StealthStop_DeepCSV_DeepResolved_DeepAK8_wp0.96_2016_v1 -f TopTaggerCfg_2016.cfg -o
-getTaggerCfg.sh -t StealthStop_DeepCSV_DeepResolved_DeepAK8_wp0.96_2017_v1 -f TopTaggerCfg_2017.cfg -o
-getTaggerCfg.sh -t StealthStop_DeepCSV_DeepResolved_DeepAK8_wp0.96_2018_v1 -f TopTaggerCfg_2018.cfg -o
 getTaggerCfg.sh -t StealthStop_DeepCSV_DeepResolved_DeepAK8_wp0.98_2016_v1 -f TopTaggerCfg_2016.cfg -o
 getTaggerCfg.sh -t StealthStop_DeepCSV_DeepResolved_DeepAK8_wp0.98_2017_v1 -f TopTaggerCfg_2017.cfg -o
 getTaggerCfg.sh -t StealthStop_DeepCSV_DeepResolved_DeepAK8_wp0.98_2018_v1 -f TopTaggerCfg_2018.cfg -o
