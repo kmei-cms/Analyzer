@@ -37,12 +37,13 @@ private:
         const auto& bjetFileName          = tr.getVar<std::string>("bjetFileName");
         const auto& bjetCSVFileName       = tr.getVar<std::string>("bjetCSVFileName");
         const auto& filetag               = tr.getVar<std::string>("filetag");
-        
+        const auto& TopTaggerCfg          = tr.getVar<std::string>("TopTaggerCfg");       
+ 
         for(const auto& module : modules)
         {
             if     (module=="PartialUnBlinding")           tr.emplaceModule<PartialUnBlinding>();
             else if(module=="PrepNTupleVars")              tr.emplaceModule<PrepNTupleVars>();
-            else if(module=="RunTopTagger")                tr.emplaceModule<RunTopTagger>();
+            else if(module=="RunTopTagger")                tr.emplaceModule<RunTopTagger>(TopTaggerCfg);
             else if(module=="Muon")                        tr.emplaceModule<Muon>();
             else if(module=="Electron")                    tr.emplaceModule<Electron>();
             else if(module=="Photon")                      tr.emplaceModule<Photon>();
@@ -58,6 +59,7 @@ private:
             else if(module=="MakeMT2Hemispheres_1l")       tr.emplaceModule<MakeMT2Hemispheres>("GoodJets_pt30", "NGoodJets_pt30", "_1l");
             else if(module=="DeepEventShape")              tr.emplaceModule<DeepEventShape>(DeepESMCfg, ModelFile);
             else if(module=="DeepEventShape_NonIsoMuon")   tr.emplaceModule<DeepEventShape>(DeepESMCfg_NonIsoMuon, ModelFile);
+            
             if(runtype == "MC")
             {
                 if     (module=="ScaleFactors")  tr.emplaceModule<ScaleFactors>(runYear, leptonFileName, puFileName, meanFileName);
@@ -82,7 +84,8 @@ public:
         const auto& analyzer = tr.getVar<std::string>("analyzer");
         const bool isSignal = (filetag.find("_stop") != std::string::npos || filetag.find("_mStop") != std::string::npos) ? true : false;
 
-        std::string runYear, puFileName, DeepESMCfg, DeepESMCfg_NonIsoMuon, ModelFile, leptonFileName, bjetFileName, bjetCSVFileName, meanFileName;
+        std::string runYear, puFileName, DeepESMCfg, DeepESMCfg_NonIsoMuon, ModelFile, leptonFileName, bjetFileName, bjetCSVFileName, meanFileName, TopTaggerCfg;
+        
         double Lumi, deepCSV_WP_loose, deepCSV_WP_medium, deepCSV_WP_tight;
         bool blind;
 
@@ -102,6 +105,7 @@ public:
             bjetCSVFileName = "DeepCSV_2016LegacySF_WP_V1.csv";
             meanFileName = "allInOne_SFMean.root";
             blind = false;
+            TopTaggerCfg = "TopTaggerCfg_2016.cfg";
         }
         else if(filetag.find("2017") != std::string::npos)
         { 
@@ -119,6 +123,7 @@ public:
             bjetCSVFileName = "DeepCSV_94XSF_WP_V4_B_F.csv";
             meanFileName = "allInOne_SFMean.root";
             blind = false;
+            TopTaggerCfg = "TopTaggerCfg_2017.cfg";
         }
         else if(filetag.find("2018pre") != std::string::npos) 
         {
@@ -136,6 +141,7 @@ public:
             bjetCSVFileName = "DeepCSV_102XSF_WP_V1.csv";
             meanFileName = "allInOne_SFMean.root";
             blind = true;
+            TopTaggerCfg = "TopTaggerCfg_2018.cfg";
         }
         else if(filetag.find("2018post") != std::string::npos) 
         {
@@ -153,6 +159,7 @@ public:
             bjetCSVFileName = "DeepCSV_102XSF_WP_V1.csv";
             meanFileName = "allInOne_SFMean.root";
             blind = true;
+            TopTaggerCfg = "TopTaggerCfg_2018.cfg";
         }
 
         tr.registerDerivedVar("runYear",runYear);
@@ -171,9 +178,10 @@ public:
         tr.registerDerivedVar("meanFileName",meanFileName);        
         tr.registerDerivedVar("etaCut",2.4); 
         tr.registerDerivedVar("blind",blind);
+        tr.registerDerivedVar("TopTaggerCfg", TopTaggerCfg);
 
         //Register Modules that are needed for each Analyzer
-        if(analyzer=="Analyze0Lep" || analyzer=="Semra_Analyzer" || analyzer=="AnalyzeTopTagger")
+        if(analyzer=="Analyze0Lep" || analyzer=="AnalyzeTopTagger")
         {
             const std::vector<std::string> modulesList = {
                 "PartialUnBlinding",
@@ -247,7 +255,7 @@ public:
             };
             registerModules(tr, std::move(modulesList));
         }
-        else if(analyzer=="StealthHemispheres")
+        else if(analyzer=="StealthHemispheres" || analyzer=="Semra_Analyzer")
         {
             const std::vector<std::string> modulesList = {
                 "PartialUnBlinding",
@@ -262,9 +270,10 @@ public:
                 "MakeMVAVariables",
                 "Baseline",
                 "DeepEventShape",
-                "MakeMT2Hemispheres_0l"
+                "MakeMT2Hemispheres_0l",
+                "MakeMT2Hemispheres_1l",
                 "BTagCorrector",
-                "ScaleFactors"
+                "ScaleFactors",
             };
             registerModules(tr, std::move(modulesList));
         }
@@ -322,7 +331,6 @@ public:
                 "DeepEventShape",
                 "MakeMVAVariables_NonIsoMuon",
                 "DeepEventShape_NonIsoMuon",
-                //"MakeMT2Hemispheres_1l",
                 "BTagCorrector",
                 "ScaleFactors"
             };
