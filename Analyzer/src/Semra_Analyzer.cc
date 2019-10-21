@@ -85,8 +85,6 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
         //my_histos.emplace( "h_relativeDiff_stopMasses_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_relativeDiff_stopMasses_PtRank_"+cutVar.first).c_str(), ("h_relativeDiff_stopMasses_PtRank_"+cutVar.first).c_str(), 500, -1500, 1500) );
         //my_histos.emplace( "h_difference_stopMasses_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_difference_stopMasses_MassRank_"+cutVar.first).c_str(), ("h_difference_stopMasses_MassRank_"+cutVar.first).c_str(), 500, 0, 1500) );
         //my_histos.emplace( "h_relativeDiff_stopMasses_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_relativeDiff_stopMasses_MassRank_"+cutVar.first).c_str(), ("h_relativeDiff_stopMasses_MassRank_"+cutVar.first).c_str(), 500, -1500, 1500) );
-
-        //my_2d_histos.emplace( "h_Mass_stop1vsstop2_PtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Mass_stop1vsstop2_PtRank_"+cutVar.first).c_str(), ("h_Mass_stop1vsstop2_PtRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
         //my_2d_histos.emplace( "h_Mass_stop1vsstop2_MassRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Mass_stop1vsstop2_MassRank_"+cutVar.first).c_str(), ("h_Mass_stop1vsstop2_MassRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
         //my_2d_histos.emplace( "h_Mass_MT2vsstop1_PtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_MT2vsstop1_PtRank_"+cutVar.first).c_str(), ("h_Mass_MT2vsstop1_PtRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
         //my_2d_histos.emplace( "h_Mass_MT2vsstop1_MassRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_MT2vsstop1_MassRank_"+cutVar.first).c_str(), ("h_Mass_MT2vsstop1_MassRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
@@ -236,11 +234,11 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         // -------------------------------------------------
         const std::map<std::string, bool>& cutmap
         {
-            {"",                                       true                                                                },
-            {"0l",                                     pass_general && pass_0l                                             },
-            {"0l_HT500",                               pass_general && pass_0l && pass_HT500                               },           
-            {"0l_HT500_ge2b",                          pass_general && pass_0l && pass_HT500 && pass_ge2b                  },     
-            {"0l_HT500_ge2b_ge6j",                     pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j     },
+            {"",                                       true                                                            },
+            {"0l",                                     pass_general && pass_0l                                         },
+            {"0l_HT500",                               pass_general && pass_0l && pass_HT500                           },           
+            {"0l_HT500_ge2b",                          pass_general && pass_0l && pass_HT500 && pass_ge2b              },     
+            {"0l_HT500_ge2b_ge6j",                     pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j },
             
             // >= 2 tops
             {"0l_HT500_ge2b_ge6j_ge2t",                passBaseline0l && pass_ge2t     },
