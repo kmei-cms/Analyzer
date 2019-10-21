@@ -9,14 +9,26 @@ from samples import SampleCollection
 import optparse 
 import subprocess
 
+def removeCopies(x):
+  return list(dict.fromkeys(x))
+
 def makeExeAndFriendsTarball(filestoTransfer, fname, path):
     system("mkdir -p %s" % fname)
-    for fn in filestoTransfer:
+    for fn in removeCopies(filestoTransfer):
         system("cd %s; ln -s %s" % (fname, fn))
         
     tarallinputs = "tar czf %s/%s.tar.gz %s --dereference"% (path, fname, fname)
     system(tarallinputs)
     system("rm -r %s" % fname)
+
+def getTopTaggerTrainingFile(topTaggerFile):
+    name = ""
+    with file(topTaggerFile) as meowttcfgFile:
+        for line in meowttcfgFile:
+            if "modelFile" in line:
+                name = line.split("=")[1].strip().strip("\"")
+                break
+    return name
 
 def main():
     repo = "Analyzer/Analyzer"    
@@ -32,15 +44,14 @@ def main():
     options, args = parser.parse_args()
     
     # Prepare the list of files to transfer
-    mvaFileName = ""
-    with file(environ["CMSSW_BASE"] + "/src/%s/test/TopTaggerCfg_2016.cfg" % repo) as meowttcfgFile:
-        for line in meowttcfgFile:
-            if "modelFile" in line:
-                mvaFileName = line.split("=")[1].strip().strip("\"")
-                break
-    
+    mvaFileName2016 = getTopTaggerTrainingFile(environ["CMSSW_BASE"] + "/src/%s/test/TopTaggerCfg_2016.cfg" % repo)
+    mvaFileName2017 = getTopTaggerTrainingFile(environ["CMSSW_BASE"] + "/src/%s/test/TopTaggerCfg_2017.cfg" % repo)
+    mvaFileName2018 = getTopTaggerTrainingFile(environ["CMSSW_BASE"] + "/src/%s/test/TopTaggerCfg_2018.cfg" % repo)
+
     filestoTransfer = [environ["CMSSW_BASE"] + "/src/%s/test/MyAnalysis" % repo, 
-                       environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,mvaFileName),
+                       environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,mvaFileName2016),
+                       environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,mvaFileName2017),
+                       environ["CMSSW_BASE"] + "/src/%s/test/%s" % (repo,mvaFileName2018),
                        environ["CMSSW_BASE"] + "/src/%s/test/TopTaggerCfg_2016.cfg" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/TopTaggerCfg_2017.cfg" % repo,
                        environ["CMSSW_BASE"] + "/src/%s/test/TopTaggerCfg_2018.cfg" % repo,
