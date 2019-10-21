@@ -32,15 +32,16 @@ optionsMap = {"h_jet_pt"       : {"X" : {"rebin" : 12, "min" : 0, "max" : 1000, 
               "h_jet30_pthad"  : {"X" : {"rebin" : 30, "title" : "Jet p_{T} [GeV]"}, "Y" : {"rebin" : 30, "title" : "Neutral Hadron Fraction"}},
               "h_jet30_etaem"  : {"X" : {"rebin" : 30, "title" : "Jet #eta"}, "Y" : {"rebin" : 30, "title" : "Neutral EM Fraction"}},
               "h_jet30_etahad" : {"X" : {"rebin" : 30, "title" : "Jet #eta"}, "Y" : {"rebin" : 30, "title" : "Neutral Hadron Fraction"}},
-              "h_fwm2_top6"    : {"X" : {"rebin" : 20}},
-              "h_fwm3_top6"    : {"X" : {"rebin" : 20}},
-              "h_fwm4_top6"    : {"X" : {"rebin" : 20}},
-              "h_fwm5_top6"    : {"X" : {"rebin" : 20}},
-              "h_jmt_ev0_top6" : {"X" : {"min" : 0.3, "max" : 0.1, "rebin" : 20}},
-              "h_jmt_ev1_top6" : {"X" : {"min" : 0.0, "max" : 0.5, "rebin" : 20}},
-              "h_jmt_ev2_top6" : {"X" : {"min" : 0.0, "max" : 0.3, "rebin" : 20}},
-              "h_beta_z"       : {"X" : {"rebin" : 20}},
-              "h_deepESM_val"  : {"X" : {"rebin" : 20}},
+              "h_fwm2_top6"    : {"X" : {"rebin" : 20, "title" : "Fox-Wolfram 2nd Moment"}},
+              "h_fwm3_top6"    : {"X" : {"rebin" : 20, "title" : "Fox-Wolfram 3rd Moment"}},
+              "h_fwm4_top6"    : {"X" : {"rebin" : 20, "title" : "Fox-Wolfram 4th Moment"}},
+              "h_fwm5_top6"    : {"X" : {"rebin" : 20, "title" : "Fox-Wolfram 5th Moment"}},
+              "h_jmt_ev0_top6" : {"X" : {"min" : 0.3, "max" : 0.1, "rebin" : 20, "title" : "Jet Momentum Tensor Eigenvalue 0"}},
+              "h_jmt_ev1_top6" : {"X" : {"min" : 0.0, "max" : 0.5, "rebin" : 20, "title" : "Jet Momentum Tensor Eigenvalue 1"}},
+              "h_jmt_ev2_top6" : {"X" : {"min" : 0.0, "max" : 0.3, "rebin" : 20, "title" : "Jet Momentum Tensor Eigenvalue 2"}},
+              "h_beta_z"       : {"X" : {"rebin" : 20, "title" : "#beta_{z}"}},
+              "h_beta_z_pt20"  : {"X" : {"rebin" : 20, "title" : "#beta_{z}"}},
+              "h_deepESM"  : {"X" : {"rebin" : 20, "title" : "DeepESM"}},
 }
 
 def doOptions(histo, histoName, theMap):
@@ -130,7 +131,7 @@ if __name__ == '__main__':
 
             data2018A = mapPFAhistos["2018A"][name]
             theName = data2018A.GetName().replace("_2018A", "")
-            prettyHisto(data2018A,0.875,0.8)
+            prettyHisto(data2018A,0.875,1.1)
             doOptions(data2018A, theName, optionsMap)
 
             data2018A.SetTitle(""); data2018A.SetContour(255); 
@@ -147,7 +148,7 @@ if __name__ == '__main__':
             ROOT.gPad.SetRightMargin(magicMargins["R"])
 
             data2018D = mapPFAhistos["2018D"][name]
-            prettyHisto(data2018D,0.875,0.8)
+            prettyHisto(data2018D,0.875,1.1)
             doOptions(data2018D, theName, optionsMap)
 
             data2018D.SetTitle(""); data2018D.SetContour(255)
@@ -221,7 +222,7 @@ if __name__ == '__main__':
                 ratio.Divide(data2018D,data2018A)
 
                 ratio.GetYaxis().SetRangeUser(0.25,1.75)
-                ratio.GetYaxis().SetNdivisions(304)
+                ratio.GetYaxis().SetNdivisions(604)
                 ratio.GetYaxis().SetTitle("2018D / 2018A")
                 ratio.GetYaxis().SetTitleSize(ratio.GetYaxis().GetTitleSize()*0.6)
                 ratio.GetXaxis().SetTitleSize(ratio.GetXaxis().GetTitleSize()*0.8)
