@@ -65,7 +65,7 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
         my_histos.emplace( "h_average_stopMasses_"+cutVar.first, std::make_shared<TH1D> ( ("h_average_stopMasses_"+cutVar.first).c_str(), ("h_average_stopMasses_"+cutVar.first).c_str(), 500, 0, 1500) );
         my_histos.emplace( "h_relativeDiff_stopMasses_"+cutVar.first, std::make_shared<TH1D> ( ("h_relativeDiff_stopMasses_"+cutVar.first).c_str(), ("h_relativeDiff_stopMasses_"+cutVar.first).c_str(), 500, -1500, 1500) );
 
-         my_2d_histos.emplace( "h_Mass_stop1vsstop2_"+cutVar.first, std::make_shared<TH2D>( ("h_Mass_stop1vsstop2_"+cutVar.first).c_str(), ("h_Mass_stop1vsstop2_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
+        my_2d_histos.emplace( "h_Mass_stop1vsstop2_"+cutVar.first, std::make_shared<TH2D>( ("h_Mass_stop1vsstop2_"+cutVar.first).c_str(), ("h_Mass_stop1vsstop2_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
         my_2d_histos.emplace( "h_Eta_stop1vsstop2_"+cutVar.first, std::make_shared<TH2D>( ("h_Eta_stop1vsstop2_"+cutVar.first).c_str(), ("h_Eta_stop1vsstop2_"+cutVar.first).c_str(), 100, -6, 6, 100, -6, 6 ) );
         my_2d_histos.emplace( "h_Phi_stop1vsstop2_"+cutVar.first, std::make_shared<TH2D>( ("h_Phi_stop1vsstop2_"+cutVar.first).c_str(), ("h_Phi_stop1vsstop2_"+cutVar.first).c_str(), 80, -4, 4, 80, -4, 4 ) );
         my_2d_histos.emplace( "h_Pt_stop1vsstop2_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt_stop1vsstop2_"+cutVar.first).c_str(), ("h_Pt_stop1vsstop2_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000 ) );
@@ -98,7 +98,7 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
         my_2d_histos.emplace( "h_Mass_NJetsVSstop1_MassRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_NJetsVSstop1_MassRank_"+cutVar.first).c_str(), ("h_Mass_NJetsVSstop1_MassRank_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );
         my_2d_histos.emplace( "h_Mass_NJetsVSstop2_PtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_NJetsVSstop2_PtRank_"+cutVar.first).c_str(), ("h_Mass_NJetsVSstop2_PtRank_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );
         my_2d_histos.emplace( "h_Mass_NJetsVSstop2_MassRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_NJetsVSstop2_MassRank_"+cutVar.first).c_str(), ("h_Mass_NJetsVSstop2_MassRank_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );
-
+ 
         //my_2d_histos.emplace( "h_njets_MVA_"+cutVar.first, std::make_shared<TH2D>( ("h_njets_MVA_"+cutVar.first).c_str(), ("h_njets_MVA_"+cutVar.first).c_str(), 8, 7, 15, 50, 0, 1.0 ) );
         //my_2d_histos.emplace( "h_njets_dR_bjets_"+cutVar.first, std::make_shared<TH2D>( ("h_njets_dR_bjets_"+cutVar.first).c_str(), ("h_njets_dR_bjets_"+cutVar.first).c_str(), 1000, 0, 10, 20, 0, 20 ) ); // for cut optimization of dR_bjets cut
     }
@@ -237,11 +237,11 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         // -------------------------------------------------
         const std::map<std::string, bool>& cutmap
         {
-            {"",                                       true                                                                },
-            {"0l",                                     pass_general && pass_0l                                             },
-            {"0l_HT500",                               pass_general && pass_0l && pass_HT500                               },           
-            {"0l_HT500_ge2b",                          pass_general && pass_0l && pass_HT500 && pass_ge2b                  },     
-            {"0l_HT500_ge2b_ge6j",                     pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j     },
+            {"",                                       true                                                            },
+            {"0l",                                     pass_general && pass_0l                                         },
+            {"0l_HT500",                               pass_general && pass_0l && pass_HT500                           },           
+            {"0l_HT500_ge2b",                          pass_general && pass_0l && pass_HT500 && pass_ge2b              },     
+            {"0l_HT500_ge2b_ge6j",                     pass_general && pass_0l && pass_HT500 && pass_ge2b && pass_ge6j },
             
             // >= 2 tops
             {"0l_HT500_ge2b_ge6j_ge2t",                passBaseline0l && pass_ge2t     },
@@ -408,11 +408,11 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                 my_histos["h_difference_stopMasses_MassRank_"+cutVar.first]->Fill( difference_stopMasses_MassRank, weight );
                 my_histos["h_relativeDiff_stopMasses_MassRank_"+cutVar.first]->Fill( relativeDiff_stopMasses_MassRank, weight );
                 my_2d_histos["h_Mass_stop1vsstop2_PtRank_"+cutVar.first]->Fill(stop1Mass_PtRank, stop2Mass_PtRank, weight);
-                my_2d_histos["h_Mass_stop1vsstop2_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("M_{#tildet}_{1}");
-                my_2d_histos["h_Mass_stop1vsstop2_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("M_{#tildet}_{2}");
+                my_2d_histos["h_Mass_stop1vsstop2_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank M_{#tildet}_{1}");
+                my_2d_histos["h_Mass_stop1vsstop2_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank M_{#tildet}_{2}");
                 my_2d_histos["h_Mass_stop1vsstop2_MassRank_"+cutVar.first]->Fill(stop1Mass_MassRank, stop2Mass_MassRank, weight);
-                my_2d_histos["h_Mass_stop1vsstop2_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("M_{#tildet}_{1}");
-                my_2d_histos["h_Mass_stop1vsstop2_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("M_{#tildet}_{2}");
+                my_2d_histos["h_Mass_stop1vsstop2_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("Mass Rank M_{#tildet}_{1}");
+                my_2d_histos["h_Mass_stop1vsstop2_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("MAss Rank M_{#tildet}_{2}");
                 my_2d_histos["h_Mass_MT2vsstop1_PtRank_"+cutVar.first]->Fill( MT2, stop1Mass_PtRank, weight );
                 my_2d_histos["h_Mass_MT2vsstop1_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("MT2");
                 my_2d_histos["h_Mass_MT2vsstop1_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank M_{#tildet}_{1} [GeV]");
