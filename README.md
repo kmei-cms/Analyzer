@@ -3,10 +3,10 @@ Runs all of our anaylsis code.
 
 ## Using the tensor-flow based top tagger
 
-To have easy access to TensorFlow, we need to work in a CMSSW93 release:
+To have easy access to TensorFlow and UpRoot, we need to work in a CMSSW10_2_9 release:
 ```
-cmsrel CMSSW_9_3_3
-cd CMSSW_9_3_3/src/
+cmsrel CMSSW_10_2_9
+cd CMSSW_10_2_9/src/
 cmsenv
 ```
 
