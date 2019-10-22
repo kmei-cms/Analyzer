@@ -32,6 +32,7 @@ git clone git@github.com:susy2015/SusyAnaTools.git
 git clone git@github.com:StealthStop/Analyzer.git
 cd Analyzer/Analyzer/test
 source setup.sh #.csh if in tcsh
+./configure
 make -j4
 ```
 
