@@ -113,7 +113,7 @@ def main():
     
     fileParts = []
     fileParts.append("Universe   = vanilla\n")
-    fileParts.append("Executable = run_Analyzer_condor.tcsh\n")
+    fileParts.append("Executable = run_Analyzer_condor.sh\n")
     fileParts.append("Transfer_Input_Files = %s/CMSSW_9_3_3.tar.gz, %s/exestuff.tar.gz\n" % (options.outPath,options.outPath))
     fileParts.append("Should_Transfer_Files = YES\n")
     fileParts.append("WhenToTransferOutput = ON_EXIT\n")

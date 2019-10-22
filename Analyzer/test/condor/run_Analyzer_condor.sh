@@ -1,4 +1,4 @@
-#!/bin/tcsh
+#!/bin/bash
 
 #--- You should copy this to a scratch disk where you will manage your job submission and output
 #    and prepare the two tar files as described below.
@@ -7,16 +7,16 @@
 
 ##--- See also make_condor_jdl_files.c which makes jdl files that go with this executable script.
 
-set dataset = $1
-set nfiles = $2
-set startfile = $3
-set filelist = $4
-set analyzer = $5
-set base_dir = `pwd`
+dataset=$1
+nfiles=$2
+startfile=$3
+filelist=$4
+analyzer=$5
+base_dir=`pwd`
 printf "\n\n base dir is $base_dir\n\n"
 
-source /cvmfs/cms.cern.ch/cmsset_default.csh
-setenv SCRAM_ARCH slc6_amd64_gcc630
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+export SCRAM_ARCH=slc6_amd64_gcc630
 
 printf "\n\n ls output\n"
 ls -l
@@ -42,7 +42,7 @@ cd CMSSW_9_3_3/
 mkdir -p src
 cd src
 scram b ProjectRename
-eval `scramv1 runtime -csh`
+eval `scramv1 runtime -sh`
 
 printf "\n\n ls output\n"
 ls -l
@@ -55,14 +55,14 @@ cp ${base_dir}/exestuff.tar.gz .
 tar xzvf exestuff.tar.gz
 cd exestuff/
 
-setenv LD_LIBRARY_PATH ${PWD}:${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH=${PWD}:${LD_LIBRARY_PATH}
 
 printf "\n\n LD_LIBRARY_PATH: ${LD_LIBRARY_PATH}\n\n"
 printf "\n\n ls output\n"
 ls -l
 
 printf "Copy over the needed filelist"
-set file=`printf ${filelist} | sed 's|/eos/uscms||'`
+file=$(printf ${filelist} | sed 's|/eos/uscms||')
 printf "\n\n xrdcp root://cmseos.fnal.gov/${file} .\n\n"
 xrdcp root://cmseos.fnal.gov/${file} .
 
