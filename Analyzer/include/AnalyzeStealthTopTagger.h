@@ -32,7 +32,7 @@ public:
 
     ~AnalyzeStealthTopTagger(){}
 
-    void Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet = true)
+    void Loop(NTupleReader& tr, double, int maxevents, bool)
     {        
         int events = 0, peventsLep0 = 0, peventsLep1 = 0;
         TRandom* trand = new TRandom3();        
@@ -44,19 +44,9 @@ public:
             if(maxevents != -1 && tr.getEvtNum() >= maxevents) break;        
             if ( tr.getEvtNum() % 1000 == 0 ) printf("  Event %i\n", tr.getEvtNum() ) ;
 
-            const auto& MET          = tr.getVar<double>("MET");
-            const auto& HT           = tr.getVar<double>("HT");
-            const auto& ntops        = tr.getVar<int>("ntops");
-            const auto& ntops_3jet   = tr.getVar<int>("ntops_3jet");
-            const auto& ntops_2jet   = tr.getVar<int>("ntops_2jet");
-            const auto& ntops_1jet   = tr.getVar<int>("ntops_1jet");
             const auto& runtype      = tr.getVar<std::string>("runtype");     
             const auto& filetag      = tr.getVar<std::string>("filetag");
-            const auto& TriggerNames = tr.getVec<std::string>("TriggerNames");
-            const auto& TriggerPass  = tr.getVec<int>("TriggerPass");
-            const auto& NJets_pt30   = tr.getVar<int>("NJets_pt30");
             const auto& NJets_pt45   = tr.getVar<int>("NJets_pt45");
-            const auto& NBJets       = tr.getVar<int>("NBJets");
             const auto& NBJets_pt45  = tr.getVar<int>("NBJets_pt45");
             const auto& NGoodLeptons = tr.getVar<int>("NGoodLeptons");
             const auto& HT_trigger   = tr.getVar<double>("HT_trigger");

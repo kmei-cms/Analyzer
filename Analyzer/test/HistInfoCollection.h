@@ -120,11 +120,11 @@ public:
         h->SetLineStyle(style);
     }
 
-    histInfo(const std::string& legName, const std::string& histFile, const std::string& drawOptions, const int color, const bool printNEvents = true, const double scale = 1.0) : legName(legName), histFile(histFile), histName(""), drawOptions(drawOptions), color(color), scale(scale), rebin(-1), h(nullptr), nEvents(-1), printNEvents(printNEvents)
+    histInfo(const std::string& legName, const std::string& histFile, const std::string& drawOptions, const int color, const bool printNEvents = true, const double scale = 1.0) : legName(legName), histFile(histFile), histName(""), drawOptions(drawOptions), color(color), rebin(-1), nEvents(-1), scale(scale), printNEvents(printNEvents), h(nullptr)
     {
     }
 
-    histInfo(TH1* h) : legName(h->GetName()), histFile(""), histName(h->GetName()), drawOptions(""), color(kWhite), scale(1.0), rebin(0), h(h), nEvents(-1), printNEvents(true)
+    histInfo(TH1* h) : legName(h->GetName()), histFile(""), histName(h->GetName()), drawOptions(""), color(kWhite), rebin(0), nEvents(-1), scale(1.0), printNEvents(true), h(h)
     {
     }
 
@@ -270,7 +270,7 @@ public:
         return yieldMap;
     }
 
-    std::map<std::string,double> computeYields(const std::string& histName, const std::string& histType, const std::shared_ptr<TH1>& hbgSum, const int min, const int max)
+    std::map<std::string,double> computeYields(const std::string&, const std::string& histType, const std::shared_ptr<TH1>& hbgSum, const int min, const int max)
     {
         std::map<std::string,double> yieldMap;
         std::vector<std::vector<histInfo>*> dataSets  = { &dataVec_, &bgVec_, &sigVec_ };

@@ -44,7 +44,7 @@ void CalculateBTagSF::InitHistos(std::string histoFileTag)
     my_2d_histos["n_eff_udsg_"+histoFileTag]->GetYaxis()->SetTitle( "#eta" );
 }//END of init histos
 
-void CalculateBTagSF::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void CalculateBTagSF::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {

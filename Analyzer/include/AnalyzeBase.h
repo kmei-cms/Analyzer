@@ -29,7 +29,7 @@ public:
         }
     }
 
-    const bool printEventNum(const int maxevents, const int evtNum, const int divisor = 1000)
+    bool printEventNum(const int maxevents, const int evtNum, const int divisor = 1000)
     {
         bool b = false;
         if( maxevents != -1 && evtNum >= maxevents + 1 ) b = true;

@@ -81,7 +81,7 @@ void Analyze0Lep::InitHistos(const std::map<std::string, bool>& cutMap)
 
 }
 
-void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void Analyze0Lep::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {
@@ -92,7 +92,6 @@ void Analyze0Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& ntops_2jet         = tr.getVar<int>("ntops_2jet");
         const auto& ntops_1jet         = tr.getVar<int>("ntops_1jet");
         const auto& runtype            = tr.getVar<std::string>("runtype");     
-        const auto& filetag            = tr.getVar<std::string>("filetag");
         const auto& NJets_pt30         = tr.getVar<int>("NGoodJets_pt30");
         const auto& NJets_pt45         = tr.getVar<int>("NGoodJets_pt45");
         const auto& NBJets             = tr.getVar<int>("NGoodBJets");

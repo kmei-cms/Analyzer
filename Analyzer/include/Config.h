@@ -86,8 +86,8 @@ public:
 
         std::string runYear, puFileName, DeepESMCfg, DeepESMCfg_NonIsoMuon, ModelFile, leptonFileName, bjetFileName, bjetCSVFileName, meanFileName, TopTaggerCfg;
         
-        double Lumi, deepCSV_WP_loose, deepCSV_WP_medium, deepCSV_WP_tight;
-        bool blind;
+        double Lumi=0.0, deepCSV_WP_loose=0.0, deepCSV_WP_medium=0.0, deepCSV_WP_tight=0.0;
+        bool blind = true;
 
         if(filetag.find("2016") != std::string::npos)
         {

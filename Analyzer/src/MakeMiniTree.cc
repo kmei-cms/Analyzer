@@ -23,7 +23,7 @@ void MakeMiniTree::InitHistos()
     my_histos.emplace( "EventCounter", std::make_shared<TH1D>( "EventCounter", "EventCounter", 2, -1.1, 1.1 ) ); 
 }//END of init histos
 
-void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void MakeMiniTree::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {
@@ -31,33 +31,17 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
         my_histos["EventCounter"]->Fill( eventCounter );
 
         const auto& runtype             = tr.getVar<std::string>("runtype");
-        const auto& filetag             = tr.getVar<std::string>("filetag");
-
-
-        const auto& passBaseline0l      = tr.getVar<bool>("passBaseline0l_Good");
         const auto& passBaseline1l      = tr.getVar<bool>("passBaseline1l_Good");
-
-        const auto& NJets_pt30          = tr.getVar<int>("NGoodJets_pt30");
-        const auto& NJets_pt45          = tr.getVar<int>("NGoodJets_pt45");
-        const auto& NGoodElectrons      = tr.getVar<int>("NGoodElectrons");
-        const auto& NGoodMuons          = tr.getVar<int>("NGoodMuons");
-        
-        const auto& HT                  = tr.getVar<double>("HT");
-        const auto& HT_trigger_pt30     = tr.getVar<double>("HT_trigger_pt30");
-        const auto& passTrigger         = tr.getVar<bool>("passTrigger");
-        const auto& JetID               = tr.getVar<bool>("JetID");
-
+       
         //------------------------------------
         //-- Print Event Number
         //------------------------------------
-
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
         if( tr.getEvtNum() % 10000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
 
         //-----------------------------------
         //  Initialize the tree
-        //-----------------------------------
-        
+        //-----------------------------------       
         std::set<std::string> variables = {
             "Lumi",
             "deepESM_val",
@@ -118,7 +102,6 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
         if( runtype == "MC" ) {
             const auto& passTriggerMC       = tr.getVar<bool>("passTriggerMC");
             const auto& passMadHT           = tr.getVar<bool>("passMadHT");
-            const auto& MadHT               = tr.getVar<double>("madHT");
             
             if( !passMadHT || !passTriggerMC ) continue; 
         }

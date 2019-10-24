@@ -27,29 +27,26 @@ AnalyzeTopTagger::AnalyzeTopTagger() : hists("histos"), histNjet7("Njet7"), hist
 void AnalyzeTopTagger::InitHistos()
 {
     TH1::SetDefaultSumw2();
+    my_histos.emplace("EventCounter", std::make_shared<TH1D>("EventCounter","EventCounter", 2, -1.1, 1.1 ) );
 }
 
-void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void AnalyzeTopTagger::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     TRandom3 rand(123);
    
     while(tr.getNextEvent())
     {
         const auto& eventCounter           = tr.getVar<int>("eventCounter");
+        my_histos["EventCounter"]->Fill(eventCounter);
 
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
-        if( tr.getEvtNum() & 10000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );        
+        if( tr.getEvtNum() & (10000 == 0) ) printf( " Event %i\n", tr.getEvtNum() );        
 
         const auto& runtype                = tr.getVar<std::string>("runtype");
-        const auto& filetag                = tr.getVar<std::string>("filetag");
-        const auto& NGoodLeptons           = tr.getVar<int>("NGoodLeptons");
         const auto& dR_bjets               = tr.getVar<double>("dR_bjets");
         const auto& Jets                   = tr.getVec<TLorentzVector>("Jets");
         const auto& GoodJets_pt45          = tr.getVec<bool>("GoodJets_pt45");
         const auto& NGoodJets_pt45         = tr.getVar<int>("NGoodJets_pt45");
-        const auto& GoodBJets_pt45         = tr.getVec<bool>("GoodBJets_pt45");
-        const auto& NGoodBJets_pt45        = tr.getVar<int>("NGoodBJets_pt45");
-        const auto& ntops                  = tr.getVar<int>("ntops"); 
         const bool  passBaseline0l         = tr.getVar<bool>("passBaseline0l_Good");     
         const bool  pass_ge1dRbjets        = (dR_bjets >= 1.0); 
 
@@ -79,7 +76,7 @@ void AnalyzeTopTagger::Loop(NTupleReader& tr, double weight, int maxevents, bool
         // -- Create variables for setStealthStopVar function
         // -----------------------------------------------------
         auto& goodjets_pt45 = tr.createDerivedVec<TLorentzVector>("GoodJets_pt45_tlv");
-        for (int i = 0; i < Jets.size(); ++i )
+        for (unsigned int i = 0; i < Jets.size(); ++i )
         {
             if (!GoodJets_pt45[i]) continue;
             goodjets_pt45.emplace_back(Jets.at(i));            

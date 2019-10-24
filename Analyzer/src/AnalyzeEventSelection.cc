@@ -26,12 +26,11 @@ void AnalyzeEventSelection::InitHistos()
     my_efficiencies.emplace("event_sel_weight", std::make_shared<TEfficiency>("event_sel_weight","event_sel_weight",9,0,9));
 }
 
-void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void AnalyzeEventSelection::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {
         const auto& runtype              = tr.getVar<std::string>("runtype");     
-        const auto& filetag              = tr.getVar<std::string>("filetag");
         const auto& GoodLeptons          = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
 
         const auto& JetID                = tr.getVar<bool>("JetID");
@@ -53,7 +52,6 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
         double leptonweight = 1.0;
         double bTagWeight = 1.0;
         double htDerivedweight = 1.0;
-        double topPtScaleFactor = 1.0;
         double prefiringScaleFactor = 1.0;
         if(runtype == "MC")
         {
@@ -73,7 +71,6 @@ void AnalyzeEventSelection::Loop(NTupleReader& tr, double weight, int maxevents,
             //PileupWeight = tr.getVar<double>("_PUweightFactor");
             bTagWeight   = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
             htDerivedweight = tr.getVar<double>("htDerivedweight");
-            topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
             prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
             
             weight *= eventweight*leptonweight*bTagWeight*htDerivedweight*prefiringScaleFactor;
