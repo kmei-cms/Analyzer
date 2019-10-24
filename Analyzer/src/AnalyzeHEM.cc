@@ -84,7 +84,7 @@ void AnalyzeHEM::InitHistos()
 }
 
 //Put everything you want to do per event here.
-void AnalyzeHEM::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void AnalyzeHEM::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {
@@ -98,18 +98,14 @@ void AnalyzeHEM::Loop(NTupleReader& tr, double weight, int maxevents, bool isQui
         //--------------------------------------------------
         
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
-        if( tr.getEvtNum() & 10000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
+        if( tr.getEvtNum() & (10000 == 0) ) printf( " Event %i\n", tr.getEvtNum() );
        
         const auto& runtype             = tr.getVar<std::string>("runtype");     
-        const auto& filetag             = tr.getVar<std::string>("filetag");
         const auto& GoodLeptons         = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
         const auto& Jets                = tr.getVec<TLorentzVector>("Jets");
         const auto& GoodJets_pt30       = tr.getVec<bool>("GoodJets_pt30");
-        const auto& JetID               = tr.getVar<bool>("JetID");
         const auto& NGoodLeptons        = tr.getVar<int>("NGoodLeptons");
-        const auto& passTriggerMC       = tr.getVar<bool>("passTriggerMC");
         const auto& NGoodBJets_pt30     = tr.getVar<int>("NGoodBJets_pt30");
-        const auto& Mbl                 = tr.getVar<double>("Mbl");
         const auto& HT_trigger_pt30     = tr.getVar<double>("HT_trigger_pt30");
         const auto& NGoodJets_pt30      = tr.getVar<int>("NGoodJets_pt30");
         const auto& RunNum              = tr.getVar<unsigned int>("RunNum");
@@ -145,7 +141,6 @@ void AnalyzeHEM::Loop(NTupleReader& tr, double weight, int maxevents, bool isQui
         double leptonScaleFactor    = 1.0;
         double bTagScaleFactor      = 1.0;
         double htDerivedScaleFactor = 1.0;
-        double topPtScaleFactor     = 1.0;
         double prefiringScaleFactor = 1.0;
         double puScaleFactor        = 1.0;
         
@@ -168,7 +163,6 @@ void AnalyzeHEM::Loop(NTupleReader& tr, double weight, int maxevents, bool isQui
             //PileupWeight = tr.getVar<double>("_PUweightFactor");
             bTagScaleFactor   = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
             htDerivedScaleFactor = tr.getVar<double>("htDerivedweight");
-            topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
             prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
             puScaleFactor = tr.getVar<double>("puWeightCorr");
             

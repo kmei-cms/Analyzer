@@ -60,7 +60,7 @@ void AnalyzeLepTrigger::InitHistos()
 }
 
 //Put everything you want to do per event here.
-void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void AnalyzeLepTrigger::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {
@@ -69,17 +69,12 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         my_histos["EventCounter"]->Fill( eventCounter );
 
         //Define useful variables here
-        const auto& TriggerNames        = tr.getVec<std::string>("TriggerNames");
-        const auto& TriggerPass         = tr.getVec<int>("TriggerPass");
-
         const auto& runtype             = tr.getVar<std::string>("runtype");
-        const auto& runYear             = tr.getVar<std::string>("runYear");
         const auto& filetag             = tr.getVar<std::string>("filetag");
         const auto& etaCut              = tr.getVar<double>("etaCut");
         const auto& GoodLeptons         = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
 
         const auto& NGoodLeptons        = tr.getVar<int>("NGoodLeptons");
-        const auto& passTriggerMC       = tr.getVar<bool>("passTriggerMC");
         const auto& NGoodJets_pt30      = tr.getVar<int>("NGoodJets_pt30");
 
         const auto& Muons               = tr.getVec<TLorentzVector>("Muons");
@@ -103,6 +98,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         //--------------------------------------------------
         //-- Print list of triggers (only if you want to see them)
         //--------------------------------------------------
+        //const auto& TriggerNames        = tr.getVec<std::string>("TriggerNames");
         //if( tr.getEvtNum() == 1 ) printTriggerList(TriggerNames); 
 
         // ------------------------
@@ -110,10 +106,6 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
         // ------------------------
         double theweight            = 1.0;
         double leptonScaleFactor    = 1.0;
-        double bTagScaleFactor      = 1.0;
-        double prefiringScaleFactor = 1.0;
-        double puScaleFactor        = 1.0;
-
         if(runtype == "MC")
         {
             if( !passMadHT ) continue; //Make sure not to double count DY events
@@ -133,8 +125,7 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double weight, int maxevents, boo
             const auto& bTagScaleFactor   = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
             const auto& prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
 
-            theweight = lumi*Weight*puWeight*leptonScaleFactor*bTagScaleFactor*prefiringScaleFactor;
-            
+            theweight = lumi*Weight*puWeight*leptonScaleFactor*bTagScaleFactor*prefiringScaleFactor;            
         }
 
         bool passMuonTriggers       = tr.getVar<bool>("passTriggerMuon");

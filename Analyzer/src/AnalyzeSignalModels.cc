@@ -47,7 +47,7 @@ void AnalyzeSignalModels::InitHistos()
 }
 
 //Put everything you want to do per event here.
-void AnalyzeSignalModels::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void AnalyzeSignalModels::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {
@@ -60,11 +60,9 @@ void AnalyzeSignalModels::Loop(NTupleReader& tr, double weight, int maxevents, b
         //--------------------------------------------------
         
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
-        if( tr.getEvtNum() & 10000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
+        if( tr.getEvtNum() & (10000 == 0) ) printf( " Event %i\n", tr.getEvtNum() );
         
         const auto& runtype         = tr.getVar<std::string>("runtype");     
-        const auto& filetag         = tr.getVar<std::string>("filetag");
-        const auto& GoodLeptons     = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
         const auto& GoodJets        = tr.getVec<bool>("GoodJets");
         const auto& Jets            = tr.getVec<TLorentzVector>("Jets");
 
@@ -74,14 +72,12 @@ void AnalyzeSignalModels::Loop(NTupleReader& tr, double weight, int maxevents, b
 
         //const auto& JetID           = tr.getVar<bool>("JetID");
         const auto& NGoodLeptons    = tr.getVar<int>("NGoodLeptons");
-        const auto& passTriggerMC   = tr.getVar<bool>("passTriggerMC");
         const auto& NGoodBJets_pt30 = tr.getVar<int>("NGoodBJets_pt30");
         //const auto& Mbl             = tr.getVar<double>("Mbl");
         const auto& HT_trigger_pt30 = tr.getVar<double>("HT_trigger_pt30");
         const auto& NGoodJets       = tr.getVar<int>("NGoodJets");
         //const auto& NGoodJets_pt30  = tr.getVar<int>("NGoodJets_pt30");
         const auto& passMadHT       = tr.getVar<bool>("passMadHT");
-        const auto& passBaseline    = tr.getVar<bool>("passBaseline1l_Good");
         const auto& met             = tr.getVar<double>("MET");
        
         if(maxevents != -1 && tr.getEvtNum() >= maxevents) break;        
@@ -95,7 +91,6 @@ void AnalyzeSignalModels::Loop(NTupleReader& tr, double weight, int maxevents, b
         double leptonScaleFactor    = 1.0;
         double bTagScaleFactor      = 1.0;
         double htDerivedScaleFactor = 1.0;
-        double topPtScaleFactor     = 1.0;
         double prefiringScaleFactor = 1.0;
         double puScaleFactor        = 1.0;
         
@@ -118,7 +113,6 @@ void AnalyzeSignalModels::Loop(NTupleReader& tr, double weight, int maxevents, b
             //PileupWeight = tr.getVar<double>("_PUweightFactor");
             //bTagScaleFactor   = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
             //htDerivedScaleFactor = tr.getVar<double>("htDerivedweight");
-            //topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
             //prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
             //puScaleFactor = tr.getVar<double>("puWeightCorr");
             

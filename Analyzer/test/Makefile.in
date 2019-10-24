@@ -22,7 +22,7 @@ TTDIR   = $(CMSSW_BASE)/src/TopTagger/
 TTTDIR  = $(TTDIR)/TopTagger/test
 
 # Enable the maximun warning
-#CXXFLAGS += -Wall -Wextra -Wpedantic
+CXXFLAGS += -Wall -Wextra -Wpedantic
 
 # Flags for generating auto dependancies
 CXXDEPFLAGS = -MMD -MP

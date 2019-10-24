@@ -25,7 +25,7 @@ public:
     std::vector<double> rocVec;
     std::string legEntry;
     int color;
-    bool firstOnly;
+    //bool firstOnly;    
 };
 
 class Plotter
@@ -154,7 +154,7 @@ public:
         significance.DrawLatex(0.099, 0.92, ("Significance = "+std::to_string(sig)).c_str());
 
         //Draw CMS and lumi lables
-        //drawLables(lumi);
+        drawLables(lumi);
             
         //Compute and draw yields for njets min to max
         //drawYields(histName,"njets",12,20);
@@ -317,7 +317,7 @@ public:
         
 
         //Draw CMS and lumi lables
-        //drawLables(lumi);
+        drawLables(lumi);
 
         //save new plot to file
         c->Print((outpath_ + "/fisherNorm_" + histName + ".pdf").c_str());
@@ -380,7 +380,7 @@ public:
             mhc.second.setUpBG(histName, rebin, bgStack, hbgSum, false);
             delete bgStack;
             mhc.second.setUpSignal(histName, rebin);
-            rocInfo bgSumRocInfo = { makeFisherVec(hbgSum), "AllBG", mhc.second.bgVec_[0].color };
+            rocInfo bgSumRocInfo = { makeFisherVec(hbgSum), "AllBG", mhc.second.bgVec_[0].color};
             std::vector<rocInfo> rocBgVec  = makeRocVec(mhc.second.bgVec_);
             std::vector<rocInfo> rocSigVec = makeRocVec(mhc.second.sigVec_);
             if(firstOnly) rocBgVec.emplace(rocBgVec.begin(), bgSumRocInfo);
@@ -406,7 +406,7 @@ public:
         dummy.draw("AXIS");
 
         //Draw CMS and lumi lables
-        //drawLables(lumi);
+        drawLables(lumi);
 
         //save new plot to file
         if(firstOnly) 
@@ -468,7 +468,7 @@ public:
         std::vector<TH1*> hbgSumVec;
         int index = -1;
         double scale = 1;
-        int fixedBin;
+        int fixedBin = 1;
         for(auto& histName : histNameVec)
         {
             index++;
@@ -535,7 +535,7 @@ public:
         dummy.draw("AXIS");
 
         //Draw CMS and lumi lables
-        //drawLables(lumi);
+        drawLables(lumi);
 
         //save new plot to file
         c->Print( (outpath_ + "/" + name + "_" + histTitle + ".pdf").c_str() );
@@ -592,8 +592,8 @@ public:
         
         std::vector<TH1*> hbgRatioSumVec;
         int index = -1;
-        double scale = 1;
-        int fixedBin;
+        //double scale = 1;
+        //int fixedBin;
         for(auto& histName : histNameVec)
         {
             index++;
@@ -661,7 +661,7 @@ public:
         dummy.draw("AXIS");
 
         //Draw CMS and lumi lables
-        //drawLables(lumi);
+        drawLables(lumi);
 
         //save new plot to file
         c->Print( (outpath_+"/"+name+"Ratio_" + histTitle + ".pdf").c_str() );
@@ -678,7 +678,7 @@ public:
     //This is a helper function which will keep the plot from overlapping with the legend
     void smartMax(const TH1* const h, const TLegend* const l, const TPad* const p, double& gmin, double& gmax, double& gpThreshMax, const bool error)
     {
-        const bool isLog = p->GetLogy();
+        //const bool isLog = p->GetLogy();
         double min = 9e99;
         double max = -9e99;
         double pThreshMax = -9e99;
@@ -732,14 +732,14 @@ public:
             for(const auto& mSig : rocSigVec)
             {
                 int n = mBg.rocVec.size();
-                double x[n], y[n];
+                std::vector<double> x(n, 0.0), y(n, 0.0);
                 for(int i = 0; i < n; i++)
                 {
                     x[i] = mBg.rocVec[i];
                     y[i] = mSig.rocVec[i];
                     //std::cout<<mBg.legEntry<<" "<<x[i]<<" "<<mSig.legEntry<<" "<<y[i]<<std::endl;
                 }
-                TGraph* g = new TGraph (n, x, y);
+                TGraph* g = new TGraph (n, x.data(), y.data());
                 g->SetLineWidth(2);
                 g->SetLineStyle(lineStyle);
                 g->SetLineColor( mBg.color );

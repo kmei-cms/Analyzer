@@ -37,7 +37,7 @@ void AnalyzeTest::InitHistos()
 }
 
 //Put everything you want to do per event here.
-void AnalyzeTest::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void AnalyzeTest::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {
@@ -50,10 +50,9 @@ void AnalyzeTest::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         //--------------------------------------------------
         
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
-        if( tr.getEvtNum() & 10000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
+        if( tr.getEvtNum() & (10000 == 0) ) printf( " Event %i\n", tr.getEvtNum() );
         
         const auto& runtype             = tr.getVar<std::string>("runtype");     
-        const auto& filetag             = tr.getVar<std::string>("filetag");
         const auto& GoodLeptons         = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
 
         const auto& JetID               = tr.getVar<bool>("JetID");
@@ -78,7 +77,6 @@ void AnalyzeTest::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         double leptonScaleFactor    = 1.0;
         double bTagScaleFactor      = 1.0;
         double htDerivedScaleFactor = 1.0;
-        double topPtScaleFactor     = 1.0;
         double prefiringScaleFactor = 1.0;
         double puScaleFactor        = 1.0;
         
@@ -101,7 +99,6 @@ void AnalyzeTest::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             //PileupWeight = tr.getVar<double>("_PUweightFactor");
             bTagScaleFactor   = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
             htDerivedScaleFactor = tr.getVar<double>("htDerivedweight");
-            topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
             prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
             puScaleFactor = tr.getVar<double>("puWeightCorr");
             

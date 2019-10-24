@@ -83,7 +83,7 @@ void AnalyzeBackground::InitHistos()
     }
 }
 
-void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void AnalyzeBackground::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while(tr.getNextEvent())
     {
@@ -94,19 +94,13 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, boo
         const auto& runtype                 = tr.getVar<std::string>("runtype");
         const auto& filetag                 = tr.getVar<std::string>("filetag");
         const auto& JetID                   = tr.getVar<bool>("JetID");
-        const auto& passTrigger             = tr.getVar<bool>("passTrigger");
 
         const auto& NJets_pt30          = tr.getVar<int>("NJets_pt30");
         const auto& NJets_pt45          = tr.getVar<int>("NJets_pt45");
-        const auto& BJets_pt30          = tr.getVec<TLorentzVector>("BJets_pt30");
         const auto& NBJets_pt30         = tr.getVar<int>("NBJets_pt30");
-        const auto& BJets_pt45          = tr.getVec<TLorentzVector>("BJets_pt45");
-        const auto& NBJets_pt45         = tr.getVar<int>("NBJets_pt45");
-        const auto& GoodLeptons         = tr.getVec<TLorentzVector>("GoodLeptons");
         const auto& NGoodLeptons        = tr.getVar<int>("NGoodLeptons");
         const auto& HT_trigger          = tr.getVar<double>("HT_trigger");
         const auto& Mbl                 = tr.getVar<double>("Mbl");
-        const auto& onZ                 = tr.getVar<bool>("onZ");
 
         const auto& fisher_bin1 = tr.getVar<bool>("fisher_bin1");
         const auto& fisher_bin2 = tr.getVar<bool>("fisher_bin2");
@@ -117,7 +111,6 @@ void AnalyzeBackground::Loop(NTupleReader& tr, double weight, int maxevents, boo
         const auto& bdt_bin3    = tr.getVar<bool>("bdt_bin3");
         const auto& bdt_bin4    = tr.getVar<bool>("bdt_bin4");
 
-        const auto& passBaseline0l    = tr.getVar<bool>("passBaseline0l");
         const auto& passBaseline1l    = tr.getVar<bool>("passBaseline1l");
         const auto& passBaseline2lonZ = tr.getVar<bool>("passBaseline2lonZ");
 

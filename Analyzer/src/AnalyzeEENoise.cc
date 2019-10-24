@@ -82,7 +82,7 @@ void AnalyzeEENoise::InitHistos()
 }
 
 //Put everything you want to do per event here.
-void AnalyzeEENoise::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void AnalyzeEENoise::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {
@@ -96,7 +96,7 @@ void AnalyzeEENoise::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         //--------------------------------------------------
         
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
-        if( tr.getEvtNum() & 10000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
+        if( tr.getEvtNum() & (10000 == 0) ) printf( " Event %i\n", tr.getEvtNum() );
        
         const auto& RunNum              = tr.getVar<unsigned int>("RunNum");
         const auto& Jets                = tr.getVec<TLorentzVector>("Jets");

@@ -46,7 +46,7 @@ void AnalyzeWControlRegion::InitHistos(const std::map<std::string, bool>& cutMap
     }   
 }
 
-void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void AnalyzeWControlRegion::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while(tr.getNextEvent())
     {
@@ -62,23 +62,18 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
         const auto& NGoodJets_pt30          = tr.getVar<int>("NGoodJets_pt30");
         const auto& GoodJets_pt30           = tr.getVec<bool>("GoodJets_pt30");
         const auto& NGoodBJets_pt30         = tr.getVar<int>("NGoodBJets_pt30");
-        const auto& GoodBJets_pt30          = tr.getVec<bool>("GoodBJets_pt30");
         const auto& NGoodBJets_pt30_loose   = tr.getVar<int>("NGoodBJets_pt30_loose");
-        const auto& GoodBJets_pt30_loose    = tr.getVec<bool>("GoodBJets_pt30_loose");
 
         const auto& GoodLeptons         = tr.getVec< std::pair<std::string,TLorentzVector> >("GoodLeptons");
         const auto& NGoodLeptons        = tr.getVar<int>("NGoodLeptons");
         
         const auto& Muons               = tr.getVec<TLorentzVector>("Muons");
-        const auto& MuonsMTW            = tr.getVec<double>("MuonsMTW");
         const auto& GoodMuons           = tr.getVec<bool>("GoodMuons");
         const auto& NGoodMuons          = tr.getVar<int>("NGoodMuons");
         const auto& Electrons           = tr.getVec<TLorentzVector>("Electrons");
-        const auto& ElectronsMTW        = tr.getVec<double>("ElectronsMTW");
         const auto& GoodElectrons       = tr.getVec<bool>("GoodElectrons");
         const auto& NGoodElectrons      = tr.getVar<int>("NGoodElectrons");
         
-        const auto& Mbl                 = tr.getVar<double>("Mbl");
         const auto& HT                  = tr.getVar<double>("HT");
         const auto& MET                 = tr.getVar<double>("MET");
         const auto& METPhi              = tr.getVar<double>("METPhi");
@@ -129,13 +124,13 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
         bool pass_mT = mT > 30 && mT < 100;
 
         // jet cuts
-        bool pass_0b = NGoodBJets_pt30 == 0;
+        //bool pass_0b = NGoodBJets_pt30 == 0;
         bool pass_0b_loose = NGoodBJets_pt30_loose == 0;
         // compute dphi with highest pT jet
         double dphi = -1;
         if (NGoodJets_pt30 > 0)
         {
-            for (int i = 0; i<Jets.size() ; ++i)
+            for (unsigned int i = 0; i<Jets.size() ; ++i)
             {
                 if(GoodJets_pt30[i])
                 {
@@ -152,7 +147,7 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
         if (pass_1l && NGoodJets_pt30 > 0)
         {
             TLorentzVector Jet_maxpT;
-            for (int i = 0; i<Jets.size() ; ++i)
+            for (unsigned int i = 0; i<Jets.size() ; ++i)
             {
                 if(GoodJets_pt30[i])
                 {
@@ -163,7 +158,7 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
             Mbl_maxpT = (GoodLeptons[0].second+Jet_maxpT).M();
 
             int maxCSV_index = -1;
-            for (int i=0; i<Jets.size(); ++i)
+            for (unsigned int i=0; i<Jets.size(); ++i)
             {
                 if(!GoodJets_pt30[i]) continue;
                 if(maxCSV_index == -1)
@@ -179,7 +174,7 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
         bool pass_Mbl_maxpT = Mbl_maxpT > 30 && Mbl_maxpT < 180;
         bool pass_Mbl_maxCSV = Mbl_maxCSV > 30 && Mbl_maxCSV < 180;
         bool pass_Mbl_all = false;
-        for(double mbl : Mbl_all)
+        for(const auto& mbl : Mbl_all)
         {
             if (mbl > 30 && mbl < 180)
             {
@@ -275,13 +270,13 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
 
                 my_histos["h_Mbl_maxCSV_"  +kv.first]->Fill(Mbl_maxCSV, eventweight);
                 my_histos["h_Mbl_maxpT_"  +kv.first]->Fill(Mbl_maxpT, eventweight);
-                for (double mbl: Mbl_all)
+                for (const auto& mbl: Mbl_all)
                     my_histos["h_Mbl_all_"  +kv.first]->Fill(mbl, eventweight);
                 my_histos["h_nleptons_" +kv.first]->Fill(NGoodLeptons, eventweight);
 
                 if (NGoodMuons > 0)
                 {
-                    for (int m=0; m<Muons.size(); ++m)
+                    for (unsigned int m=0; m<Muons.size(); ++m)
                     {
                         if(GoodMuons[m])
                         {
@@ -294,7 +289,7 @@ void AnalyzeWControlRegion::Loop(NTupleReader& tr, double weight, int maxevents,
                 } 
                 if (NGoodElectrons > 0)
                 {
-                    for (int m=0; m<Electrons.size(); ++m)
+                    for (unsigned int m=0; m<Electrons.size(); ++m)
                     {
                         if(GoodElectrons[m])
                         {
