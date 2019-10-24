@@ -1,3 +1,13 @@
+# Variables set by configure 
+TENSORFLOW_DIR = @TENSORFLOWDIR@
+TENSORFLOWLIBS = @TENSORFLOWLIBS@
+
+CXX      = @CXX@
+LD       = @CXX@
+CXXFLAGS = @CXXFLAGS@
+LDFLAGS  = @LDFLAGS@
+
+# Path to source directories
 WDIR    = .
 ODIR    = obj
 IFWDIR  = $(CMSSW_BASE)/src/Framework/Framework/include
@@ -8,44 +18,37 @@ SSDIR   = $(CMSSW_BASE)/src/SusyAnaTools/Tools
 ITTDir  = $(CMSSW_BASE)/CfgParser/include
 STTDir  = $(CMSSW_BASE)/CfgParser/src
 TDIR    = $(CMSSW_BASE)/src
-
-OPENCV_DIRECTORY = /uscms_data/d3/nstrobbe/SOFTWARE/opencv
-TENSORFLOW_DIR = /cvmfs/cms.cern.ch/slc6_amd64_gcc630/external/tensorflow-c/1.1.0-ghjeda2
-TTDIR            = $(CMSSW_BASE)/src/TopTagger/
-TTTDIR           = $(TTDIR)/TopTagger/test
-
-CXX = g++
-
-CXXFLAGS  += -I. -I$(CMSSW_BASE)/src -std=c++0x
-#CXXFLAGS  += -I. -I$(CMSSW_BASE)/src -std=c++0x -I$(LHAPDF_DATA_PATH)/../../include
-
-# Optimization flag
-CXXFLAGS += -g #-O3
+TTDIR   = $(CMSSW_BASE)/src/TopTagger/
+TTTDIR  = $(TTDIR)/TopTagger/test
 
 # Enable the maximun warning
-#CXXFLAGS += -Wall -Wextra -Weffc++ -g
+#CXXFLAGS += -Wall -Wextra -Wpedantic
 
-# Include ROOT
-CXXFLAGS  += $(shell root-config --cflags)
-
+# Flags for generating auto dependancies
 CXXDEPFLAGS = -MMD -MP
 
-LD         = g++
-LDFLAGS    =
+#Necessary includes and libraries, the order matters here!
 
-INCLUDES += $(shell $(PYTHONCFG) --includes)
+## top tagger includes
+#INCLUDESDIRS  += -I. -I$(TAGGERDIR)/..
+# top tagger libraries
+LIBSTOPTAGGER += -L$(TTTDIR) -lTopTagger
 
-LIBS            = $(shell root-config --glibs)
-LIBSTOPTAGGER  += -L$(TTTDIR) -lTopTagger
-CXXFLAGS       += -DDOTENSORFLOW
-LIBS           += -L$(TENSORFLOW_DIR)/lib -ltensorflow
-#LHAPDFLIB      = -L$(LHAPDF_DATA_PATH)/../../lib -lLHAPDF
+# Include ROOT
+INCLUDESDIRS  += $(shell root-config --cflags)
+# ROOT libraries
+LIBS          += $(shell root-config --glibs)
 
-INCLUDESDIRS     = -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir)
-INCLUDESDIRS    += -I$(TENSORFLOW_DIR)/include
+# tensorflow includes and libraries
+ifdef TENSORFLOW_DIR
+	INCLUDESDIRS  += -I$(TENSORFLOW_DIR)/include
 
-#OBJS       = $(patsubst %, $(ODIR)/%, $(OBJ))
+	CXXFLAGS += -DDOTENSORFLOW
+	LIBS     += -L$(TENSORFLOW_DIR)/lib $(TENSORFLOWLIBS)
+endif
 
+# include our code
+INCLUDESDIRS    += -I$(TDIR) -I$(IFWDIR) -I$(SFWDIR) -I$(IADIR) -I$(SADIR) -I$(SSDIR) -I$(ITTDir) -I$(STTDir)
 
 PROGRAMS = MyAnalysis plot_1l Stack_plot_0l Stack_plot_1l Stack_plot_2l
 
@@ -56,7 +59,7 @@ HELPERS = $(ODIR)/NTupleReader.o $(ODIR)/Utility.o $(ODIR)/samples.o $(ODIR)/Eve
 all: mkobj sampPyWrap $(PROGRAMS) link
 
 mkobj:
-	@mkdir -p obj
+	@mkdir -p $(ODIR)
 
 #code to compile shared library to link samples to python
 sampPyWrap: $(ODIR)/samplesModule.so
