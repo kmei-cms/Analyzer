@@ -93,7 +93,7 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
         my_2d_histos.emplace( "h_Eta_stop1vsstop2_MassRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Eta_stop1vsstop2_MassRank_"+cutVar.first).c_str(), ("h_Eta_stop1vsstop2_MassRank_"+cutVar.first).c_str(), 100, -6, 6, 100, -6, 6 ) );
         my_2d_histos.emplace( "h_Phi_stop1vsstop2_MassRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Phi_stop1vsstop2_MassRank_"+cutVar.first).c_str(), ("h_Phi_stop1vsstop2_MassRank_"+cutVar.first).c_str(), 80, -4, 4, 80, -4, 4 ) );
         my_2d_histos.emplace( "h_Pt_stop1vsstop2_MassRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt_stop1vsstop2_MassRank_"+cutVar.first).c_str(), ("h_Pt_stop1vsstop2_MassRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
-        my_2d_histos.emplace( "h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Mass_stop1vsstop2_ScalarScalarPtRank_"+cutVar.first).c_str(), ("h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );    
+        my_2d_histos.emplace( "h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );    
         my_2d_histos.emplace( "h_Eta_stop1vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Eta_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Eta_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 100, -6, 6, 100, -6, 6 ) );
         my_2d_histos.emplace( "h_Phi_stop1vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Phi_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Phi_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 80, -4, 4, 80, -4, 4 ) );
         my_2d_histos.emplace( "h_Pt_stop1vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Pt_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) ); 
@@ -112,7 +112,7 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
         my_2d_histos.emplace( "h_Pt1_PtRankVsScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt1_PtRankVsScalarPtRank_"+cutVar.first).c_str(), ("h_Pt1_PtRankVsScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
         my_2d_histos.emplace( "h_Pt2_PtRankVsScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt2_PtRankVsScalarPtRank_"+cutVar.first).c_str(), ("h_Pt2_PtRankVsScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
         my_2d_histos.emplace( "h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first).c_str(), ("h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
-        my_2d_histos.emplace( "h_Pt2_PtRankVsSacalarPt2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt2_PtRankVsSacalarPt2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Pt2_PtRankVsSacalarPt2_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
+        my_2d_histos.emplace( "h_Pt2_PtRankVsScalarPt2_ScalarPtRank"+cutVar.first, std::make_shared<TH2D>( ("h_Pt2_PtRankVsScalarPt2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Pt2_PtRankVsScalarPt2_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
 
         // stops MassVsPt
         my_2d_histos.emplace( "h_stop1_MassVsPt_PtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop1_MassVsPt_PtRank_"+cutVar.first).c_str(), ("h_stop1_MassVsPt_PtRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
@@ -199,9 +199,9 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         const bool pass_ge2t1j3j               = ntops >= 2 && ntops_1jet >= 1 && ntops_3jet >= 1 && ntops_2jet==0;
         const bool pass_ge1dRbjets             = dR_bjets >= 1.0;       
     
-        // -------------------------------
-        // -- MT2 hemispheres variables
-        // -------------------------------
+        // ------------------------------------------
+        // -- MT2 or Stealth hemispheres variables
+        // ------------------------------------------
         const auto& stop1_PtRank               = tr.getVar<TLorentzVector>("stop1_PtRank_0l");
         const auto& stop2_PtRank               = tr.getVar<TLorentzVector>("stop2_PtRank_0l");
         const auto& stop1_MassRank             = tr.getVar<TLorentzVector>("stop1_MassRank_0l");
@@ -525,9 +525,9 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
                 my_2d_histos["h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first]->Fill( stop1Pt_PtRank, stop1ScalarPt_ScalarPtRank, weight );
                 my_2d_histos["h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank pT_{#tildet}_{1}");
                 my_2d_histos["h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank Scalar pT_{#tildet}_{1}");
-                my_2d_histos["h_Pt2_PtRankVsSacalarPt2_ScalarPtRank_"+cutVar.first]->Fill( stop2Pt_PtRank, stop2ScalarPt_ScalarPtRank, weight );
-                my_2d_histos["h_Pt2_PtRankVsSacalarPt2_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank pT_{#tildet}_{2}");
-                my_2d_histos["h_Pt2_PtRankVsSacalarPt2_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank Scalar pT_{#tildet}_{2}");
+                my_2d_histos["h_Pt2_PtRankVsScalarPt2_ScalarPtRank"+cutVar.first]->Fill( stop2Pt_PtRank, stop2ScalarPt_ScalarPtRank, weight );
+                my_2d_histos["h_Pt2_PtRankVsScalarPt2_ScalarPtRank"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank pT_{#tildet}_{2}");
+                my_2d_histos["h_Pt2_PtRankVsScalarPt2_ScalarPtRank"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank Scalar pT_{#tildet}_{2}");
                 // stops MassVsPt
                 my_2d_histos["h_stop1_MassVsPt_PtRank_"+cutVar.first]->Fill(stop1Mass_PtRank, stop1Pt_PtRank, weight);
                 my_2d_histos["h_stop1_MassVsPt_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank M_{#tildet}_{1}");
