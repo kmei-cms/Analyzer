@@ -16,39 +16,41 @@ parser.add_argument("--ratio", dest="ratio", help="Draw ratio", action="store_tr
 
 arg = parser.parse_args()
 
-optionsMap = {"h_jet_pt"       : {"X" : {"rebin" : 12, "min" : 0, "max" : 1000, "title" : "Jet p_{T} [GeV]"}},
+OPTIONSMAP = {"h_jet_pt"       : {"X" : {"rebin" : 12, "min" : 0, "max" : 1000, "title" : "Jet p_{T} [GeV]"}},
               "h_jet_eta"      : {"X" : {"rebin" : 12, "title" : "#eta"}},
               "h_jet_etaphi"   : {"X" : {"rebin" : 30, "title" : "#eta"}, "Y" : {"rebin" : 30, "title" : "#phi"}},
-              "h_jet_pteta"    : {"X" : {"rebin" : 30, "title" : "#eta"}, "Y" : {"rebin" : 30, "title" : "Jet p_{T} [GeV]"}},
-              "h_jet_ptem"     : {"X" : {"rebin" : 30, "title" : "Jet p_{T} [GeV]"}, "Y" : {"rebin" : 30, "title" : "Neutral EM Fraction"}},
-              "h_jet_pthad"    : {"X" : {"rebin" : 30, "title" : "Jet p_{T} [GeV]"}, "Y" : {"rebin" : 30, "title" : "Neutral Hadron Fraction"}},
-              "h_jet_etaem"    : {"X" : {"rebin" : 30, "title" : "Jet #eta"}, "Y" : {"rebin" : 30, "title" : "Neutral EM Fraction"}},
-              "h_jet_etahad"   : {"X" : {"rebin" : 30, "title" : "Jet #eta"}, "Y" : {"rebin" : 30, "title" : "Neutral Hadron Fraction"}},
+              "h_jet_pteta"    : {"X" : {"rebin" : 3,  "min" : 0, "max" : 200, "title" : "p_{T} [GeV]"}, "Y" : {"rebin" : 30, "title" : "#eta"}},
+              "h_jet_ptem"     : {"X" : {"rebin" : 3,  "min" : 0, "max" : 200, "title" : "p_{T} [GeV]"}, "Y" : {"rebin" : 30, "title" : "Neutral EM Fraction"}},
+              "h_jet_pthad"    : {"X" : {"rebin" : 3,  "min" : 0, "max" : 200, "title" : "p_{T} [GeV]"}, "Y" : {"rebin" : 30, "title" : "Neutral Hadron Fraction"}},
+              "h_jet_etaem"    : {"X" : {"rebin" : 30, "title" : "#eta"}, "Y" : {"rebin" : 30, "title" : "Neutral EM Fraction"}},
+              "h_jet_etahad"   : {"X" : {"rebin" : 30, "title" : "#eta"}, "Y" : {"rebin" : 30, "title" : "Neutral Hadron Fraction"}},
               "h_jet30_pt"     : {"X" : {"rebin" : 12, "min" : 0, "max" : 1000, "title" : "Jet p_{T} [GeV]"}},
               "h_jet30_eta"    : {"X" : {"rebin" : 12, "title" : "#eta"}},
               "h_jet30_etaphi" : {"X" : {"rebin" : 30, "title" : "#eta"}, "Y" : {"rebin" : 30, "title" : "#phi"}},
-              "h_jet30_pteta"  : {"X" : {"rebin" : 30, "title" : "#eta"}, "Y" : {"rebin" : 30, "title" : "Jet p_{T} [GeV]"}},
-              "h_jet30_ptem"   : {"X" : {"rebin" : 30, "title" : "Jet p_{T} [GeV]"}, "Y" : {"rebin" : 30, "title" : "Neutral EM Fraction"}},
-              "h_jet30_pthad"  : {"X" : {"rebin" : 30, "title" : "Jet p_{T} [GeV]"}, "Y" : {"rebin" : 30, "title" : "Neutral Hadron Fraction"}},
-              "h_jet30_etaem"  : {"X" : {"rebin" : 30, "title" : "Jet #eta"}, "Y" : {"rebin" : 30, "title" : "Neutral EM Fraction"}},
-              "h_jet30_etahad" : {"X" : {"rebin" : 30, "title" : "Jet #eta"}, "Y" : {"rebin" : 30, "title" : "Neutral Hadron Fraction"}},
+              "h_jet30_pteta"  : {"X" : {"rebin" : 3,  "min" : 0, "max" : 200, "title" : "p_{T} [GeV]"}, "Y" : {"rebin" : 30, "title" : "#eta"}},
+              "h_jet30_ptem"   : {"X" : {"rebin" : 3,  "min" : 0, "max" : 200, "title" : "p_{T} [GeV]"}, "Y" : {"rebin" : 30, "title" : "Neutral EM Fraction"}},
+              "h_jet30_pthad"  : {"X" : {"rebin" : 3,  "min" : 0, "max" : 200, "title" : "p_{T} [GeV]"}, "Y" : {"rebin" : 30, "title" : "Neutral Hadron Fraction"}},
+              "h_jet30_etaem"  : {"X" : {"rebin" : 30, "title" : "#eta"}, "Y" : {"rebin" : 30, "title" : "Neutral EM Fraction"}},
+              "h_jet30_etahad" : {"X" : {"rebin" : 30, "title" : "#eta"}, "Y" : {"rebin" : 30, "title" : "Neutral Hadron Fraction"}},
               "h_fwm2_top6"    : {"X" : {"rebin" : 20, "title" : "Fox-Wolfram 2nd Moment"}},
               "h_fwm3_top6"    : {"X" : {"rebin" : 20, "title" : "Fox-Wolfram 3rd Moment"}},
               "h_fwm4_top6"    : {"X" : {"rebin" : 20, "title" : "Fox-Wolfram 4th Moment"}},
               "h_fwm5_top6"    : {"X" : {"rebin" : 20, "title" : "Fox-Wolfram 5th Moment"}},
-              "h_jmt_ev0_top6" : {"X" : {"min" : 0.3, "max" : 0.1, "rebin" : 20, "title" : "Jet Momentum Tensor Eigenvalue 0"}},
-              "h_jmt_ev1_top6" : {"X" : {"min" : 0.0, "max" : 0.5, "rebin" : 20, "title" : "Jet Momentum Tensor Eigenvalue 1"}},
-              "h_jmt_ev2_top6" : {"X" : {"min" : 0.0, "max" : 0.3, "rebin" : 20, "title" : "Jet Momentum Tensor Eigenvalue 2"}},
+              "h_jmt_ev0_top6" : {"X" : {"min" : 0.0, "max" : 1.0, "rebin" : 20, "title" : "Jet Momentum Tensor Eigenvalue 0"}},
+              "h_jmt_ev1_top6" : {"X" : {"min" : 0.0, "max" : 1.0, "rebin" : 20, "title" : "Jet Momentum Tensor Eigenvalue 1"}},
+              "h_jmt_ev2_top6" : {"X" : {"min" : 0.0, "max" : 1.0, "rebin" : 20, "title" : "Jet Momentum Tensor Eigenvalue 2"}},
               "h_beta_z"       : {"X" : {"rebin" : 20, "title" : "#beta_{z}"}},
               "h_beta_z_pt20"  : {"X" : {"rebin" : 20, "title" : "#beta_{z}"}},
+              "h_beta_z_nvtx"       : {"X" : {"rebin" : 20, "title" : "#beta_{z}"}, "Y" : {"title" : "Number of Vertices"}},
+              "h_beta_z_pt20_nvtx"  : {"X" : {"rebin" : 20, "title" : "#beta_{z}"}, "Y" : {"title" : "Number of Vertices"}},
               "h_deepESM"  : {"X" : {"rebin" : 20, "title" : "DeepESM"}},
 }
 
-def doOptions(histo, histoName, theMap):
+def doOptions(histo, histoName):
 
     is1D = "TH1" in histo.ClassName()
 
-    for axis, options in theMap[histoName].iteritems():
+    for axis, options in OPTIONSMAP[histoName].iteritems():
 
         if axis == "X":
             if "rebin" in options:
@@ -66,7 +68,7 @@ def doOptions(histo, histoName, theMap):
             if "min" in options and "max" in options: histo.GetZaxis().SetRangeUser(options["min"],options["max"])
 
 def prettyHisto(histo,magicFactor=1.0,magicFactor2=1.0):
-    histo.GetYaxis().SetLabelSize(magicFactor*0.055); histo.GetYaxis().SetTitleSize(magicFactor*0.08); histo.GetYaxis().SetTitleOffset(0.6/magicFactor)
+    histo.GetYaxis().SetLabelSize(magicFactor*0.055); histo.GetYaxis().SetTitleSize(magicFactor*0.08); histo.GetYaxis().SetTitleOffset(0.7/magicFactor)
     histo.GetXaxis().SetLabelSize(magicFactor*0.055); histo.GetXaxis().SetTitleSize(magicFactor*0.08); histo.GetXaxis().SetTitleOffset(1.0/magicFactor2)
     histo.GetZaxis().SetLabelSize(magicFactor*0.055); histo.GetZaxis().SetTitleSize(magicFactor*0.06)
 
@@ -82,8 +84,8 @@ def fillMap(inRootFile, theMap):
         # Will be either 2018D or 2018A
         keyName = hkey.GetName().split("_")[-1]
 
-        if keyName == "2018D" and "2018pre" in inRootFile: continue
-        if keyName == "2018A" and "2018post" in inRootFile: continue
+        #if keyName == "2018D" and "2018pre" in inRootFile: continue
+        #if keyName == "2018A" and "2018post" in inRootFile: continue
 
         name = hkey.GetName()
         name = name.replace("_2018A","").replace("_2018D", "")
@@ -117,7 +119,7 @@ if __name__ == '__main__':
     # Save the final histograms
     for name in mapPFAhistos.values()[0].keys():
 
-        magicMargins = {"T" : 0.02625, "B" : 0.13375, "L" : 0.11, "R" : 0.12}
+        magicMargins = {"T" : 0.02625, "B" : 0.15, "L" : 0.11, "R" : 0.12}
 
 
         if "TH2" in mapPFAhistos.values()[0][name].ClassName():
@@ -132,7 +134,7 @@ if __name__ == '__main__':
             data2018A = mapPFAhistos["2018A"][name]
             theName = data2018A.GetName().replace("_2018A", "")
             prettyHisto(data2018A,0.875,1.1)
-            doOptions(data2018A, theName, optionsMap)
+            doOptions(data2018A, theName)
 
             data2018A.SetTitle(""); data2018A.SetContour(255); 
 
@@ -149,7 +151,7 @@ if __name__ == '__main__':
 
             data2018D = mapPFAhistos["2018D"][name]
             prettyHisto(data2018D,0.875,1.1)
-            doOptions(data2018D, theName, optionsMap)
+            doOptions(data2018D, theName)
 
             data2018D.SetTitle(""); data2018D.SetContour(255)
 
@@ -171,7 +173,7 @@ if __name__ == '__main__':
 
                 data2018D.Divide(data2018A)
 
-                data2018D.GetZaxis().SetRangeUser(0.5,2.0)
+                data2018D.GetZaxis().SetRangeUser(0.5,3.0)
                 
                 data2018D.Draw("COLZ")
                 c1.SaveAs("%s/%s_ratio.pdf"%(outpath,name))
@@ -198,8 +200,8 @@ if __name__ == '__main__':
                 prettyHisto(data2018A); prettyHisto(data2018D); prettyHisto(ratio,PadFactor)
 
                 theName = data2018A.GetName().replace("_2018A", "")
-                if theName in optionsMap:
-                    doOptions(data2018A, theName, optionsMap); doOptions(data2018D, theName, optionsMap); doOptions(ratio, theName, optionsMap)
+                if theName in OPTIONSMAP:
+                    doOptions(data2018A, theName); doOptions(data2018D, theName); doOptions(ratio, theName)
 
                 data2018A.SetMarkerColor(ROOT.kBlack); data2018A.SetLineColor(ROOT.kBlack); data2018A.SetMarkerSize(3); data2018A.SetLineWidth(2); data2018A.SetMarkerStyle(20); data2018A.Scale(1./data2018A.Integral())
                 data2018D.SetMarkerColor(ROOT.kRed);   data2018D.SetLineColor(ROOT.kRed);   data2018D.SetMarkerSize(3); data2018D.SetLineWidth(2); data2018D.SetMarkerStyle(20); data2018D.Scale(1./data2018D.Integral())
