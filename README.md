@@ -120,3 +120,31 @@ python write_fit_input.py -d condor/MakeNJetsDists_2017_v1.1     -H FitInput/Ker
 python write_fit_input.py -d condor/MakeNJetsDists_2018pre_v1.0  -H FitInput/Keras_2018pre_v1.0  -y 2018pre
 python write_fit_input.py -d condor/MakeNJetsDists_2018post_v1.0 -H FitInput/Keras_2018post_v1.0 -y 2018post
 ```
+
+## Deriving ttbar shape systematics
+
+Before running `njets_systs_comp.py` one must run `run_fits4ttbar_systematics.sh` in the HiggsAnalysis-CombinedLimit repository. This will stash away results in directories called TAG_YEAR_SYSTEMATIC
+
+Once these have been generated, one can run `njets_systs_comp.py` with three arguments:
+
+```
+--fittag TAG
+--year YEAR
+--fitdir Base directory containing TAG_YEAR_SYSTEMATIC results
+```
+
+An example workflow to run would be something like:
+
+```
+cd $HOME/../../CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit/
+
+./run_fits4ttbar_systematics.sh
+
+# Let this run for several hours...
+# After it is finished successfully
+
+cd $HOME/../../CMSSW_9_3_3/src/Analyzer/Analyzer/test/
+
+# For example running on 2018pre
+python njets_systs_comp.py --year 2018pre --fitdir $HOME/../../src/HiggsAnalysis/CombinedLimit/ --fittag Approval_StatErrPlusFullDev_12JetFix
+```
