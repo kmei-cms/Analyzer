@@ -32,7 +32,7 @@ if not os.path.exists(arg.fitdir):
 
 year = arg.year
 fitdir = arg.fitdir
-fittag = arg.fittag
+fittag = arg.fittag + "_" + year
 
 inputfilename = "/uscms_data/d3/jhiltb/susy/CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit/"
 if year == "2016":
