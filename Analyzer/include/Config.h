@@ -20,7 +20,7 @@
 #include "Framework/Framework/include/StopGenMatch.h"
 #include "Framework/Framework/include/MegaJetCombine.h"
 #include "Framework/Framework/include/MakeMT2Hemispheres.h"
-#include "Framework/Framework/include/StealthHemisphereJets.h"
+#include "Framework/Framework/include/MT2Jets.h"
 
 class Config
 {
@@ -58,7 +58,7 @@ private:
             else if(module=="MegaJetCombine")              tr.emplaceModule<MegaJetCombine>();
             else if(module=="MakeMT2Hemispheres_0l")       tr.emplaceModule<MakeMT2Hemispheres>("GoodJets_pt45", "NGoodJets_pt45", "_0l");
             else if(module=="MakeMT2Hemispheres_1l")       tr.emplaceModule<MakeMT2Hemispheres>("GoodJets_pt30", "NGoodJets_pt30", "_1l");
-            else if(module=="StealthHemisphereJets")       tr.emplaceModule<StealthHemisphereJets>();
+            else if(module=="MT2Jets")                     tr.emplaceModule<MT2Jets>();
             else if(module=="DeepEventShape")              tr.emplaceModule<DeepEventShape>(DeepESMCfg, ModelFile);
             else if(module=="DeepEventShape_NonIsoMuon")   tr.emplaceModule<DeepEventShape>(DeepESMCfg_NonIsoMuon, ModelFile);
  
@@ -274,7 +274,7 @@ public:
                 "DeepEventShape",
                 "MakeMT2Hemispheres_0l",
                 "MakeMT2Hemispheres_1l",
-                "StealthHemisphereJets",
+                "MT2Jets",
                 "BTagCorrector",
                 "ScaleFactors",
             };
