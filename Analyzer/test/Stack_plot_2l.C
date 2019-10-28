@@ -18,7 +18,7 @@
 
 void smartMax(const TH1 * const h, const TLegend* const l, const TPad* const p, double& gmin, double& gmax, double& gpThreshMax, const bool error)
 {
-	const bool isLog  = p->GetLogy();
+        //const bool isLog  = p->GetLogy();
     	double min        = 9e99;
     	double max        = -9e99;
     	double pThreshMax = -9e99;
@@ -145,11 +145,11 @@ public:
 			h->SetFillColor(color);
     	}
 
-    	histInfo(const std::string& legName, const std::string& histFile, const std::string& drawOptions, const int color, const bool drawHisto = true) : legName(legName), histFile(histFile), histName(""), drawOptions(drawOptions), color(color), rebin(-1), h(nullptr), drawHisto(drawHisto), nEvents(-1), legEntry(legName)
+        histInfo(const std::string& legName, const std::string& histFile, const std::string& drawOptions, const int color, const bool drawHisto = true) : legName(legName), legEntry(legName), histFile(histFile), histName(""), drawOptions(drawOptions), color(color), rebin(-1), nEvents(-1), h(nullptr), drawHisto(drawHisto)
      	{
     	}
 
-    	histInfo(TH1* h) : legName(h->GetName()), legEntry(h->GetName()), histFile(""), histName(h->GetName()), drawOptions(""), color(0), rebin(0), h(h), nEvents(-1)
+        histInfo(TH1* h) : legName(h->GetName()), legEntry(h->GetName()), histFile(""), histName(h->GetName()), drawOptions(""), color(0), rebin(0), nEvents(-1), h(h), drawHisto(true)
     	{
     	}
 
@@ -238,7 +238,7 @@ public:
         	
 		if(data_.drawHisto) // define for empty data plot  
 			leg->AddEntry(data_.h.get(), data_.legEntry.c_str(), data_.drawOptions.c_str());
-        		smartMax(hbgSum, leg, static_cast<TPad*>(gPad), min, max, lmax, true);
+                smartMax(hbgSum, leg, static_cast<TPad*>(gPad), min, max, lmax, true);
 	
 
         	//background

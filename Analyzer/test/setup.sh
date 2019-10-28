@@ -61,7 +61,7 @@ then
     echo "|      Checking repos for updates      |"
     echo "|--------------------------------------|"
     echo "If it asks for your password too many times you can do something like the following:"
-    echo "         eval `ssh-agent -c`  "
+    echo "         eval `ssh-agent`  "
     echo "         ssh-add ~/.ssh/id_rsa"
     status.sh
 fi

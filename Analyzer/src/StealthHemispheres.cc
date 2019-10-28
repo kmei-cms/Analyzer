@@ -54,7 +54,7 @@ void StealthHemispheres::InitHistos(const std::map<std::string, bool>& cutmap)
     }
 }
 
-void StealthHemispheres::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void StealthHemispheres::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {
@@ -65,23 +65,12 @@ void StealthHemispheres::Loop(NTupleReader& tr, double weight, int maxevents, bo
         // -- Print event number   
         // ------------------------     
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
-        if( tr.getEvtNum() & 10000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
+        if( tr.getEvtNum() & (10000 == 0) ) printf( " Event %i\n", tr.getEvtNum() );
 
-        const auto& runtype            = tr.getVar<std::string>("runtype");
-        const auto& filetag            = tr.getVar<std::string>("filetag");
-        const auto& JetID              = tr.getVar<bool>("JetID");
-        const auto& NGoodLeptons       = tr.getVar<int>("NGoodLeptons");
-        const auto& passTriggerMC      = tr.getVar<bool>("passTriggerMC");
-        const auto& NGoodBJets_pt45    = tr.getVar<int>("NGoodBJets_pt45");
-        const auto& HT_trigger_pt45    = tr.getVar<double>("HT_trigger_pt45");
-        const auto& NGoodJets_pt45     = tr.getVar<int>("NGoodJets_pt45");
-        const auto& passMadHT          = tr.getVar<bool>("passMadHT");
-        const auto& MET                = tr.getVar<double>("MET");
-        const auto& Jets               = tr.getVec<TLorentzVector>("Jets");
-        const auto& GoodJets_pt45      = tr.getVec<bool>("GoodJets_pt45");
-        const auto& GoodBJets_pt45     = tr.getVec<bool>("GoodBJets_pt45");
-        const bool passBaseline1l_Good = tr.getVar<bool>("passBaseline1l_Good");
-        const bool passBaseline2l_Good = tr.getVar<bool>("passBaseline2l_Good");       
+        const auto& runtype             = tr.getVar<std::string>("runtype");
+        const auto& NGoodJets_pt45      = tr.getVar<int>("NGoodJets_pt45");
+        const auto& passBaseline1l_Good = tr.getVar<bool>("passBaseline1l_Good");
+        const auto& passBaseline2l_Good = tr.getVar<bool>("passBaseline2l_Good");       
  
         // -------------------------------
         // -- MT2 hemispheres variables
@@ -103,7 +92,6 @@ void StealthHemispheres::Loop(NTupleReader& tr, double weight, int maxevents, bo
         // -------------------
         double weight=1.0, weightNoHT=1.0, weightQCDCR=1.0, weightNoBTag=1.0;
         double eventweight=1.0, leptonweight=1.0, bTagWeight=1.0, prefiringScaleFactor=1.0, pileupWeight=1.0, htDerivedweight=1.0;
-        double topPtScaleFactor=1.0, FSRUp=1.0, FSRDown=1.0, FSRUp_2=1.0, FSRDown_2=1.0;
         double weightNoLepton=1.0;
         if(runtype == "MC")
         {
@@ -120,7 +108,6 @@ void StealthHemispheres::Loop(NTupleReader& tr, double weight, int maxevents, bo
             pileupWeight             = tr.getVar<double>("puWeightCorr");
             bTagWeight               = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
             htDerivedweight          = tr.getVar<double>("htDerivedweight");
-            topPtScaleFactor         = tr.getVar<double>("topPtScaleFactor");
             prefiringScaleFactor     = tr.getVar<double>("prefiringScaleFactor");
             
             weightQCDCR    *= eventweight*muNonIso*prefiringScaleFactor*pileupWeight;
@@ -128,7 +115,6 @@ void StealthHemispheres::Loop(NTupleReader& tr, double weight, int maxevents, bo
             weightNoLepton *= eventweight*bTagWeight*prefiringScaleFactor*pileupWeight*htDerivedweight;
             weightNoBTag   *= eventweight*leptonweight*prefiringScaleFactor*pileupWeight*htDerivedweight;
             weight         *= eventweight*leptonweight*bTagWeight*prefiringScaleFactor*pileupWeight*htDerivedweight;
-
         }
 
         // -------------------------------------------------

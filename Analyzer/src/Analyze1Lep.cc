@@ -87,7 +87,7 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap, const st
     my_histos.emplace( "h_cutFlow", std::make_shared<TH1D>("h_cutFlow", "h_cutFlow", 9,0,9));    
 }
 
-void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void Analyze1Lep::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {
@@ -96,7 +96,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         const auto& ntops                     = tr.getVar<int>("ntops");
         const auto& runtype                   = tr.getVar<std::string>("runtype");     
         const auto& filetag                   = tr.getVar<std::string>("filetag");
-        const auto& RunNum                    = tr.getVar<UInt_t>("RunNum");
         const auto& Jets                      = tr.getVec<TLorentzVector>("Jets");
         const auto& GoodJets_pt30             = tr.getVec<bool>("GoodJets_pt30");
         const auto& NJet                      = tr.getVar<int>("NJets");
@@ -157,7 +156,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // ------------------------
         double weight=1.0, weightNoHT=1.0, weightQCDCR=1.0, weightNoBTag=1.0;
         double eventweight=1.0, leptonweight=1.0, bTagWeight=1.0, prefiringScaleFactor=1.0, pileupWeight=1.0, htDerivedweight=1.0;
-        double topPtScaleFactor=1.0, FSRUp=1.0, FSRDown=1.0, FSRUp_2=1.0, FSRDown_2=1.0;
         double weightNoLepton=1.0;
         if(runtype == "MC")
         {
@@ -174,7 +172,6 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             pileupWeight = tr.getVar<double>("puWeightCorr");
             bTagWeight   = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
             htDerivedweight = tr.getVar<double>("htDerivedweight");
-            topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
             prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
             
             weightQCDCR *= eventweight*muNonIso*prefiringScaleFactor*pileupWeight;
@@ -203,11 +200,11 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
         // -- Define cuts
         // -------------------------------
         bool pass_general    = passTriggerMC && passTrigger && passMadHT && passBlind && passMETFilters && passHEMVeto && correct2018Split;
-        bool pass_0l         = NGoodLeptons == 0;
+        //bool pass_0l         = NGoodLeptons == 0;
         bool pass_1l         = NGoodLeptons == 1;
         bool pass_ht         = HT_trigger_pt30 > 300;
         bool pass_MBL        = (50 < Mbl && Mbl < 250);
-        bool pass_1e_1m      = (NGoodLeptons == 2) ? GoodLeptons[0].first != GoodLeptons[1].first : false;
+        //bool pass_1e_1m      = (NGoodLeptons == 2) ? GoodLeptons[0].first != GoodLeptons[1].first : false;
         bool pass_njet_pt30  = NGoodJets_pt30 >= 7;
         bool pass_1btag_pt30 = NGoodBJets_pt30 >= 1;
         bool pass_2btag_pt30 = NGoodBJets_pt30 >= 2;
@@ -220,7 +217,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             if(GoodLeptons[0].first == "m") pass_1m = true;
             pass_lBarrel = abs( GoodLeptons[0].second.Eta() ) <= 1.2;
         }
-        bool pass_5to6njet_pt30 = (NGoodJets_pt30 == 5 || NGoodJets_pt30 == 6);
+        //bool pass_5to6njet_pt30 = (NGoodJets_pt30 == 5 || NGoodJets_pt30 == 6);
         
         bool passBaseline1l_AllJets = passBaselineGoodOffline1l &&
                                       passTrigger               &&
@@ -244,7 +241,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
             mT = utility::calcMT(GoodLeptons[0].second, metLV);
             pass_mT = mT > 50 && mT < 110;
         
-            for(int i = 0; i < Jets.size(); ++i)
+            for(unsigned int i = 0; i < Jets.size(); ++i)
             {
                 if(!GoodJets_pt30[i]) continue;
                 double mbl = (GoodLeptons[0].second+Jets[i]).M();
@@ -458,7 +455,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                 {
                     my_histos["h_allMbl"+kv.first]->Fill(mbl, w);
                 }
-                for(int j = 0; j < Jets.size(); j++)
+                for(unsigned int j = 0; j < Jets.size(); j++)
                 {
                     if(!GoodJets_pt30[j]) continue;
                     my_histos["h_jPt"+kv.first]->Fill(Jets.at(j).Pt(), w);
@@ -492,7 +489,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double weight, int maxevents, bool isQu
                     {
                         my_histos["blind_allMbl"+kv.first]->Fill(mbl, w);
                     }
-                    for(int j = 0; j < Jets.size(); j++)
+                    for(unsigned int j = 0; j < Jets.size(); j++)
                     {
                         if(!GoodJets_pt30[j]) continue;
                         my_histos["blind_jPt"+kv.first]->Fill(Jets.at(j).Pt(), w);

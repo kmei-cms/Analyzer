@@ -23,7 +23,7 @@ void Make2LInputTrees::InitHistos()
     my_histos.emplace( "EventCounter", std::make_shared<TH1D>( "EventCounter", "EventCounter", 2, -1.1, 1.1 ) ); 
 }//END of init histos
 
-void Make2LInputTrees::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void Make2LInputTrees::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {
@@ -31,17 +31,9 @@ void Make2LInputTrees::Loop(NTupleReader& tr, double weight, int maxevents, bool
         my_histos["EventCounter"]->Fill( eventCounter );
 
         const auto& runtype             = tr.getVar<std::string>("runtype");
-        const auto& filetag             = tr.getVar<std::string>("filetag");
         const auto& NGoodLeptons        = tr.getVar<int>("NGoodLeptons");
         const auto& onZ                 = tr.getVar<bool>("onZ");
 
-        const auto& FirstComboCands     = tr.getVec<TLorentzVector>("FirstComboCandidates");
-        const auto& SecComboCands       = tr.getVec<TLorentzVector>("SecComboCandidates"); 
-        
-        const auto& FirstStopMassSums   = tr.getVec<double>("FirstStopMassSums");
-        const auto& SecStopMassSums     = tr.getVec<double>("SecStopMassSums");
-        const auto& StopMassDiffs       = tr.getVec<double>("StopMassDiffs");
-        const auto& StopMT2s            = tr.getVec<double>("StopMT2s");
         const auto& TwoLep_Mbl1         = tr.getVar<double>("TwoLep_Mbl1");
         const auto& TwoLep_Mbl2         = tr.getVar<double>("TwoLep_Mbl2");
 
@@ -79,7 +71,6 @@ void Make2LInputTrees::Loop(NTupleReader& tr, double weight, int maxevents, bool
         if( runtype == "MC" ) {
             //        const auto& passTriggerMC       = tr.getVar<bool>("passTriggerMC");
             const auto& passMadHT           = tr.getVar<bool>("passMadHT");
-            const auto& MadHT               = tr.getVar<double>("madHT");
             
             if( !passMadHT ) continue; 
         }

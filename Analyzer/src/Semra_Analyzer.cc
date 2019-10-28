@@ -142,7 +142,7 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
 // ---------------------------------------------
 // -- Put everything you want to do per event 
 // ---------------------------------------------
-void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void Semra_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {
@@ -153,51 +153,46 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         //-------------------------
         
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
-        if( tr.getEvtNum() & 10000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
+        if( tr.getEvtNum() & (10000 == 0) ) printf( " Event %i\n", tr.getEvtNum() );
 
-        const auto& runtype                    = tr.getVar<std::string>("runtype");     
-        const auto& filetag                    = tr.getVar<std::string>("filetag");
-        const auto& JetID                      = tr.getVar<bool>("JetID");
-        const auto& NGoodLeptons               = tr.getVar<int>("NGoodLeptons");
-        const auto& passTriggerMC              = tr.getVar<bool>("passTriggerMC");
-        const auto& NGoodBJets_pt45            = tr.getVar<int>("NGoodBJets_pt45");
-        const auto& HT_trigger_pt45            = tr.getVar<double>("HT_trigger_pt45");
-        const auto& NGoodJets_pt45             = tr.getVar<int>("NGoodJets_pt45");
-        const auto& passMadHT                  = tr.getVar<bool>("passMadHT");
-        const auto& MET                        = tr.getVar<double>("MET");       
-        const auto& Jets                       = tr.getVec<TLorentzVector>("Jets");
-        const auto& GoodJets_pt45              = tr.getVec<bool>("GoodJets_pt45");
-        const auto& GoodBJets_pt45             = tr.getVec<bool>("GoodBJets_pt45");
-        const auto& dR_bjets                   = tr.getVar<double>("dR_bjets");               
+        const auto& runtype          = tr.getVar<std::string>("runtype");     
+        const auto& JetID            = tr.getVar<bool>("JetID");
+        const auto& NGoodLeptons     = tr.getVar<int>("NGoodLeptons");
+        const auto& NGoodBJets_pt45  = tr.getVar<int>("NGoodBJets_pt45");
+        const auto& HT_trigger_pt45  = tr.getVar<double>("HT_trigger_pt45");
+        const auto& NGoodJets_pt45   = tr.getVar<int>("NGoodJets_pt45");
+        const auto& passMadHT        = tr.getVar<bool>("passMadHT");
+        const auto& Jets             = tr.getVec<TLorentzVector>("Jets");
+        const auto& GoodBJets_pt45   = tr.getVec<bool>("GoodBJets_pt45");
+        const auto& dR_bjets         = tr.getVar<double>("dR_bjets");               
  
         // ------------------------------
         // -- Define Top Tag variables
         // ------------------------------
-        const auto& deepESM_val                = tr.getVar<double>("deepESM_val");
-        const auto& ntops                      = tr.getVar<int>("ntops");
-        const auto& ntops_1jet                 = tr.getVar<int>("ntops_1jet");
-        const auto& ntops_2jet                 = tr.getVar<int>("ntops_2jet");
-        const auto& ntops_3jet                 = tr.getVar<int>("ntops_3jet");
-        const auto& topsMass                   = tr.getVec<double>("topsMass");
-        const auto& topsEta                    = tr.getVec<double>("topsEta");
-        const auto& topsPt                     = tr.getVec<double>("topsPt");
-        const auto& bestTopMass                = tr.getVar<double>("bestTopMass");
-        const auto& bestTopEta                 = tr.getVar<double>("bestTopEta");
-        const auto& bestTopPt                  = tr.getVar<double>("bestTopPt");
-        const auto& dR_top1_top2               = tr.getVar<double>("dR_top1_top2");
-        const auto& topsLV                     = tr.getVec<TLorentzVector>("topsLV");
-        const auto& passBaseline0l             = tr.getVar<bool>("passBaseline0l_Good");
-        const auto& passMETFilters             = tr.getVar<bool>("passMETFilters");
-        const bool pass_general                = JetID && passMETFilters && passMadHT;
-        const bool pass_0l                     = NGoodLeptons==0;  
-        const bool pass_HT500                  = HT_trigger_pt45 > 500;
-        const bool pass_ge2b                   = NGoodBJets_pt45 >= 2;
-        const bool pass_ge6j                   = NGoodJets_pt45 >= 6;
-        const bool pass_ge2t                   = ntops >= 2;
-        const bool pass_ge2t1j                 = ntops >= 2 && ntops_3jet == 0 && ntops_2jet==0;
-        const bool pass_ge2t3j                 = ntops >= 2 && ntops_1jet == 0 && ntops_2jet==0;
-        const bool pass_ge2t1j3j               = ntops >= 2 && ntops_1jet >= 1 && ntops_3jet >= 1 && ntops_2jet==0;
-        const bool pass_ge1dRbjets             = dR_bjets >= 1.0;       
+        const auto& ntops          = tr.getVar<int>("ntops");
+        const auto& ntops_1jet     = tr.getVar<int>("ntops_1jet");
+        const auto& ntops_2jet     = tr.getVar<int>("ntops_2jet");
+        const auto& ntops_3jet     = tr.getVar<int>("ntops_3jet");
+        //const auto& topsMass       = tr.getVec<double>("topsMass");
+        //const auto& topsEta        = tr.getVec<double>("topsEta");
+        //const auto& topsPt         = tr.getVec<double>("topsPt");
+        //const auto& bestTopMass    = tr.getVar<double>("bestTopMass");
+        //const auto& bestTopEta     = tr.getVar<double>("bestTopEta");
+        //const auto& bestTopPt      = tr.getVar<double>("bestTopPt");
+        //const auto& dR_top1_top2   = tr.getVar<double>("dR_top1_top2");
+        const auto& topsLV         = tr.getVec<TLorentzVector>("topsLV");
+        const auto& passBaseline0l = tr.getVar<bool>("passBaseline0l_Good");
+        const auto& passMETFilters = tr.getVar<bool>("passMETFilters");
+        const bool pass_general    = JetID && passMETFilters && passMadHT;
+        const bool pass_0l         = NGoodLeptons==0;  
+        const bool pass_HT500      = HT_trigger_pt45 > 500;
+        const bool pass_ge2b       = NGoodBJets_pt45 >= 2;
+        const bool pass_ge6j       = NGoodJets_pt45 >= 6;
+        const bool pass_ge2t       = ntops >= 2;
+        const bool pass_ge2t1j     = ntops >= 2 && ntops_3jet == 0 && ntops_2jet==0;
+        const bool pass_ge2t3j     = ntops >= 2 && ntops_1jet == 0 && ntops_2jet==0;
+        const bool pass_ge2t1j3j   = ntops >= 2 && ntops_1jet >= 1 && ntops_3jet >= 1 && ntops_2jet==0;
+        const bool pass_ge1dRbjets = dR_bjets >= 1.0;       
     
         // ------------------------------------------
         // -- MT2 or Stealth hemispheres variables
@@ -243,13 +238,13 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         // -- Calculate DeltaR between tops and bjets
         // ---------------------------------------------
         std::vector<TLorentzVector> bjets;
-        for(int ijet = 0; ijet < Jets.size(); ijet++) {
+        for(unsigned int ijet = 0; ijet < Jets.size(); ijet++) {
             if(!GoodBJets_pt45[ijet]) continue;
             bjets.push_back(Jets.at(ijet));        
         }
         std::vector<double> dR_top_bjet;
-        for (double t = 0; t < topsLV.size(); t++) {
-            for (double b = 0; b < bjets.size(); b++) {
+        for (unsigned int t = 0; t < topsLV.size(); t++) {
+            for (unsigned int b = 0; b < bjets.size(); b++) {
                 double deltaR = topsLV.at(t).DeltaR(bjets.at(b));
                 dR_top_bjet.push_back(deltaR);
             }
