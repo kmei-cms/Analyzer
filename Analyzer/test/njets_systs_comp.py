@@ -2,24 +2,46 @@ import ROOT
 import plot
 import math
 import sys
+import argparse
+import os
 
 ROOT.gROOT.SetBatch(True)
 
-year = str(sys.argv[1])
+usage = "usage: %prog [options]"
+parser = argparse.ArgumentParser(usage)
+parser.add_argument("--year", dest="year", help="Which period of Run2", default="NULL", type=str) 
+parser.add_argument("--fitdir", dest="fitdir", help="Directory containing fits", default="NULL", type=str) 
+parser.add_argument("--fittag", dest="fittag", help="Unique tag for fit results", default="NULL", type=str) 
 
-version = ""; fitversion = ""
+arg = parser.parse_args()
+
+if arg.fitdir == "NULL":
+    print "Must provide directory containing fits!"
+    print "Exiting..."
+    quit()
+
+if arg.fittag == "NULL":
+    print "Must provide tag for fit results!"
+    print "Exiting..."
+    quit()
+
+if not os.path.exists(arg.fitdir):
+    print "Fit directory \"%s\" does not exist!"%(arg.fitdir)
+    print "Exiting..."
+    quit()
+
+year = arg.year
+fitdir = arg.fitdir
+fittag = arg.fittag + "_" + year
+
 inputfilename = "/uscms_data/d3/jhiltb/susy/CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit/"
 if year == "2016":
-    version = "Keras_V1.2.8_Approval_StatErrPlusFullDev_12JetFix"
     inputfilename += "Keras_2016_v1.1" 
 elif year == "2017":
-    version = "Keras_V3.0.4_Approval_StatErrPlusFullDev_12JetFix"
     inputfilename += "Keras_2017_v1.1" 
 elif year == "2018pre":
-    version = "Keras_V3.0.4_Approval_StatErrPlusFullDev_12JetFix"
     inputfilename += "Keras_2018pre_v1.0" 
 elif year == "2018post":
-    version = "Keras_V3.0.4_Approval_StatErrPlusFullDev_12JetFix"
     inputfilename += "Keras_2018post_v1.0" 
 else:
     print "Year \"%s\" is not valid!"%(year)
@@ -27,10 +49,6 @@ else:
     quit()
  
 inputfilename += "/njets_for_Aron.root"
-fitversion = "Approval_With12JetFix_%s"%(year)
-#fitversion = "GL_2017"
-#fitversion = "FS2017"
-#GL_2016_nom_shared
 
 print "Opening root file \"%s\""%(inputfilename)
 inputfile = ROOT.TFile.Open(inputfilename)
@@ -58,7 +76,7 @@ systs = ["",
          "_puUp",
          "_puDown"
 ]
-if "2017" in year:
+if "2017" in year or "2018" in year:
     systs.extend([
          "_isrUp",
          "_isrDown",
@@ -106,7 +124,7 @@ extra_systs = ["_isrUp",
                "_fsrDown",
                ]
 extra_base = "_h_njets_pt30_1l"
-if "2016" in fitversion:
+if "2016" in year:
     # deal with the isr and fsr uncertainties
     for mva in mvas:
         extra_histnames = [mva+"_TT"+syst+extra_base for syst in extra_systs]
@@ -143,7 +161,7 @@ for sumh in sumhistos:
     sumhistos_norm.append(newh)
 
 
-outputfile = ROOT.TFile.Open("ttbar_systematics_%s.root"%fitversion, "RECREATE")
+outputfile = ROOT.TFile.Open("ttbar_systematics_%s.root"%year, "RECREATE")
 outputfile.cd()
 
 for mva in mvas: 
@@ -212,7 +230,7 @@ for mva in mvas:
             #    if "pdf" in systs[start]:
             #        myh.SetBinContent(8, myh.GetBinContent(7))
             # 2016 pileup unc in bin D4 is subject to very large stat fluctuation, set by hand to value from bin before
-            if "2016" in fitversion and mva in ["D4"]:
+            if "2016" in year and mva in ["D4"]:
                 if "pu" in systs[start]:
                     myh.SetBinContent(7, myh.GetBinContent(6))
                     myh.SetBinContent(8, myh.GetBinContent(6))
@@ -253,80 +271,80 @@ for mva in mvas:
 #    h.Write()
 
 # Add the QCD CR systematic and the new HT systematics
-if "2016" in fitversion:
-    #f_CR_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/FinalSystematicFiles/qcdCR_shape_systematic_2016.root")
-    f_CR_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/RatioOfRatiosSystematic_12BinInclusive/2016_qcdCR_qcdCRErr_Systematics.root")
-    h_CR_2016 = [f_CR_2016.Get("%s_qcdCR"%mva) for mva in mvas]
-    herr_CR_2016 = [f_CR_2016.Get("%s_qcdCRErr"%mva) for mva in mvas]
-    outputfile.cd()
-    for h in h_CR_2016:
-        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
-        for bin in range(h.GetNbinsX()):
-            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
-        newh.Write()
-    for h in herr_CR_2016:
-        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
-        for bin in range(h.GetNbinsX()):
-            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
-        newh.Write()
-
-    f_HT_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/RatioOfRatiosSystematic_12BinInclusive/2016_htRatioSyst.root")
-    h_HTtail_2016 = [f_HT_2016.Get("%s_httail"%mva) for mva in mvas]
-    h_HTnjet_2016 = [f_HT_2016.Get("%s_htnjet"%mva) for mva in mvas]
-    outputfile.cd()
-    for i, h in enumerate(h_HTtail_2016):
-        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
-        for bin in range(h.GetNbinsX()):
-            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
-        newh.Write()
-    for h in h_HTnjet_2016:
-        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
-        for bin in range(h.GetNbinsX()):
-            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
-        newh.Write()
-
-        
-if "2017" in fitversion:
-    f_CR_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/RatioOfRatiosSystematic_12BinInclusive/2017_qcdCR_qcdCRErr_Systematics.root")
-    #f_CR_2017 = ROOT.TFile.Open("/uscms_data/d1/owenl/stealth-rpv/mva-shape-syst/dratio-rw5-fab5.root")
-    #print ["h_njets_dratio_mva%s_ab_rw5_fab"%mva for mva in ["1","2","3","4"]]
-    #h_CR_2017 = [f_CR_2017.Get("h_njets_dratio_mva%s_ab_rw5_fab5"%mva) for mva in ["1","2","3","4"]]
-    #f_CR_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/FinalSystematicFiles/qcdCR_shape_systematic_2017.root")
-    h_CR_2017 = [f_CR_2017.Get("%s_qcdCR"%mva) for mva in mvas]
-    herr_CR_2017 = [f_CR_2017.Get("%s_qcdCRErr"%mva) for mva in mvas]
-    outputfile.cd()
-    for i,h in enumerate(h_CR_2017):
-        #print h
-        newh = ROOT.TH1D("D%s_qcdCR"%(i+1), "D%s_qcdCR"%(i+1), 6, 0, 6)
-        for bin in range(h.GetNbinsX()):
-            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
-            # if i == 2 and bin >= 5:
-            #     newh.SetBinContent(bin+1, 1.)
-            # elif i == 3 and bin >=4:
-            #     newh.SetBinContent(bin+1, 1.)
-            # else:
-            #     newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
-        newh.Write()
-    for i,h in enumerate(herr_CR_2017):
-        newh = ROOT.TH1D("D%s_qcdCRErr"%(i+1), "D%s_qcdCRErr"%(i+1), 6, 0, 6)
-        for bin in range(h.GetNbinsX()):
-            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
-        newh.Write()
-
-    f_HT_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/RatioOfRatiosSystematic_12BinInclusive/2017_htRatioSyst.root")
-    h_HTtail_2017 = [f_HT_2017.Get("%s_httail"%mva) for mva in mvas]
-    h_HTnjet_2017 = [f_HT_2017.Get("%s_htnjet"%mva) for mva in mvas]
-    outputfile.cd()
-    for h in h_HTtail_2017:
-        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
-        for bin in range(h.GetNbinsX()):
-            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
-        newh.Write()
-    for h in h_HTnjet_2017:
-        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
-        for bin in range(h.GetNbinsX()):
-            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
-        newh.Write()
+#if "2016" in fitversion:
+#    #f_CR_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/FinalSystematicFiles/qcdCR_shape_systematic_2016.root")
+#    f_CR_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/RatioOfRatiosSystematic_12BinInclusive/2016_qcdCR_qcdCRErr_Systematics.root")
+#    h_CR_2016 = [f_CR_2016.Get("%s_qcdCR"%mva) for mva in mvas]
+#    herr_CR_2016 = [f_CR_2016.Get("%s_qcdCRErr"%mva) for mva in mvas]
+#    outputfile.cd()
+#    for h in h_CR_2016:
+#        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
+#        for bin in range(h.GetNbinsX()):
+#            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+#        newh.Write()
+#    for h in herr_CR_2016:
+#        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
+#        for bin in range(h.GetNbinsX()):
+#            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+#        newh.Write()
+#
+#    f_HT_2016 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/RatioOfRatiosSystematic_12BinInclusive/2016_htRatioSyst.root")
+#    h_HTtail_2016 = [f_HT_2016.Get("%s_httail"%mva) for mva in mvas]
+#    h_HTnjet_2016 = [f_HT_2016.Get("%s_htnjet"%mva) for mva in mvas]
+#    outputfile.cd()
+#    for i, h in enumerate(h_HTtail_2016):
+#        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
+#        for bin in range(h.GetNbinsX()):
+#            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+#        newh.Write()
+#    for h in h_HTnjet_2016:
+#        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
+#        for bin in range(h.GetNbinsX()):
+#            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+#        newh.Write()
+#
+#        
+#if "2017" in fitversion:
+#    f_CR_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/RatioOfRatiosSystematic_12BinInclusive/2017_qcdCR_qcdCRErr_Systematics.root")
+#    #f_CR_2017 = ROOT.TFile.Open("/uscms_data/d1/owenl/stealth-rpv/mva-shape-syst/dratio-rw5-fab5.root")
+#    #print ["h_njets_dratio_mva%s_ab_rw5_fab"%mva for mva in ["1","2","3","4"]]
+#    #h_CR_2017 = [f_CR_2017.Get("h_njets_dratio_mva%s_ab_rw5_fab5"%mva) for mva in ["1","2","3","4"]]
+#    #f_CR_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/FinalSystematicFiles/qcdCR_shape_systematic_2017.root")
+#    h_CR_2017 = [f_CR_2017.Get("%s_qcdCR"%mva) for mva in mvas]
+#    herr_CR_2017 = [f_CR_2017.Get("%s_qcdCRErr"%mva) for mva in mvas]
+#    outputfile.cd()
+#    for i,h in enumerate(h_CR_2017):
+#        #print h
+#        newh = ROOT.TH1D("D%s_qcdCR"%(i+1), "D%s_qcdCR"%(i+1), 6, 0, 6)
+#        for bin in range(h.GetNbinsX()):
+#            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+#            # if i == 2 and bin >= 5:
+#            #     newh.SetBinContent(bin+1, 1.)
+#            # elif i == 3 and bin >=4:
+#            #     newh.SetBinContent(bin+1, 1.)
+#            # else:
+#            #     newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+#        newh.Write()
+#    for i,h in enumerate(herr_CR_2017):
+#        newh = ROOT.TH1D("D%s_qcdCRErr"%(i+1), "D%s_qcdCRErr"%(i+1), 6, 0, 6)
+#        for bin in range(h.GetNbinsX()):
+#            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+#        newh.Write()
+#
+#    f_HT_2017 = ROOT.TFile.Open("/uscms/homes/k/kmei91/public/forNadja/RatioOfRatiosSystematic_12BinInclusive/2017_htRatioSyst.root")
+#    h_HTtail_2017 = [f_HT_2017.Get("%s_httail"%mva) for mva in mvas]
+#    h_HTnjet_2017 = [f_HT_2017.Get("%s_htnjet"%mva) for mva in mvas]
+#    outputfile.cd()
+#    for h in h_HTtail_2017:
+#        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
+#        for bin in range(h.GetNbinsX()):
+#            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+#        newh.Write()
+#    for h in h_HTnjet_2017:
+#        newh = ROOT.TH1D(h.GetName(), h.GetTitle(), 6, 0, 6)
+#        for bin in range(h.GetNbinsX()):
+#            newh.SetBinContent(bin+1, h.GetBinContent(bin+1) if h.GetBinContent(bin+1) > 0 else h.GetBinContent(bin))
+#        newh.Write()
 
 
 # Add the systematic from Owen
@@ -337,12 +355,9 @@ if "2017" in fitversion:
 #     for h in h_owen:
 #         h.Write()
 
-# Look at results from Aron's fits -- update with my own background-only fits
-fitdir = "/uscms_data/d3/jhiltb/susy/CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit"
-
 #*(1) Fit with a0, a1, a2 shared across MVA bins, fitting to pseudo-data composed of nominal samples*
 #Results are here:
-fname_nom_shared = "%s/%s_nom_shared/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+fname_nom_shared = "%s/%s_nom_shared/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
 f_nom_shared = ROOT.TFile.Open(fname_nom_shared)
 histos_nom_shared = {}
 for mva in mvas:
@@ -351,7 +366,7 @@ for mva in mvas:
 
 #*(2) Fit with separate a0, a1, a2 for each MVA bin, fitting to pseudo-data composed of nominal samples*
 #Results are here:
-fname_nom_sep = "%s/%s_nom_sep/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+fname_nom_sep = "%s/%s_nom_sep/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
 f_nom_sep = ROOT.TFile.Open(fname_nom_sep)
 histos_nom_sep = {}
 for mva in mvas:
@@ -361,7 +376,7 @@ for mva in mvas:
 
 #*(3) Fit with a0, a1, a2 shared across MVA bins, fitting to pseudo-data composed of JEC UP samples*
 #Results are here:
-fname_JECUp_shared = "%s/%s_JECUp_shared/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+fname_JECUp_shared = "%s/%s_JECUp_shared/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
 f_JECUp_shared = ROOT.TFile.Open(fname_JECUp_shared)
 histos_JECUp_shared = {}
 for mva in mvas:
@@ -370,7 +385,7 @@ for mva in mvas:
 
 #*(4) Fit with separate a0, a1, a2 for each MVA bin, fitting to pseudo-data composed of JEC UP samples*
 #Results are here:
-fname_JECUp_sep = "%s/%s_JECUp_sep/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+fname_JECUp_sep = "%s/%s_JECUp_sep/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
 f_JECUp_sep = ROOT.TFile.Open(fname_JECUp_sep)
 histos_JECUp_sep = {}
 for mva in mvas:
@@ -379,7 +394,7 @@ for mva in mvas:
 
 #*(5) Fit with a0, a1, a2 shared across MVA bins, fitting to pseudo-data composed of JEC Down samples*
 #Results are here:
-fname_JECDown_shared = "%s/%s_JECDown_shared/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+fname_JECDown_shared = "%s/%s_JECDown_shared/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
 f_JECDown_shared = ROOT.TFile.Open(fname_JECDown_shared)
 histos_JECDown_shared = {}
 for mva in mvas:
@@ -388,7 +403,7 @@ for mva in mvas:
 
 #*(6) Fit with separate a0, a1, a2 for each MVA bin, fitting to pseudo-data composed of JEC Down samples*
 #Results are here:
-fname_JECDown_sep = "%s/%s_JECDown_sep/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+fname_JECDown_sep = "%s/%s_JECDown_sep/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
 f_JECDown_sep = ROOT.TFile.Open(fname_JECDown_sep)
 histos_JECDown_sep = {}
 for mva in mvas:
@@ -400,7 +415,7 @@ for mva in mvas:
 
 #*(7) Fit with a0, a1, a2 shared across MVA bins, fitting to pseudo-data composed of JER UP samples*
 #Results are here:
-fname_JERUp_shared = "%s/%s_JERUp_shared/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+fname_JERUp_shared = "%s/%s_JERUp_shared/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
 f_JERUp_shared = ROOT.TFile.Open(fname_JERUp_shared)
 histos_JERUp_shared = {}
 for mva in mvas:
@@ -409,7 +424,7 @@ for mva in mvas:
 
 #*(8) Fit with separate a0, a1, a2 for each MVA bin, fitting to pseudo-data composed of JER UP samples*
 #Results are here:
-fname_JERUp_sep = "%s/%s_JERUp_sep/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+fname_JERUp_sep = "%s/%s_JERUp_sep/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
 f_JERUp_sep = ROOT.TFile.Open(fname_JERUp_sep)
 histos_JERUp_sep = {}
 for mva in mvas:
@@ -418,7 +433,7 @@ for mva in mvas:
 
 #*(9) Fit with a0, a1, a2 shared across MVA bins, fitting to pseudo-data composed of JER Down samples*
 #Results are here:
-fname_JERDown_shared = "%s/%s_JERDown_shared/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+fname_JERDown_shared = "%s/%s_JERDown_shared/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
 f_JERDown_shared = ROOT.TFile.Open(fname_JERDown_shared)
 histos_JERDown_shared = {}
 for mva in mvas:
@@ -427,7 +442,7 @@ for mva in mvas:
 
 #*(10) Fit with separate a0, a1, a2 for each MVA bin, fitting to pseudo-data composed of JER Down samples*
 #Results are here:
-fname_JERDown_sep = "%s/%s_JERDown_sep/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+fname_JERDown_sep = "%s/%s_JERDown_sep/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
 f_JERDown_sep = ROOT.TFile.Open(fname_JERDown_sep)
 histos_JERDown_sep = {}
 for mva in mvas:
@@ -440,10 +455,10 @@ histos_FSRUp_shared = {}
 histos_FSRUp_sep = {}
 histos_FSRDown_shared = {}
 histos_FSRDown_sep = {}
-if "201" in fitversion:
+if "201" in year:
     #*(11) Fit with a0, a1, a2 shared across MVA bins, fitting to pseudo-data composed of FSR UP samples*
     #Results are here:
-    fname_FSRUp_shared = "%s/%s_FSRUp_shared/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+    fname_FSRUp_shared = "%s/%s_FSRUp_shared/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
     f_FSRUp_shared = ROOT.TFile.Open(fname_FSRUp_shared)
     for mva in mvas:
         h = f_FSRUp_shared.Get("shapes_fit_b/%s/TT" % mva)
@@ -451,7 +466,7 @@ if "201" in fitversion:
     
     #*(12) Fit with separate a0, a1, a2 for each MVA bin, fitting to pseudo-data composed of FSR UP samples*
     #Results are here:
-    fname_FSRUp_sep = "%s/%s_FSRUp_sep/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+    fname_FSRUp_sep = "%s/%s_FSRUp_sep/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
     f_FSRUp_sep = ROOT.TFile.Open(fname_FSRUp_sep)
     for mva in mvas:
         h = f_FSRUp_sep.Get("shapes_fit_b/%s/TT" % mva)
@@ -459,7 +474,7 @@ if "201" in fitversion:
     
     #*(13) Fit with a0, a1, a2 shared across MVA bins, fitting to pseudo-data composed of FSR Down samples*
     #Results are here:
-    fname_FSRDown_shared = "%s/%s_FSRDown_shared/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+    fname_FSRDown_shared = "%s/%s_FSRDown_shared/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
     f_FSRDown_shared = ROOT.TFile.Open(fname_FSRDown_shared)
     for mva in mvas:
         h = f_FSRDown_shared.Get("shapes_fit_b/%s/TT" % mva)
@@ -467,7 +482,7 @@ if "201" in fitversion:
     
     #*(14) Fit with separate a0, a1, a2 for each MVA bin, fitting to pseudo-data composed of FSR Down samples*
     #Results are here:
-    fname_FSRDown_sep = "%s/%s_FSRDown_sep/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+    fname_FSRDown_sep = "%s/%s_FSRDown_sep/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
     f_FSRDown_sep = ROOT.TFile.Open(fname_FSRDown_sep)
     for mva in mvas:
         h = f_FSRDown_sep.Get("shapes_fit_b/%s/TT" % mva)
@@ -477,10 +492,10 @@ histos_ISRUp_shared = {}
 histos_ISRUp_sep = {}
 histos_ISRDown_shared = {}
 histos_ISRDown_sep = {}
-if "201" in fitversion:
+if "201" in year:
     #*(15) Fit with a0, a1, a2 shared across MVA bins, fitting to pseudo-data composed of ISR UP samples*
     #Results are here:
-    fname_ISRUp_shared = "%s/%s_ISRUp_shared/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+    fname_ISRUp_shared = "%s/%s_ISRUp_shared/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
     f_ISRUp_shared = ROOT.TFile.Open(fname_ISRUp_shared)
     for mva in mvas:
         h = f_ISRUp_shared.Get("shapes_fit_b/%s/TT" % mva)
@@ -488,7 +503,7 @@ if "201" in fitversion:
     
     #*(16) Fit with separate a0, a1, a2 for each MVA bin, fitting to pseudo-data composed of ISR UP samples*
     #Results are here:
-    fname_ISRUp_sep = "%s/%s_ISRUp_sep/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+    fname_ISRUp_sep = "%s/%s_ISRUp_sep/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
     f_ISRUp_sep = ROOT.TFile.Open(fname_ISRUp_sep)
     for mva in mvas:
         h = f_ISRUp_sep.Get("shapes_fit_b/%s/TT" % mva)
@@ -496,7 +511,7 @@ if "201" in fitversion:
     
     #*(17) Fit with a0, a1, a2 shared across MVA bins, fitting to pseudo-data composed of ISR Down samples*
     #Results are here:
-    fname_ISRDown_shared = "%s/%s_ISRDown_shared/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+    fname_ISRDown_shared = "%s/%s_ISRDown_shared/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
     f_ISRDown_shared = ROOT.TFile.Open(fname_ISRDown_shared)
     for mva in mvas:
         h = f_ISRDown_shared.Get("shapes_fit_b/%s/TT" % mva)
@@ -504,7 +519,7 @@ if "201" in fitversion:
     
     #*(18) Fit with separate a0, a1, a2 for each MVA bin, fitting to pseudo-data composed of ISR Down samples*
     #Results are here:
-    fname_ISRDown_sep = "%s/%s_ISRDown_sep/fitDiagnostics%sRPV550.root"%(fitdir,fitversion,year)
+    fname_ISRDown_sep = "%s/%s_ISRDown_sep/fitDiagnostics%sRPV550.root"%(fitdir,fittag,year)
     f_ISRDown_sep = ROOT.TFile.Open(fname_ISRDown_sep)
     for mva in mvas:
         h = f_ISRDown_sep.Get("shapes_fit_b/%s/TT" % mva)
@@ -579,7 +594,7 @@ for mva in mvas:
                   ylabel="",
                   colors=colors3, norm=False, drawstyle="lastP")
    
-    if "201" in fitversion:
+    if "201" in year:
         # for FSR Up case
         index_FSRUp = systs.index("_fsrUp")
         plot.makeplot([histos_nom_shared[mva].Clone(), histos_FSRUp_sep[mva].Clone(), histos_FSRUp_shared[mva].Clone(), histos_rebin[mva][index_FSRUp].Clone()], 
@@ -598,7 +613,7 @@ for mva in mvas:
                       ylabel="",
                       colors=colors3, norm=False, drawstyle="lastP")
         
-    if "201" in fitversion:
+    if "201" in year: 
         # for ISR Up case
         index_ISRUp = systs.index("_isrUp")
         plot.makeplot([histos_nom_shared[mva].Clone(), histos_ISRUp_sep[mva].Clone(), histos_ISRUp_shared[mva].Clone(), histos_rebin[mva][index_ISRUp].Clone()], 
@@ -643,7 +658,7 @@ for mva in mvas:
     
     ratio_FSRUp = None
     ratio_FSRDown = None
-    if "201" in fitversion:
+    if "201" in year:
         # For the FSR Up case
         ratio_FSRUp = histos_FSRUp_sep[mva].Clone(mva+"_ratio_FSRUp_fit")
         ratio_FSRUp.Divide(histos_FSRUp_shared[mva])
@@ -653,7 +668,7 @@ for mva in mvas:
 
     ratio_ISRUp = None
     ratio_ISRDown = None
-    if "201" in fitversion:
+    if "201" in year:
         # For the ISR Up case
         ratio_ISRUp = histos_ISRUp_sep[mva].Clone(mva+"_ratio_ISRUp_fit")
         ratio_ISRUp.Divide(histos_ISRUp_shared[mva])
@@ -673,14 +688,14 @@ for mva in mvas:
     divratio_JERDown.Divide(ratio_nom)
     divratio_FSRUp = None
     divratio_FSRDown = None
-    if "201" in fitversion:
+    if "201" in year:
         divratio_FSRUp = ratio_FSRUp.Clone(mva+"_ratio_FSRUp_div_fit")
         divratio_FSRUp.Divide(ratio_nom)
         divratio_FSRDown = ratio_FSRDown.Clone(mva+"_ratio_FSRDown_div_fit")
         divratio_FSRDown.Divide(ratio_nom)
     divratio_ISRUp = None
     divratio_ISRDown = None
-    if "201" in fitversion:
+    if "201" in year:
         divratio_ISRUp = ratio_ISRUp.Clone(mva+"_ratio_ISRUp_div_fit")
         divratio_ISRUp.Divide(ratio_nom)
         divratio_ISRDown = ratio_ISRDown.Clone(mva+"_ratio_ISRDown_div_fit")
@@ -689,7 +704,7 @@ for mva in mvas:
     outputfile.cd()
     # Rather than put JECUp and JERUp, construct maximum of the Up and Down variations, but preserve the "sign"
     mva_JEC = None
-    if "2016" in fitversion:
+    if "2016" in year:
         # Use JEC Down
         mva_JEC = divratio_JECDown.Clone(mva+"_JEC")
         for i in range(divratio_JECDown.GetNbinsX()):
@@ -746,7 +761,7 @@ for mva in mvas:
                 mva_JER.SetBinContent(i+1,1/down_value)
 
     mva_FSR = None
-    if "201" in fitversion:
+    if "201" in year:
         mva_FSR = divratio_FSRUp.Clone(mva+"_FSR")
         for i in range(divratio_FSRUp.GetNbinsX()):
             print "bin ", i
@@ -769,7 +784,7 @@ for mva in mvas:
                     print "writing 1/down", 1/down_value
     
     mva_ISR = None
-    if "201" in fitversion:
+    if "201" in year:
         mva_ISR = divratio_ISRUp.Clone(mva+"_ISR")
         for i in range(divratio_ISRUp.GetNbinsX()):
             print "bin ", i
@@ -790,7 +805,7 @@ for mva in mvas:
                 else:
                     mva_ISR.SetBinContent(i+1,1/down_value)
                     print "writing 1/down", 1/down_value
-    if "2016" in fitversion:
+    if "2016" in year:
         for bin in range(mva_ISR.GetNbinsX()):
             old_value = mva_ISR.GetBinContent(bin+1)
             diff_value = abs(old_value-1)/math.sqrt(2)
@@ -808,9 +823,9 @@ for mva in mvas:
     divratio_JERDown.Write(mva+"_JERDown")
     #mva_JEC.Write(mva+"_JEC")
     #mva_JER.Write(mva+"_JER")
-    if "201" in fitversion:
+    if "201" in year:
         mva_FSR.Write(mva+"_FSR")
-    if "201" in fitversion:
+    if "201" in year:
         mva_ISR.Write(mva+"_ISR")
 
 
@@ -832,11 +847,11 @@ for mva in mvas:
     #ymin=0.7, ymax=1.3, ylabel="",
     #colors=colors, norm=False, drawstyle="hist")
 
-    if "201" in fitversion:
+    if "201" in year:
         plot.makeplot([ratio_nom, ratio_FSRUp, ratio_FSRDown], ["Nominal", "FSR Up", "FSR Down"], "N_{j}-7", mva+"_fit"+"_comp_FSR", plotdir="./", linear=True, legendColumns=1, 
                       ymin=0.7, ymax=1.3, ylabel="",
                       colors=colors, norm=False, drawstyle="hist")
-    if "201" in fitversion:
+    if "201" in year:
         plot.makeplot([ratio_nom, ratio_ISRUp, ratio_ISRDown], ["Nominal", "ISR Up", "ISR Down"], "N_{j}-7", mva+"_fit"+"_comp_ISR", plotdir="./", linear=True, legendColumns=1, 
                       ymin=0.7, ymax=1.3, ylabel="",
                       colors=colors, norm=False, drawstyle="hist")
@@ -853,11 +868,11 @@ for mva in mvas:
     #ymin=0.8, ymax=1.3, ylabel="", dropzeroes=False,
     #colors=colors, norm=False, drawstyle="hist")
 
-    if "201" in fitversion:
+    if "201" in year:
         plot.makeplot([divratio_FSRUp, divratio_FSRDown], ["FSR Up","FSR Down"], "N_{j}-7", mva+"_fit_comp_div_FSR", plotdir="./", linear=True, legendColumns=1, 
                       ymin=0.8, ymax=1.3, ylabel="", dropzeroes=False,
                       colors=colors, norm=False, drawstyle="hist")
-    if "201" in fitversion:
+    if "201" in year:
         plot.makeplot([divratio_ISRUp, divratio_ISRDown], ["ISR Up","ISR Down"], "N_{j}-7", mva+"_fit_comp_div_ISR", plotdir="./", linear=True, legendColumns=1, 
                       ymin=0.8, ymax=1.3, ylabel="", dropzeroes=False,
                       colors=colors, norm=False, drawstyle="hist")

@@ -35,6 +35,10 @@ void AnalyzeEENoise::InitHistos()
     my_histos.emplace( "h_jmt_ev2_top6_2018A",std::make_shared<TH1D>( "h_jmt_ev2_top6_2018A", "h_jmt_ev2_top6_2018A", 1440, 0, 1) ) ;
     my_histos.emplace( "h_beta_z_2018A", std::make_shared<TH1D>( "h_beta_z_2018A", "h_beta_z_2018A", 1440, -1, 1) ) ;
     my_histos.emplace( "h_beta_z_pt20_2018A", std::make_shared<TH1D>( "h_beta_z_pt20_2018A", "h_beta_z_pt20_2018A", 1440, -1, 1) ) ;
+
+    my_2d_histos.emplace( "h_beta_z_nvtx_2018A", std::make_shared<TH2D>( "h_beta_z_nvtx_2018A", "h_beta_z_nvtx_2018A", 1440, -1, 1, 121, -0.5, 120.5) ) ;
+    my_2d_histos.emplace( "h_beta_z_pt20_nvtx_2018A", std::make_shared<TH2D>( "h_beta_z_pt20_nvtx_2018A", "h_beta_z_pt20_nvtx_2018A", 1440, -1, 1, 121, -0.5, 120.5) ) ;
+
     my_histos.emplace( "h_deepESM_2018A", std::make_shared<TH1D>( "h_deepESM_2018A", "h_deepESM_val_2018A", 1440, 0, 1) ) ;
     my_histos.emplace( "h_jet_pt_2018A", std::make_shared<TH1D>( "h_jet_pt_2018A", "h_jet_pt_2018A", 1440, 0, 1440) );
     my_histos.emplace( "h_jet_eta_2018A", std::make_shared<TH1D>( "h_jet_eta_2018A", "h_jet_eta_2018A", 1440, -5, 5) );
@@ -62,6 +66,10 @@ void AnalyzeEENoise::InitHistos()
     my_histos.emplace( "h_jmt_ev2_top6_2018D",std::make_shared<TH1D>( "h_jmt_ev2_top6_2018D", "h_jmt_ev2_top6_2018D", 1440, 0, 1) ) ;
     my_histos.emplace( "h_beta_z_2018D", std::make_shared<TH1D>( "h_beta_z_2018D", "h_beta_z_2018D", 1440, -1, 1) ) ;
     my_histos.emplace( "h_beta_z_pt20_2018D", std::make_shared<TH1D>( "h_beta_z_pt20_2018D", "h_beta_z_pt20_2018D", 1440, -1, 1) ) ;
+
+    my_2d_histos.emplace( "h_beta_z_nvtx_2018D", std::make_shared<TH2D>( "h_beta_z_nvtx_2018D", "h_beta_z_nvtx_2018D", 1440, -1, 1, 121, -0.5, 120.5) ) ;
+    my_2d_histos.emplace( "h_beta_z_pt20_nvtx_2018D", std::make_shared<TH2D>( "h_beta_z_pt20_nvtx_2018D", "h_beta_z_pt20_nvtx_2018D", 1440, -1, 1, 121, -0.5, 120.5) ) ;
+
     my_histos.emplace( "h_deepESM_2018D", std::make_shared<TH1D>( "h_deepESM_2018D", "h_deepESM_2018D", 1440, 0, 1) ) ;
     my_histos.emplace( "h_jet_pt_2018D", std::make_shared<TH1D>( "h_jet_pt_2018D", "h_jet_pt_2018D", 1440, 0, 1440) );
     my_histos.emplace( "h_jet_eta_2018D", std::make_shared<TH1D>( "h_jet_eta_2018D", "h_jet_eta_2018D", 1440, -5, 5) );
@@ -100,6 +108,7 @@ void AnalyzeEENoise::Loop(NTupleReader& tr, double, int maxevents, bool)
        
         const auto& RunNum              = tr.getVar<unsigned int>("RunNum");
         const auto& Jets                = tr.getVec<TLorentzVector>("Jets");
+        const auto& NVtx                = tr.getVar<int>("NVtx");
         const auto& fwm2_top6           = tr.getVar<double>("fwm2_top6");
         const auto& fwm3_top6           = tr.getVar<double>("fwm3_top6");
         const auto& fwm4_top6           = tr.getVar<double>("fwm4_top6");
@@ -156,6 +165,10 @@ void AnalyzeEENoise::Loop(NTupleReader& tr, double, int maxevents, bool)
                 my_histos["h_jmt_ev2_top6_2018A"]->Fill(jmt_ev2_top6, 1.0);
                 my_histos["h_beta_z_2018A"]->Fill(event_beta_z, 1.0);
                 my_histos["h_beta_z_pt20_2018A"]->Fill(event_beta_z_pt20, 1.0);
+
+                my_2d_histos["h_beta_z_nvtx_2018A"]->Fill(event_beta_z, NVtx, 1.0);
+                my_2d_histos["h_beta_z_pt20_nvtx_2018A"]->Fill(event_beta_z_pt20, NVtx, 1.0);
+
                 my_histos["h_deepESM_2018A"]->Fill(nnDisc, 1.0);
 
             } else if ( RunNum >= 320673 && RunNum <= 325175 ) {
@@ -193,6 +206,10 @@ void AnalyzeEENoise::Loop(NTupleReader& tr, double, int maxevents, bool)
                 my_histos["h_jmt_ev2_top6_2018D"]->Fill(jmt_ev2_top6, 1.0);
                 my_histos["h_beta_z_2018D"]->Fill(event_beta_z, 1.0);
                 my_histos["h_beta_z_pt20_2018D"]->Fill(event_beta_z_pt20, 1.0);
+
+                my_2d_histos["h_beta_z_nvtx_2018D"]->Fill(event_beta_z, NVtx, 1.0);
+                my_2d_histos["h_beta_z_pt20_nvtx_2018D"]->Fill(event_beta_z_pt20, NVtx, 1.0);
+
                 my_histos["h_deepESM_2018D"]->Fill(nnDisc, 1.0);
 
             }
