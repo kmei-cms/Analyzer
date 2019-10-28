@@ -291,6 +291,8 @@ void Analyze1Lep::Loop(NTupleReader& tr, double, int maxevents, bool)
             {"_1l_HT300_ge7j_ge1b_Mbl"               , pass_general && passBaseline1l_Good                                                      },                         
             {"_1e_HT300_ge7j_ge1b_Mbl"               , pass_general && passBaseline1l_Good && pass_1e                                           },                         
             {"_1m_HT300_ge7j_ge1b_Mbl"               , pass_general && passBaseline1l_Good && pass_1m                                           },   
+            {"_1l_HT300_ge7j_ge1b_Mbl_posWeight"     , pass_general && passBaseline1l_Good && weight >  0.0                                     },                         
+            {"_1l_HT300_ge7j_ge1b_Mbl_negWeight"     , pass_general && passBaseline1l_Good && weight <= 0.0                                     },                         
             {"_1l_HT300_ge7j_ge1b_Mbl_noHTWeight"    , pass_general && passBaseline1l_Good                                                      }, 
             {"_1l_HT300_ge7j_ge1b_Mbl_noLepWeight"   , pass_general && passBaseline1l_Good                                                      },                         
             {"_1l_HT300_ge7j_ge1b_Mbl_noBTagWeight"  , pass_general && passBaseline1l_Good                                                      },                         
@@ -376,22 +378,22 @@ void Analyze1Lep::Loop(NTupleReader& tr, double, int maxevents, bool)
             {"h_bTagWeight",           200,  -5.0,   20.0},
             {"h_htDerivedweight",      200,  -5.0,    5.0},
             {"h_prefiringScaleFactor", 200,  -5.0,    5.0},
-            {"h_eventweight",          200,-100.0,  100.0},            
+            {"h_eventweight",          200,  -5.0,   50.0},            
         };
 
         std::vector<TH2DInfo> hist2DInfos = {
-            {    "h_njets_deepESM", 15,    0,   15, 200,   0.0,   1.0},
-            {"blind_njets_deepESM", 15,    0,   15, 200,   0.0,   1.0},
-            {    "h_njets_mbl",     15,    0,   15, 300,   0.0, 300.0},
-            {"blind_njets_mbl",     15,    0,   15, 300,   0.0, 300.0},
-            {    "h_ht_deepESM",   300,    0, 3000, 200,   0.0,   1.0},
-            {"blind_ht_deepESM",   300,    0, 3000, 200,   0.0,   1.0},
-            {    "h_lEta_lPhi",    200, -6.0,  6.0, 200,  -3.2,   3.2},
-            {"blind_lEta_lPhi",    200, -6.0,  6.0, 200,  -3.2,   3.2},
-            {    "h_jEta_jPhi",    200, -6.0,  6.0, 200,  -3.2,   3.2},
-            {"blind_jEta_jPhi",    200, -6.0,  6.0, 200,  -3.2,   3.2},
-            {    "h_lEta_nb",      200, -6.0,  6.0,  10,   0.0,  10.0},
-            {"blind_lEta_nb",      200, -6.0,  6.0,  10,   0.0,  10.0},
+            {    "h_njets_deepESM", 15,    0,   15, 100,   0.0,   1.0},
+            {"blind_njets_deepESM", 15,    0,   15, 100,   0.0,   1.0},
+            {    "h_njets_mbl",     15,    0,   15, 100,   0.0, 300.0},
+            {"blind_njets_mbl",     15,    0,   15, 100,   0.0, 300.0},
+            {    "h_ht_deepESM",   100,    0, 3000, 100,   0.0,   1.0},
+            {"blind_ht_deepESM",   100,    0, 3000, 100,   0.0,   1.0},
+            {    "h_lEta_lPhi",    100, -6.0,  6.0, 100,  -3.2,   3.2},
+            {"blind_lEta_lPhi",    100, -6.0,  6.0, 100,  -3.2,   3.2},
+            {    "h_jEta_jPhi",    100, -6.0,  6.0, 100,  -3.2,   3.2},
+            {"blind_jEta_jPhi",    100, -6.0,  6.0, 100,  -3.2,   3.2},
+            {    "h_lEta_nb",      100, -6.0,  6.0,  10,   0.0,  10.0},
+            {"blind_lEta_nb",      100, -6.0,  6.0,  10,   0.0,  10.0},
         };
 
         std::vector<TH2DProfileInfo> hist2DProfileInfos = {
@@ -412,11 +414,11 @@ void Analyze1Lep::Loop(NTupleReader& tr, double, int maxevents, bool)
             if(kv.second)
             {
                 double w = weight;
-                if(kv.first.find("50to110mt")  != std::string::npos || 
-                   kv.first.find("htCorr")     != std::string::npos || 
-                   kv.first.find("noHTWeight") != std::string::npos) w = weightNoHT;
-                if(kv.first.find("passQCDCR")   != std::string::npos) w = weightQCDCR;
-                if(kv.first.find("noLepWeight") != std::string::npos) w = weightNoLepton;
+                if(kv.first.find("50to110mt")    != std::string::npos || 
+                   kv.first.find("htCorr")       != std::string::npos || 
+                   kv.first.find("noHTWeight")   != std::string::npos) w = weightNoHT;
+                if(kv.first.find("passQCDCR")    != std::string::npos) w = weightQCDCR;
+                if(kv.first.find("noLepWeight")  != std::string::npos) w = weightNoLepton;
                 if(kv.first.find("noBTagWeight") != std::string::npos) w = weightNoBTag;
                 my_histos["h_njets"               +kv.first]->Fill(NGoodJets_pt30, w);
                 my_histos["h_ngjets"              +kv.first]->Fill(NGenJets, eventweight);
@@ -468,7 +470,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double, int maxevents, bool)
                 my_2d_histos["h_ht_deepESM"+kv.first]->Fill(HT_trigger_pt30, deepESM_val, w);
                 my_2d_tp_histos["h_njets_deepESMMerged_preFireSF"+kv.first]->Fill(NJet, deepESM_binNum, prefiringScaleFactor, w);
 
-                if ( NGoodJets_pt30 <= 8 )
+                if( NGoodJets_pt30 <= 8 )
                 {
                     my_histos["blind_njets"         +kv.first]->Fill(NGoodJets_pt30, w);
                     my_histos["blind_ntops"         +kv.first]->Fill(ntops, w);
