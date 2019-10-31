@@ -197,20 +197,20 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
         // ------------------------------------------
         // -- MT2 or Stealth hemispheres variables
         // ------------------------------------------
-        const auto& stop1_PtRank               = tr.getVar<TLorentzVector>("stop1_PtRank_0l");
-        const auto& stop2_PtRank               = tr.getVar<TLorentzVector>("stop2_PtRank_0l");
-        const auto& stop1_MassRank             = tr.getVar<TLorentzVector>("stop1_MassRank_0l");
-        const auto& stop2_MassRank             = tr.getVar<TLorentzVector>("stop2_MassRank_0l");
-        const auto& stop1_ScalarPtRank         = tr.getVar<TLorentzVector>("stop1_ScalarPtRank_0l");
-        const auto& stop2_ScalarPtRank         = tr.getVar<TLorentzVector>("stop2_ScalarPtRank_0l");
-        const auto& stop1ScalarPt_ScalarPtRank = tr.getVar<double>("stop1ScalarPt_ScalarPtRank_0l");
-        const auto& stop2ScalarPt_ScalarPtRank = tr.getVar<double>("stop2ScalarPt_ScalarPtRank_0l");
-        const auto& MT2                        = tr.getVar<double>("MT2_0l"); 
-        const auto& dR_stop1stop2              = tr.getVar<double>("dR_stop1stop2_0l");
-        const auto& dPhi_stop1stop2            = tr.getVar<double>("dPhi_stop1stop2_0l");
-        const auto& difference_stopMasses      = tr.getVar<double>("difference_stopMasses_0l");
-        const auto& average_stopMasses         = tr.getVar<double>("average_stopMasses_0l");
-        const auto& relativeDiff_stopMasses    = tr.getVar<double>("relativeDiff_stopMasses_0l");
+        const auto& stop1_PtRank               = tr.getVar<TLorentzVector>("stop1_PtRank_TopSeed");
+        const auto& stop2_PtRank               = tr.getVar<TLorentzVector>("stop2_PtRank_TopSeed");
+        const auto& stop1_MassRank             = tr.getVar<TLorentzVector>("stop1_MassRank_TopSeed");
+        const auto& stop2_MassRank             = tr.getVar<TLorentzVector>("stop2_MassRank_TopSeed");
+        const auto& stop1_ScalarPtRank         = tr.getVar<TLorentzVector>("stop1_ScalarPtRank_TopSeed");
+        const auto& stop2_ScalarPtRank         = tr.getVar<TLorentzVector>("stop2_ScalarPtRank_TopSeed");
+        const auto& stop1ScalarPt_ScalarPtRank = tr.getVar<double>("stop1ScalarPt_ScalarPtRank_TopSeed");
+        const auto& stop2ScalarPt_ScalarPtRank = tr.getVar<double>("stop2ScalarPt_ScalarPtRank_TopSeed");
+        const auto& MT2                        = tr.getVar<double>("MT2_TopSeed"); 
+        const auto& dR_stop1stop2              = tr.getVar<double>("dR_stop1stop2_TopSeed");
+        const auto& dPhi_stop1stop2            = tr.getVar<double>("dPhi_stop1stop2_TopSeed");
+        const auto& difference_stopMasses      = tr.getVar<double>("difference_stopMasses_TopSeed");
+        const auto& average_stopMasses         = tr.getVar<double>("average_stopMasses_TopSeed");
+        const auto& relativeDiff_stopMasses    = tr.getVar<double>("relativeDiff_stopMasses_TopSeed");
  
         // -------------------
         // -- Define weight

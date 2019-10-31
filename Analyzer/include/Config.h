@@ -56,8 +56,9 @@ private:
             else if(module=="Baseline")                    tr.emplaceModule<Baseline>();
             else if(module=="StopGenMatch")                tr.emplaceModule<StopGenMatch>();
             else if(module=="MegaJetCombine")              tr.emplaceModule<MegaJetCombine>();
-            else if(module=="MakeMT2Hemispheres_0l")       tr.emplaceModule<MakeMT2Hemispheres>("GoodJets_pt45", "NGoodJets_pt45", "_0l");
-            else if(module=="MakeMT2Hemispheres_1l")       tr.emplaceModule<MakeMT2Hemispheres>("GoodJets_pt30", "NGoodJets_pt30", "_1l");
+            else if(module=="MakeMT2Hemispheres_0l")       tr.emplaceModule<MakeMT2Hemispheres>("Jets",    "GoodJets_pt45", "NGoodJets_pt45", "_0l");
+            else if(module=="MakeMT2Hemispheres_TopSeed")  tr.emplaceModule<MakeMT2Hemispheres>("MT2Jets", "GoodMT2Jets",   "NGoodMT2Jets",   "_TopSeed");
+            else if(module=="MakeMT2Hemispheres_1l")       tr.emplaceModule<MakeMT2Hemispheres>("Jets",    "GoodJets_pt30", "NGoodJets_pt30", "_1l");
             else if(module=="MT2Jets")                     tr.emplaceModule<MT2Jets>();
             else if(module=="DeepEventShape")              tr.emplaceModule<DeepEventShape>(DeepESMCfg, ModelFile);
             else if(module=="DeepEventShape_NonIsoMuon")   tr.emplaceModule<DeepEventShape>(DeepESMCfg_NonIsoMuon, ModelFile);
@@ -272,9 +273,10 @@ public:
                 "MakeMVAVariables",
                 "Baseline",
                 "DeepEventShape",
-                "MakeMT2Hemispheres_0l",
-                "MakeMT2Hemispheres_1l",
                 "MT2Jets",
+                "MakeMT2Hemispheres_0l",
+                "MakeMT2Hemispheres_TopSeed",
+                "MakeMT2Hemispheres_1l",
                 "BTagCorrector",
                 "ScaleFactors",
             };
