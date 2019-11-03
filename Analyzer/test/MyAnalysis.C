@@ -22,6 +22,7 @@
 #include "Analyzer/Analyzer/include/AnalyzeLepTrigger.h"
 #include "Analyzer/Analyzer/include/AnalyzeNonIsoMuonTrigger.h"
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
+#include "Analyzer/Analyzer/include/AnalyzeSignalKM.h"
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
 #include "Analyzer/Analyzer/include/MakeMiniTree.h"
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
@@ -183,6 +184,7 @@ int main(int argc, char *argv[])
         {"AnalyzeBTagSF",           run<AnalyzeBTagSF>},
         {"AnalyzeHEM",              run<AnalyzeHEM>},
         {"AnalyzeSignalModels",     run<AnalyzeSignalModels>},
+        {"AnalyzeSignalKM",         run<AnalyzeSignalKM>},
         {"AnalyzeTest",             run<AnalyzeTest>},
         {"CalculateBTagSF",         run<CalculateBTagSF>},
         {"CalculateSFMean",         run<CalculateSFMean>},

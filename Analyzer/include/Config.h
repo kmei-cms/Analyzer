@@ -285,6 +285,24 @@ public:
             };
             registerModules(tr, std::move(modulesList));
         }
+        else if (analyzer=="AnalyzeNonIsoMuonTrigger") {
+            const std::vector<std::string> modulesList = {
+                "PartialUnBlinding",
+                "PrepNTupleVars",
+                "Muon",
+                "Electron",
+                "Photon",
+                "Jet",
+                "BJet",
+                "CommonVariables",
+                "MakeMVAVariables_NonIsoMuon",
+                "Baseline",
+                "DeepEventShape_NonIsoMuon",
+                "BTagCorrector",
+                "ScaleFactors"
+            };
+            registerModules(tr, std::move(modulesList));
+        }
         else if (analyzer=="AnalyzeTest")
         {
             const std::vector<std::string> modulesList = {
@@ -305,7 +323,7 @@ public:
             };
             registerModules(tr, std::move(modulesList));
         }
-        else if(analyzer=="Analyze1Lep")
+        else if(analyzer=="Analyze1Lep" || analyzer == "MakeMiniTree")
         {
             const std::vector<std::string> modulesList = {
                 "PartialUnBlinding",
@@ -323,6 +341,26 @@ public:
                 "MakeMVAVariables_NonIsoMuon",
                 "DeepEventShape_NonIsoMuon",
                 //"MakeMT2Hemispheres_1l",
+                "BTagCorrector",
+                "ScaleFactors"
+            };
+            registerModules(tr, std::move(modulesList));
+        }
+        else if( analyzer == "MakeMiniTree" )
+        {
+            const std::vector<std::string> modulesList = {
+                "PartialUnBlinding",
+                "PrepNTupleVars",
+                "RunTopTagger",
+                "Muon",
+                "Electron",
+                "Photon",
+                "Jet",
+                "BJet",
+                "CommonVariables",
+                "MakeMVAVariables",
+                "Baseline",
+                "DeepEventShape",
                 "BTagCorrector",
                 "ScaleFactors"
             };
