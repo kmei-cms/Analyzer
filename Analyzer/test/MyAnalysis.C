@@ -21,6 +21,7 @@
 #include "Analyzer/Analyzer/include/AnalyzeTest.h"
 #include "Analyzer/Analyzer/include/AnalyzeLepTrigger.h"
 #include "Analyzer/Analyzer/include/AnalyzeNonIsoMuonTrigger.h"
+#include "Analyzer/Analyzer/include/AnalyzeEENoise.h"
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
 #include "Analyzer/Analyzer/include/AnalyzeSignalKM.h"
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
@@ -183,6 +184,7 @@ int main(int argc, char *argv[])
         {"AnalyzeStealthTopTagger", run<AnalyzeStealthTopTagger>},
         {"AnalyzeBTagSF",           run<AnalyzeBTagSF>},
         {"AnalyzeHEM",              run<AnalyzeHEM>},
+        {"AnalyzeEENoise",          run<AnalyzeEENoise>},
         {"AnalyzeSignalModels",     run<AnalyzeSignalModels>},
         {"AnalyzeSignalKM",         run<AnalyzeSignalKM>},
         {"AnalyzeTest",             run<AnalyzeTest>},

@@ -23,7 +23,7 @@ void MakeMiniTree::InitHistos()
     my_histos.emplace( "EventCounter", std::make_shared<TH1D>( "EventCounter", "EventCounter", 2, -1.1, 1.1 ) ); 
 }//END of init histos
 
-void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void MakeMiniTree::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {
@@ -39,14 +39,12 @@ void MakeMiniTree::Loop(NTupleReader& tr, double weight, int maxevents, bool isQ
         //------------------------------------
         //-- Print Event Number
         //------------------------------------
-
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
         if( tr.getEvtNum() % 10000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
 
         //-----------------------------------
         //  Initialize the tree
-        //-----------------------------------
-        
+        //-----------------------------------       
         std::set<std::string> variables = {
             //General variables
             "Lumi",

@@ -131,8 +131,8 @@ bool   calc_replacement_jet_p3( const TLorentzVector& j0tlv, TLorentzVector& j1t
       double pz0 = pt0 * sinh( eta0 ) ;
       if ( !isQuiet ) printf(" calc_replacement_jet_p3 : pz0 = %7.2f : eta0 = %7.3f, deta_jj = %7.3f, eta_start = %7.3f, eta_end = %7.3f\n", pz0, eta0, deta_jj, eta1_start, eta1_end ) ;
 
-      double scan_eta1[500] ;
-      double scan_sumpz_minus_pz0[500] ;
+      //double scan_eta1[500] ;
+      //double scan_sumpz_minus_pz0[500] ;
       double previous_sumpz_minus_pz0(0.) ;
       double previous_eta1(0.) ;
 
@@ -149,8 +149,8 @@ bool   calc_replacement_jet_p3( const TLorentzVector& j0tlv, TLorentzVector& j1t
 
          double this_sumpz_minus_pz0 = pz1+pz2 - pz0 ;
 
-         scan_eta1[i] = this_eta1 ;
-         scan_sumpz_minus_pz0[i] = this_sumpz_minus_pz0 ;
+         //scan_eta1[i] = this_eta1 ;
+         //scan_sumpz_minus_pz0[i] = this_sumpz_minus_pz0 ;
          npoints_gr ++ ;
 
          if ( !isQuiet ) printf(" calc_replacement_jet_p3 :      %3d : eta1 = %7.3f , eta2 = %7.3f :  pz1 = %7.2f  pz2 = %7.2f  pz1+pz2 = %7.2f  pz0 = %7.2f  pz1+pz2-pz0 = %7.2f",
@@ -263,8 +263,6 @@ void AnalyzeNjetsMinusOneCSJetReplacement::InitHistos()
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
 
-    int fB = 200;
-
     //---- Declare all your histograms here, that way we can fill them for multiple chains.
 
     char hname[1000] ;
@@ -313,7 +311,7 @@ void AnalyzeNjetsMinusOneCSJetReplacement::InitHistos()
 
 //===========================================================================================================================
 
-void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double, int maxevents, bool isQuiet)
 {
 
     char hname[1000] ;
@@ -343,7 +341,6 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
 
         const auto& Jets = tr.getVec<TLorentzVector>("Jets");
         const auto& GoodJets = tr.getVec<bool>("GoodJets");
-        const auto& NGoodJets = tr.getVar<int>("NGoodJets");
         const auto& GoodLeptons = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
         const auto& NGoodLeptons = tr.getVar<int>("NGoodLeptons");
         const auto& MET = tr.getVar<double>("MET"); 
@@ -358,14 +355,13 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
 
 
         if ( !isQuiet ) {
-           printf("\n\n\n\n =========== Count %9lld : Run %9u , Lumi %9u , Event %9llu  ==========================================\n",
+           printf("\n\n\n\n =========== Count %9d : Run %9u , Lumi %9u , Event %9ld  ==========================================\n",
              tr.getEvtNum(),
              tr.getVar<unsigned int>("RunNum"),
              tr.getVar<unsigned int>("LumiBlockNum"),
              tr.getVar<long int>("EvtNum")
              ) ;
         }
-
 
         double eventweight = 1.0;        
         // Weight from samples.cc
@@ -377,8 +373,6 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
             // Weight from NTuples            
             eventweight = lumi*Weight;
         }
-
-
 
         // Global cuts
         if ( !(passTrigger && passMadHT) ) continue;
@@ -412,7 +406,7 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
 
       int ptrank_goodjets_pt30(0) ;
 
-      for ( int rji=0; rji<Jets.size(); rji++ ) {
+      for ( unsigned int rji=0; rji<Jets.size(); rji++ ) {
 
          TLorentzVector j0tlv( Jets.at(rji) ) ;
 
@@ -505,7 +499,7 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
               //-- Make sure jets aren't too close to another jet in the event.
 
                bool too_close(false) ;
-               for ( int oji=0; oji<Jets.size(); oji++ ) {
+               for ( unsigned int oji=0; oji<Jets.size(); oji++ ) {
 
                   if ( !GoodJets[oji] ) continue ;
                   if ( oji == rji ) continue ;
@@ -555,8 +549,6 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
                sprintf( hname, "h_cs_for_njet%02d__drjj_vs_mjj", NGoodJets_pt30+1 ) ;
                my_2d_histos[ hname ] -> Fill( j1j2tlv.M(), j1tlv.DeltaR( j2tlv ) , eventweight ) ;
 
-
-
                const auto& deepESM_val = tr.getVar<double>("deepESM_val");
                const auto& event_beta_z = tr.getVar<double>("event_beta_z") ;
                const auto& Jets_cm = tr.getVec<TLorentzVector>("Jets_cm") ;
@@ -581,7 +573,6 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
                   } // ji
                }
 
-
                sprintf( hname, "h_cs_for_njet%02d__true_njm1_mva_val", NGoodJets_pt30+1 ) ;
                my_histos[ hname ] ->  Fill( deepESM_val , eventweight ) ;
 
@@ -595,7 +586,7 @@ void AnalyzeNjetsMinusOneCSJetReplacement::Loop(NTupleReader& tr, double weight,
                int   altNGoodJets(0) ;
                int   altNGoodJets_pt30(0) ;
 
-               for ( int oji=0; oji<Jets.size(); oji++ ) {
+               for ( unsigned int oji=0; oji<Jets.size(); oji++ ) {
 
                   //////////////if ( !GoodJets[oji] ) continue ; ////------- Don't do this!
                   if ( oji == rji ) continue ;
@@ -717,10 +708,3 @@ void AnalyzeNjetsMinusOneCSJetReplacement::WriteHistos(TFile* outfile)
 } // WriteHistos
 
 //===========================================================================================================================
-
-
-
-
-
-
-

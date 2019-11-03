@@ -33,10 +33,7 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::InitHistos()
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
 
-    int fB = 200;
-
     //---- Declare all your histograms here, that way we can fill them for multiple chains.
-
     char hname[1000] ;
 
     sprintf( hname, "h_mct__cvs_nontop" ) ;
@@ -167,7 +164,7 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::InitHistos()
 
 //===========================================================================================================================
 
-void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double, int maxevents, bool isQuiet)
 {
 
     char hname[1000] ;
@@ -188,46 +185,16 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
 
         const auto& MET                  = tr.getVar<double>("MET");
         const auto& runtype              = tr.getVar<std::string>("runtype");     
-        const auto& filetag              = tr.getVar<std::string>("filetag");
         const auto& NGoodJets_pt30       = tr.getVar<int>("NGoodJets_pt30");
-        const auto& NGoodJets_pt45       = tr.getVar<int>("NGoodJets_pt45");
-        const auto& NGoodBJets           = tr.getVar<int>("NGoodBJets");
-        const auto& NGoodBJets_pt45      = tr.getVar<int>("NGoodBJets_pt45");
         const auto& NGoodBJets_pt30      = tr.getVar<int>("NGoodBJets_pt30");
         const auto& NGoodLeptons         = tr.getVar<int>("NGoodLeptons");
 
-        const auto& eventshape_bdt_val   = tr.getVar<double>("eventshape_bdt_val");
-        const auto& fisher_val           = tr.getVar<double>("fisher_val");
         const auto& passTrigger          = tr.getVar<bool>("passTrigger");
         const auto& passMadHT            = tr.getVar<bool>("passMadHT");
               auto  passBaseline1l_Good  = tr.getVar<bool>("passBaseline1l_Good");
         const auto& Mbl                  = tr.getVar<double>("Mbl");
                     passBaseline1l_Good  = passBaseline1l_Good && Mbl>30 && Mbl<180;
-        const auto& Photons              = tr.getVec<TLorentzVector>("Photons");
-        const auto& GoodPhotons          = tr.getVec<bool>("GoodPhotons");
-        const auto& NGoodPhotons         = tr.getVar<int>("NGoodPhotons");
-        const auto& passBaseline1g_Good  = tr.getVar<bool>("passBaseline1photon_Good"); 
-
         const auto& deepESM_val          = tr.getVar<double>("deepESM_val");
-        const auto& deepESM_bin1         = tr.getVar<bool>("deepESM_bin1");
-        const auto& deepESM_bin2         = tr.getVar<bool>("deepESM_bin2");
-        const auto& deepESM_bin3         = tr.getVar<bool>("deepESM_bin3");
-        const auto& deepESM_bin4         = tr.getVar<bool>("deepESM_bin4");
-
-        const auto& fwm2_top6            = tr.getVar<double>("fwm2_top6");
-        const auto& fwm3_top6            = tr.getVar<double>("fwm3_top6");
-        const auto& fwm4_top6            = tr.getVar<double>("fwm4_top6");
-        const auto& fwm5_top6            = tr.getVar<double>("fwm5_top6");
-        const auto& fwm6_top6            = tr.getVar<double>("fwm6_top6");
-        const auto& fwm7_top6            = tr.getVar<double>("fwm7_top6");
-        const auto& fwm8_top6            = tr.getVar<double>("fwm8_top6");
-        const auto& fwm9_top6            = tr.getVar<double>("fwm9_top6");
-        const auto& fwm10_top6           = tr.getVar<double>("fwm10_top6");
-        const auto& jmt_ev0_top6         = tr.getVar<double>("jmt_ev0_top6");
-        const auto& jmt_ev1_top6         = tr.getVar<double>("jmt_ev1_top6");
-        const auto& jmt_ev2_top6         = tr.getVar<double>("jmt_ev2_top6");
-        const auto& Jets_cm_top6         = tr.getVec<TLorentzVector>("Jets_cm_top6");
-        const auto& Jets_top6            = tr.getVec<TLorentzVector>("Jets_top6");
 
         const auto& GenParticles           = tr.getVec<TLorentzVector>("GenParticles") ;
         const auto& GenParticles_PdgId     = tr.getVec<int>("GenParticles_PdgId") ;
@@ -249,16 +216,13 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
 
 
         if ( !isQuiet ) {
-           printf("\n\n\n\n =========== Count %9lld : Run %9u , Lumi %9u , Event %9llu  ==========================================\n",
+           printf("\n\n\n\n =========== Count %9d : Run %9u , Lumi %9u , Event %9ld  ==========================================\n",
              tr.getEvtNum(),
              tr.getVar<unsigned int>("RunNum"),
              tr.getVar<unsigned int>("LumiBlockNum"),
              tr.getVar<long int>("EvtNum")
              ) ;
         }
-
-
-
 
         // Global cuts
         if ( !(passTrigger && passMadHT) ) continue;
@@ -317,9 +281,6 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
            int spdgid = GenParticles_PdgId.at(gpi) ;
            int pdgid = abs( GenParticles_PdgId.at(gpi) ) ;
            int smomid = GenParticles_ParentId.at(gpi) ;
-           int momid = abs( GenParticles_ParentId.at(gpi) ) ;
-           int momidx = GenParticles_ParentIdx.at(gpi) ;
-           int status = GenParticles_Status.at(gpi) ;
 
            TLorentzVector gplv( GenParticles.at(gpi) ) ;
 
@@ -360,15 +321,7 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
 
         for ( unsigned int gpi=0; gpi < GenParticles.size() ; gpi++ ) {
 
-            int spdgid = GenParticles_PdgId.at(gpi) ;
-            int pdgid = abs( GenParticles_PdgId.at(gpi) ) ;
-            int smomid = GenParticles_ParentId.at(gpi) ;
-            int momid = abs( GenParticles_ParentId.at(gpi) ) ;
-            int momidx = GenParticles_ParentIdx.at(gpi) ;
-
             TLorentzVector gplv( GenParticles.at(gpi) ) ;
-
-
             char pname[100] ;
             char mname[100] ;
             sprintf( pname, "%s", mcname( GenParticles_PdgId.at(gpi) ) ) ;
@@ -376,7 +329,6 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
             double eta = 99. ;
             if ( GenParticles.at(gpi).Pt() > 0 ) eta = GenParticles.at(gpi).Eta() ;
             double phi = GenParticles.at(gpi).Phi() ;
-            double pt = GenParticles.at(gpi).Pt() ;
             if ( !isQuiet ) {
                printf("  %3u :  ID=%9d %10s : MomID=%9d %10s MomIdx=%3d status=%2d :  Pt = %7.1f , Eta = %6.3f, Phi = %6.3f",
                     gpi,
@@ -387,18 +339,18 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
                     eta,
                     phi
                     ) ;
-               if ( gpi == top1_gpi ) printf("  == top1 " ) ;
-               if ( gpi == top2_gpi ) printf("  == top2 " ) ;
-               if ( gpi  == w1_gpi  ) printf("  == W1 " ) ;
-               if ( gpi  == w2_gpi  ) printf("  == W2 " ) ;
-               if ( gpi  == w1_lep_gpi  ) printf("  == W1 lep " ) ;
-               if ( gpi  == w2_lep_gpi  ) printf("  == W2 lep " ) ;
-               if ( gpi  == b1_gpi ) printf("  == b1 " ) ;
-               if ( gpi  == b2_gpi ) printf("  == b2 " ) ;
-               if ( gpi  == w1_qd1_gpi ) printf("  == W1 quark daughter 1 " ) ;
-               if ( gpi  == w1_qd2_gpi ) printf("  == W1 quark daughter 2 " ) ;
-               if ( gpi  == w2_qd1_gpi ) printf("  == W2 quark daughter 1 " ) ;
-               if ( gpi  == w2_qd2_gpi ) printf("  == W2 quark daughter 2 " ) ;
+               if ( int(gpi) == top1_gpi ) printf("  == top1 " ) ;
+               if ( int(gpi) == top2_gpi ) printf("  == top2 " ) ;
+               if ( int(gpi) == w1_gpi  ) printf("  == W1 " ) ;
+               if ( int(gpi) == w2_gpi  ) printf("  == W2 " ) ;
+               if ( int(gpi) == w1_lep_gpi  ) printf("  == W1 lep " ) ;
+               if ( int(gpi) == w2_lep_gpi  ) printf("  == W2 lep " ) ;
+               if ( int(gpi) == b1_gpi ) printf("  == b1 " ) ;
+               if ( int(gpi) == b2_gpi ) printf("  == b2 " ) ;
+               if ( int(gpi) == w1_qd1_gpi ) printf("  == W1 quark daughter 1 " ) ;
+               if ( int(gpi) == w1_qd2_gpi ) printf("  == W1 quark daughter 2 " ) ;
+               if ( int(gpi) == w2_qd1_gpi ) printf("  == W2 quark daughter 1 " ) ;
+               if ( int(gpi) == w2_qd2_gpi ) printf("  == W2 quark daughter 2 " ) ;
                printf("\n") ;
             }
          } // gpi
@@ -408,11 +360,6 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
             printf( "   top1 = %3d ,  w1 = %3d \n", top1_gpi, w1_gpi ) ;
             printf( "   top2 = %3d ,  w2 = %3d \n", top2_gpi, w2_gpi ) ;
          }
-
-
-
-
-
 
 
         //-------- go through gen jets and check for top daughters.
@@ -428,7 +375,7 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
             double smallest_dr(999999.) ;
             int smallest_dr_tdgpi(-1) ;
 
-            for ( int tdi=0; tdi < observable_top_daughters.size() ; tdi++ ) {
+            for ( unsigned int tdi=0; tdi < observable_top_daughters.size() ; tdi++ ) {
 
                TLorentzVector tdlv( GenParticles.at( observable_top_daughters[tdi] ) ) ;
 
@@ -468,10 +415,6 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
 
          } // gji
 
-
-
-
-
     //---------  find which reconstructed jets are associated to top daughters.
 
       std::vector<int> nontop_rji ;
@@ -490,7 +433,7 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
          double smallest_dr(999999.) ;
          int smallest_dr_tdgpi(-1) ;
 
-         for ( int tdi=0; tdi < observable_top_daughters.size() ; tdi++ ) {
+         for ( unsigned int tdi=0; tdi < observable_top_daughters.size() ; tdi++ ) {
 
             TLorentzVector tdlv( GenParticles.at( observable_top_daughters[tdi] ) ) ;
 
@@ -517,10 +460,6 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
       } // rji
 
 
-
-
-
-
      //---------------- Look at all nontop jet pairs
 
      
@@ -536,11 +475,11 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
 
       if ( nontop_rji.size() > 1 ) {
 
-         for ( int j1=0; j1<(nontop_rji.size()-1); j1++ ) {
+         for ( unsigned int j1=0; j1<(nontop_rji.size()-1); j1++ ) {
             TLorentzVector j1tlv( Jets.at(nontop_rji[j1]) ) ;
             if ( !isQuiet ) printf("  j1 = %2d : Pt = %7.1f , Eta = %6.3f, Phi = %6.3f\n", nontop_rji[j1],
                 j1tlv.Pt(), j1tlv.Eta(), j1tlv.Phi() ) ;
-            for ( int j2=j1+1; j2<nontop_rji.size(); j2++ ) {
+            for ( unsigned int j2=j1+1; j2<nontop_rji.size(); j2++ ) {
                TLorentzVector j2tlv( Jets.at(nontop_rji[j2]) ) ;
                TLorentzVector jjtlv = j1tlv + j2tlv ;
                if ( !isQuiet ) printf("  j2 = %2d : Pt = %7.1f , Eta = %6.3f, Phi = %6.3f , mjj = %7.1f , dRjj = %7.3f\n", nontop_rji[j2],
@@ -578,8 +517,8 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
 
             if ( !GoodJets_pt30[rji] ) continue ;
 
-            if ( rji == smallest_mjj_j1 ) continue ;
-            if ( rji == smallest_mjj_j2 ) continue ;
+            if ( int(rji) == smallest_mjj_j1 ) continue ;
+            if ( int(rji) == smallest_mjj_j2 ) continue ;
 
             TLorentzVector jlv( Jets.at(rji) ) ;
 
@@ -709,7 +648,7 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
 
 
       if ( !isQuiet ) {
-         printf("\n\n  Reconstructed Jets: %lu\n", NGoodJets_pt30 ) ;
+         printf("\n\n  Reconstructed Jets: %d\n", NGoodJets_pt30 ) ;
       }
 
       for ( unsigned int rji=0; rji < Jets.size() ; rji++ ) {
@@ -725,8 +664,8 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
                 Jets[rji].Eta(),
                 Jets[rji].Phi()
             ) ;
-            for ( int tdmi=0; tdmi<topdau_rji.size(); tdmi++ ) {
-               if ( topdau_rji[tdmi] == rji ) {
+            for ( unsigned int tdmi=0; tdmi<topdau_rji.size(); tdmi++ ) {
+               if ( topdau_rji[tdmi] == int(rji) ) {
                   printf("   matches top daughter : DR = %7.3f ,   ", topdau_match_dr[tdmi] ) ;
                   int gpi = topdau_match_gpi[tdmi] ;
                   if ( gpi  == w1_lep_gpi  ) printf("  == W1 lep " ) ;
@@ -769,7 +708,7 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
          my_histos[ hname ] -> Fill( Jets_bDiscriminatorCSV[ b2_rji ], eventweight ) ;
       }
 
-      for ( int ntji=0; ntji<nontop_rji.size(); ntji++ ) {
+      for ( unsigned int ntji=0; ntji<nontop_rji.size(); ntji++ ) {
          sprintf( hname, "h_mct__cvs_nontop" ) ;
          my_histos[ hname ] -> Fill( Jets_bDiscriminatorCSV[ nontop_rji[ntji] ], eventweight ) ;
       } // ntji
@@ -805,7 +744,7 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
             if ( rji == smallest_mjj_j2 ) continue ;
 
             bool skip_this_one(false) ;
-            for ( int i=0; i<good_jets_rji_ptrank_order_using_mjj_sum.size(); i++ ) {
+            for ( unsigned int i=0; i<good_jets_rji_ptrank_order_using_mjj_sum.size(); i++ ) {
                if ( rji == good_jets_rji_ptrank_order_using_mjj_sum[i] ) {
                   skip_this_one = true ;
                   break ;
@@ -842,13 +781,13 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
             jtlv = smallest_mjj_tlv ;
          }
          if ( rji >= 0 ) {
-            for ( int tdmi=0; tdmi<topdau_rji.size(); tdmi++ ) {
+            for ( unsigned int tdmi=0; tdmi<topdau_rji.size(); tdmi++ ) {
                if ( topdau_rji[tdmi] == rji ) {
                   sprintf( hname, "h_mct_njet%02d__ptrank_topdau", NGoodJets_pt30 ) ;
                   my_histos[ hname ] -> Fill( i, eventweight ) ;
                }
             } //tdmi
-            for ( int ntji=0; ntji<nontop_rji.size(); ntji++ ) {
+            for ( unsigned int ntji=0; ntji<nontop_rji.size(); ntji++ ) {
                if ( nontop_rji[ntji] == rji ) {
                   sprintf( hname, "h_mct_njet%02d__ptrank_nontop", NGoodJets_pt30 ) ;
                   my_histos[ hname ] -> Fill( i, eventweight ) ;
@@ -883,11 +822,11 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
                int   altNGoodJets(0) ;
                int   altNGoodJets_pt30(0) ;
 
-               for ( int oji=0; oji<Jets.size(); oji++ ) {
+               for ( unsigned int oji=0; oji<Jets.size(); oji++ ) {
 
                   ////////////////////////if ( !GoodJets[oji] ) continue ; ////-------- Don't do this!
-                  if ( oji == smallest_mjj_j1 ) continue ;
-                  if ( oji == smallest_mjj_j2 ) continue ;
+                  if ( int(oji) == smallest_mjj_j1 ) continue ;
+                  if ( int(oji) == smallest_mjj_j2 ) continue ;
 
                   altJets->push_back( Jets[oji] ) ;
                   altGoodJets->push_back( GoodJets[oji] ) ;
@@ -943,10 +882,6 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::Loop(NTupleReader& tr, double weight,
 
     } // end of event loop
 
-
-
-
-
 } // Loop
 
 //===========================================================================================================================
@@ -973,9 +908,6 @@ void AnalyzeNjetsMinusOneCSFillDijetHists::WriteHistos(TFile* outfile)
 
 
 const char* mcname( int pdgid ) {
-
-   sprintf( pname, "" ) ;
-
    if ( pdgid == 1 ) sprintf( pname, "d" ) ;
    if ( pdgid == 2 ) sprintf( pname, "u" ) ;
    if ( pdgid == 3 ) sprintf( pname, "s" ) ;

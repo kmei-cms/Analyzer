@@ -31,7 +31,7 @@ void AnalyzeEventShape::InitHistos()
 
 }
 
-void AnalyzeEventShape::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void AnalyzeEventShape::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
 
     printf("\n\n In AnalyzeEventShape::Loop\n\n" ) ; fflush( stdout ) ;

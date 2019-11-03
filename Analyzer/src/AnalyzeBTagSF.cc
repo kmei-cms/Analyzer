@@ -75,30 +75,14 @@ void AnalyzeBTagSF::InitHistos()
 
 }//END of init histos
 
-void AnalyzeBTagSF::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void AnalyzeBTagSF::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {
-        const auto& runtype             = tr.getVar<std::string>("runtype");
-        const auto& filetag             = tr.getVar<std::string>("filetag");
-        const auto& TriggerNames        = tr.getVec<std::string>("TriggerNames");
-        const auto& TriggerPass         = tr.getVec<int>("TriggerPass");
-
         const auto& NJets_pt30          = tr.getVar<int>("NGoodJets_pt30");
-        const auto& NJets_pt45          = tr.getVar<int>("NGoodJets_pt45");
         const auto& NBJets_pt30         = tr.getVar<int>("NGoodBJets_pt30");
         const auto& Jets_CSV            = tr.getVec<double>("Jets_bDiscriminatorCSV");
 
-        const auto& HT_trigger          = tr.getVar<double>("HT_trigger");
-        const auto& fisher_value        = tr.getVar<double>("fisher_val");
-        const auto& fisher_bin1         = tr.getVar<bool>("fisher_bin1");
-        const auto& fisher_bin2         = tr.getVar<bool>("fisher_bin2");
-        const auto& fisher_bin3         = tr.getVar<bool>("fisher_bin3");
-        const auto& fisher_bin4         = tr.getVar<bool>("fisher_bin4");
-
-        const auto& passBlindHad        = tr.getVar<bool>("passBlindHad_Good");
-        const auto& passBlindLep        = tr.getVar<bool>("passBlindLep_Good");
-        const auto& passTrigger         = tr.getVar<bool>("passTrigger");
         const auto& passMadHT           = tr.getVar<bool>("passMadHT");
         
         const auto& bTagSF              = tr.getVar<float>("bTagSF_EventWeightSimple_Central");

@@ -31,7 +31,7 @@ public:
         my_Histos.emplace_back(new Histo1D(filetag+"_pu_Down",      100, 0, 5, "puSysDownUnCorr",               {"passMadHT"}, {"Lumi", "Weight"}));    
     }
 
-    void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false)
+    void Loop(NTupleReader& tr, double, int maxevents, bool)
     {
         const auto& runtype = tr.getVar<std::string>("runtype");
         const auto& filetag = tr.getVar<std::string>("filetag");

@@ -3,10 +3,10 @@ Runs all of our anaylsis code.
 
 ## Using the tensor-flow based top tagger
 
-To have easy access to TensorFlow, we need to work in a CMSSW93 release:
+To have easy access to TensorFlow and UpRoot, we need to work in a CMSSW10_2_9 release:
 ```
-cmsrel CMSSW_9_3_3
-cd CMSSW_9_3_3/src/
+cmsrel CMSSW_10_2_9
+cd CMSSW_10_2_9/src/
 cmsenv
 ```
 
@@ -31,14 +31,18 @@ git clone -b Stealth git@github.com:susy2015/TopTaggerTools.git
 git clone git@github.com:susy2015/SusyAnaTools.git
 git clone git@github.com:StealthStop/Analyzer.git
 cd Analyzer/Analyzer/test
-source setup.csh
+source setup.sh #.csh if in tcsh
+./configure
 make -j4
 ```
 
+We set up the top tagger cfg files for per year, because per year has different b-tagger working points (WPs).
 Last step is to get the cfg and model files for the top tagger and deepESM.
 ```
 cmsenv
-getTaggerCfg.sh -t DeepCombined_Stealth_RES_T_DeepAK8_T_v1.0.0 -o
+getTaggerCfg.sh -t StealthStop_DeepCSV_DeepResolved_DeepAK8_wp0.98_2016_v1 -f TopTaggerCfg_2016.cfg -o
+getTaggerCfg.sh -t StealthStop_DeepCSV_DeepResolved_DeepAK8_wp0.98_2017_v1 -f TopTaggerCfg_2017.cfg -o
+getTaggerCfg.sh -t StealthStop_DeepCSV_DeepResolved_DeepAK8_wp0.98_2018_v1 -f TopTaggerCfg_2018.cfg -o
 getDeepESMCfg.sh -t Keras_Tensorflow_2016_v1.1 -o -s 2016
 getDeepESMCfg.sh -t Keras_Tensorflow_2017_v1.1 -o -s 2017
 getDeepESMCfg.sh -t Keras_Tensorflow_2018pre_v1.0 -o -s 2018pre
@@ -115,4 +119,32 @@ python write_fit_input.py -d condor/MakeNJetsDists_2016_v1.1     -H FitInput/Ker
 python write_fit_input.py -d condor/MakeNJetsDists_2017_v1.1     -H FitInput/Keras_2017_v1.1     -y 2017
 python write_fit_input.py -d condor/MakeNJetsDists_2018pre_v1.0  -H FitInput/Keras_2018pre_v1.0  -y 2018pre
 python write_fit_input.py -d condor/MakeNJetsDists_2018post_v1.0 -H FitInput/Keras_2018post_v1.0 -y 2018post
+```
+
+## Deriving ttbar shape systematics
+
+Before running `njets_systs_comp.py` one must run `run_fits4ttbar_systematics.sh` in the HiggsAnalysis-CombinedLimit repository. This will stash away results in directories called TAG_YEAR_SYSTEMATIC
+
+Once these have been generated, one can run `njets_systs_comp.py` with three arguments:
+
+```
+--fittag TAG
+--year YEAR
+--fitdir Base directory containing TAG_YEAR_SYSTEMATIC results
+```
+
+An example workflow to run would be something like:
+
+```
+cd $HOME/../../CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit/
+
+./run_fits4ttbar_systematics.sh
+
+# Let this run for several hours...
+# After it is finished successfully
+
+cd $HOME/../../CMSSW_9_3_3/src/Analyzer/Analyzer/test/
+
+# For example running on 2018pre
+python njets_systs_comp.py --year 2018pre --fitdir $HOME/../../src/HiggsAnalysis/CombinedLimit/ --fittag Approval_StatErrPlusFullDev_12JetFix
 ```

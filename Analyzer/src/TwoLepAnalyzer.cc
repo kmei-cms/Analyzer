@@ -96,7 +96,7 @@ void TwoLepAnalyzer::InitHistos(const std::map<std::string, bool>& cutmap)
 
 
 /// Put everything you want to do per event 
-void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool isQuiet)
+void TwoLepAnalyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {
@@ -105,38 +105,24 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         //--------------------------------------------------
         
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
-        if( tr.getEvtNum() & 10000 == 0 ) printf( " Event %i\n", tr.getEvtNum() );
+        if( tr.getEvtNum() & (10000 == 0) ) printf( " Event %i\n", tr.getEvtNum() );
 
         const auto& eventCounter        = tr.getVar<int>("eventCounter");        
         const auto& runtype             = tr.getVar<std::string>("runtype");     
-        const auto& filetag             = tr.getVar<std::string>("filetag");
         const auto& GoodLeptons         = tr.getVec<std::pair<std::string, TLorentzVector>>("GoodLeptons");
 
         const auto& JetID               = tr.getVar<bool>("JetID");
         const auto& NGoodLeptons        = tr.getVar<int>("NGoodLeptons");
-        const auto& passTriggerMC       = tr.getVar<bool>("passTriggerMC");
         const auto& NGoodBJets_pt30     = tr.getVar<int>("NGoodBJets_pt30");
-        const auto& Mbl                 = tr.getVar<double>("Mbl");
         const auto& HT_trigger_pt30     = tr.getVar<double>("HT_trigger_pt30");
         const auto& NGoodJets_pt30      = tr.getVar<int>("NGoodJets_pt30");
         const auto& GoodBJets_pt30      = tr.getVec<bool>("GoodBJets_pt30");
-        const auto& deepESM_val         = tr.getVar<double>("deepESM_val");
         
         const auto& passMadHT           = tr.getVar<bool>("passMadHT");
-        const auto& passBaseline_1l     = tr.getVar<bool>("passBaseline1l_Good");
 //        const auto& ntops               = tr.getVar<int>("ntops");
         const auto& GoodLeptonsCharge   = tr.getVec<int>("GoodLeptonsCharge");
         const auto& Jets                = tr.getVec<TLorentzVector>("Jets");
-        const auto& passTrigger         = tr.getVar<bool>("passTrigger");
         const auto& passBlind           = tr.getVar<bool>("passBlindLep_Good");
-
-        const auto& deepESM_bin1        = tr.getVar<bool>("deepESM_bin1");
-        const auto& deepESM_bin2        = tr.getVar<bool>("deepESM_bin2");
-        const auto& deepESM_bin3        = tr.getVar<bool>("deepESM_bin3");
-        const auto& deepESM_bin4        = tr.getVar<bool>("deepESM_bin4");
-        const auto& deepESM_binNum      = tr.getVar<int>("deepESM_binNum");
-        const auto& onZ                 = tr.getVar<bool>("onZ");
-        const auto& GoodJets_pt30       = tr.getVec<bool>("GoodJets_pt30");
 
         const auto& Mbl1                = tr.getVar<double>("TwoLep_Mbl1");
         const auto& Mbl2                = tr.getVar<double>("TwoLep_Mbl2");
@@ -157,9 +143,6 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         //const auto& StopMT2Gen          = tr.getVar<double>("GM_StopGenMT2"); 
         const auto& fracGenMatched        = tr.getVar<double>("fracGenMatched");
 
-        const auto& HT_trigger_pt45     = tr.getVar<double>("HT_trigger_pt45");
-        const auto& NGoodBJets_pt45     = tr.getVar<int>("NGoodBJets_pt45");
-
         const auto& RecoStop1           = tr.getVar<TLorentzVector>("RecoStop1");
         const auto& RecoStop2           = tr.getVar<TLorentzVector>("RecoStop2");
         const auto& RecoStopMT2         = tr.getVar<double>("RecoStopMT2");
@@ -171,7 +154,6 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         double leptonScaleFactor    = 1.0;
         double bTagScaleFactor      = 1.0;
         double htDerivedScaleFactor = 1.0;
-        double topPtScaleFactor     = 1.0;
         double prefiringScaleFactor = 1.0;
         double puScaleFactor        = 1.0;
         
@@ -193,7 +175,6 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             //PileupWeight = tr.getVar<double>("_PUweightFactor");
             bTagScaleFactor   = tr.getVar<double>("bTagSF_EventWeightSimple_Central");
             htDerivedScaleFactor = tr.getVar<double>("htDerivedweight");
-            topPtScaleFactor = tr.getVar<double>("topPtScaleFactor");
             prefiringScaleFactor = tr.getVar<double>("prefiringScaleFactor");
             puScaleFactor = tr.getVar<double>("puWeightCorr");
             
@@ -203,7 +184,7 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         std::vector<std::pair<TLorentzVector,int>> GoodBJetsVec_pt30;
         std::pair<TLorentzVector,int> BJetPair;
 
-        for (int j=0; j < Jets.size(); j++)
+        for (unsigned int j=0; j < Jets.size(); j++)
         {
             if (GoodBJets_pt30.at(j))
             {
@@ -224,7 +205,7 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
             }
         }
         TLorentzVector lepton_sum;
-        for(int l = 0; l < GoodLeptons.size(); l++)
+        for(unsigned int l = 0; l < GoodLeptons.size(); l++)
         {
             lepton_sum += GoodLeptons.at(l).second;
         }
@@ -240,19 +221,20 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
         // cutmap booleans
         bool pass_general =  passMadHT && passBlind;
         bool pass_jgeneral = passMadHT && passBlind && JetID;
-        bool pass_1l = NGoodLeptons==1;
-        bool is_muon =  pass_1l ? GoodLeptons[0].first=="m" : false;
-        bool is_elec =  pass_1l ?  GoodLeptons[0].first=="e" : false; 
+        //bool pass_1l = NGoodLeptons==1;
+        //bool is_muon =  pass_1l ? GoodLeptons[0].first=="m" : false;
+        //bool is_elec =  pass_1l ?  GoodLeptons[0].first=="e" : false; 
         bool pass_2l = NGoodLeptons==2;
         bool pass_2l_opc =  pass_2l ? GoodLeptonsCharge[0]!=GoodLeptonsCharge[1] : false;
-        bool is_ee = false, is_em = false, is_me = false, is_mm = false;
-        double twolepDeltaR = -1;
+        bool is_ee = false, is_mm = false;
+        //bool is_em = false, is_me = false;
+        //double twolepDeltaR = -1;
         if(pass_2l_opc) {
             is_ee = GoodLeptons[0].first=="e" && GoodLeptons[1].first=="e";
-            is_em = GoodLeptons[0].first=="e" && GoodLeptons[1].first=="m";
-            is_me = GoodLeptons[0].first=="m" && GoodLeptons[1].first=="e";
+            //is_em = GoodLeptons[0].first=="e" && GoodLeptons[1].first=="m";
+            //is_me = GoodLeptons[0].first=="m" && GoodLeptons[1].first=="e";
             is_mm = GoodLeptons[0].first=="m" && GoodLeptons[1].first=="m";
-            twolepDeltaR = GoodLeptons[0].second.DeltaR(GoodLeptons[1].second);
+            //twolepDeltaR = GoodLeptons[0].second.DeltaR(GoodLeptons[1].second);
         }
         bool pass_Mbl1 = pass_2l_opc ? (25 <= Mbl1 && Mbl1 <= 250) : false;
         bool pass_Mbl2 =  pass_2l_opc ? (25 <= Mbl2 && Mbl2 <= 250) : false;
@@ -376,7 +358,6 @@ void TwoLepAnalyzer::Loop(NTupleReader& tr, double weight, int maxevents, bool i
 
             {"_2l_ge1b", pass_jgeneral && pass_2l_opc && NGoodBJets_pt30 >= 1}
             
-
        	};
                 
 	if (!inithisto) {

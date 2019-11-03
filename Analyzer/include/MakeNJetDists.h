@@ -151,7 +151,7 @@ public:
         }
     }//END of init histos
 
-    void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false)
+    void Loop(NTupleReader& tr, double, int maxevents, bool)
     {
         const auto& runtype = tr.getVar<std::string>("runtype");
         const auto& filetag = tr.getVar<std::string>("filetag");
