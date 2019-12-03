@@ -114,7 +114,7 @@ def main():
     fileParts = []
     fileParts.append("Universe   = vanilla\n")
     fileParts.append("Executable = run_Analyzer_condor.sh\n")
-    fileParts.append("Transfer_Input_Files = %s/CMSSW_9_3_3.tar.gz, %s/exestuff.tar.gz\n" % (options.outPath,options.outPath))
+    fileParts.append("Transfer_Input_Files = %s/%s.tar.gz, %s/exestuff.tar.gz\n" % (options.outPath,environ["CMSSW_VERSION"],options.outPath))
     fileParts.append("Should_Transfer_Files = YES\n")
     fileParts.append("WhenToTransferOutput = ON_EXIT\n")
     fileParts.append("x509userproxy = $ENV(X509_USER_PROXY)\n\n")
@@ -138,7 +138,7 @@ def main():
                 for startFileNum in xrange(0, count, nFilesPerJob):
                     numberOfJobs+=1
                     fileParts.append("transfer_output_remaps = \"MyAnalysis_%s_%s.root = %s/output-files/%s/MyAnalysis_%s_%s.root\"\n" % (n, startFileNum, options.outPath, ds, n, startFileNum))
-                    fileParts.append("Arguments = %s %i %i %s %s\n"%(n, nFilesPerJob, startFileNum, s, options.analyze))
+                    fileParts.append("Arguments = %s %i %i %s %s %s\n"%(n, nFilesPerJob, startFileNum, s, options.analyze, environ["CMSSW_VERSION"]))
                     fileParts.append("Output = %s/log-files/MyAnalysis_%s_%i.stdout\n"%(options.outPath, n, startFileNum))
                     fileParts.append("Error = %s/log-files/MyAnalysis_%s_%i.stderr\n"%(options.outPath, n, startFileNum))
                     fileParts.append("Log = %s/log-files/MyAnalysis_%s_%i.log\n"%(options.outPath, n, startFileNum))
