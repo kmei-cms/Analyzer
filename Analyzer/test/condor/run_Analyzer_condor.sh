@@ -12,6 +12,7 @@ nfiles=$2
 startfile=$3
 filelist=$4
 analyzer=$5
+CMSSW_VERSION=$6
 base_dir=`pwd`
 printf "\n\n base dir is $base_dir\n\n"
 
@@ -32,13 +33,13 @@ ls -l
 #
 
 printf "\n\n unpacking CMSSW tar file.\n\n"
-tar -xf CMSSW_9_3_3.tar.gz
+tar -xf ${CMSSW_VERSION}.tar.gz
 
 printf "\n\n ls output\n"
 ls -l
 
-printf "\n\n changing to CMSSW_9_3_3/ dir\n"
-cd CMSSW_9_3_3/
+printf "\n\n changing to CMSSW_X_X_X/ dir\n"
+cd ${CMSSW_VERSION}/
 mkdir -p src
 cd src
 scram b ProjectRename
