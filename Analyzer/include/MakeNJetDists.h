@@ -79,6 +79,9 @@ public:
             my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_sclUp",   6,  0.0, 6.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight", "puWeightCorr", "prefiringScaleFactor", "scaleWeightUp"}));
             my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_sclDown", 6,  0.0, 6.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight", "puWeightCorr", "prefiringScaleFactor", "scaleWeightDown"}));
        
+            my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_prfUp",   6,  0.0, 6.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight", "puWeightCorr", "prefiringScaleFactorUp"}));
+            my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_prfDown", 6,  0.0, 6.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight", "puWeightCorr", "prefiringScaleFactorDown"}));
+       
             for(int i = 0; i < 4; i++)
             {
                 std::string index = std::to_string(i+1);
@@ -112,6 +115,9 @@ public:
 
                 my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+"_sclUp",   6,  0.0, 6.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good", "deepESM_bin"+index}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight", "puWeightCorr", "prefiringScaleFactor", "scaleWeightUp"}));
                 my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+"_sclDown", 6,  0.0, 6.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good", "deepESM_bin"+index}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight", "puWeightCorr", "prefiringScaleFactor", "scaleWeightDown"}));
+
+                my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+"_prfUp",   6,  0.0, 6.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good", "deepESM_bin"+index}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight", "puWeightCorr", "prefiringScaleFactorUp"}));
+                my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+"_prfDown", 6,  0.0, 6.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good", "deepESM_bin"+index}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight", "puWeightCorr", "prefiringScaleFactorDown"}));
             }            
         }
         else
