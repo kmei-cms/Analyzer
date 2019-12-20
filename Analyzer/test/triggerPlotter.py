@@ -10,11 +10,11 @@ ROOT.TH2.SetDefaultSumw2()
 
 usage = "usage: %prog [options]"
 parser = argparse.ArgumentParser(usage)
-parser.add_argument("--tag"    , dest="tag"    , help="Unique tag for output"         , type=str, required=True)
-parser.add_argument("--data"   , dest="data"   , help="full path to input data file"  , type=str, required=True)
-parser.add_argument("--mc"     , dest="mc"     , help="full path to input mc file"    , type=str, required=True)
-parser.add_argument("--year"   , dest="year"   , help="Which year of run II"          , type=str, required=True)
-parser.add_argument("--dataset", dest="dataset", help="The muon or electron dataset"  , type=str, required=True)
+parser.add_argument("--tag"      , dest="tag"      , help="Unique tag for output"         , type=str, required=True)
+parser.add_argument("--year"     , dest="year"     , help="Which year of run II"          , type=str, required=True)
+parser.add_argument("--basePath" , dest="basePath" , help="Base path to input"            , type=str, required=True)
+parser.add_argument("--inputDir" , dest="inputDir" , help="Dir in base path with files"   , type=str, required=True)
+parser.add_argument("--dataset"  , dest="dataset"  , help="The muon or electron dataset"  , type=str, required=True)
 
 arg = parser.parse_args()
 
@@ -215,12 +215,20 @@ if __name__ == '__main__':
     trigTags     = [ "trig" ] 
     nJetCutTags  = [ "5", "6" ]
 
-    mcFile = ROOT.TFile.Open(arg.mc)
-    dataFile = ROOT.TFile.Open(arg.data)
-
+    basePath = arg.basePath
+    inputDir = arg.inputDir
     tag = arg.tag
     year = arg.year
     dataset = arg.dataset
+
+    fullPath = basePath + "/" + inputDir
+
+    mcFile = ROOT.TFile.Open(fullPath + "/" + year + "_TT.root")
+
+    dataFile = 0
+    if dataset == "electron": dataFile = ROOT.TFile.Open(fullPath + "/" + year + "_Data_SingleElectron.root")
+    elif dataset == "muon": dataFile = ROOT.TFile.Open(fullPath + "/" + year + "_Data_SingleMuon.root")
+
 
     outputPath = "./plots/%s/%s"%(tag,arg.year)
     outputFileName = "%s_TrigEff.root"%(year)
