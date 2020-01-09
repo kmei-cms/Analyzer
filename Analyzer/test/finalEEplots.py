@@ -39,11 +39,11 @@ OPTIONSMAP = {"h_jet_pt"       : {"X" : {"rebin" : 12, "min" : 0, "max" : 1000, 
               "h_jmt_ev0_top6" : {"X" : {"min" : 0.0, "max" : 1.0, "rebin" : 20, "title" : "Jet Momentum Tensor Eigenvalue 0"}},
               "h_jmt_ev1_top6" : {"X" : {"min" : 0.0, "max" : 1.0, "rebin" : 20, "title" : "Jet Momentum Tensor Eigenvalue 1"}},
               "h_jmt_ev2_top6" : {"X" : {"min" : 0.0, "max" : 1.0, "rebin" : 20, "title" : "Jet Momentum Tensor Eigenvalue 2"}},
-              "h_beta_z"       : {"X" : {"rebin" : 20, "title" : "#beta_{z}"}},
+              "h_beta_z"       : {"X" : {"rebin" : 36, "title" : "#beta_{z}"}},
               "h_beta_z_pt20"  : {"X" : {"rebin" : 20, "title" : "#beta_{z}"}},
               "h_beta_z_nvtx"       : {"X" : {"rebin" : 20, "title" : "#beta_{z}"}, "Y" : {"title" : "Number of Vertices"}},
               "h_beta_z_pt20_nvtx"  : {"X" : {"rebin" : 20, "title" : "#beta_{z}"}, "Y" : {"title" : "Number of Vertices"}},
-              "h_deepESM"  : {"X" : {"rebin" : 20, "title" : "DeepESM"}},
+              "h_deepESM"  : {"X" : {"rebin" : 36, "title" : "DeepESM"}},
 }
 
 def doOptions(histo, histoName):
@@ -186,7 +186,7 @@ if __name__ == '__main__':
                 PadFactor = (YMax-YMin) / (RatioYMax-RatioYMin)
 
                 c1 = ROOT.TCanvas("%s"%(name), "%s"%(name), XCANVAS, YCANVAS); 
-                c1.Divide(1,2); c1.cd(1); ROOT.gPad.SetLogy(); ROOT.gPad.SetLogz(); ROOT.gPad.SetPad(XMin, YMin, XMax, YMax)
+                c1.Divide(1,2); c1.cd(1); ROOT.gPad.SetLogz(); ROOT.gPad.SetPad(XMin, YMin, XMax, YMax)
 
                 ROOT.gPad.SetGridy(); ROOT.gPad.SetGridx()
                 ROOT.gPad.SetTopMargin(0.03)
