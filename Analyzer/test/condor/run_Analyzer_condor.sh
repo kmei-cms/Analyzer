@@ -13,6 +13,7 @@ startfile=$3
 filelist=$4
 analyzer=$5
 CMSSW_VERSION=$6
+scaleJetpT=$7
 base_dir=`pwd`
 printf "\n\n base dir is $base_dir\n\n"
 
@@ -68,7 +69,7 @@ printf "\n\n xrdcp root://cmseos.fnal.gov/${file} .\n\n"
 xrdcp root://cmseos.fnal.gov/${file} .
 
 printf "\n\n Attempting to run MyAnalysis executable.\n\n"
-./MyAnalysis -A ${analyzer} --condor -D ${dataset} -N ${nfiles} -M ${startfile}
+./MyAnalysis -A ${analyzer} --condor -D ${dataset} -N ${nfiles} -M ${startfile} -S ${scaleJetpT}
 
 printf "\n\n ls output\n"
 ls -l
