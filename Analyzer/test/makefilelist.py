@@ -72,7 +72,7 @@ else:
             # for data: Run2016B-17Jul2018_ver2-v1.SingleMuon_106_RA2AnalysisTree.root
             # for 2017 MC: RunIIFall17MiniAODv2.TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_123_RA2AnalysisTree.root
             shortline = line.split(".")[1].rpartition("_")[0].rpartition("_")[0]
-            shortline = era+shortline.replace("_ext1","").replace("_ext2","").replace("_ext3","").replace("_backup","")
+            shortline = era+shortline.replace("_ext1","").replace("_ext2","").replace("_ext3","").replace("_backup","").replace("mN1", "mSo").replace("CUEP", "CUETP")
             print shortline
             newline = "root://cmseos.fnal.gov/" + basedir + line
             samples[shortline].append(newline)
