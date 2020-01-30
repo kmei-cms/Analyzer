@@ -42,7 +42,7 @@ public:
         std::vector<std::string> weightVec;
         if( runtype == "MC" )
         {
-            myVarSuffixPairs = {{"",""}, {"JECup","_JECUp"}, {"JECdown","_JECDown"}, {"JERup","_JERUp"}, {"JERdown","_JERDown"}};
+            myVarSuffixPairs = {{"",""}, {"JECup","_JECUp"}, {"JECdown","_JECDown"}, {"JERup","_JERUp"}, {"JERdown","_JERDown"}, {"pTScaled","_pTScaled"}};
             weightVec = {"Lumi", "Weight"};
 
             //--------------------------------------------------------------------------------
