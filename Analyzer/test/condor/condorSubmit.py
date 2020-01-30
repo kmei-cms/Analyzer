@@ -34,14 +34,13 @@ def main():
     repo = "Analyzer/Analyzer"    
     # Parse command line arguments
     parser = optparse.OptionParser("usage: %prog [options]\n")    
-    parser.add_option ('-n',           dest='numfile',  type='int',                         default = 10,            help="number of files per job")
-    parser.add_option ('-d',           dest='datasets', type='string',                      default = '',            help="List of datasets, comma separated")
-    parser.add_option ('-l',           dest='dataCollections',         action='store_true', default = False,         help="List all datacollections")
-    parser.add_option ('-L',           dest='dataCollectionslong',     action='store_true', default = False,         help="List all datacollections and sub collections")
-    parser.add_option ('-c',           dest='noSubmit',                action='store_true', default = False,         help="Do not submit jobs.  Only create condor_submit.txt.")
-    parser.add_option ('--output',     dest='outPath',  type='string',                      default = '.',           help="Name of directory where output of each condor job goes")
-    parser.add_option ('--analyze',    dest='analyze',                                      default = 'Analyze1Lep', help="AnalyzeBackground, AnalyzeEventSelection, Analyze0Lep, Analyze1Lep, MakeNJetDists")    
-    parser.add_option ('--scaleJetpT', dest='scaleJetpT', type='int',                       default = 0,             help="Can scale the pT of all jets with this flag")    
+    parser.add_option ('-n',        dest='numfile',  type='int',                         default = 10,            help="number of files per job")
+    parser.add_option ('-d',        dest='datasets', type='string',                      default = '',            help="List of datasets, comma separated")
+    parser.add_option ('-l',        dest='dataCollections',         action='store_true', default = False,         help="List all datacollections")
+    parser.add_option ('-L',        dest='dataCollectionslong',     action='store_true', default = False,         help="List all datacollections and sub collections")
+    parser.add_option ('-c',        dest='noSubmit',                action='store_true', default = False,         help="Do not submit jobs.  Only create condor_submit.txt.")
+    parser.add_option ('--output',  dest='outPath',  type='string',                      default = '.',           help="Name of directory where output of each condor job goes")
+    parser.add_option ('--analyze', dest='analyze',                                      default = 'Analyze1Lep', help="AnalyzeBackground, AnalyzeEventSelection, Analyze0Lep, Analyze1Lep, MakeNJetDists")    
     options, args = parser.parse_args()
     
     # Prepare the list of files to transfer
@@ -139,7 +138,7 @@ def main():
                 for startFileNum in xrange(0, count, nFilesPerJob):
                     numberOfJobs+=1
                     fileParts.append("transfer_output_remaps = \"MyAnalysis_%s_%s.root = %s/output-files/%s/MyAnalysis_%s_%s.root\"\n" % (n, startFileNum, options.outPath, ds, n, startFileNum))
-                    fileParts.append("Arguments = %s %i %i %s %s %s %i\n"%(n, nFilesPerJob, startFileNum, s, options.analyze, environ["CMSSW_VERSION"], options.scaleJetpT))
+                    fileParts.append("Arguments = %s %i %i %s %s %s\n"%(n, nFilesPerJob, startFileNum, s, options.analyze, environ["CMSSW_VERSION"]))
                     fileParts.append("Output = %s/log-files/MyAnalysis_%s_%i.stdout\n"%(options.outPath, n, startFileNum))
                     fileParts.append("Error = %s/log-files/MyAnalysis_%s_%i.stderr\n"%(options.outPath, n, startFileNum))
                     fileParts.append("Log = %s/log-files/MyAnalysis_%s_%i.log\n"%(options.outPath, n, startFileNum))

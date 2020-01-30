@@ -62,7 +62,7 @@ const std::string getFullPath(const std::string& file)
 
 template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf, 
                                     const int startFile, const int nFiles, const int maxEvts, 
-                                    TFile* const outfile, const bool isQuiet, const std::string& analyzer, const bool scaleJetpT)
+                                    TFile* const outfile, const bool isQuiet, const std::string& analyzer)
 {
     std::cout << "Initializing..." << std::endl;
     Analyze a;
@@ -77,7 +77,6 @@ template<typename Analyze> void run(const std::set<AnaSamples::FileSummary>& vvf
         tr.registerDerivedVar("runtype",runtype);
         tr.registerDerivedVar("filetag",file.tag);
         tr.registerDerivedVar("analyzer",analyzer);
-        tr.registerDerivedVar("scaleJetpT",scaleJetpT);
 
         printf( "runtype: %s nFiles: %i startFile: %i maxEvts: %i \n",runtype.c_str(),nFiles,startFile,maxEvts ); fflush( stdout );
 
@@ -131,7 +130,7 @@ int main(int argc, char *argv[])
     int opt, option_index = 0;
     bool runOnCondor = false, isQuiet = true;
     std::string histFile = "", dataSets = "", analyzer = "";
-    int nFiles = -1, startFile = 0, maxEvts = -1, scaleJetpT = 0;
+    int nFiles = -1, startFile = 0, maxEvts = -1;
 
     static struct option long_options[] = {
         {"condor",             no_argument, 0, 'c'},
@@ -142,11 +141,10 @@ int main(int argc, char *argv[])
         {"numFiles",     required_argument, 0, 'N'},
         {"startFile",    required_argument, 0, 'M'},
         {"numEvts",      required_argument, 0, 'E'},
-        {"scaleJetpT",   required_argument, 0, 'S'},
     };
 
     // here is the options to run the codes / can add options
-    while((opt = getopt_long(argc, argv, "cvA:H:D:N:M:E:S:", long_options, &option_index)) != -1)
+    while((opt = getopt_long(argc, argv, "cvA:H:D:N:M:E:", long_options, &option_index)) != -1)
     {
         switch(opt)
         {
@@ -158,7 +156,6 @@ int main(int argc, char *argv[])
             case 'N': nFiles            = int(atoi(optarg)); break;
             case 'M': startFile         = int(atoi(optarg)); break;
             case 'E': maxEvts           = int(atoi(optarg)); break;
-            case 'S': scaleJetpT        = int(atoi(optarg)); break;
         }
     }
 
@@ -172,7 +169,7 @@ int main(int argc, char *argv[])
     std::set<AnaSamples::FileSummary> vvf = setFS(dataSets, runOnCondor); 
     TFile* outfile = TFile::Open(histFile.c_str(), "RECREATE");
 
-    std::vector<std::pair<std::string, std::function<void(const std::set<AnaSamples::FileSummary>&,const int,const int,const int,TFile* const,const bool,const std::string&,const bool)>>> AnalyzerPairVec = {
+    std::vector<std::pair<std::string, std::function<void(const std::set<AnaSamples::FileSummary>&,const int,const int,const int,TFile* const,const bool,const std::string&)>>> AnalyzerPairVec = {
         {"AnalyzeBackground",       run<AnalyzeBackground>},
         {"AnalyzeWControlRegion",   run<AnalyzeWControlRegion>},
         {"AnalyzeTopTagger",        run<AnalyzeTopTagger>},
@@ -207,7 +204,7 @@ int main(int argc, char *argv[])
             if(pair.first==analyzer) 
             {
                 std::cout<<"Running the " << analyzer << " Analyzer" <<std::endl;
-                pair.second(vvf,startFile,nFiles,maxEvts,outfile,isQuiet,analyzer,bool(scaleJetpT)); 
+                pair.second(vvf,startFile,nFiles,maxEvts,outfile,isQuiet,analyzer); 
                 foundAnalyzer = true;
             }
         }
