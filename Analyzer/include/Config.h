@@ -20,6 +20,7 @@
 #include "Framework/Framework/include/StopGenMatch.h"
 #include "Framework/Framework/include/MegaJetCombine.h"
 #include "Framework/Framework/include/MakeMT2Hemispheres.h"
+#include "Framework/Framework/include/TrainingNTupleVars.h"
 
 class Config
 {
@@ -55,8 +56,10 @@ private:
             else if(module=="Baseline")                    tr.emplaceModule<Baseline>();
             else if(module=="StopGenMatch")                tr.emplaceModule<StopGenMatch>();
             else if(module=="MegaJetCombine")              tr.emplaceModule<MegaJetCombine>();
+            else if(module=="TrainingNTupleVars")          tr.emplaceModule<TrainingNTupleVars>();
             else if(module=="MakeMT2Hemispheres_0l")       tr.emplaceModule<MakeMT2Hemispheres>("GoodJets_pt45", "NGoodJets_pt45", "_0l");
             else if(module=="MakeMT2Hemispheres_1l")       tr.emplaceModule<MakeMT2Hemispheres>("GoodJets_pt30", "NGoodJets_pt30", "_1l");
+            else if(module=="MakeMT2Hemispheres_2l")       tr.emplaceModule<MakeMT2Hemispheres>("GoodJets_pt30", "NGoodJets_pt30", "_2l");
             else if(module=="DeepEventShape")              tr.emplaceModule<DeepEventShape>(DeepESMCfg, ModelFile);
             else if(module=="DeepEventShape_NonIsoMuon")   tr.emplaceModule<DeepEventShape>(DeepESMCfg_NonIsoMuon, ModelFile);
             
@@ -247,11 +250,13 @@ public:
                 "CommonVariables",
                 "MakeMVAVariables",
                 "Baseline",
-                "DeepEventShape",
+//                "DeepEventShape",
                 "StopGenMatch",
                 "MegaJetCombine",
                 "BTagCorrector",
-                "ScaleFactors"
+                "ScaleFactors",
+//                "MakeMT2Hemispheres_2l"
+                "TrainingNTupleVars"
             };
             registerModules(tr, std::move(modulesList));
         }
