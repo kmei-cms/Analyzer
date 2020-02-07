@@ -137,7 +137,14 @@ public:
             std::vector<std::string> weightVecAll;
             if( runtype == "MC" )
             {
-                weightVecAll = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s, "htDerivedweight"+s, "puWeightCorr"+s, "prefiringScaleFactor"+s};
+                if(s == "pTScaled")
+                {
+                    weightVecAll = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s, "puWeightCorr"+s, "prefiringScaleFactor"+s};
+                }
+                else
+                {
+                    weightVecAll = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s, "htDerivedweight"+s, "puWeightCorr"+s, "prefiringScaleFactor"+s};
+                }
             }
             else
             {
