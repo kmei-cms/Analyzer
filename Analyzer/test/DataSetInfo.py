@@ -18,6 +18,8 @@ class DataSetInfo:
         self.scale = scale
 
     def getHisto(self, name, rebinx=-1.0, rebiny=-1.0, xmin=None, xmax=None):
+        if not self.file.GetListOfKeys().Contains(str(name)):
+            print "\33[31m"+"Error: Histo \""+name+"\" not in file \""+self.fileName+"\""+"\033[0m"
         histo = self.file.Get(name)
         if(self.scale != -1.0): histo.Scale(self.scale)
         if(rebinx != -1.0): histo.RebinX(rebinx)
