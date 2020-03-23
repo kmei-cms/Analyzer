@@ -279,6 +279,7 @@ public:
                 "MakeMT2Hemispheres_TopSeed",
                 "MakeMT2Hemispheres_All",
                 "MakeMT2Hemispheres_1l",
+                "StopGenMatch",
                 "BTagCorrector",
                 "ScaleFactors",
             };
