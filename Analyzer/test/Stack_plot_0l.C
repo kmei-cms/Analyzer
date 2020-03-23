@@ -14,9 +14,9 @@
 
 #include "Framework/Framework/include/Utility.h"
 
-// -----------------------------------------------------------------------------
-// smartMax FUNCTION: to keep the plot from overlapping with the legend 
-// -----------------------------------------------------------------------------
+// ----------------------------------------------------
+// -- keep the plot from overlapping with the legend 
+// ----------------------------------------------------
 void smartMax(const TH1 * const h, const TLegend* const l, const TPad* const p, double& gmin, double& gmax, double& gpThreshMax, const bool error)
 {
     //const bool isLog  = p->GetLogy();
@@ -47,9 +47,9 @@ void smartMax(const TH1 * const h, const TLegend* const l, const TPad* const p, 
 
 }
 
-// -----------------------------------------------------------------------------
-// histInfo CLASS: to hold TH1* with various helper functions 
-// -----------------------------------------------------------------------------
+// -----------------------------------------------------
+// -- CLASS1: hold TH1* with various helper functions 
+// -----------------------------------------------------
 class histInfo
 {
 public:
@@ -59,9 +59,9 @@ public:
     std::shared_ptr<TH1> h;
     bool drawHisto; // define for empty data plot
 
-    // -----------------------------------------------------------------------------------------------
-    // retrieveHistogram FUNCTION:  to get histogram from file and configure its optional settings
-    // -----------------------------------------------------------------------------------------------
+    // -----------------------------------------------------------
+    // get histogram from file and configure its optional settings
+    // -----------------------------------------------------------
     void retrieveHistogram()
     {
         if(drawHisto) // define for empty data plot
@@ -100,9 +100,9 @@ public:
         } 
     }
 
-    // --------------------------------------------
-    // setupAxes FUNCTION: to help for axes
-    // -------------------------------------------- 
+    // -------------
+    // help for axes
+    // ------------- 
     void setupAxes()
     {
         h->SetStats(0);
@@ -117,23 +117,25 @@ public:
             h->GetXaxis()->SetNdivisions(6, 5, 0);
     }
 
-    // ------------------------------------------------
-    // draw FUNCTION: wrapper to draw histogram
-    // ------------------------------------------------
+    // -------------------------
+    // wrapper to draw histogram
+    // -------------------------
     void draw(const std::string& additionalOptions = "", bool noSame = false) const 
     {
         h->Draw(((noSame?"":"same " + drawOptions + " " + additionalOptions)).c_str());
     }
 
+    // ------------------------------
     // add for signal plot line style
+    // ------------------------------
     void setLineStyle(int style = 1)
     {
         h->SetLineStyle(style);
     }
 
-    // -------------------------------
-    // setFillColor FUNCTION:
-    // -------------------------------
+    // ------------
+    // setFillColor 
+    // ------------
     void setFillColor(int newColor = -1) {
         if(newColor >= 0) 
             h->SetFillColor(newColor);
@@ -141,6 +143,7 @@ public:
             h->SetFillColor(color);
     }
 
+    // constructor & distructor
     histInfo(const std::string& legName, const std::string& histFile, const std::string& drawOptions, const int color, const bool drawHisto = true) : legName(legName), legEntry(legName), histFile(histFile), histName(""), drawOptions(drawOptions), color(color), rebin(-1), nEvents(-1), h(nullptr), drawHisto(drawHisto)
     {
     }
@@ -154,9 +157,9 @@ public:
     }
 };
 
-// -----------------------------------------------------------------------------
-// Plotter CLASS: 
-// -----------------------------------------------------------------------------
+// ---------------------
+// -- CLASS2: Plotter 
+// ---------------------
 class Plotter
 {
 
@@ -177,15 +180,16 @@ private:
 public:
     Plotter(histInfo&& data, std::vector<histInfo>&& bgEntries, std::vector<histInfo>&& sigEntries) : data_(data), bgEntries_(bgEntries), sigEntries_(sigEntries) {}
 
-    // -------------------------------
-    // plot FUNCTION:
-    // -------------------------------   
+    // ---------------------
+    // function for plotting
+    // ---------------------   
     void plot(const std::string& histName, const std::string& xAxisLabel, const std::string& yAxisLabel = "Events", const bool isLogY = false, const std::string& cutlabel = "", const double xmin = 999.9, const double xmax = -999.9, int rebin = -1, double lumi = 35900) // lumi 2016 = 35900, lumi 2017 = 41500, lumi 2018 = 59740
     {
-        //This is a magic incantation to disassociate opened histograms from their files so the files can be closed
         TH1::AddDirectory(false);
 
-        //create the canvas & TLegend for the plot
+        // ----------------------------------------
+        // create the canvas & TLegend for the plot
+        // ----------------------------------------
         TCanvas *c = new TCanvas("c1", "c1", 800, 800);
         c->cd();
         TLegend *leg = new TLegend(0.50, 0.56, 0.89, 0.88); 
@@ -195,26 +199,33 @@ public:
         leg->SetNColumns(1);
         leg->SetTextFont(42); 
 
-        //get maximum from histos and fill TLegend
+        // get maximum from histos and fill TLegend
         double min  = 0.0;
         double max  = 0.0;
         double lmax = 0.0;
 
-        //Create the THStack for the background 
+        // -------------------------------------
+        // create the THStack for the background
+        // ------------------------------------- 
         THStack *bgStack = new THStack();
         //Make seperate histogram from sum of BG histograms  
         TH1* hbgSum      = nullptr;
 
-        //sort the bgEntries by number of events
+        // -----------------------------------------------------------------------
+        // background / get new histogram & sort the bgEntries by number of events
+        // -----------------------------------------------------------------------
         for(auto& h : bgEntries_)
         {
             h.histName = histName;
             h.rebin    = rebin;
             h.retrieveHistogram();
         }
+       
+        // sort the bgEntries by number of events
         std::sort(bgEntries_.begin(), bgEntries_.end(), compareNEvents);
 
-        for(int iBG = bgEntries_.size() - 1; iBG >= 0; --iBG) {
+        for(int iBG = bgEntries_.size() - 1; iBG >= 0; --iBG) 
+        {
             bgStack->Add(bgEntries_[iBG].h.get(), bgEntries_[iBG].drawOptions.c_str());
 
             if(!hbgSum)
@@ -223,7 +234,9 @@ public:
             hbgSum->Add(bgEntries_[iBG].h.get());
         }
 
-        //data / get new histogram from file
+        // ------------------------
+        // data / get new histogram 
+        // ------------------------
         data_.histName = histName;
         data_.rebin    = rebin;
         data_.retrieveHistogram();
@@ -232,20 +245,23 @@ public:
             leg->AddEntry(data_.h.get(), data_.legEntry.c_str(), data_.drawOptions.c_str());
         smartMax(hbgSum, leg, static_cast<TPad*>(gPad), min, max, lmax, true);
     
-
-        //background
-        for(auto& entry : bgEntries_) {
+        // ----------
+        // background 
+        // ---------- 
+        for(auto& entry : bgEntries_) 
+        {
             entry.setFillColor();
 
             //add histograms to TLegend
             leg->AddEntry(entry.h.get(), entry.legEntry.c_str(), "F");
         }
-    
         smartMax(hbgSum, leg, static_cast<TPad*>(gPad), min, max, lmax, false);
 
-
-        //signal / get new histogram
-        for(auto& entry : sigEntries_) {
+        // --------------------------
+        // signal / get new histogram
+        // --------------------------
+        for(auto& entry : sigEntries_) 
+        {
             entry.histName = histName;
             entry.rebin    = rebin;
             entry.retrieveHistogram();
@@ -256,22 +272,27 @@ public:
             smartMax(entry.h.get(), leg, static_cast<TPad*>(gPad), min, max, lmax, false);
         }
     
-
-        //Set Canvas margin 
+        // -----------------
+        // set Canvas margin
+        // ----------------- 
         gPad->SetLeftMargin(0.12);
         gPad->SetRightMargin(0.06);
         gPad->SetTopMargin(0.08);
         gPad->SetBottomMargin(0.12);
 
-
-        //create a dummy histogram to act as the axes
+        // -------------------------------------------
+        // create a dummy histogram to act as the axes
+        // -------------------------------------------
         histInfo dummy(new TH1D("dummy", "dummy", 1000, hbgSum->GetBinLowEdge(1), hbgSum->GetBinLowEdge(hbgSum->GetNbinsX()) + hbgSum->GetBinWidth(hbgSum->GetNbinsX())));
         dummy.setupAxes();
         dummy.h->GetYaxis()->SetTitle(yAxisLabel.c_str());
         dummy.h->GetXaxis()->SetTitle(xAxisLabel.c_str());
+        
+        // set x-axis range
+        if(xmin < xmax)
+            dummy.h->GetXaxis()->SetRangeUser(xmin, xmax);
 
-
-        //Set the y-range of the histogram
+        // set y-axis range 
         if(isLogY) {
 
             double locMin  = std::min(0.2, std::max(0.2, 0.05 * min));
@@ -282,7 +303,6 @@ public:
                 double scale = (log10(lmax) - log10(locMin)) / (legMin - log10(locMin));
                 max = pow(max/locMin, scale)*locMin;
         }
-
         dummy.h->GetYaxis()->SetRangeUser(locMin, 10*max);
     
         } else {
@@ -294,37 +314,34 @@ public:
         }
 
 
-        //set x-axis range
-        if(xmin < xmax) 
-            dummy.h->GetXaxis()->SetRangeUser(xmin, xmax);
-
         dummy.draw(); 
 
-        //Switch to logY if desired
         gPad->SetLogy(isLogY);
 
-        //plot background stack
         bgStack->Draw("same");
 
-
-
-        //plot signal histograms
-        for(const auto& entry : sigEntries_) {
+        // ----
+        // draw
+        // ----
+        // plot signal histograms
+        for(const auto& entry : sigEntries_) 
+        {
             entry.draw();
         }
     
-        //plot data histogram
+        // plot data histogram
         if(data_.drawHisto) // define for empty data plot
             data_.draw();
 
-        //plot legend
+        // plot legend
         leg->Draw("same");
 
-        //Draw dummy hist again to get axes on top of histograms
+        // draw dummy hist again to get axes on top of histograms
         dummy.draw("AXIS");
 
-
-        //Draw CMS & lumi lables & cut labels
+        // --------------------------------------------------
+        // draw CMS & lumi lables & cut labels & significance
+        // --------------------------------------------------
         char lumistamp[128];
         sprintf(lumistamp, "%.1f fb^{-1} (13 TeV)", lumi / 1000.0);
     
@@ -334,7 +351,7 @@ public:
         mark.SetTextAlign(11);
         mark.SetTextSize(0.050);
         mark.SetTextFont(61);
-        mark.DrawLatex(gPad->GetLeftMargin(), 1 - (gPad->GetTopMargin() - 0.017), "CMS"); // #scale[0.8]{#it{Preliminary}}");
+        mark.DrawLatex(gPad->GetLeftMargin(), 1 - (gPad->GetTopMargin() - 0.017), "CMS"); 
         
         mark.SetTextSize(0.030); 
         mark.SetTextFont(52);
@@ -361,7 +378,6 @@ public:
                 sig = utility::addInQuad(sig, s);
             }
         }
-
         TLatex significance;  
         significance.SetNDC(true);
         significance.SetTextAlign(11);
@@ -369,11 +385,15 @@ public:
         significance.SetTextSize(0.030);
         significance.DrawLatex(0.15, 0.89, ("Significance = "+std::to_string(sig)).c_str());
 
-        //save new plot to file
+        // -----------------
+        // save plots as pdf
+        // -----------------
         //c->Print((histName + ".png").c_str());
         c->Print((histName + ".pdf").c_str());
 
-        //clean up dynamic memory
+        // -----------------------
+        // clean up dynamic memory
+        // -----------------------
         delete c;
         delete leg;
         delete bgStack;
@@ -381,41 +401,48 @@ public:
     }
 };
 
-// -----------------------------------------------------------------------------
-// Main FUNCTION 
-// -----------------------------------------------------------------------------
+// -------------------
+// -- Main function 
+// -------------------
 int main()
 {
+    // --------------
     // entry for data
-    // this uses the initializer syntax to initialize the histInfo object
+    // --------------
     // 'leg entry'  'root file'     'draw options'  'draw color'
-    histInfo data = {"Data", "condor/hadd_2016_MC_15thSlides_seed2_Assc3_wp0.98/2016_BG_OTHER.root", "PEX0", kBlack, false};
+    histInfo data = {"Data", "condor/MT2_stopHemispheres/19th_presentation/hadd_2016_MC_HemisphereJets_pt45WithGoodJetRequirements_seed2_Assc3_wp0.98/2016_BG_OTHER.root", "PEX0", kBlack, false};
 
-    // vector summarizing background histograms to include in the plot
+    // ----------------------------------------
+    // vector summarizing background histograms 
+    // ----------------------------------------
     std::vector<histInfo> bgEntries = {
 
-        {"T#bar{T}",        "condor/hadd_2016_MC_15thSlides_seed2_Assc3_wp0.98/2016_TT.root",              "hist", kBlue - 6   },
-        {"WJets",           "condor/hadd_2016_MC_15thSlides_seed2_Assc3_wp0.98/2016_WJets.root",           "hist", kYellow + 1 },
-        {"DYJetsToLL_M-50", "condor/hadd_2016_MC_15thSlides_seed2_Assc3_wp0.98/2016_DYJetsToLL_M-50.root", "hist", kOrange + 2 },
-        {"QCD",             "condor/hadd_2016_MC_15thSlides_seed2_Assc3_wp0.98/2016_QCD.root",             "hist", kGreen + 1  },
-        {"ST",              "condor/hadd_2016_MC_15thSlides_seed2_Assc3_wp0.98/2016_ST.root",              "hist", kRed + 1    },
-        {"Diboson",         "condor/hadd_2016_MC_15thSlides_seed2_Assc3_wp0.98/2016_Diboson.root",         "hist", kMagenta + 1},
-        {"TTX",             "condor/hadd_2016_MC_15thSlides_seed2_Assc3_wp0.98/2016_TTX.root",             "hist", kCyan + 1   },
-        {"Triboson",        "condor/hadd_2016_MC_15thSlides_seed2_Assc3_wp0.98/2016_Triboson.root",        "hist", kGray       },
+        {"T#bar{T}",        "condor/MT2_stopHemispheres/19th_presentation/hadd_2016_MC_HemisphereJets_pt45WithGoodJetRequirements_seed2_Assc3_wp0.98/2016_TT.root",              "hist", kBlue - 6   },
+        {"WJets",           "condor/MT2_stopHemispheres/19th_presentation/hadd_2016_MC_HemisphereJets_pt45WithGoodJetRequirements_seed2_Assc3_wp0.98/2016_WJets.root",           "hist", kYellow + 1 },
+        {"DYJetsToLL_M-50", "condor/MT2_stopHemispheres/19th_presentation/hadd_2016_MC_HemisphereJets_pt45WithGoodJetRequirements_seed2_Assc3_wp0.98/2016_DYJetsToLL_M-50.root", "hist", kOrange + 2 },
+        {"QCD",             "condor/MT2_stopHemispheres/19th_presentation/hadd_2016_MC_HemisphereJets_pt45WithGoodJetRequirements_seed2_Assc3_wp0.98/2016_QCD.root",             "hist", kGreen + 1  },
+        {"ST",              "condor/MT2_stopHemispheres/19th_presentation/hadd_2016_MC_HemisphereJets_pt45WithGoodJetRequirements_seed2_Assc3_wp0.98/2016_ST.root",              "hist", kRed + 1    },
+        {"Diboson",         "condor/MT2_stopHemispheres/19th_presentation/hadd_2016_MC_HemisphereJets_pt45WithGoodJetRequirements_seed2_Assc3_wp0.98/2016_Diboson.root",         "hist", kMagenta + 1},
+        {"TTX",             "condor/MT2_stopHemispheres/19th_presentation/hadd_2016_MC_HemisphereJets_pt45WithGoodJetRequirements_seed2_Assc3_wp0.98/2016_TTX.root",             "hist", kCyan + 1   },
+        {"Triboson",        "condor/MT2_stopHemispheres/19th_presentation/hadd_2016_MC_HemisphereJets_pt45WithGoodJetRequirements_seed2_Assc3_wp0.98/2016_Triboson.root",        "hist", kGray       },
 
     };
-
-    // vector summarizing signal histograms to include in the plot
+    
+    // ------------------------------------
+    // vector summarizing signal histograms
+    // ------------------------------------ 
     std::vector<histInfo> sigEntries = { 
 
-        {"RPV m_{#tildet} = 350", "condor/hadd_2016_MC_15thSlides_seed2_Assc3_wp0.98/2016_RPV_2t6j_mStop-350.root",        "hist", kCyan    }, 
-        {"RPV m_{#tildet} = 550", "condor/hadd_2016_MC_15thSlides_seed2_Assc3_wp0.98/2016_RPV_2t6j_mStop-550.root",        "hist", kMagenta },
-        {"RPV m_{#tildet} = 850", "condor/hadd_2016_MC_15thSlides_seed2_Assc3_wp0.98/2016_RPV_2t6j_mStop-850.root",        "hist", kRed },
-        //{"SYY m_{#tildet} = 900", "condor/hadd_2016_MC_15thSlides_seed2_Assc3_wp0.98/2016_StealthSYY_2t6j_mStop-900.root", "hist", k    },
+        {"RPV m_{#tildet} = 350", "condor/MT2_stopHemispheres/19th_presentation/hadd_2016_MC_HemisphereJets_pt45WithGoodJetRequirements_seed2_Assc3_wp0.98/2016_RPV_2t6j_mStop-350.root",        "hist", kCyan    }, 
+        {"RPV m_{#tildet} = 550", "condor/MT2_stopHemispheres/19th_presentation/hadd_2016_MC_HemisphereJets_pt45WithGoodJetRequirements_seed2_Assc3_wp0.98/2016_RPV_2t6j_mStop-550.root",        "hist", kMagenta },
+        {"RPV m_{#tildet} = 850", "condor/MT2_stopHemispheres/19th_presentation/hadd_2016_MC_HemisphereJets_pt45WithGoodJetRequirements_seed2_Assc3_wp0.98/2016_RPV_2t6j_mStop-850.root",        "hist", kRed },
+        //{"SYY m_{#tildet} = 900", "condor/hadd_2016_MC_HemisphereJets_pt45WithGoodJetRequirements_seed2_Assc3_wp0.98/2016_StealthSYY_2t6j_mStop-900.root", "hist", k    },
     
     };
 
-    // make plotter object with the required sources for histograms specified
+    // -------------------
+    // make plotter object
+    // ------------------- 
     Plotter plt(std::move(data), std::move(bgEntries), std::move(sigEntries));
 
     std::vector<std::string> cut {
@@ -431,6 +458,9 @@ int main()
         //"baseline_0l_Njet7", "baseline_0l_Njet8", "baseline_0l_Njet9", 
         //"baseline_0l_Njet10", "baseline_0l_Njet11", "baseline_0l_Njet12",
         //"baseline_0l_Njet13", "baseline_0l_Njet14", "baseline_0l_Njet15",
+        
+        //"baseline_0l_stopMassesg200_PtRank", "baseline_0l_stopMassesg200_ScalarPtRank",
+        //"baseline_0l_stopMassesle200_PtRank", "baseline_0l_stopMassesle200_ScalarPtRank", 
 
     };
 
@@ -460,42 +490,47 @@ int main()
         //plt.plot( "h_dR_tops_bjets_"+cutlabel,  "#DeltaR_{tops-bjets}", "Events", false, cutlabel );
 
         // stop MT2 hemispheres 
-        plt.plot( "h_stop1Mass_PtRank_"+cutlabel,           "Pt Rank M_{#tildet}_{1}",               "Events", true, cutlabel, 0, 1500, 5 );
-        plt.plot( "h_stop1Eta_PtRank_"+cutlabel,            "Pt Rank #eta_{#tildet}_{1}",            "Events", true, cutlabel, 5 );
-        plt.plot( "h_stop1Phi_PtRank_"+cutlabel,            "Pt Rank #phi_{#tildet}_{1}",            "Events", true, cutlabel, 5 );
-        plt.plot( "h_stop1Pt_PtRank_"+cutlabel,             "Pt Rank pT_{#tildet}_{1}",              "Events", true, cutlabel, 0, 1500, 5 );        
-        plt.plot( "h_stop2Mass_PtRank_"+cutlabel,           "Pt Rank M_{#tildet}_{2}",               "Events", true, cutlabel, 0, 1500, 5 );
-        plt.plot( "h_stop2Eta_PtRank_"+cutlabel,            "Pt Rank #eta_{#tildet}_{2}",            "Events", true, cutlabel, 5 );
-        plt.plot( "h_stop2Phi_PtRank_"+cutlabel,            "Pt Rank #phi_{#tildet}_{2}",            "Events", true, cutlabel, 5 );
-        plt.plot( "h_stop2Pt_PtRank_"+cutlabel,             "Pt Rank pT_{#tildet}_{2}",              "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_stop1Mass_PtRank_"+cutlabel,           "Pt Rank M_{#tildet}_{1}",               "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_stop1Eta_PtRank_"+cutlabel,            "Pt Rank #eta_{#tildet}_{1}",            "Events", true, cutlabel, 5 );
+        //plt.plot( "h_stop1Phi_PtRank_"+cutlabel,            "Pt Rank #phi_{#tildet}_{1}",            "Events", true, cutlabel, 5 );
+        //plt.plot( "h_stop1Pt_PtRank_"+cutlabel,             "Pt Rank pT_{#tildet}_{1}",              "Events", true, cutlabel, 0, 1500, 5 );        
+        //plt.plot( "h_stop2Mass_PtRank_"+cutlabel,           "Pt Rank M_{#tildet}_{2}",               "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_stop2Eta_PtRank_"+cutlabel,            "Pt Rank #eta_{#tildet}_{2}",            "Events", true, cutlabel, 5 );
+        //plt.plot( "h_stop2Phi_PtRank_"+cutlabel,            "Pt Rank #phi_{#tildet}_{2}",            "Events", true, cutlabel, 5 );
+        //plt.plot( "h_stop2Pt_PtRank_"+cutlabel,             "Pt Rank pT_{#tildet}_{2}",              "Events", true, cutlabel, 0, 1500, 5 );
 
-        plt.plot( "h_stop1Mass_MassRank_"+cutlabel,         "Mass Rank M_{#tildet}_{1}",             "Events", true, cutlabel, 0, 1500, 5 );
-        plt.plot( "h_stop1Eta_MassRank_"+cutlabel,          "Mass Rank #eta_{#tildet}_{1}",          "Events", true, cutlabel, 5 );
-        plt.plot( "h_stop1Phi_MassRank_"+cutlabel,          "Mass Rank #phi_{#tildet}_{1}",          "Events", true, cutlabel, 5 );
-        plt.plot( "h_stop1Pt_MassRank_"+cutlabel,           "Mass Rank pT_{#tildet}_{1}",            "Events", true, cutlabel, 0, 1500, 5 );
-        plt.plot( "h_stop2Mass_MassRank_"+cutlabel,         "Mass Rank M_{#tildet}_{2}",             "Events", true, cutlabel, 0, 1500, 5 );
-        plt.plot( "h_stop2Eta_MassRank_"+cutlabel,          "Mass Rank #eta_{#tildet}_{2}",          "Events", true, cutlabel, 5 );
-        plt.plot( "h_stop2Phi_MassRank_"+cutlabel,          "Mass Rank #phi_{#tildet}_{2}",          "Events", true, cutlabel, 5 );
-        plt.plot( "h_stop2Pt_MassRank_"+cutlabel,           "Mass Rank pT_{#tildet}_{2}",            "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_stop1Mass_MassRank_"+cutlabel,         "Mass Rank M_{#tildet}_{1}",             "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_stop1Eta_MassRank_"+cutlabel,          "Mass Rank #eta_{#tildet}_{1}",          "Events", true, cutlabel, 5 );
+        //plt.plot( "h_stop1Phi_MassRank_"+cutlabel,          "Mass Rank #phi_{#tildet}_{1}",          "Events", true, cutlabel, 5 );
+        //plt.plot( "h_stop1Pt_MassRank_"+cutlabel,           "Mass Rank pT_{#tildet}_{1}",            "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_stop2Mass_MassRank_"+cutlabel,         "Mass Rank M_{#tildet}_{2}",             "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_stop2Eta_MassRank_"+cutlabel,          "Mass Rank #eta_{#tildet}_{2}",          "Events", true, cutlabel, 5 );
+        //plt.plot( "h_stop2Phi_MassRank_"+cutlabel,          "Mass Rank #phi_{#tildet}_{2}",          "Events", true, cutlabel, 5 );
+        //plt.plot( "h_stop2Pt_MassRank_"+cutlabel,           "Mass Rank pT_{#tildet}_{2}",            "Events", true, cutlabel, 0, 1500, 5 );
 
-        plt.plot( "h_stop1Mass_ScalarPtRank_"+cutlabel,     "ScalarPt Rank M_{#tildet}_{1}",         "Events", true, cutlabel, 0, 1500, 5 );
-        plt.plot( "h_stop1Eta_ScalarPtRank_"+cutlabel,      "ScalarPt Rank #eta_{#tildet}_{1}",      "Events", true, cutlabel, 5 );
-        plt.plot( "h_stop1Phi_ScalarPtRank_"+cutlabel,      "ScalarPt Rank #phi_{#tildet}_{1}",      "Events", true, cutlabel, 5 );
-        plt.plot( "h_stop1Pt_ScalarPtRank_"+cutlabel,       "ScalarPt Rank pT_{#tildet}_{1}",        "Events", true, cutlabel, 0, 1500, 5 );
-        plt.plot( "h_stop2Mass_ScalarPtRank_"+cutlabel,     "ScalarPt Rank M_{#tildet}_{2}",         "Events", true, cutlabel, 0, 1500, 5 );
-        plt.plot( "h_stop2Eta_ScalarPtRank_"+cutlabel,      "ScalarPt Rank #eta_{#tildet}_{2}",      "Events", true, cutlabel, 5 );
-        plt.plot( "h_stop2Phi_ScalarPtRank_"+cutlabel,      "ScalarPt Rank #phi_{#tildet}_{2}",      "Events", true, cutlabel, 5 );
-        plt.plot( "h_stop2Pt_ScalarPtRank_"+cutlabel,       "ScalarPt Rank pT_{#tildet}_{2}",        "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_stop1Mass_ScalarPtRank_"+cutlabel,     "ScalarPt Rank M_{#tildet}_{1}",         "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_stop1Eta_ScalarPtRank_"+cutlabel,      "ScalarPt Rank #eta_{#tildet}_{1}",      "Events", true, cutlabel, 5 );
+        //plt.plot( "h_stop1Phi_ScalarPtRank_"+cutlabel,      "ScalarPt Rank #phi_{#tildet}_{1}",      "Events", true, cutlabel, 5 );
+        //plt.plot( "h_stop1Pt_ScalarPtRank_"+cutlabel,       "ScalarPt Rank pT_{#tildet}_{1}",        "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_stop2Mass_ScalarPtRank_"+cutlabel,     "ScalarPt Rank M_{#tildet}_{2}",         "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_stop2Eta_ScalarPtRank_"+cutlabel,      "ScalarPt Rank #eta_{#tildet}_{2}",      "Events", true, cutlabel, 5 );
+        //plt.plot( "h_stop2Phi_ScalarPtRank_"+cutlabel,      "ScalarPt Rank #phi_{#tildet}_{2}",      "Events", true, cutlabel, 5 );
+        //plt.plot( "h_stop2Pt_ScalarPtRank_"+cutlabel,       "ScalarPt Rank pT_{#tildet}_{2}",        "Events", true, cutlabel, 0, 1500, 5 );
 
-        plt.plot( "h_stop1ScalarPt_ScalarPtRank_"+cutlabel, "ScalarPt Rank Scalar pT_{#tildet}_{1}", "Events", true, cutlabel, 0, 1500, 5 );
-        plt.plot( "h_stop2ScalarPt_ScalarPtRank_"+cutlabel, "ScalarPt Rank Scalar pT_{#tildet}_{2}", "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_stop1ScalarPt_ScalarPtRank_"+cutlabel, "ScalarPt Rank Scalar pT_{#tildet}_{1}", "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_stop2ScalarPt_ScalarPtRank_"+cutlabel, "ScalarPt Rank Scalar pT_{#tildet}_{2}", "Events", true, cutlabel, 0, 1500, 5 );
 
-        //plt.plot( "h_MT2_"+cutlabel,                            "MT2",                         "Events", true, cutlabel, 0, 1500, 5 );
-        //plt.plot( "h_dR_stop1stop2_"+cutlabel,                  "#DeltaR",                     "Events", true, cutlabel, 5 );
-        //plt.plot( "h_dPhi_stop1stop2_"+cutlabel,                "#Delta#phi",                  "Events", true, cutlabel, 0, 4 );
-        //plt.plot( "h_difference_stopMasses_PtRank_"+cutlabel,   "Pt Rank difference",          "Events", true, cutlabel, 0, 1500, 5 );
-        //plt.plot( "h_average_stopMasses_"+cutlabel,             "average",                     "Events", true, cutlabel, 0, 1500, 5 );
-        //plt.plot( "h_relativeDiff_stopMasses_PtRank_"+cutlabel, "Pt Rank relative difference", "Events", true, cutlabel, 0, 100,  5 );
+        //plt.plot( "h_MT2_"+cutlabel,                        "MT2",                                   "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_dR_stop1stop2_"+cutlabel,              "#DeltaR",                               "Events", true, cutlabel, 5 );
+        //plt.plot( "h_dPhi_stop1stop2_"+cutlabel,            "#Delta#phi",                            "Events", true, cutlabel, 0, 4 );
+        //plt.plot( "h_difference_stopMasses_"+cutlabel,      "Pt Rank difference",                    "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_average_stopMasses_"+cutlabel,         "average",                               "Events", true, cutlabel, 0, 1500, 5 );
+        //plt.plot( "h_relativeDiff_stopMasses_"+cutlabel,    "Pt Rank relative difference",           "Events", true, cutlabel, 0, 100,  5 );
+
+        plt.plot( "h_resolvedMass_"+cutlabel,               "resolved jet M",                        "Events", true, cutlabel, 0, 50);
+        plt.plot( "h_resolvedEta_"+cutlabel,                "resolved jet #eta",                     "Events", true, cutlabel, 5 );
+        plt.plot( "h_resolvedPhi_"+cutlabel,                "resolved jet #phi",                     "Events", true, cutlabel, 5 );
+        plt.plot( "h_resolvedPt_"+cutlabel,                 "resolved jet pT",                       "Events", true, cutlabel, 0, 500);
 
     }
 }
