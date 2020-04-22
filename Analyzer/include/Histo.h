@@ -54,14 +54,6 @@ protected:
         return weight;
     }
 
-    std::string split(const std::string& half, const std::string& s, const std::string& h) const
-    {
-        std::string token;
-        if      ("first"==half) token = s.substr(0, s.find(h));
-        else if ("last" ==half) token = s.substr(s.find(h) + h.length(), std::string::npos);
-        return token;
-    }
-
     template<typename T> T tlvGetValue(const TLorentzVector& lv, const std::string& varType) const
     {
         T val = 0;
@@ -81,8 +73,8 @@ class Histo1D : public Histo_FirstChild<TH1>
 private:
     template<typename T> void vecFill(const std::string& varX, std::unique_ptr<TH1>& histo, const double weight, const NTupleReader& tr) const
     {
-        const std::string& varType = split("last",  varX, ".");
-        const std::string&     var = split("first", varX, ".");
+        const std::string& varType = utility::split("last",  varX, ".");
+        const std::string&     var = utility::split("first", varX, ".");
         const auto& vec = tr.getVec<T>(varX);
         for(const auto& v : vec)
         {            
@@ -92,8 +84,8 @@ private:
 
     void vecFilltlv(const std::string& varX, std::unique_ptr<TH1>& histo, const double weight, const NTupleReader& tr) const
     {
-        const std::string& varType = split("last",  varX, ".");
-        const std::string&     var = split("first", varX, ".");
+        const std::string& varType = utility::split("last",  varX, ".");
+        const std::string&     var = utility::split("first", varX, ".");
         const auto& vec = tr.getVec<TLorentzVector>(var);
         for(const auto& v : vec)
         {            
@@ -104,7 +96,7 @@ private:
     void fillHisto(const std::string& varX, std::unique_ptr<TH1>& histo, const double weight, const NTupleReader& tr) const
     {
         std::string type;
-        tr.getType(split("first", split("first", varX, "."), "["), type);
+        tr.getType(utility::split("first", utility::split("first", varX, "."), "["), type);
 
         if(type.find("std::vector<") != std::string::npos)
         {
@@ -131,8 +123,8 @@ private:
             else if(type.find("long")           != std::string::npos) histo->Fill( tr.getVar<long>(varX),         weight );        
             else if(type.find("TLorentzVector") != std::string::npos)
             {
-                const std::string& varType = split("last",  varX, ".");
-                const std::string&     var = split("first", varX, ".");
+                const std::string& varType = utility::split("last",  varX, ".");
+                const std::string&     var = utility::split("first", varX, ".");
                 histo->Fill( tlvGetValue<double>(tr.getVar<TLorentzVector>(var), varType), weight );
             }
             else std::cout<<utility::color("Type \""+type+"\" is not an option for variable \""+varX+"\"", "red")<<std::endl;
