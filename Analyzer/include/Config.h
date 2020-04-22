@@ -314,27 +314,6 @@ public:
             };
             registerModules(tr, std::move(modulesList));
         }
-	else if(analyzer=="AnalyzeTopPt")
-	 {
-            const std::vector<std::string> modulesList = {
-                "PrepNTupleVars",
-                "PartialUnBlinding",
-                "PrepNTupleVars",
-                "Muon",
-                "Electron",
-                "Photon",
-                "Jet",
-                "BJet",
-                "CommonVariables",
-                "MakeMVAVariables",
-                "Baseline",
-                "DeepEventShape",
-                "BTagCorrector",
-                "ScaleFactors",
-		"TopsPt"
-            };
-	registerModules(tr, std::move(modulesList));
-        }
         else if(analyzer=="Analyze1Lep")
         {
             const std::vector<std::string> modulesList = {
