@@ -82,7 +82,7 @@ public:
         //Get and make needed info
         const auto& filetag = tr.getVar<std::string>("filetag");
         const auto& analyzer = tr.getVar<std::string>("analyzer");
-        const bool isSignal = (filetag.find("_stop") != std::string::npos || filetag.find("_mStop") != std::string::npos) ? true : false;
+        const bool isSignal = (filetag.find("_stop") != std::string::npos || filetag.find("_mStop") != std::string::npos || filetag.find("VLQ_2t4b") != std::string::npos) ? true : false;
 
         std::string runYear, puFileName, DeepESMCfg, DeepESMCfg_NonIsoMuon, ModelFile, leptonFileName, bjetFileName, bjetCSVFileName, meanFileName, TopTaggerCfg;
         
