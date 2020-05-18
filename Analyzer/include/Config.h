@@ -332,7 +332,7 @@ public:
             };
             registerModules(tr, std::move(modulesList));
         }
-        else if(analyzer=="Analyze1Lep" || analyzer == "MakeMiniTree")
+        else if(analyzer=="Analyze1Lep" || analyzer == "MakeMiniTree" || analyzer == "MakeANPlots" || analyzer == "ExtraChecks" || analyzer == "MakeQCDChecks" || analyzer == "ExtraChecksv2" || analyzer == "MakeNewQCDSystematic" || analyzer == "MakeTuneSystematic" || analyzer == "NonIsoMuonBStudy" || analyzer=="AnalyzeLepTrigger_NIM" )
         {
             const std::vector<std::string> modulesList = {
                 "PartialUnBlinding",

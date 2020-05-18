@@ -20,12 +20,19 @@
 #include "Analyzer/Analyzer/include/AnalyzeSignalModels.h"
 #include "Analyzer/Analyzer/include/AnalyzeTest.h"
 #include "Analyzer/Analyzer/include/AnalyzeLepTrigger.h"
+#include "Analyzer/Analyzer/include/AnalyzeLepTrigger_NIM.h"
 #include "Analyzer/Analyzer/include/AnalyzeNonIsoMuonTrigger.h"
 #include "Analyzer/Analyzer/include/AnalyzeEENoise.h"
 #include "Analyzer/Analyzer/include/AnalyzeBTagSF.h"
-#include "Analyzer/Analyzer/include/AnalyzeSignalKM.h"
+//#include "Analyzer/Analyzer/include/AnalyzeSignalKM.h"
+#include "Analyzer/Analyzer/include/MakeNewQCDSystematic.h"
+#include "Analyzer/Analyzer/include/MakeANPlots.h"
+#include "Analyzer/Analyzer/include/MakeQCDChecks.h"
 #include "Analyzer/Analyzer/include/MakeNJetDists.h"
 #include "Analyzer/Analyzer/include/MakeMiniTree.h"
+#include "Analyzer/Analyzer/include/ExtraChecks.h"
+#include "Analyzer/Analyzer/include/NonIsoMuonBStudy.h"
+#include "Analyzer/Analyzer/include/ExtraChecksv2.h"
 #include "Analyzer/Analyzer/include/CalculateBTagSF.h"
 #include "Analyzer/Analyzer/include/CalculateSFMean.h"
 #include "Analyzer/Analyzer/include/Config.h"
@@ -180,18 +187,25 @@ int main(int argc, char *argv[])
         {"Analyze0Lep",             run<Analyze0Lep>},
         {"Analyze1Lep",             run<Analyze1Lep>},
         {"AnalyzeLepTrigger",       run<AnalyzeLepTrigger>},
+        {"AnalyzeLepTrigger_NIM",       run<AnalyzeLepTrigger_NIM>},
         {"AnalyzeNonIsoMuonTrigger",run<AnalyzeNonIsoMuonTrigger>},
         {"AnalyzeStealthTopTagger", run<AnalyzeStealthTopTagger>},
         {"AnalyzeBTagSF",           run<AnalyzeBTagSF>},
         {"AnalyzeHEM",              run<AnalyzeHEM>},
         {"AnalyzeEENoise",          run<AnalyzeEENoise>},
         {"AnalyzeSignalModels",     run<AnalyzeSignalModels>},
-        {"AnalyzeSignalKM",         run<AnalyzeSignalKM>},
+//        {"AnalyzeSignalKM",         run<AnalyzeSignalKM>},
+        {"MakeNewQCDSystematic",    run<MakeNewQCDSystematic>},
         {"AnalyzeTest",             run<AnalyzeTest>},
         {"CalculateBTagSF",         run<CalculateBTagSF>},
         {"CalculateSFMean",         run<CalculateSFMean>},
+        {"MakeANPlots",             run<MakeANPlots>},
+        {"MakeQCDChecks",           run<MakeQCDChecks>},
         {"MakeMiniTree",            run<MakeMiniTree>},
         {"MakeNJetDists",           run<MakeNJetDists>},
+        {"NonIsoMuonBStudy",        run<NonIsoMuonBStudy>},
+        {"ExtraChecks",             run<ExtraChecks>},
+        {"ExtraChecksv2",           run<ExtraChecksv2>},
         {"AnalyzeNjetsMinusOneCSFillDijetHists", run<AnalyzeNjetsMinusOneCSFillDijetHists>},
         {"AnalyzeNjetsMinusOneCSJetReplacement", run<AnalyzeNjetsMinusOneCSJetReplacement>},
         {"Semra_Analyzer",          run<Semra_Analyzer>},
