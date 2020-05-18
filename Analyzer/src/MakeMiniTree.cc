@@ -31,7 +31,6 @@ void MakeMiniTree::Loop(NTupleReader& tr, double, int maxevents, bool)
         my_histos["EventCounter"]->Fill( eventCounter );
 
         const auto& runtype             = tr.getVar<std::string>("runtype");
-        const auto& filetag             = tr.getVar<std::string>("filetag");
 
         const auto& passBaseline1l      = tr.getVar<bool>("passBaseline1l_Good");
         const auto& passBaseline1l_NIM  = tr.getVar<bool>("passBaseline1l_NonIsoMuon");
@@ -60,21 +59,21 @@ void MakeMiniTree::Loop(NTupleReader& tr, double, int maxevents, bool)
             "puWeightCorr",
             "Weight",
             //Variables for Signal selection
-            //"deepESM_val",
-            //"NGoodJets_pt30",
-            //"NGoodBJets_pt30",
-            //"HT_trigger_pt30",
-            //"NGoodElectrons",
-            //"NGoodMuons",
-            //"passBaseline1l_Good",
-            //"totalEventWeight",
+            "deepESM_val",
+            "NGoodJets_pt30",
+            "NGoodBJets_pt30",
+            "HT_trigger_pt30",
+            "NGoodElectrons",
+            "NGoodMuons",
+            "passBaseline1l_Good",
+            "totalEventWeight",
             //Variables for QCD CR selection
-            "deepESM_valNonIsoMuon",
-            "NNonIsoMuonJets_pt30",
-            "HT_NonIsoMuon_pt30",
-            "NNonIsoMuons",
-            "passBaseline1l_NonIsoMuon",
-            "totalEventWeightNIM",
+            //"deepESM_valNonIsoMuon",
+            //"NNonIsoMuonJets_pt30",
+            //"HT_NonIsoMuon_pt30",
+            //"NNonIsoMuons",
+            //"passBaseline1l_NonIsoMuon",
+            //"totalEventWeightNIM",
         };
         if( runtype != "MC" ) {
             variables = {
@@ -83,19 +82,19 @@ void MakeMiniTree::Loop(NTupleReader& tr, double, int maxevents, bool)
             "NVtx",
             "MET",
             //Variables for Signal selection
-            //"deepESM_val",
-            //"NGoodJets_pt30",
-            //"NGoodBJets_pt30",
-            //"HT_trigger_pt30",
-            //"NGoodElectrons",
-            //"NGoodMuons",
-            //"passBaseline1l_Good",
+            "deepESM_val",
+            "NGoodJets_pt30",
+            "NGoodBJets_pt30",
+            "HT_trigger_pt30",
+            "NGoodElectrons",
+            "NGoodMuons",
+            "passBaseline1l_Good",
             //Variables for QCD CR selection
-            "deepESM_valNonIsoMuon",
-            "NNonIsoMuonJets_pt30",
-            "HT_NonIsoMuon_pt30",
-            "NNonIsoMuons",
-            "passBaseline1l_NonIsoMuon"
+            //"deepESM_valNonIsoMuon",
+            //"NNonIsoMuonJets_pt30",
+            //"HT_NonIsoMuon_pt30",
+            //"NNonIsoMuons",
+            //"passBaseline1l_NonIsoMuon"
             };
         }
 
@@ -110,7 +109,7 @@ void MakeMiniTree::Loop(NTupleReader& tr, double, int maxevents, bool)
         //-----------------------------------
         //-- Fill Histograms Below
         //-----------------------------------
-        if( passBaseline1l_NIM ) {
+        if( passBaseline1l ) {
             myMiniTuple->fill();
         }
 

@@ -98,8 +98,8 @@ void AnalyzeLepTrigger::Loop(NTupleReader& tr, double, int maxevents, bool)
         //--------------------------------------------------
         //-- Print list of triggers (only if you want to see them)
         //--------------------------------------------------
-        //const auto& TriggerNames        = tr.getVec<std::string>("TriggerNames");
-        //if( tr.getEvtNum() == 1 ) printTriggerList(TriggerNames); 
+        const auto& TriggerNames        = tr.getVec<std::string>("TriggerNames");
+        if( tr.getEvtNum() == 1 ) printTriggerList(TriggerNames); 
 
         // ------------------------
         // -- Define theweight
