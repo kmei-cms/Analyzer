@@ -42,7 +42,7 @@ public:
         std::vector<std::string> weightVec;
         if( runtype == "MC" )
         {
-            myVarSuffixPairs = {{"",""}, {"JECup","_JECUp"}, {"JECdown","_JECDown"}, {"JERup","_JERUp"}, {"JERdown","_JERDown"}, {"pTScaled","_pTScaled"}};
+            myVarSuffixPairs = {{"",""}, {"JECup","_JECUp"}, {"JECdown","_JECDown"}, {"JERup","_JERUp"}, {"JERdown","_JERDown"}, {"pTScaled","_pTScaled"}, {"mScaled", "_mScaled"}};
             weightVec = {"Lumi", "Weight"};
 
             //--------------------------------------------------------------------------------
@@ -137,7 +137,7 @@ public:
             std::vector<std::string> weightVecAll;
             if( runtype == "MC" )
             {
-                if(s == "pTScaled")
+                if(s == "pTScaled" || s == "mScaled")
                 {
                     weightVecAll = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s, "puWeightCorr"+s, "prefiringScaleFactor"+s};
                 }
