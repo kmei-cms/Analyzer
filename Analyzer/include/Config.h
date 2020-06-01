@@ -20,6 +20,7 @@
 #include "Framework/Framework/include/StopGenMatch.h"
 #include "Framework/Framework/include/MegaJetCombine.h"
 #include "Framework/Framework/include/MakeMT2Hemispheres.h"
+#include "Framework/Framework/include/StopJets.h"
 
 class Config
 {
@@ -41,25 +42,28 @@ private:
  
         for(const auto& module : modules)
         {
-            if     (module=="PartialUnBlinding")           tr.emplaceModule<PartialUnBlinding>();
-            else if(module=="PrepNTupleVars")              tr.emplaceModule<PrepNTupleVars>();
-            else if(module=="RunTopTagger")                tr.emplaceModule<RunTopTagger>(TopTaggerCfg);
-            else if(module=="Muon")                        tr.emplaceModule<Muon>();
-            else if(module=="Electron")                    tr.emplaceModule<Electron>();
-            else if(module=="Photon")                      tr.emplaceModule<Photon>();
-            else if(module=="Jet")                         tr.emplaceModule<Jet>();
-            else if(module=="BJet")                        tr.emplaceModule<BJet>();
-            else if(module=="CommonVariables")             tr.emplaceModule<CommonVariables>();
-            else if(module=="MakeMVAVariables")            tr.emplaceModule<MakeMVAVariables>();
-            else if(module=="MakeMVAVariables_NonIsoMuon") tr.emplaceModule<MakeMVAVariables>(false, "", "NonIsoMuonJets_pt30");
-            else if(module=="Baseline")                    tr.emplaceModule<Baseline>();
-            else if(module=="StopGenMatch")                tr.emplaceModule<StopGenMatch>();
-            else if(module=="MegaJetCombine")              tr.emplaceModule<MegaJetCombine>();
-            else if(module=="MakeMT2Hemispheres_0l")       tr.emplaceModule<MakeMT2Hemispheres>("GoodJets_pt45", "NGoodJets_pt45", "_0l");
-            else if(module=="MakeMT2Hemispheres_1l")       tr.emplaceModule<MakeMT2Hemispheres>("GoodJets_pt30", "NGoodJets_pt30", "_1l");
-            else if(module=="DeepEventShape")              tr.emplaceModule<DeepEventShape>(DeepESMCfg, ModelFile);
-            else if(module=="DeepEventShape_NonIsoMuon")   tr.emplaceModule<DeepEventShape>(DeepESMCfg_NonIsoMuon, ModelFile);
-            
+            if     (module=="PartialUnBlinding")            tr.emplaceModule<PartialUnBlinding>();
+            else if(module=="PrepNTupleVars")               tr.emplaceModule<PrepNTupleVars>();
+            else if(module=="RunTopTagger")                 tr.emplaceModule<RunTopTagger>(TopTaggerCfg);
+            else if(module=="Muon")                         tr.emplaceModule<Muon>();
+            else if(module=="Electron")                     tr.emplaceModule<Electron>();
+            else if(module=="Photon")                       tr.emplaceModule<Photon>();
+            else if(module=="Jet")                          tr.emplaceModule<Jet>();
+            else if(module=="BJet")                         tr.emplaceModule<BJet>();
+            else if(module=="CommonVariables")              tr.emplaceModule<CommonVariables>();
+            else if(module=="MakeMVAVariables")             tr.emplaceModule<MakeMVAVariables>();
+            else if(module=="MakeMVAVariables_NonIsoMuon")  tr.emplaceModule<MakeMVAVariables>(false, "", "NonIsoMuonJets_pt30");
+            else if(module=="Baseline")                     tr.emplaceModule<Baseline>();
+            else if(module=="StopGenMatch")                 tr.emplaceModule<StopGenMatch>();
+            else if(module=="MegaJetCombine")               tr.emplaceModule<MegaJetCombine>();
+            else if(module=="MakeMT2Hemispheres_All")       tr.emplaceModule<MakeMT2Hemispheres>("Jets",     "AllJets",       "NJets",          "_All");
+            else if(module=="MakeMT2Hemispheres_1l")        tr.emplaceModule<MakeMT2Hemispheres>("Jets",     "GoodJets_pt30", "NGoodJets_pt30", "_1l");
+            else if(module=="MakeMT2Hemispheres_0l")        tr.emplaceModule<MakeMT2Hemispheres>("Jets",     "GoodJets_pt45", "NGoodJets_pt45", "_0l");
+            else if(module=="MakeMT2Hemispheres_TaggedTop") tr.emplaceModule<MakeMT2Hemispheres>("StopJets", "GoodStopJets",  "NGoodStopJets",  "_TaggedTop");
+            else if(module=="StopJets")                     tr.emplaceModule<StopJets>();
+            else if(module=="DeepEventShape")               tr.emplaceModule<DeepEventShape>(DeepESMCfg, ModelFile);
+            else if(module=="DeepEventShape_NonIsoMuon")    tr.emplaceModule<DeepEventShape>(DeepESMCfg_NonIsoMuon, ModelFile);
+ 
             if(runtype == "MC")
             {
                 if     (module=="ScaleFactors")  tr.emplaceModule<ScaleFactors>(runYear, leptonFileName, puFileName, meanFileName);
@@ -270,8 +274,12 @@ public:
                 "MakeMVAVariables",
                 "Baseline",
                 "DeepEventShape",
-                "MakeMT2Hemispheres_0l",
+                "StopJets",
+                "MakeMT2Hemispheres_All",
                 "MakeMT2Hemispheres_1l",
+                "MakeMT2Hemispheres_0l",
+                "MakeMT2Hemispheres_TaggedTop",
+                "StopGenMatch",
                 "BTagCorrector",
                 "ScaleFactors",
             };
