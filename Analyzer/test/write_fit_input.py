@@ -226,7 +226,7 @@ if __name__ == "__main__":
     systypes = ["", "_JECUp", "_JECDown", "_JERUp", "_JERDown", "_btgUp", "_btgDown", "_lepUp", "_lepDown",
                 "_isrUp", "_isrDown", "_fsrUp", "_fsrDown", "_isr2Up", "_isr2Down", "_fsr2Up", "_fsr2Down",
                 "_pdfUp", "_pdfDown", "_htUp", "_htDown", "_puUp", "_puDown", "_sclUp", "_sclDown", "_prfUp", "_prfDown",
-                "_pTScaled"]
+                "_mpTScaled", "_noHT", "_mpTScalednoHT"]
     outputfile = ROOT.TFile.Open(outDir + "/" + options.rootFile,"RECREATE")
     outputDataCard = options.dataCard
 
@@ -419,7 +419,7 @@ if __name__ == "__main__":
                 basenameOut = "h_njets_" + jettype
                 histos = wp.writeHistos(bgData, basenameIn, basenameOut, bin, sys)
                 signalhistos = wp.writeHistos(sgData, basenameIn, basenameOut, bin, sys)
-                if sys in ["", "_JECUp", "_JECDown", "_JERUp", "_JERDown", "_pTScaled"]:
+                if sys in ["", "_JECUp", "_JECDown", "_JERUp", "_JERDown"]:
                     wp.makePseudoData(histos, signalhistos, sgData, basenameOut, bin, sys)
                     #wp.makePseudoData_Func(histos, "28_24_236", basenameOut, bin, sys, a0=0.28, a1=0.24, a2=0.236)
                     #wp.makePseudoData_Func(histos, "28_24_18",  basenameOut, bin, sys, a0=0.28, a1=0.24, a2=0.18)
