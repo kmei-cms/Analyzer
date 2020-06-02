@@ -146,5 +146,5 @@ cd $HOME/../../CMSSW_8_1_0/src/HiggsAnalysis/CombinedLimit/
 cd $HOME/../../CMSSW_9_3_3/src/Analyzer/Analyzer/test/
 
 # For example running on 2018pre
-python njets_systs_comp.py --year 2018pre --fitdir $HOME/../../src/HiggsAnalysis/CombinedLimit/ --fittag Approval_StatErrPlusFullDev_12JetFix
+python njets_systs_comp.py --year 2018pre --fitdir $HOME/../../src/HiggsAnalysis/CombinedLimit/ --fittag Approval_StatErrPlusFullDev_12JetFix --outputdir MYDIR
 ```
