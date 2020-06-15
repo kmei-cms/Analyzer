@@ -42,7 +42,7 @@ public:
         std::vector<std::string> weightVec;
         if( runtype == "MC" )
         {
-            myVarSuffixPairs = {{"",""}, {"JECup","_JECUp"}, {"JECdown","_JECDown"}, {"JERup","_JERUp"}, {"JERdown","_JERDown"}, {"pTScaled","_pTScaled"}};
+            myVarSuffixPairs = {{"",""}, {"JECup","_JECUp"}, {"JECdown","_JECDown"}, {"JERup","_JERUp"}, {"JERdown","_JERDown"}, {"mpTScaled","_mpTScaled"}};
             weightVec = {"Lumi", "Weight"};
 
             //--------------------------------------------------------------------------------
@@ -81,6 +81,8 @@ public:
        
             my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_prfUp",   6,  0.0, 6.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight", "puWeightCorr", "prefiringScaleFactorUp"}));
             my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_prfDown", 6,  0.0, 6.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight", "puWeightCorr", "prefiringScaleFactorDown"}));
+
+            my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_noHT", 6,  0.0, 6.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good"}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "puWeightCorr", "prefiringScaleFactor"}));
        
             for(int i = 0; i < 4; i++)
             {
@@ -118,6 +120,8 @@ public:
 
                 my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+"_prfUp",   6,  0.0, 6.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good", "deepESM_bin"+index}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight", "puWeightCorr", "prefiringScaleFactorUp"}));
                 my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+"_prfDown", 6,  0.0, 6.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good", "deepESM_bin"+index}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "htDerivedweight", "puWeightCorr", "prefiringScaleFactorDown"}));
+
+                my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+"_noHT", 6,  0.0, 6.0, "NGoodJets_pt30_inclusive_shift", {"passBaseline1l_Good", "deepESM_bin"+index}, {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central", "totGoodElectronSF", "totGoodMuonSF", "puWeightCorr", "prefiringScaleFactor"}));
             }            
         }
         else
@@ -134,32 +138,29 @@ public:
             const std::string& s = pair.first;
             const std::string& n = pair.second;
 
-            std::vector<std::string> weightVecAll;
+            std::vector<std::string> weightVecNoHT, weightVecAll;
             if( runtype == "MC" )
             {
-                if(s == "pTScaled")
-                {
-                    weightVecAll = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s, "puWeightCorr"+s, "prefiringScaleFactor"+s};
-                }
-                else
-                {
-                    weightVecAll = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s, "htDerivedweight"+s, "puWeightCorr"+s, "prefiringScaleFactor"+s};
-                }
+                weightVecNoHT = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s,                      "puWeightCorr"+s, "prefiringScaleFactor"+s};
+                weightVecAll  = {"Lumi", "Weight", "bTagSF_EventWeightSimple_Central"+s, "totGoodElectronSF"+s, "totGoodMuonSF"+s, "htDerivedweight"+s, "puWeightCorr"+s, "prefiringScaleFactor"+s};
             }
             else
             {
-                weightVecAll = {};
+                weightVecNoHT = {};
+                weightVecAll = {};                
             }
 
             //-----------------------------------------------------------------
             // NJet plots
             //-----------------------------------------------------------------       
             my_Histos.emplace_back(new Histo1D("h_njetsShifted"+n,  6, 0.0,  6.0, "NGoodJets_pt30_inclusive_shift"+s, {}, weightVec));
-            my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l"+n, 6, 0.0,  6.0, "NGoodJets_pt30_inclusive_shift"+s, {"passBaseline1l_Good"+s}, weightVecAll));
+            my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l"+n+"noHT", 6, 0.0,  6.0, "NGoodJets_pt30_inclusive_shift"+s, {"passBaseline1l_Good"+s}, weightVecNoHT));
+            my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l"+n,        6, 0.0,  6.0, "NGoodJets_pt30_inclusive_shift"+s, {"passBaseline1l_Good"+s}, weightVecAll));
             for(int i = 0; i < 4; i++)
             {
                 std::string index = std::to_string(i+1);
-                my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+n, 6, 0.0,  6.0, "NGoodJets_pt30_inclusive_shift"+s, {"passBaseline1l_Good"+s,"deepESM_bin"+index+s}, weightVecAll));
+                my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+n+"noHT", 6, 0.0, 6.0, "NGoodJets_pt30_inclusive_shift"+s, {"passBaseline1l_Good"+s,"deepESM_bin"+index+s}, weightVecNoHT));
+                my_Histos.emplace_back(new Histo1D("h_njetsShifted_pt30_1l_D"+index+n,        6, 0.0, 6.0, "NGoodJets_pt30_inclusive_shift"+s, {"passBaseline1l_Good"+s,"deepESM_bin"+index+s}, weightVecAll));
             }
         }
     }//END of init histos

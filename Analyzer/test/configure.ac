@@ -143,6 +143,49 @@ else
    fi
 fi
 
+dnl check for fastjet 
+if test -z ${FASTJETDIR+x}; then
+   if test ${scramfound} == yes; then
+      FASTJETDIR=$(scram tool tag fastjet FASTJET_BASE)
+   else
+      FASTJETDIR=/usr/local/
+   fi
+fi
+
+FASTJETINCLUDE=$FASTJETDIR/include/fastjet/version.hh
+AC_CHECK_FILE($FASTJETINCLUDE, [], [])
+
+FASTJETLIB=$FASTJETDIR/lib/libfastjet.${LIBSUFFIX}
+AC_CHECK_FILE($FASTJETLIB, [], [])
+
+FASTJETTOOLSLIB=$FASTJETDIR/lib/libfastjettools.${LIBSUFFIX}
+AC_CHECK_FILE($FASTJETTOOLSLIB, [], [])
+
+FASTJETPLUGINSLIB=$FASTJETDIR/lib/libfastjetplugins.${LIBSUFFIX}
+AC_CHECK_FILE($FASTJETPLUGINSLIB, [], [])
+
+FASTJETSISCONELIB=$FASTJETDIR/lib/libsiscone.${LIBSUFFIX}
+AC_CHECK_FILE($FASTJETSISCONELIB, [], [])
+
+FASTJETSICONESPHERELIB=$FASTJETDIR/lib/libsiscone_spherical.${LIBSUFFIX}
+AC_CHECK_FILE($FASTJETSICONESPHERELIB, [], [])
+
+FASTJETINCLUDE=ac_cv_file_$(echo ${FASTJETINCLUDE} | sed -e 's/[\/]/_/g' -e 's/\./_/')
+FASTJETLIB=ac_cv_file_$(echo ${FASTJETLIB} | sed -e 's/[\/]/_/g' -e 's/\./_/')
+FASTJETTOOLSLIB=ac_cv_file_$(echo ${FASTJETTOOLSLIB} | sed -e 's/[\/]/_/g' -e 's/\./_/')
+FASTJETPLUGINSLIB=ac_cv_file_$(echo ${FASTJETPLUGINSLIB} | sed -e 's/[\/]/_/g' -e 's/\./_/')
+FASTJETSISCONELIB=ac_cv_file_$(echo ${FASTJETSISCONELIB} | sed -e 's/[\/]/_/g' -e 's/\./_/')
+FASTJETSISCONESPHERELIB=ac_cv_file_$(echo ${FASTJETSISCONESPHERELIB} | sed -e 's/[\/]/_/g' -e 's/\./_/')
+
+dnl configure fastjet if it is found
+if test "${!FASTJETINCLUDE}" = "no" || test "${!FASTJETTOOLSLIB}" = "no" || test "${!FASTJETLIB}" = "no" || test "${!FASTJETPLUGINSLIB}" = "no" || test "${!FASTJETSISCONELIB}" = "no" || test "${!FASTJETSISCONESPHERELIB}" = "no"; then
+   AC_WARN([Optional dependency missing: Fastjet includes or libraries are not found. Specify location with "./configure FASTJETDIR=/Path" if required.])
+   AC_SUBST(FASTJETDIR, "")
+else
+   AC_SUBST(FASTJETDIR, $FASTJETDIR)
+   AC_SUBST(FASTJETLIBS, "-lfastjet -lfastjettools -lfastjetplugins -lsiscone -lsiscone_spherical")
+fi
+
 dnl check for xgboost
 if test -z ${XGBOOSTDIR+x}; then
    XGBOOSTDIR=/usr/local/
@@ -174,7 +217,7 @@ if test -z ${TOPTAGGERDIR+x}; then
 fi
 
 AC_CHECK_HEADER($TOPTAGGERDIR/TopTagger/interface/TopTagger.h,        [], [AC_ERROR([TopTagger includes are not found!!!!!!!!!!])])
-AC_CHECK_HEADERS($TOPTAGGERDIR/CfgParser/include/TTException.h,     [], [AC_ERROR([CfgParser includes are not found!!!!!!!!!!])])
+AC_CHECK_HEADERS($TOPTAGGERDIR/CfgParser/interface/TTException.h,     [], [AC_ERROR([CfgParser includes are not found!!!!!!!!!!])])
 
 AC_SUBST(TAGGERDIR, $TOPTAGGERDIR)
 

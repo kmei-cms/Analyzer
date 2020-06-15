@@ -1,7 +1,8 @@
 # Variables set by configure 
 TENSORFLOW_DIR = @TENSORFLOWDIR@
 TENSORFLOWLIBS = @TENSORFLOWLIBS@
-
+FASTJET_DIR = @FASTJETDIR@
+FASTJETLIBS = @FASTJETLIBS@
 CXX      = @CXX@
 LD       = @CXX@
 CXXFLAGS = @CXXFLAGS@
@@ -15,7 +16,7 @@ SFWDIR  = $(CMSSW_BASE)/src/Framework/Framework/src
 IADIR   = $(CMSSW_BASE)/src/Analyzer/Analyzer/include
 SADIR   = $(CMSSW_BASE)/src/Analyzer/Analyzer/src
 SSDIR   = $(CMSSW_BASE)/src/SusyAnaTools/Tools
-ITTDir  = $(CMSSW_BASE)/CfgParser/include
+ITTDir  = $(CMSSW_BASE)/CfgParser/interface
 STTDir  = $(CMSSW_BASE)/CfgParser/src
 TDIR    = $(CMSSW_BASE)/src
 TTDIR   = $(CMSSW_BASE)/src/TopTagger/
@@ -45,6 +46,12 @@ ifdef TENSORFLOW_DIR
 	INCLUDESDIRS += -I$(TENSORFLOW_DIR)/include
 	CXXFLAGS     += -DDOTENSORFLOW
 	LIBS         += -L$(TENSORFLOW_DIR)/lib $(TENSORFLOWLIBS)
+endif
+
+# Fastjet includes and libraries
+ifdef FASTJET_DIR
+	INCLUDESDIRS += -I$(FASTJET_DIR)/include
+	LIBS         += -L$(FASTJET_DIR)/lib $(FASTJETLIBS)
 endif
 
 # Include our code
@@ -78,70 +85,13 @@ $(ODIR)/samplesPyWrap.o: $(SSDIR)/samples.cc $(SSDIR)/samples.h
 $(ODIR)/samplesModulePyWrap.o: $(SSDIR)/samplesModule.cc
 	$(CXX) --std=c++11 -c -fPIC -o $@ $<
 
-# Framework Repo
-$(ODIR)/%.o : $(SFWDIR)/%.C
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-$(ODIR)/%.o : $(SFWDIR)/%.c
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-$(ODIR)/%.o : $(SFWDIR)/%.cc
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-$(ODIR)/%.o : $(SFWDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-# Analyzer Repo
-$(ODIR)/%.o : $(SADIR)/%.C
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-$(ODIR)/%.o : $(SADIR)/%.c
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-$(ODIR)/%.o : $(SADIR)/%.cc
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-$(ODIR)/%.o : $(SADIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-# SusyAnaTools Repo
-$(ODIR)/%.o : $(SSDIR)/%.C
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-$(ODIR)/%.o : $(SSDIR)/%.c
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-$(ODIR)/%.o : $(SSDIR)/%.cc
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-$(ODIR)/%.o : $(SSDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-# TopTagger Repo
-$(ODIR)/%.o : $(STTDir)/%.C
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-$(ODIR)/%.o : $(STTDir)/%.c
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-$(ODIR)/%.o : $(STTDir)/%.cc
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-$(ODIR)/%.o : $(STTDir)/%.cpp
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-# Working Directory 
-$(ODIR)/%.o : $(WDIR)/%.C
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-$(ODIR)/%.o : $(WDIR)/%.c
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-$(ODIR)/%.o : $(WDIR)/%.cc
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
-
-$(ODIR)/%.o : $(WDIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $(CXXDEPFLAGS)  $(INCLUDESDIRS) -o $@ -c $<
+SRC_EXT = cpp c cc C
+SRC_DIR = $(SFWDIR) $(SADIR) $(SSDIR) $(STTDir) $(WDIR) 
+define compile_rule
+$$(ODIR)/%.o : $1/%.$2
+	$$(CXX) $$(CXXFLAGS) $$(CXXDEPFLAGS)  $$(INCLUDESDIRS) -o $$@ -c $$<
+endef    
+$(foreach DIR,$(SRC_DIR),$(foreach EXT,$(SRC_EXT),$(eval $(call compile_rule,$(DIR),$(EXT)))))
 
 # Make executables
 MyAnalysis: $(ODIR)/MyAnalysis.o $(HELPERS) $(ANALYZERS)
