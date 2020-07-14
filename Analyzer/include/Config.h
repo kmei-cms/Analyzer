@@ -22,6 +22,7 @@
 #include "Framework/Framework/include/MakeMT2Hemispheres.h"
 #include "Framework/Framework/include/TrainingNTupleVars.h"
 #include "Framework/Framework/include/StopJets.h"
+#include "Framework/Framework/include/FatJetCombine.h"
 
 class Config
 {
@@ -57,6 +58,7 @@ private:
             else if(module=="Baseline")                     tr.emplaceModule<Baseline>();
             else if(module=="StopGenMatch")                 tr.emplaceModule<StopGenMatch>();
             else if(module=="MegaJetCombine")               tr.emplaceModule<MegaJetCombine>();
+            else if(module=="FatJetCombine")                tr.emplaceModule<FatJetCombine>();
             else if(module=="TrainingNTupleVars")          tr.emplaceModule<TrainingNTupleVars>();
             else if(module=="MakeMT2Hemispheres_All")       tr.emplaceModule<MakeMT2Hemispheres>("Jets",     "AllJets",       "NJets",          "_All");
             else if(module=="MakeMT2Hemispheres_1l")        tr.emplaceModule<MakeMT2Hemispheres>("Jets",     "GoodJets_pt30", "NGoodJets_pt30", "_1l");
@@ -255,11 +257,12 @@ public:
                 "Baseline",
 //                "DeepEventShape",
                 "StopGenMatch",
-                "MegaJetCombine",
+//                "MegaJetCombine",
                 "BTagCorrector",
                 "ScaleFactors",
 //                "MakeMT2Hemispheres_2l"
-                "TrainingNTupleVars"
+                "TrainingNTupleVars",
+                "FatJetCombine"
             };
             registerModules(tr, std::move(modulesList));
         }
