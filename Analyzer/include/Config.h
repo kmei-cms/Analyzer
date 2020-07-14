@@ -19,8 +19,8 @@
 #include "Framework/Framework/include/PartialUnBlinding.h"
 #include "Framework/Framework/include/StopGenMatch.h"
 #include "Framework/Framework/include/MegaJetCombine.h"
-#include "Framework/Framework/include/MakeMT2Hemispheres.h"
 #include "Framework/Framework/include/TrainingNTupleVars.h"
+#include "Framework/Framework/include/MakeStopHemispheres.h"
 #include "Framework/Framework/include/StopJets.h"
 #include "Framework/Framework/include/FatJetCombine.h"
 
@@ -60,10 +60,10 @@ private:
             else if(module=="MegaJetCombine")               tr.emplaceModule<MegaJetCombine>();
             else if(module=="FatJetCombine")                tr.emplaceModule<FatJetCombine>();
             else if(module=="TrainingNTupleVars")          tr.emplaceModule<TrainingNTupleVars>();
-            else if(module=="MakeMT2Hemispheres_All")       tr.emplaceModule<MakeMT2Hemispheres>("Jets",     "AllJets",       "NJets",          "_All");
-            else if(module=="MakeMT2Hemispheres_1l")        tr.emplaceModule<MakeMT2Hemispheres>("Jets",     "GoodJets_pt30", "NGoodJets_pt30", "_1l");
-            else if(module=="MakeMT2Hemispheres_0l")        tr.emplaceModule<MakeMT2Hemispheres>("Jets",     "GoodJets_pt45", "NGoodJets_pt45", "_0l");
-            else if(module=="MakeMT2Hemispheres_TaggedTop") tr.emplaceModule<MakeMT2Hemispheres>("StopJets", "GoodStopJets",  "NGoodStopJets",  "_TaggedTop");
+            else if(module=="MakeStopHemispheres_All")      tr.emplaceModule<MakeStopHemispheres>("Jets",     "AllJets",       "NJets",          "_All");
+            else if(module=="MakeStopHemispheres_1l")       tr.emplaceModule<MakeStopHemispheres>("Jets",     "GoodJets_pt30", "NGoodJets_pt30", "_1l");
+            else if(module=="MakeStopHemispheres_0l")       tr.emplaceModule<MakeStopHemispheres>("Jets",     "GoodJets_pt45", "NGoodJets_pt45", "_0l");
+            else if(module=="MakeStopHemispheres_TaggedTop") tr.emplaceModule<MakeStopHemispheres>("StopJets", "GoodStopJets",  "NGoodStopJets",  "_TaggedTop");
             else if(module=="StopJets")                     tr.emplaceModule<StopJets>();
             else if(module=="DeepEventShape")               tr.emplaceModule<DeepEventShape>(DeepESMCfg, ModelFile);
             else if(module=="DeepEventShape_NonIsoMuon")    tr.emplaceModule<DeepEventShape>(DeepESMCfg_NonIsoMuon, ModelFile);
@@ -194,11 +194,11 @@ public:
             const std::vector<std::string> modulesList = {
                 "PartialUnBlinding",
                 "PrepNTupleVars",
-                "RunTopTagger",
                 "Muon",
                 "Electron",
                 "Photon",
                 "Jet",
+                "RunTopTagger",
                 "BJet",
                 "CommonVariables",
                 "MakeMVAVariables",
@@ -260,33 +260,32 @@ public:
 //                "MegaJetCombine",
                 "BTagCorrector",
                 "ScaleFactors",
-//                "MakeMT2Hemispheres_2l"
                 "TrainingNTupleVars",
                 "FatJetCombine"
             };
             registerModules(tr, std::move(modulesList));
         }
-        else if(analyzer=="StealthHemispheres" || analyzer=="Semra_Analyzer")
+        else if(analyzer=="StealthHemispheres" || analyzer=="Semra_Analyzer" || analyzer=="AnalyzeTopTagger")
         {
             const std::vector<std::string> modulesList = {
                 "PartialUnBlinding",
                 "PrepNTupleVars",
-                "RunTopTagger",
                 "Muon",
                 "Electron",
                 "Photon",
                 "Jet",
                 "BJet",
+                "RunTopTagger",
                 "CommonVariables",
                 "MakeMVAVariables",
                 "Baseline",
                 "DeepEventShape",
                 "StopJets",
-                "MakeMT2Hemispheres_All",
-                "MakeMT2Hemispheres_1l",
-                "MakeMT2Hemispheres_0l",
-                "MakeMT2Hemispheres_TaggedTop",
-                "StopGenMatch",
+                "MakeStopHemispheres_All",
+                //"MakeStopHemispheres_1l",
+                "MakeStopHemispheres_0l",
+                "MakeStopHemispheres_TaggedTop",
+                //"StopGenMatch",
                 "BTagCorrector",
                 "ScaleFactors",
             };
@@ -334,11 +333,11 @@ public:
             const std::vector<std::string> modulesList = {
                 "PartialUnBlinding",
                 "PrepNTupleVars",
-                "RunTopTagger",
                 "Muon",
                 "Electron",
                 "Photon",
                 "Jet",
+                "RunTopTagger",
                 "BJet",
                 "CommonVariables",
                 "MakeMVAVariables",
