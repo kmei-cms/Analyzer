@@ -137,7 +137,20 @@ def main():
                         count = count + 1
                 for startFileNum in xrange(0, count, nFilesPerJob):
                     numberOfJobs+=1
-                    fileParts.append("transfer_output_remaps = \"MyAnalysis_%s_%s.root = %s/output-files/%s/MyAnalysis_%s_%s.root\"\n" % (n, startFileNum, options.outPath, ds, n, startFileNum))
+                    outputDir = "%s/output-files/%s" % (options.outPath, ds)
+                    outputFiles = [
+                        "MyAnalysis_%s_%s.root" % (n, startFileNum),
+                        "MyAnalysis_%s_%s_Train.root" % (n, startFileNum),
+                        "MyAnalysis_%s_%s_Test.root" % (n, startFileNum),
+                        "MyAnalysis_%s_%s_Val.root" % (n, startFileNum),
+                    ]
+                    transfer = "transfer_output_remaps = \""
+                    for f_ in outputFiles:
+                        transfer += "%s = %s/%s" % (f_, outputDir, f_)
+                        if f_ != outputFiles[-1]:
+                            transfer += "; "
+                    transfer += "\"\n"                    
+                    fileParts.append(transfer)
                     fileParts.append("Arguments = %s %i %i %s %s %s\n"%(n, nFilesPerJob, startFileNum, s, options.analyze, environ["CMSSW_VERSION"]))
                     fileParts.append("Output = %s/log-files/MyAnalysis_%s_%i.stdout\n"%(options.outPath, n, startFileNum))
                     fileParts.append("Error = %s/log-files/MyAnalysis_%s_%i.stderr\n"%(options.outPath, n, startFileNum))
