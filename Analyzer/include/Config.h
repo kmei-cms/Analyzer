@@ -54,7 +54,7 @@ private:
             else if(module=="Jet")                          tr.emplaceModule<Jet>();
             else if(module=="BJet")                         tr.emplaceModule<BJet>();
             else if(module=="CommonVariables")              tr.emplaceModule<CommonVariables>();
-            else if(module=="MakeMVAVariables")             tr.emplaceModule<MakeMVAVariables>();
+            else if(module=="MakeMVAVariables")             tr.emplaceModule<MakeMVAVariables>(false);
             else if(module=="MakeMVAVariables_NonIsoMuon")  tr.emplaceModule<MakeMVAVariables>(false, "", "NonIsoMuonJets_pt30");
             else if(module=="Baseline")                     tr.emplaceModule<Baseline>();
             else if(module=="StopGenMatch")                 tr.emplaceModule<StopGenMatch>();
@@ -353,6 +353,33 @@ public:
                 "DeepEventShape_NonIsoMuon",
                 "BTagCorrector",
                 "ScaleFactors"
+            };
+            registerModules(tr, std::move(modulesList));
+        }
+        else if(analyzer=="MakeNNVariables")
+        {
+            const std::vector<std::string> modulesList = {
+                "PartialUnBlinding",
+                "PrepNTupleVars",
+                "Muon",
+                "Electron",
+                "Photon",
+                "Jet",
+                "BJet",
+                "RunTopTagger",
+                "CommonVariables",
+                "MakeMVAVariables",
+                "Baseline",
+                "DeepEventShape",
+                "StopJets",
+                //"MakeStopHemispheres_All",
+                "MakeStopHemispheres_1l",
+                //"MakeStopHemispheres_0l",
+                //"MakeStopHemispheres_TaggedTop",
+                "BTagCorrector",
+                "ScaleFactors",
+                "TrainingNTupleVars",
+                "FatJetCombine"
             };
             registerModules(tr, std::move(modulesList));
         }
