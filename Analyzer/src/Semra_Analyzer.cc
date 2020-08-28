@@ -724,16 +724,20 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
             // -- ISR gen matching
             // ----------------------
             my_histos["h_nGenISR_"+cutVar.first]->Fill( nGenISR, weight );
+            my_histos["h_nGenISR_"+cutVar.first]->GetXaxis()->SetTitle("nGenISR");
             my_histos["h_nRecoISR_"+cutVar.first]->Fill( nRecoISR, weight );
+            my_histos["h_nRecoISR_"+cutVar.first]->GetXaxis()->SetTitle("nRecoISR");
 
             for (double dr = 0.0; dr < GM_ISRmatching_DR.size(); dr++)
             {
                 my_histos["h_GM_ISRmatching_DR_"+cutVar.first]->Fill( GM_ISRmatching_DR.at(dr), weight );
+                my_histos["h_GM_ISRmatching_DR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching #DeltaR");
             }
 
             for (double pt = 0.0; pt < GM_ISRmatching_Pt.size(); pt++)
             {
                 my_histos["h_GM_ISRmatching_Pt_"+cutVar.first]->Fill( GM_ISRmatching_Pt.at(pt), weight );
+                my_histos["h_GM_ISRmatching_Pt_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching Pt Ratio");
             }
 
             // ISR and NON ISR Jet variables 
@@ -744,21 +748,31 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                 if (ISRmatched[j])
                 {
                     my_histos["h_ISRJets_Mass_"+cutVar.first]->Fill( Jets[j].M(), weight );
+                    my_histos["h_ISRJets_Mass_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Mass");
                     my_histos["h_ISRJets_Pt_"+cutVar.first]->Fill( Jets[j].Pt(), weight );
+                    my_histos["h_ISRJets_Pt_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Pt");
                     my_histos["h_ISRJets_Phi_"+cutVar.first]->Fill( Jets[j].Phi(), weight );
+                    my_histos["h_ISRJets_Phi_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets #phi");
                     my_histos["h_ISRJets_Eta_"+cutVar.first]->Fill( Jets[j].Eta(), weight );
+                    my_histos["h_ISRJets_Eta_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets #eta");
                     nISRJets++;
                 } else
                 {
                     my_histos["h_NonISRJets_Mass_"+cutVar.first]->Fill( Jets[j].M(), weight );
+                    my_histos["h_NonISRJets_Mass_"+cutVar.first]->GetXaxis()->SetTitle("NonISRJets Mass");
                     my_histos["h_NonISRJets_Pt_"+cutVar.first]->Fill( Jets[j].Pt(), weight );
+                    my_histos["h_NonISRJets_Pt_"+cutVar.first]->GetXaxis()->SetTitle("NonISRJets Pt");
                     my_histos["h_NonISRJets_Phi_"+cutVar.first]->Fill( Jets[j].Phi(), weight );
+                    my_histos["h_NonISRJets_Phi_"+cutVar.first]->GetXaxis()->SetTitle("NonISRJets #phi");
                     my_histos["h_NonISRJets_Eta_"+cutVar.first]->Fill( Jets[j].Eta(), weight );
+                    my_histos["h_NonISRJets_Eta_"+cutVar.first]->GetXaxis()->SetTitle("NonISRJets #eta");
                     nNonISRJets++;
                 }
             }
             my_histos["h_nISRJets_"+cutVar.first]->Fill( nISRJets, weight );
+            my_histos["h_nISRJets_"+cutVar.first]->GetXaxis()->SetTitle("nISRJets");
             my_histos["h_nNonISRJets_"+cutVar.first]->Fill( nNonISRJets, weight );
+            my_histos["h_nNonISRJets_"+cutVar.first]->GetXaxis()->SetTitle("nNonISRJets");
 
         }
     }
