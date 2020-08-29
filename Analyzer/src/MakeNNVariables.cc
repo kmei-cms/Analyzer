@@ -38,8 +38,6 @@ void MakeNNVariables::Loop(NTupleReader& tr, double, int maxevents, bool)
         const auto& isSignal            = tr.getVar<bool>("isSignal");
         const auto& passBaseline1l      = tr.getVar<bool>("passBaseline1l_Good");
         const auto& filetag             = tr.getVar<std::string>("filetag");
-        const auto& stop1_PtRank_1l     = tr.getVar<TLorentzVector>("stop1_PtRank_1l");
-        const auto& stop2_PtRank_1l     = tr.getVar<TLorentzVector>("stop2_PtRank_1l");
 
         auto& mass = tr.createDerivedVar<double>("mass", 0.0);
         if(!isSignal)
@@ -53,9 +51,6 @@ void MakeNNVariables::Loop(NTupleReader& tr, double, int maxevents, bool)
                 mass = (filetag.find(std::to_string(m)) != std::string::npos) ? m : mass;
             }
         }
-
-        tr.createDerivedVar<double>("stop1_PtRank_1l_mass", stop1_PtRank_1l.M());
-        tr.createDerivedVar<double>("stop2_PtRank_1l_mass", stop2_PtRank_1l.M());
        
         //------------------------------------
         //-- Print Event Number
@@ -71,7 +66,7 @@ void MakeNNVariables::Loop(NTupleReader& tr, double, int maxevents, bool)
             "isSignal",
             "deepESM_val",
             //"filetag",
-            "NGoodJets_pt30",
+            "NGoodJets_pt30_double",
             "NGoodBJets_pt30",
             "Mbl",
             "HT_trigger_pt30",
