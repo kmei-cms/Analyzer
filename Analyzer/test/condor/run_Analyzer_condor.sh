@@ -17,7 +17,7 @@ base_dir=`pwd`
 printf "\n\n base dir is $base_dir\n\n"
 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
-export SCRAM_ARCH=slc6_amd64_gcc630
+export SCRAM_ARCH=slc7_amd64_gcc820
 
 printf "\n\n ls output\n"
 ls -l
