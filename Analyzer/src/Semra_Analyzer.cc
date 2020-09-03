@@ -185,8 +185,22 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
         // -------------------
         my_histos.emplace( "h_nGenISR_"+cutVar.first, std::make_shared<TH1D> ( ("h_nGenISR_"+cutVar.first).c_str(), ("h_nGenISR_"+cutVar.first).c_str(), 20, 0, 20 ) );
         my_histos.emplace( "h_nRecoISR_"+cutVar.first, std::make_shared<TH1D> ( ("h_nRecoISR_"+cutVar.first).c_str(), ("h_nRecoISR_"+cutVar.first).c_str(), 20, 0, 20 ) );
-        my_histos.emplace( "h_GM_ISRmatching_DR_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_DR_"+cutVar.first).c_str(), ("h_GM_ISRmatching_DR_"+cutVar.first).c_str(), 1000, 0, 0.1 ) );
-        my_histos.emplace( "h_GM_ISRmatching_Pt_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_Pt_"+cutVar.first).c_str(), ("h_GM_ISRmatching_Pt_"+cutVar.first).c_str(), 1000, 0, 0.5 ) );
+
+        my_histos.emplace( "h_GM_ISRmatching_allDR_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_allDR_"+cutVar.first).c_str(), ("h_GM_ISRmatching_allDR_"+cutVar.first).c_str(), 1000, 0, 10 ) );
+        my_histos.emplace( "h_GM_ISRmatching_bestDR_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_bestDR_"+cutVar.first).c_str(), ("h_GM_ISRmatching_bestDR_"+cutVar.first).c_str(), 1000, 0, 10 ) );
+        my_histos.emplace( "h_GM_ISRmatching_CutOnDR_DR_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_CutOnDR_DR_"+cutVar.first).c_str(), ("h_GM_ISRmatching_CutOnDR_DR_"+cutVar.first).c_str(), 1000, 0, 10 ) );
+        my_histos.emplace( "h_GM_ISRmatching_CutOnPtRatio_DR_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_CutOnPtRatio_DR_"+cutVar.first).c_str(), ("h_GM_ISRmatching_CutOnPtRatio_DR_"+cutVar.first).c_str(), 1000, 0, 10 ) );        
+        my_histos.emplace( "h_GM_ISRmatching_allPtRatio_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_allPtRatio_"+cutVar.first).c_str(), ("h_GM_ISRmatching_allPtRatio_"+cutVar.first).c_str(), 1000, 0, 10 ) );
+        my_histos.emplace( "h_GM_ISRmatching_bestPtRatio_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_bestPtRatio_"+cutVar.first).c_str(), ("h_GM_ISRmatching_bestPtRatio_"+cutVar.first).c_str(), 1000, 0, 10 ) );
+        my_histos.emplace( "h_GM_ISRmatching_CutOnDR_PtRatio_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_CutOnDR_PtRatio_"+cutVar.first).c_str(), ("h_GM_ISRmatching_CutOnDR_PtRatio_"+cutVar.first).c_str(), 1000, 0, 10 ) );
+        my_histos.emplace( "h_GM_ISRmatching_CutOnPtRatio_PtRatio_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_CutOnPtRatio_PtRatio_"+cutVar.first).c_str(), ("h_GM_ISRmatching_CutOnPtRatio_PtRatio_"+cutVar.first).c_str(), 1000, 0, 10 ) ); 
+
+        // 2d plots 
+        my_2d_histos.emplace( "h_GM_all_PtRvsDR_"+cutVar.first, std::make_shared<TH2D>( ("h_GM_all_PtRvsDR_"+cutVar.first).c_str(), ("h_GM_all_PtRvsDR_"+cutVar.first).c_str(), 1000, 0, 10, 1000, 0, 10) );
+        my_2d_histos.emplace( "h_GM_best_PtRvsDR_"+cutVar.first, std::make_shared<TH2D>( ("h_GM_best_PtRvsDR_"+cutVar.first).c_str(), ("h_GM_best_PtRvsDR_"+cutVar.first).c_str(), 1000, 0, 10, 1000, 0, 10) );
+        my_2d_histos.emplace( "h_GM_CutOnDR_PtRvsDR_"+cutVar.first, std::make_shared<TH2D>( ("h_GM_CutOnDR_PtRvsDR_"+cutVar.first).c_str(), ("h_GM_CutOnDR_PtRvsDR_"+cutVar.first).c_str(), 1000, 0, 10, 1000, 0, 10) );
+        my_2d_histos.emplace( "h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first, std::make_shared<TH2D>( ("h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first).c_str(), ("h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first).c_str(), 1000, 0, 10, 1000, 0, 10) );
+
         // ISR Jets
         my_histos.emplace( "h_nISRJets_"+cutVar.first, std::make_shared<TH1D> ( ("h_nISRJets_"+cutVar.first).c_str(), ("h_nISRJets_"+cutVar.first).c_str(), 20, 0, 20 ) );
         my_histos.emplace( "h_ISRJets_Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_ISRJets_Mass_"+cutVar.first).c_str(), ("h_ISRJets_Mass_"+cutVar.first).c_str(), 500, 0, 1500) );
@@ -341,12 +355,18 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
         // ----------------------
         // -- ISR gen matching
         // ----------------------
-        const auto& nGenISR           = tr.getVar<int>("nGenISR");
-        const auto& nRecoISR          = tr.getVar<int>("nRecoISR");
-        auto&       nISRJets          = tr.getVar<int>("nISRJets");
-        const auto& ISRmatched        = tr.getVec<bool>("ISRmatched");
-        const auto& GM_ISRmatching_DR = tr.getVec<double>("GM_ISRmatching_DR");
-        const auto& GM_ISRmatching_Pt = tr.getVec<double>("GM_ISRmatching_Pt");
+        const auto& nGenISR                                 = tr.getVar<int>("nGenISR");
+        const auto& nRecoISR                                = tr.getVar<int>("nRecoISR");
+        auto&       nISRJets                                = tr.getVar<int>("nISRJets");
+        const auto& ISRmatched                              = tr.getVec<bool>("ISRmatched");
+        const auto& GM_ISRmatching_allDR                    = tr.getVec<double>("GM_ISRmatching_allDR");
+        const auto& GM_ISRmatching_bestDR                   = tr.getVec<double>("GM_ISRmatching_bestDR");
+        const auto& GM_ISRmatching_justCutOnDR_DR           = tr.getVec<double>("GM_ISRmatching_justCutOnDR_DR");
+        const auto& GM_ISRmatching_justCutOnPtRatio_DR      = tr.getVec<double>("GM_ISRmatching_justCutOnPtRatio_DR");
+        const auto& GM_ISRmatching_allPtRatio               = tr.getVec<double>("GM_ISRmatching_allPtRatio");
+        const auto& GM_ISRmatching_bestPtRatio              = tr.getVec<double>("GM_ISRmatching_bestPtRatio");
+        const auto& GM_ISRmatching_justCutOnDR_PtRatio      = tr.getVec<double>("GM_ISRmatching_justCutOnDR_PtRatio");
+        const auto& GM_ISRmatching_justCutOnPtRatio_PtRatio = tr.getVec<double>("GM_ISRmatching_justCutOnPtRatio_PtRatio");
 
         // -------------------
         // -- Define weight
@@ -728,19 +748,83 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
             my_histos["h_nRecoISR_"+cutVar.first]->Fill( nRecoISR, weight );
             my_histos["h_nRecoISR_"+cutVar.first]->GetXaxis()->SetTitle("nRecoISR");
 
-            for (double dr = 0.0; dr < GM_ISRmatching_DR.size(); dr++)
+            // --------------------
+            // all possible matches
+            // --------------------
+            for (double dr = 0.0; dr < GM_ISRmatching_allDR.size(); dr++)
             {
-                my_histos["h_GM_ISRmatching_DR_"+cutVar.first]->Fill( GM_ISRmatching_DR.at(dr), weight );
-                my_histos["h_GM_ISRmatching_DR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching #DeltaR");
+                my_histos["h_GM_ISRmatching_allDR_"+cutVar.first]->Fill( GM_ISRmatching_allDR.at(dr), weight );
+                my_histos["h_GM_ISRmatching_allDR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching all #DeltaR");
+                my_2d_histos["h_GM_all_PtRvsDR_"+cutVar.first]->Fill(GM_ISRmatching_allPtRatio.at(dr), GM_ISRmatching_allDR.at(dr), weight);
+                my_2d_histos["h_GM_all_PtRvsDR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching all (1 - Pt^{Gen}/Pt^{Reco})");
+                my_2d_histos["h_GM_all_PtRvsDR_"+cutVar.first]->GetYaxis()->SetTitle("ISRmatching all #DeltaR");
             }
 
-            for (double pt = 0.0; pt < GM_ISRmatching_Pt.size(); pt++)
+            for (double pt = 0.0; pt < GM_ISRmatching_allPtRatio.size(); pt++)
             {
-                my_histos["h_GM_ISRmatching_Pt_"+cutVar.first]->Fill( GM_ISRmatching_Pt.at(pt), weight );
-                my_histos["h_GM_ISRmatching_Pt_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching Pt Ratio");
+                my_histos["h_GM_ISRmatching_allPtRatio_"+cutVar.first]->Fill( GM_ISRmatching_allPtRatio.at(pt), weight );
+                my_histos["h_GM_ISRmatching_allPtRatio_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching all (1 - Pt^{Gen}/Pt^{Reco})");
             }
 
-            // ISR and NON ISR Jet variables 
+            // ------------
+            // best matches
+            // ------------
+            for (double dr = 0.0; dr < GM_ISRmatching_bestDR.size(); dr++)
+            {
+                my_histos["h_GM_ISRmatching_bestDR_"+cutVar.first]->Fill( GM_ISRmatching_bestDR.at(dr), weight );
+                my_histos["h_GM_ISRmatching_bestDR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching best #DeltaR");
+                my_2d_histos["h_GM_best_PtRvsDR_"+cutVar.first]->Fill(GM_ISRmatching_bestPtRatio.at(dr), GM_ISRmatching_bestDR.at(dr), weight);
+                my_2d_histos["h_GM_best_PtRvsDR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching best (1 - Pt^{Gen}/Pt^{Reco})");
+                my_2d_histos["h_GM_best_PtRvsDR_"+cutVar.first]->GetYaxis()->SetTitle("ISRmatching best #DeltaR");
+            }
+
+            for (double pt = 0.0; pt < GM_ISRmatching_bestPtRatio.size(); pt++)
+            {
+                my_histos["h_GM_ISRmatching_bestPtRatio_"+cutVar.first]->Fill( GM_ISRmatching_bestPtRatio.at(pt), weight );
+                my_histos["h_GM_ISRmatching_bestPtRatio_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching best (1 - Pt^{Gen}/Pt^{Reco})");
+            }
+
+            // ------------------------------
+            // matches with cutting on deltaR
+            // ------------------------------
+            for (double dr = 0.0; dr < GM_ISRmatching_justCutOnDR_DR.size(); dr++)
+            {
+                my_histos["h_GM_ISRmatching_CutOnDR_DR_"+cutVar.first]->Fill( GM_ISRmatching_justCutOnDR_DR.at(dr), weight );
+                my_histos["h_GM_ISRmatching_CutOnDR_DR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching CutOnDR #DeltaR")
+;
+                my_2d_histos["h_GM_best_PtRvsDR_"+cutVar.first]->Fill(GM_ISRmatching_justCutOnDR_PtRatio.at(dr), GM_ISRmatching_justCutOnDR_DR.at(dr), weight);
+                my_2d_histos["h_GM_CutOnDR_PtRvsDR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching CutOnDR (1 - Pt^{Gen}/Pt^{Reco})");
+                my_2d_histos["h_GM_CutOnDR_PtRvsDR_"+cutVar.first]->GetYaxis()->SetTitle("ISRmatching CutOnDR #DeltaR");   
+            }
+
+            for (double pt = 0.0; pt < GM_ISRmatching_justCutOnDR_PtRatio.size(); pt++)
+            {
+                my_histos["h_GM_ISRmatching_CutOnDR_PtRatio_"+cutVar.first]->Fill( GM_ISRmatching_justCutOnDR_PtRatio.at(pt), weight );
+                my_histos["h_GM_ISRmatching_CutOnDR_PtRatio_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching CutOnDR (1 - Pt^{Gen}/Pt^{Reco})");
+            }
+
+            // --------------------------------
+            // matches with cutting on pt ratio
+            // --------------------------------
+            for (double dr = 0.0; dr < GM_ISRmatching_justCutOnPtRatio_DR.size(); dr++)
+            {
+                my_histos["h_GM_ISRmatching_CutOnPtRatio_DR_"+cutVar.first]->Fill( GM_ISRmatching_justCutOnPtRatio_DR.at(dr), weight );
+                my_histos["h_GM_ISRmatching_CutOnPtRatio_DR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching CutOnPtRatio #DeltaR");
+                my_2d_histos["h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first]->Fill(GM_ISRmatching_justCutOnPtRatio_PtRatio.at(dr), GM_ISRmatching_justCutOnPtRatio_DR.at(dr), weight);
+                my_2d_histos["h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching CutOnPtRatio (1 - Pt^{Gen}/Pt^{Reco})");
+                my_2d_histos["h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first]->GetYaxis()->SetTitle("ISRmatching CutOnPtRatio #DeltaR");
+            }
+
+            for (double pt = 0.0; pt < GM_ISRmatching_justCutOnPtRatio_PtRatio.size(); pt++)
+            {
+                my_histos["h_GM_ISRmatching_CutOnPtRatio_PtRatio_"+cutVar.first]->Fill( GM_ISRmatching_justCutOnPtRatio_PtRatio.at(pt), weight );
+                my_histos["h_GM_ISRmatching_CutOnPtRatio_PtRatio_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching CutOnPtRatio (1 - Pt^{Gen}/Pt^{Reco})");
+            }            
+
+
+            // -----------------------------
+            // ISR and NON ISR Jet variables
+            // ----------------------------- 
             int nISRJets = 0, nNonISRJets = 0;
             for (unsigned int j = 0; j < Jets.size(); j++)
             {
