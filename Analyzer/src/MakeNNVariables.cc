@@ -38,6 +38,7 @@ void MakeNNVariables::Loop(NTupleReader& tr, double, int maxevents, bool)
         const auto& isSignal            = tr.getVar<bool>("isSignal");
         const auto& passBaseline1l      = tr.getVar<bool>("passBaseline1l_Good");
         const auto& filetag             = tr.getVar<std::string>("filetag");
+//        const auto& passBaseline2l_pt20 = tr.getVar<bool>("passBaseline2l_pt20");
 
         auto& mass = tr.createDerivedVar<double>("mass", 0.0);
         if(!isSignal)
@@ -97,6 +98,13 @@ void MakeNNVariables::Loop(NTupleReader& tr, double, int maxevents, bool)
             "GoodLeptons_eta_1", "GoodLeptons_eta_2",
             "GoodLeptons_phi_1", "GoodLeptons_phi_2",
             "GoodLeptons_m_1",   "GoodLeptons_m_2",
+            "JetsAK8Cands_pt_1",   "JetsAK8Cands_pt_2",   "JetsAK8Cands_pt_3",
+            "JetsAK8Cands_eta_1",  "JetsAK8Cands_eta_2",  "JetsAK8Cands_eta_3",
+            "JetsAK8Cands_phi_1",  "JetsAK8Cands_phi_2",  "JetsAK8Cands_phi_3",
+            "JetsAK8Cands_m_1",    "JetsAK8Cands_m_2",    "JetsAK8Cands_m_3",
+            "JetsAK8Cands_SDM_1",    "JetsAK8Cands_SDM_2",    "JetsAK8Cands_SDM_3",
+            "JetsAK8Cands_Pruned_1",    "JetsAK8Cands_Pruned_2",    "JetsAK8Cands_Pruned_3",
+            "JetsAK8Cands_T21_1",    "JetsAK8Cands_T21_2",    "JetsAK8Cands_T21_3",
             "lvMET_cm_pt",
             "lvMET_cm_eta",
             "lvMET_cm_phi",
