@@ -68,97 +68,97 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
         // -- Make Stop Hemispheres  
         // ---------------------------
         // pt rank 
-        //my_histos.emplace( "h_stop1Mass_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Mass_PtRank_"+cutVar.first).c_str(), ("h_stop1Mass_PtRank_"+cutVar.first).c_str(), 500, 0, 1500) );
-        //my_histos.emplace( "h_stop1Eta_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Eta_PtRank_"+cutVar.first).c_str(), ("h_stop1Eta_PtRank_"+cutVar.first).c_str(), 100, -6, 6 ) );
-        //my_histos.emplace( "h_stop1Phi_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Phi_PtRank_"+cutVar.first).c_str(), ("h_stop1Phi_PtRank_"+cutVar.first).c_str(), 80, -4, 4 ) );
-        //my_histos.emplace( "h_stop1Pt_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Pt_PtRank_"+cutVar.first).c_str(), ("h_stop1Pt_PtRank_"+cutVar.first).c_str(), 100, 0, 1000 ) ); 
-        //my_histos.emplace( "h_stop2Mass_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Mass_PtRank_"+cutVar.first).c_str(), ("h_stop2Mass_PtRank_"+cutVar.first).c_str(), 500, 0, 1500) );
-        //my_histos.emplace( "h_stop2Eta_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Eta_PtRank_"+cutVar.first).c_str(), ("h_stop2Eta_PtRank_"+cutVar.first).c_str(), 100, -6, 6 ) );
-        //my_histos.emplace( "h_stop2Phi_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Phi_PtRank_"+cutVar.first).c_str(), ("h_stop2Phi_PtRank_"+cutVar.first).c_str(), 80, -4, 4 ) );
-        //my_histos.emplace( "h_stop2Pt_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Pt_PtRank_"+cutVar.first).c_str(), ("h_stop2Pt_PtRank_"+cutVar.first).c_str(), 100, 0, 1000 ) );
+        my_histos.emplace( "h_stop1Mass_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Mass_PtRank_"+cutVar.first).c_str(), ("h_stop1Mass_PtRank_"+cutVar.first).c_str(), 500, 0, 1500) );
+        my_histos.emplace( "h_stop1Eta_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Eta_PtRank_"+cutVar.first).c_str(), ("h_stop1Eta_PtRank_"+cutVar.first).c_str(), 100, -6, 6 ) );
+        my_histos.emplace( "h_stop1Phi_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Phi_PtRank_"+cutVar.first).c_str(), ("h_stop1Phi_PtRank_"+cutVar.first).c_str(), 80, -4, 4 ) );
+        my_histos.emplace( "h_stop1Pt_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Pt_PtRank_"+cutVar.first).c_str(), ("h_stop1Pt_PtRank_"+cutVar.first).c_str(), 100, 0, 1000 ) ); 
+        my_histos.emplace( "h_stop2Mass_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Mass_PtRank_"+cutVar.first).c_str(), ("h_stop2Mass_PtRank_"+cutVar.first).c_str(), 500, 0, 1500) );
+        my_histos.emplace( "h_stop2Eta_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Eta_PtRank_"+cutVar.first).c_str(), ("h_stop2Eta_PtRank_"+cutVar.first).c_str(), 100, -6, 6 ) );
+        my_histos.emplace( "h_stop2Phi_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Phi_PtRank_"+cutVar.first).c_str(), ("h_stop2Phi_PtRank_"+cutVar.first).c_str(), 80, -4, 4 ) );
+        my_histos.emplace( "h_stop2Pt_PtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Pt_PtRank_"+cutVar.first).c_str(), ("h_stop2Pt_PtRank_"+cutVar.first).c_str(), 100, 0, 1000 ) );
         // mass rank
-        //my_histos.emplace( "h_stop1Mass_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Mass_MassRank_"+cutVar.first).c_str(), ("h_stop1Mass_MassRank_"+cutVar.first).c_str(), 500, 0, 1500) );
-        //my_histos.emplace( "h_stop1Eta_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Eta_MassRank_"+cutVar.first).c_str(), ("h_stop1Eta_MassRank_"+cutVar.first).c_str(), 100, -6, 6 ) );
-        //my_histos.emplace( "h_stop1Phi_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Phi_MassRank_"+cutVar.first).c_str(), ("h_stop1Phi_MassRank_"+cutVar.first).c_str(), 80, -4, 4 ) );
-        //my_histos.emplace( "h_stop1Pt_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Pt_MassRank_"+cutVar.first).c_str(), ("h_stop1Pt_MassRank_"+cutVar.first).c_str(), 100, 0, 1000 ) );
-        //my_histos.emplace( "h_stop2Mass_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Mass_MassRank_"+cutVar.first).c_str(), ("h_stop2Mass_MassRank_"+cutVar.first).c_str(), 500, 0, 1500) );
-        //my_histos.emplace( "h_stop2Eta_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Eta_MassRank_"+cutVar.first).c_str(), ("h_stop2Eta_MassRank_"+cutVar.first).c_str(), 100, -6, 6 ) );
-        //my_histos.emplace( "h_stop2Phi_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Phi_MassRank_"+cutVar.first).c_str(), ("h_stop2Phi_MassRank_"+cutVar.first).c_str(), 80, -4, 4 ) );
-        //my_histos.emplace( "h_stop2Pt_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Pt_MassRank_"+cutVar.first).c_str(), ("h_stop2Pt_MassRank_"+cutVar.first).c_str(), 100, 0, 1000 ) );
+        my_histos.emplace( "h_stop1Mass_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Mass_MassRank_"+cutVar.first).c_str(), ("h_stop1Mass_MassRank_"+cutVar.first).c_str(), 500, 0, 1500) );
+        my_histos.emplace( "h_stop1Eta_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Eta_MassRank_"+cutVar.first).c_str(), ("h_stop1Eta_MassRank_"+cutVar.first).c_str(), 100, -6, 6 ) );
+        my_histos.emplace( "h_stop1Phi_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Phi_MassRank_"+cutVar.first).c_str(), ("h_stop1Phi_MassRank_"+cutVar.first).c_str(), 80, -4, 4 ) );
+        my_histos.emplace( "h_stop1Pt_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Pt_MassRank_"+cutVar.first).c_str(), ("h_stop1Pt_MassRank_"+cutVar.first).c_str(), 100, 0, 1000 ) );
+        my_histos.emplace( "h_stop2Mass_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Mass_MassRank_"+cutVar.first).c_str(), ("h_stop2Mass_MassRank_"+cutVar.first).c_str(), 500, 0, 1500) );
+        my_histos.emplace( "h_stop2Eta_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Eta_MassRank_"+cutVar.first).c_str(), ("h_stop2Eta_MassRank_"+cutVar.first).c_str(), 100, -6, 6 ) );
+        my_histos.emplace( "h_stop2Phi_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Phi_MassRank_"+cutVar.first).c_str(), ("h_stop2Phi_MassRank_"+cutVar.first).c_str(), 80, -4, 4 ) );
+        my_histos.emplace( "h_stop2Pt_MassRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Pt_MassRank_"+cutVar.first).c_str(), ("h_stop2Pt_MassRank_"+cutVar.first).c_str(), 100, 0, 1000 ) );
         // scalarPt rank
-        //my_histos.emplace( "h_stop1Mass_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Mass_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop1Mass_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500) );
-        //my_histos.emplace( "h_stop1Eta_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Eta_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop1Eta_ScalarPtRank_"+cutVar.first).c_str(), 100, -6, 6 ) );
-        //my_histos.emplace( "h_stop1Phi_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Phi_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop1Phi_ScalarPtRank_"+cutVar.first).c_str(), 80, -4, 4 ) );
-        //my_histos.emplace( "h_stop1Pt_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Pt_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop1Pt_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000 ) );
-        //my_histos.emplace( "h_stop2Mass_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Mass_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop2Mass_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500) );
-        //my_histos.emplace( "h_stop2Eta_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Eta_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop2Eta_ScalarPtRank_"+cutVar.first).c_str(), 100, -6, 6 ) );
-        //my_histos.emplace( "h_stop2Phi_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Phi_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop2Phi_ScalarPtRank_"+cutVar.first).c_str(), 80, -4, 4 ) );
-        //my_histos.emplace( "h_stop2Pt_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Pt_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop2Pt_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000 ) );       
+        my_histos.emplace( "h_stop1Mass_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Mass_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop1Mass_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500) );
+        my_histos.emplace( "h_stop1Eta_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Eta_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop1Eta_ScalarPtRank_"+cutVar.first).c_str(), 100, -6, 6 ) );
+        my_histos.emplace( "h_stop1Phi_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Phi_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop1Phi_ScalarPtRank_"+cutVar.first).c_str(), 80, -4, 4 ) );
+        my_histos.emplace( "h_stop1Pt_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1Pt_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop1Pt_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000 ) );
+        my_histos.emplace( "h_stop2Mass_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Mass_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop2Mass_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500) );
+        my_histos.emplace( "h_stop2Eta_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Eta_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop2Eta_ScalarPtRank_"+cutVar.first).c_str(), 100, -6, 6 ) );
+        my_histos.emplace( "h_stop2Phi_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Phi_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop2Phi_ScalarPtRank_"+cutVar.first).c_str(), 80, -4, 4 ) );
+        my_histos.emplace( "h_stop2Pt_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2Pt_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop2Pt_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000 ) );       
         
-        //my_histos.emplace( "h_stop1ScalarPt_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1ScalarPt_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop1ScalarPt_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000 ) );
-        //my_histos.emplace( "h_stop2ScalarPt_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2ScalarPt_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop2ScalarPt_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000 ) );
+        my_histos.emplace( "h_stop1ScalarPt_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop1ScalarPt_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop1ScalarPt_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000 ) );
+        my_histos.emplace( "h_stop2ScalarPt_ScalarPtRank_"+cutVar.first, std::make_shared<TH1D> ( ("h_stop2ScalarPt_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop2ScalarPt_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000 ) );
         
-        //my_histos.emplace( "h_MT2_"+cutVar.first, std::make_shared<TH1D> ( ("h_MT2_"+cutVar.first).c_str(), ("h_MT2_"+cutVar.first).c_str(), 500, 0, 1500) );
-        //my_histos.emplace( "h_dR_stop1stop2_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_stop1stop2_"+cutVar.first).c_str(), ("h_dR_stop1stop2_"+cutVar.first).c_str(), 50, 0, 10 ) );
-        //my_histos.emplace( "h_dPhi_stop1stop2_"+cutVar.first, std::make_shared<TH1D> ( ("h_dPhi_stop1stop2_"+cutVar.first).c_str(), ("h_dPhi_stop1stop2_"+cutVar.first).c_str(), 50, 0, 10 ) );
-        //my_histos.emplace( "h_difference_stopMasses_"+cutVar.first, std::make_shared<TH1D> ( ("h_difference_stopMasses_"+cutVar.first).c_str(), ("h_difference_stopMasses_"+cutVar.first).c_str(), 500, 0, 1500) );
-        //my_histos.emplace( "h_average_stopMasses_"+cutVar.first, std::make_shared<TH1D> ( ("h_average_stopMasses_"+cutVar.first).c_str(), ("h_average_stopMasses_"+cutVar.first).c_str(), 500, 0, 1500) );
-        //my_histos.emplace( "h_relativeDiff_stopMasses_"+cutVar.first, std::make_shared<TH1D> ( ("h_relativeDiff_stopMasses_"+cutVar.first).c_str(), ("h_relativeDiff_stopMasses_"+cutVar.first).c_str(), 500, -1500, 1500) );
+        my_histos.emplace( "h_MT2_"+cutVar.first, std::make_shared<TH1D> ( ("h_MT2_"+cutVar.first).c_str(), ("h_MT2_"+cutVar.first).c_str(), 500, 0, 1500) );
+        my_histos.emplace( "h_dR_stop1stop2_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_stop1stop2_"+cutVar.first).c_str(), ("h_dR_stop1stop2_"+cutVar.first).c_str(), 50, 0, 10 ) );
+        my_histos.emplace( "h_dPhi_stop1stop2_"+cutVar.first, std::make_shared<TH1D> ( ("h_dPhi_stop1stop2_"+cutVar.first).c_str(), ("h_dPhi_stop1stop2_"+cutVar.first).c_str(), 50, 0, 10 ) );
+        my_histos.emplace( "h_difference_stopMasses_"+cutVar.first, std::make_shared<TH1D> ( ("h_difference_stopMasses_"+cutVar.first).c_str(), ("h_difference_stopMasses_"+cutVar.first).c_str(), 500, 0, 1500) );
+        my_histos.emplace( "h_average_stopMasses_"+cutVar.first, std::make_shared<TH1D> ( ("h_average_stopMasses_"+cutVar.first).c_str(), ("h_average_stopMasses_"+cutVar.first).c_str(), 500, 0, 1500) );
+        my_histos.emplace( "h_relativeDiff_stopMasses_"+cutVar.first, std::make_shared<TH1D> ( ("h_relativeDiff_stopMasses_"+cutVar.first).c_str(), ("h_relativeDiff_stopMasses_"+cutVar.first).c_str(), 500, -1500, 1500) );
 
         // stop1VSstop2 Mass, Eta, Phi, Pt       
         // pt rank
-        //my_2d_histos.emplace( "h_Mass_stop1vsstop2_PtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Mass_stop1vsstop2_PtRank_"+cutVar.first).c_str(), ("h_Mass_stop1vsstop2_PtRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
-        //my_2d_histos.emplace( "h_Eta_stop1vsstop2_PtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Eta_stop1vsstop2_PtRank_"+cutVar.first).c_str(), ("h_Eta_stop1vsstop2_PtRank_"+cutVar.first).c_str(), 100, -6, 6, 100, -6, 6 ) );
-        //my_2d_histos.emplace( "h_Phi_stop1vsstop2_PtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Phi_stop1vsstop2_PtRank_"+cutVar.first).c_str(), ("h_Phi_stop1vsstop2_PtRank_"+cutVar.first).c_str(), 80, -4, 4, 80, -4, 4 ) );
-        //my_2d_histos.emplace( "h_Pt_stop1vsstop2_PtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt_stop1vsstop2_PtRank_"+cutVar.first).c_str(), ("h_Pt_stop1vsstop2_PtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
+        my_2d_histos.emplace( "h_Mass_stop1vsstop2_PtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Mass_stop1vsstop2_PtRank_"+cutVar.first).c_str(), ("h_Mass_stop1vsstop2_PtRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
+        my_2d_histos.emplace( "h_Eta_stop1vsstop2_PtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Eta_stop1vsstop2_PtRank_"+cutVar.first).c_str(), ("h_Eta_stop1vsstop2_PtRank_"+cutVar.first).c_str(), 100, -6, 6, 100, -6, 6 ) );
+        my_2d_histos.emplace( "h_Phi_stop1vsstop2_PtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Phi_stop1vsstop2_PtRank_"+cutVar.first).c_str(), ("h_Phi_stop1vsstop2_PtRank_"+cutVar.first).c_str(), 80, -4, 4, 80, -4, 4 ) );
+        my_2d_histos.emplace( "h_Pt_stop1vsstop2_PtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt_stop1vsstop2_PtRank_"+cutVar.first).c_str(), ("h_Pt_stop1vsstop2_PtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
         // mass rank
-        //my_2d_histos.emplace( "h_Mass_stop1vsstop2_MassRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Mass_stop1vsstop2_MassRank_"+cutVar.first).c_str(), ("h_Mass_stop1vsstop2_MassRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
-        //my_2d_histos.emplace( "h_Eta_stop1vsstop2_MassRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Eta_stop1vsstop2_MassRank_"+cutVar.first).c_str(), ("h_Eta_stop1vsstop2_MassRank_"+cutVar.first).c_str(), 100, -6, 6, 100, -6, 6 ) );
-        //my_2d_histos.emplace( "h_Phi_stop1vsstop2_MassRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Phi_stop1vsstop2_MassRank_"+cutVar.first).c_str(), ("h_Phi_stop1vsstop2_MassRank_"+cutVar.first).c_str(), 80, -4, 4, 80, -4, 4 ) );
-        //my_2d_histos.emplace( "h_Pt_stop1vsstop2_MassRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt_stop1vsstop2_MassRank_"+cutVar.first).c_str(), ("h_Pt_stop1vsstop2_MassRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
+        my_2d_histos.emplace( "h_Mass_stop1vsstop2_MassRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Mass_stop1vsstop2_MassRank_"+cutVar.first).c_str(), ("h_Mass_stop1vsstop2_MassRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
+        my_2d_histos.emplace( "h_Eta_stop1vsstop2_MassRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Eta_stop1vsstop2_MassRank_"+cutVar.first).c_str(), ("h_Eta_stop1vsstop2_MassRank_"+cutVar.first).c_str(), 100, -6, 6, 100, -6, 6 ) );
+        my_2d_histos.emplace( "h_Phi_stop1vsstop2_MassRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Phi_stop1vsstop2_MassRank_"+cutVar.first).c_str(), ("h_Phi_stop1vsstop2_MassRank_"+cutVar.first).c_str(), 80, -4, 4, 80, -4, 4 ) );
+        my_2d_histos.emplace( "h_Pt_stop1vsstop2_MassRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt_stop1vsstop2_MassRank_"+cutVar.first).c_str(), ("h_Pt_stop1vsstop2_MassRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
         // scalarPt rank
-        //my_2d_histos.emplace( "h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );    
-        //my_2d_histos.emplace( "h_Eta_stop1vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Eta_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Eta_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 100, -6, 6, 100, -6, 6 ) );
-        //my_2d_histos.emplace( "h_Phi_stop1vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Phi_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Phi_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 80, -4, 4, 80, -4, 4 ) );
-        //my_2d_histos.emplace( "h_Pt_stop1vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Pt_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) ); 
+        my_2d_histos.emplace( "h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );    
+        my_2d_histos.emplace( "h_Eta_stop1vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Eta_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Eta_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 100, -6, 6, 100, -6, 6 ) );
+        my_2d_histos.emplace( "h_Phi_stop1vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Phi_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Phi_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 80, -4, 4, 80, -4, 4 ) );
+        my_2d_histos.emplace( "h_Pt_stop1vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Pt_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) ); 
         
         // NJetsVSstops
-        //my_2d_histos.emplace( "h_Mass_NJetsVSstop1_PtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_NJetsVSstop1_PtRank_"+cutVar.first).c_str(), ("h_Mass_NJetsVSstop1_PtRank_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );
-        //my_2d_histos.emplace( "h_Mass_NJetsVSstop2_PtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_NJetsVSstop2_PtRank_"+cutVar.first).c_str(), ("h_Mass_NJetsVSstop2_PtRank_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );
-        //my_2d_histos.emplace( "h_Mass_NJetsVSstop1_MassRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_NJetsVSstop1_MassRank_"+cutVar.first).c_str(), ("h_Mass_NJetsVSstop1_MassRank_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );
-        //my_2d_histos.emplace( "h_Mass_NJetsVSstop2_MassRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_NJetsVSstop2_MassRank_"+cutVar.first).c_str(), ("h_Mass_NJetsVSstop2_MassRank_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );       
-        //my_2d_histos.emplace( "h_Mass_NJetsVSstop1_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_NJetsVSstop1_ScalarPtRank_"+cutVar.first).c_str(), ("h_Mass_NJetsVSstop1_ScalarPtRank_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );
-        //my_2d_histos.emplace( "h_Mass_NJetsVSstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_NJetsVSstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Mass_NJetsVSstop2_ScalarPtRank_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );
-        //my_2d_histos.emplace( "h_stopMasses_diffVSavg_"+cutVar.first, std::make_shared<TH2D>( ("h_stopMasses_diffVSavg_"+cutVar.first).c_str(), ( "h_stopMasses_diffVSavg_"+cutVar.first).c_str(), 150, 0, 1500, 150, 0, 1500 ) ); // 150, -1500, 1500
+        my_2d_histos.emplace( "h_Mass_NJetsVSstop1_PtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_NJetsVSstop1_PtRank_"+cutVar.first).c_str(), ("h_Mass_NJetsVSstop1_PtRank_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );
+        my_2d_histos.emplace( "h_Mass_NJetsVSstop2_PtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_NJetsVSstop2_PtRank_"+cutVar.first).c_str(), ("h_Mass_NJetsVSstop2_PtRank_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );
+        my_2d_histos.emplace( "h_Mass_NJetsVSstop1_MassRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_NJetsVSstop1_MassRank_"+cutVar.first).c_str(), ("h_Mass_NJetsVSstop1_MassRank_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );
+        my_2d_histos.emplace( "h_Mass_NJetsVSstop2_MassRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_NJetsVSstop2_MassRank_"+cutVar.first).c_str(), ("h_Mass_NJetsVSstop2_MassRank_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );       
+        my_2d_histos.emplace( "h_Mass_NJetsVSstop1_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_NJetsVSstop1_ScalarPtRank_"+cutVar.first).c_str(), ("h_Mass_NJetsVSstop1_ScalarPtRank_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );
+        my_2d_histos.emplace( "h_Mass_NJetsVSstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_NJetsVSstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Mass_NJetsVSstop2_ScalarPtRank_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );
+        my_2d_histos.emplace( "h_stopMasses_diffVSavg_"+cutVar.first, std::make_shared<TH2D>( ("h_stopMasses_diffVSavg_"+cutVar.first).c_str(), ( "h_stopMasses_diffVSavg_"+cutVar.first).c_str(), 150, 0, 1500, 150, 0, 1500 ) ); // 150, -1500, 1500
 
         // stop Pt combinations 
-        //my_2d_histos.emplace( "h_ScalarPt_stop1vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_ScalarPt_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_ScalarPt_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
-        //my_2d_histos.emplace( "h_Pt1_PtRankVsScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt1_PtRankVsScalarPtRank_"+cutVar.first).c_str(), ("h_Pt1_PtRankVsScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
-        //my_2d_histos.emplace( "h_Pt2_PtRankVsScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt2_PtRankVsScalarPtRank_"+cutVar.first).c_str(), ("h_Pt2_PtRankVsScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
-        //my_2d_histos.emplace( "h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first).c_str(), ("h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
-        //my_2d_histos.emplace( "h_Pt2_PtRankVsScalarPt2_ScalarPtRank"+cutVar.first, std::make_shared<TH2D>( ("h_Pt2_PtRankVsScalarPt2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Pt2_PtRankVsScalarPt2_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
+        my_2d_histos.emplace( "h_ScalarPt_stop1vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_ScalarPt_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_ScalarPt_stop1vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
+        my_2d_histos.emplace( "h_Pt1_PtRankVsScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt1_PtRankVsScalarPtRank_"+cutVar.first).c_str(), ("h_Pt1_PtRankVsScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
+        my_2d_histos.emplace( "h_Pt2_PtRankVsScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt2_PtRankVsScalarPtRank_"+cutVar.first).c_str(), ("h_Pt2_PtRankVsScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
+        my_2d_histos.emplace( "h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first).c_str(), ("h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
+        my_2d_histos.emplace( "h_Pt2_PtRankVsScalarPt2_ScalarPtRank"+cutVar.first, std::make_shared<TH2D>( ("h_Pt2_PtRankVsScalarPt2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Pt2_PtRankVsScalarPt2_ScalarPtRank_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1000) );
 
         // stops MassVsPt
         // pt rank
-        //my_2d_histos.emplace( "h_stop1_MassVsPt_PtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop1_MassVsPt_PtRank_"+cutVar.first).c_str(), ("h_stop1_MassVsPt_PtRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
-        //my_2d_histos.emplace( "h_stop2_MassVsPt_PtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop2_MassVsPt_PtRank_"+cutVar.first).c_str(), ("h_stop2_MassVsPt_PtRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
+        my_2d_histos.emplace( "h_stop1_MassVsPt_PtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop1_MassVsPt_PtRank_"+cutVar.first).c_str(), ("h_stop1_MassVsPt_PtRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
+        my_2d_histos.emplace( "h_stop2_MassVsPt_PtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop2_MassVsPt_PtRank_"+cutVar.first).c_str(), ("h_stop2_MassVsPt_PtRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
         // mask rank
-        //my_2d_histos.emplace( "h_stop1_MassVsPt_MassRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop1_MassVsPt_MassRank_"+cutVar.first).c_str(), ("h_stop1_MassVsPt_MassRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
-        //my_2d_histos.emplace( "h_stop2_MassVsPt_MassRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop2_MassVsPt_MassRank_"+cutVar.first).c_str(), ("h_stop2_MassVsPt_MassRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
+        my_2d_histos.emplace( "h_stop1_MassVsPt_MassRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop1_MassVsPt_MassRank_"+cutVar.first).c_str(), ("h_stop1_MassVsPt_MassRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
+        my_2d_histos.emplace( "h_stop2_MassVsPt_MassRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop2_MassVsPt_MassRank_"+cutVar.first).c_str(), ("h_stop2_MassVsPt_MassRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
         // scalarPt rank
-        //my_2d_histos.emplace( "h_stop1_MassVsPt_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop1_MassVsPt_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop1_MassVsPt_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
-        //my_2d_histos.emplace( "h_stop2_MassVsPt_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop2_MassVsPt_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop2_MassVsPt_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
-        //my_2d_histos.emplace( "h_stop1_MassVsScalarPt_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop1_MassVsScalarPt_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop1_MassVsScalarPt_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
-        //my_2d_histos.emplace( "h_stop2_MassVsScalarPt_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop2_MassVsScalarPt_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop2_MassVsScalarPt_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
+        my_2d_histos.emplace( "h_stop1_MassVsPt_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop1_MassVsPt_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop1_MassVsPt_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
+        my_2d_histos.emplace( "h_stop2_MassVsPt_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop2_MassVsPt_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop2_MassVsPt_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
+        my_2d_histos.emplace( "h_stop1_MassVsScalarPt_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop1_MassVsScalarPt_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop1_MassVsScalarPt_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
+        my_2d_histos.emplace( "h_stop2_MassVsScalarPt_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D>( ("h_stop2_MassVsScalarPt_ScalarPtRank_"+cutVar.first).c_str(), ("h_stop2_MassVsScalarPt_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000 ) );
 
         // MT2
-        //my_2d_histos.emplace( "h_NJetsVsMT2_"+cutVar.first, std::make_shared<TH2D> ( ("h_NJetsVsMT2_"+cutVar.first).c_str(), ("h_NJetsVsMT2_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );
-        //my_2d_histos.emplace( "h_Mass_MT2vsstop1_PtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_MT2vsstop1_PtRank_"+cutVar.first).c_str(), ("h_Mass_MT2vsstop1_PtRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
-        //my_2d_histos.emplace( "h_Mass_MT2vsstop2_PtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_MT2vsstop2_PtRank_"+cutVar.first).c_str(), ("h_Mass_MT2vsstop2_PtRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
-        //my_2d_histos.emplace( "h_Mass_MT2vsstop1_MassRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_MT2vsstop1_MassRank_"+cutVar.first).c_str(), ("h_Mass_MT2vsstop1_MassRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
-        //my_2d_histos.emplace( "h_Mass_MT2vsstop2_MassRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_MT2vsstop2_MassRank_"+cutVar.first).c_str(), ("h_Mass_MT2vsstop2_MassRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) ); 
-        //my_2d_histos.emplace( "h_Mass_MT2vsstop1_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_MT2vsstop1_ScalarPtRank_"+cutVar.first).c_str(), ("h_Mass_MT2vsstop1_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
-        //my_2d_histos.emplace( "h_Mass_MT2vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_MT2vsstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Mass_MT2vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
+        my_2d_histos.emplace( "h_NJetsVsMT2_"+cutVar.first, std::make_shared<TH2D> ( ("h_NJetsVsMT2_"+cutVar.first).c_str(), ("h_NJetsVsMT2_"+cutVar.first).c_str(), 20, 0, 20, 500, 0, 1500 ) );
+        my_2d_histos.emplace( "h_Mass_MT2vsstop1_PtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_MT2vsstop1_PtRank_"+cutVar.first).c_str(), ("h_Mass_MT2vsstop1_PtRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
+        my_2d_histos.emplace( "h_Mass_MT2vsstop2_PtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_MT2vsstop2_PtRank_"+cutVar.first).c_str(), ("h_Mass_MT2vsstop2_PtRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
+        my_2d_histos.emplace( "h_Mass_MT2vsstop1_MassRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_MT2vsstop1_MassRank_"+cutVar.first).c_str(), ("h_Mass_MT2vsstop1_MassRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
+        my_2d_histos.emplace( "h_Mass_MT2vsstop2_MassRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_MT2vsstop2_MassRank_"+cutVar.first).c_str(), ("h_Mass_MT2vsstop2_MassRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) ); 
+        my_2d_histos.emplace( "h_Mass_MT2vsstop1_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_MT2vsstop1_ScalarPtRank_"+cutVar.first).c_str(), ("h_Mass_MT2vsstop1_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
+        my_2d_histos.emplace( "h_Mass_MT2vsstop2_ScalarPtRank_"+cutVar.first, std::make_shared<TH2D> ( ("h_Mass_MT2vsstop2_ScalarPtRank_"+cutVar.first).c_str(), ("h_Mass_MT2vsstop2_ScalarPtRank_"+cutVar.first).c_str(), 500, 0, 1500, 500, 0, 1500 ) );
  
         // --------------------
         // -- stop gen level
@@ -179,42 +179,6 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
         //my_histos.emplace( "h_Nlino2GenMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_Nlino2GenMass_"+cutVar.first).c_str(), ("h_Nlino2GenMass_"+cutVar.first).c_str(), 500, 0, 1500) );
         //my_histos.emplace( "h_Single1GenMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_Single1GenMass_"+cutVar.first).c_str(), ("h_Single1GenMass_"+cutVar.first).c_str(), 500, 0, 1500) );
         //my_histos.emplace( "h_Single2GenMass_"+cutVar.first, std::make_shared<TH1D> ( ("h_Single2GenMass_"+cutVar.first).c_str(), ("h_Single2GenMass_"+cutVar.first).c_str(), 500, 0, 1500) );
-        
-        // -------------------
-        // ISR gen matching
-        // -------------------
-        my_histos.emplace( "h_nGenISR_"+cutVar.first, std::make_shared<TH1D> ( ("h_nGenISR_"+cutVar.first).c_str(), ("h_nGenISR_"+cutVar.first).c_str(), 20, 0, 20 ) );
-        my_histos.emplace( "h_nRecoISR_"+cutVar.first, std::make_shared<TH1D> ( ("h_nRecoISR_"+cutVar.first).c_str(), ("h_nRecoISR_"+cutVar.first).c_str(), 20, 0, 20 ) );
-
-        my_histos.emplace( "h_GM_ISRmatching_allDR_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_allDR_"+cutVar.first).c_str(), ("h_GM_ISRmatching_allDR_"+cutVar.first).c_str(), 1000, 0, 10 ) );
-        my_histos.emplace( "h_GM_ISRmatching_bestDR_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_bestDR_"+cutVar.first).c_str(), ("h_GM_ISRmatching_bestDR_"+cutVar.first).c_str(), 1000, 0, 10 ) );
-        my_histos.emplace( "h_GM_ISRmatching_CutOnDR_DR_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_CutOnDR_DR_"+cutVar.first).c_str(), ("h_GM_ISRmatching_CutOnDR_DR_"+cutVar.first).c_str(), 1000, 0, 10 ) );
-        my_histos.emplace( "h_GM_ISRmatching_CutOnPtRatio_DR_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_CutOnPtRatio_DR_"+cutVar.first).c_str(), ("h_GM_ISRmatching_CutOnPtRatio_DR_"+cutVar.first).c_str(), 1000, 0, 10 ) );        
-        
-        my_histos.emplace( "h_GM_ISRmatching_allPtRatio_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_allPtRatio_"+cutVar.first).c_str(), ("h_GM_ISRmatching_allPtRatio_"+cutVar.first).c_str(), 1000, 0, 10 ) );
-        my_histos.emplace( "h_GM_ISRmatching_bestPtRatio_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_bestPtRatio_"+cutVar.first).c_str(), ("h_GM_ISRmatching_bestPtRatio_"+cutVar.first).c_str(), 1000, 0, 10 ) );
-        my_histos.emplace( "h_GM_ISRmatching_CutOnDR_PtRatio_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_CutOnDR_PtRatio_"+cutVar.first).c_str(), ("h_GM_ISRmatching_CutOnDR_PtRatio_"+cutVar.first).c_str(), 1000, 0, 10 ) );
-        my_histos.emplace( "h_GM_ISRmatching_CutOnPtRatio_PtRatio_"+cutVar.first, std::make_shared<TH1D> ( ("h_GM_ISRmatching_CutOnPtRatio_PtRatio_"+cutVar.first).c_str(), ("h_GM_ISRmatching_CutOnPtRatio_PtRatio_"+cutVar.first).c_str(), 1000, 0, 10 ) ); 
-
-        // 2d plots 
-        my_2d_histos.emplace( "h_GM_all_PtRvsDR_"+cutVar.first, std::make_shared<TH2D>( ("h_GM_all_PtRvsDR_"+cutVar.first).c_str(), ("h_GM_all_PtRvsDR_"+cutVar.first).c_str(), 1000, 0, 10, 1000, 0, 10) );
-        my_2d_histos.emplace( "h_GM_best_PtRvsDR_"+cutVar.first, std::make_shared<TH2D>( ("h_GM_best_PtRvsDR_"+cutVar.first).c_str(), ("h_GM_best_PtRvsDR_"+cutVar.first).c_str(), 1000, 0, 10, 1000, 0, 10) );
-        my_2d_histos.emplace( "h_GM_CutOnDR_PtRvsDR_"+cutVar.first, std::make_shared<TH2D>( ("h_GM_CutOnDR_PtRvsDR_"+cutVar.first).c_str(), ("h_GM_CutOnDR_PtRvsDR_"+cutVar.first).c_str(), 1000, 0, 10, 1000, 0, 10) );
-        my_2d_histos.emplace( "h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first, std::make_shared<TH2D>( ("h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first).c_str(), ("h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first).c_str(), 1000, 0, 10, 1000, 0, 10) );
-
-        // ISR Jets
-        my_histos.emplace( "h_nISRJets_"+cutVar.first, std::make_shared<TH1D> ( ("h_nISRJets_"+cutVar.first).c_str(), ("h_nISRJets_"+cutVar.first).c_str(), 20, 0, 20 ) );
-        my_histos.emplace( "h_ISRJets_Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_ISRJets_Mass_"+cutVar.first).c_str(), ("h_ISRJets_Mass_"+cutVar.first).c_str(), 500, 0, 1500) );
-        my_histos.emplace( "h_ISRJets_Pt_"+cutVar.first, std::make_shared<TH1D> ( ("h_ISRJets_Pt_"+cutVar.first).c_str(), ("h_ISRJets_Pt_"+cutVar.first).c_str(), 100, 0, 1000 ) );
-        my_histos.emplace( "h_ISRJets_Phi_"+cutVar.first, std::make_shared<TH1D> ( ("h_ISRJets_Phi_"+cutVar.first).c_str(), ("h_ISRJets_Phi_"+cutVar.first).c_str(), 80, -4, 4 ) );       
-        my_histos.emplace( "h_ISRJets_Eta_"+cutVar.first, std::make_shared<TH1D> ( ("h_ISRJets_Eta_"+cutVar.first).c_str(), ("h_ISRJets_Eta_"+cutVar.first).c_str(), 100, -6, 6 ) ); 
-        // NON ISR Jets
-        my_histos.emplace( "h_nNonISRJets_"+cutVar.first, std::make_shared<TH1D> ( ("h_nNonISRJets_"+cutVar.first).c_str(),     ("h_nNonISRJets_"+cutVar.first).c_str(), 20, 0, 20 ) );
-        my_histos.emplace( "h_NonISRJets_Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_NonISRJets_Mass_"+cutVar.first).c_str(), ("h_NonISRJets_Mass_"+cutVar.first).c_str(), 500, 0, 1500) );
-        my_histos.emplace( "h_NonISRJets_Pt_"+cutVar.first, std::make_shared<TH1D> ( ("h_NonISRJets_Pt_"+cutVar.first).c_str(), ("h_NonISRJets_Pt_"+cutVar.first).c_str(), 100, 0, 1000 ) );
-        my_histos.emplace( "h_NonISRJets_Phi_"+cutVar.first, std::make_shared<TH1D> ( ("h_NonISRJets_Phi_"+cutVar.first).c_str(), ("h_NonISRJetsPhi_"+cutVar.first).c_str(), 80, -4, 4 ) );
-        my_histos.emplace( "h_NonISRJets_Eta_"+cutVar.first, std::make_shared<TH1D> ( ("h_NonISRJets_Eta_"+cutVar.first).c_str(), ("h_NonISRJets_Eta_"+cutVar.first).c_str(), 100, -6, 6 ) );
-
 
     }
 
@@ -239,16 +203,16 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
         if( tr.getEvtNum() & (10000 == 0) ) printf( " Event %i\n", tr.getEvtNum() );
 
         const auto& runtype         = tr.getVar<std::string>("runtype");     
-        const auto& JetID           = tr.getVar<bool>("JetID");
+        //const auto& JetID           = tr.getVar<bool>("JetID");
         const auto& Jets            = tr.getVec<TLorentzVector>("Jets");
-        const auto& NGoodLeptons    = tr.getVar<int>("NGoodLeptons");
+        //const auto& NGoodLeptons    = tr.getVar<int>("NGoodLeptons");
         //const auto& MET             = tr.getVar<double>("MET");
         //const auto& GoodJets_pt45   = tr.getVec<bool>("GoodJets_pt45");
-        const auto& GoodJets_pt20   = tr.getVec<bool>("GoodJets_pt20");
+        //const auto& GoodJets_pt20   = tr.getVec<bool>("GoodJets_pt20");
         const auto& GoodBJets_pt45  = tr.getVec<bool>("GoodBJets_pt45");
-        const auto& HT_trigger_pt45 = tr.getVar<double>("HT_trigger_pt45");
+        //const auto& HT_trigger_pt45 = tr.getVar<double>("HT_trigger_pt45");
         const auto& NGoodJets_pt45  = tr.getVar<int>("NGoodJets_pt45");
-        const auto& NGoodBJets_pt45 = tr.getVar<int>("NGoodBJets_pt45");
+        //const auto& NGoodBJets_pt45 = tr.getVar<int>("NGoodBJets_pt45");
         //const auto& deepESM_val     = tr.getVar<double>("deepESM_val");
         const auto& dR_bjets        = tr.getVar<double>("dR_bjets");               
         //const auto& dR_top1_top2    = tr.getVar<double>("dR_top1_top2");
@@ -269,13 +233,13 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
         //const auto& bestTopEta     = tr.getVar<double>("bestTopEta");
         //const auto& bestTopPt      = tr.getVar<double>("bestTopPt");
        
-        const auto& passMadHT      = tr.getVar<bool>("passMadHT");
+        //const auto& passMadHT      = tr.getVar<bool>("passMadHT");
         const auto& passBaseline0l = tr.getVar<bool>("passBaseline0l_Good");
-        const auto& passMETFilters = tr.getVar<bool>("passMETFilters");
-        const bool pass_general    = JetID && passMETFilters && passMadHT;
-        const bool pass_0l         = NGoodLeptons==0;  
-        const bool pass_HT500      = HT_trigger_pt45 > 500;
-        const bool pass_ge2b       = NGoodBJets_pt45 >= 2;
+        //const auto& passMETFilters = tr.getVar<bool>("passMETFilters");
+        //const bool pass_general    = JetID && passMETFilters && passMadHT;
+        //const bool pass_0l         = NGoodLeptons==0;  
+        //const bool pass_HT500      = HT_trigger_pt45 > 500;
+        //const bool pass_ge2b       = NGoodBJets_pt45 >= 2;
         //const bool pass_ge6j       = NGoodJets_pt45 >= 6;
         const bool pass_ge2t       = ntops >= 2;
         const bool pass_ge2t1j     = ntops >= 2 && ntops_3jet == 0 && ntops_2jet==0;
@@ -352,23 +316,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
         //const auto& Nlino2GenMass   = tr.getVar<double>("GM_Nlino2GenMass"); // Gen
         //const auto& Single1GenMass  = tr.getVar<double>("GM_Single1GenMass"); // Gen 
         //const auto& Single2GenMass  = tr.getVar<double>("GM_Single2GenMass"); // Gen
-
-        // ----------------------
-        // -- ISR gen matching
-        // ----------------------
-        const auto& nGenISR                                 = tr.getVar<int>("nGenISR");
-        const auto& nRecoISR                                = tr.getVar<int>("nRecoISR");
-        auto&       nISRJets                                = tr.getVar<int>("nISRJets");
-        const auto& ISRmatched                              = tr.getVec<bool>("ISRmatched");
-        const auto& GM_ISRmatching_allDR                    = tr.getVec<double>("GM_ISRmatching_allDR");
-        const auto& GM_ISRmatching_bestDR                   = tr.getVec<double>("GM_ISRmatching_bestDR");
-        const auto& GM_ISRmatching_justCutOnDR_DR           = tr.getVec<double>("GM_ISRmatching_justCutOnDR_DR");
-        const auto& GM_ISRmatching_justCutOnPtRatio_DR      = tr.getVec<double>("GM_ISRmatching_justCutOnPtRatio_DR");
-        const auto& GM_ISRmatching_allPtRatio               = tr.getVec<double>("GM_ISRmatching_allPtRatio");
-        const auto& GM_ISRmatching_bestPtRatio              = tr.getVec<double>("GM_ISRmatching_bestPtRatio");
-        const auto& GM_ISRmatching_justCutOnDR_PtRatio      = tr.getVec<double>("GM_ISRmatching_justCutOnDR_PtRatio");
-        const auto& GM_ISRmatching_justCutOnPtRatio_PtRatio = tr.getVec<double>("GM_ISRmatching_justCutOnPtRatio_PtRatio");
-
+        
         // -------------------
         // -- Define weight
         // -------------------
@@ -559,167 +507,167 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
             // -- Make Stop Hemispheres  
             // ---------------------------
             // ptRank
-            //my_histos["h_stop1Mass_PtRank_"+cutVar.first]->Fill( stop1Mass_PtRank, weight );
-            //my_histos["h_stop1Eta_PtRank_"+cutVar.first]->Fill( stop1Eta_PtRank, weight );
-            //my_histos["h_stop1Phi_PtRank_"+cutVar.first]->Fill( stop1Phi_PtRank, weight );
-            //my_histos["h_stop1Pt_PtRank_"+cutVar.first]->Fill( stop1Pt_PtRank, weight );
-            //my_histos["h_stop2Mass_PtRank_"+cutVar.first]->Fill( stop2Mass_PtRank, weight );
-            //my_histos["h_stop2Eta_PtRank_"+cutVar.first]->Fill( stop2Eta_PtRank, weight );
-            //my_histos["h_stop2Phi_PtRank_"+cutVar.first]->Fill( stop2Phi_PtRank, weight );
-            //my_histos["h_stop2Pt_PtRank_"+cutVar.first]->Fill( stop2Pt_PtRank, weight );
+            my_histos["h_stop1Mass_PtRank_"+cutVar.first]->Fill( stop1Mass_PtRank, weight );
+            my_histos["h_stop1Eta_PtRank_"+cutVar.first]->Fill( stop1Eta_PtRank, weight );
+            my_histos["h_stop1Phi_PtRank_"+cutVar.first]->Fill( stop1Phi_PtRank, weight );
+            my_histos["h_stop1Pt_PtRank_"+cutVar.first]->Fill( stop1Pt_PtRank, weight );
+            my_histos["h_stop2Mass_PtRank_"+cutVar.first]->Fill( stop2Mass_PtRank, weight );
+            my_histos["h_stop2Eta_PtRank_"+cutVar.first]->Fill( stop2Eta_PtRank, weight );
+            my_histos["h_stop2Phi_PtRank_"+cutVar.first]->Fill( stop2Phi_PtRank, weight );
+            my_histos["h_stop2Pt_PtRank_"+cutVar.first]->Fill( stop2Pt_PtRank, weight );
             // massRank
-            //my_histos["h_stop1Mass_MassRank_"+cutVar.first]->Fill( stop1Mass_MassRank, weight );
-            //my_histos["h_stop1Eta_MassRank_"+cutVar.first]->Fill( stop1Eta_MassRank, weight );
-            //my_histos["h_stop1Phi_MassRank_"+cutVar.first]->Fill( stop1Phi_MassRank, weight );
-            //my_histos["h_stop1Pt_MassRank_"+cutVar.first]->Fill( stop1Pt_MassRank, weight );
-            //my_histos["h_stop2Mass_MassRank_"+cutVar.first]->Fill( stop2Mass_MassRank, weight );
-            //my_histos["h_stop2Eta_MassRank_"+cutVar.first]->Fill( stop2Eta_MassRank, weight );
-            //my_histos["h_stop2Phi_MassRank_"+cutVar.first]->Fill( stop2Phi_MassRank, weight );
-            //my_histos["h_stop2Pt_MassRank_"+cutVar.first]->Fill( stop2Pt_MassRank, weight );
+            my_histos["h_stop1Mass_MassRank_"+cutVar.first]->Fill( stop1Mass_MassRank, weight );
+            my_histos["h_stop1Eta_MassRank_"+cutVar.first]->Fill( stop1Eta_MassRank, weight );
+            my_histos["h_stop1Phi_MassRank_"+cutVar.first]->Fill( stop1Phi_MassRank, weight );
+            my_histos["h_stop1Pt_MassRank_"+cutVar.first]->Fill( stop1Pt_MassRank, weight );
+            my_histos["h_stop2Mass_MassRank_"+cutVar.first]->Fill( stop2Mass_MassRank, weight );
+            my_histos["h_stop2Eta_MassRank_"+cutVar.first]->Fill( stop2Eta_MassRank, weight );
+            my_histos["h_stop2Phi_MassRank_"+cutVar.first]->Fill( stop2Phi_MassRank, weight );
+            my_histos["h_stop2Pt_MassRank_"+cutVar.first]->Fill( stop2Pt_MassRank, weight );
             // scalarPtRank
-            //my_histos["h_stop1Mass_ScalarPtRank_"+cutVar.first]->Fill( stop1Mass_ScalarPtRank, weight );
-            //my_histos["h_stop1Eta_ScalarPtRank_"+cutVar.first]->Fill( stop1Eta_ScalarPtRank, weight );
-            //my_histos["h_stop1Phi_ScalarPtRank_"+cutVar.first]->Fill( stop1Phi_ScalarPtRank, weight );
-            //my_histos["h_stop1Pt_ScalarPtRank_"+cutVar.first]->Fill( stop1Pt_ScalarPtRank, weight );
-            //my_histos["h_stop2Mass_ScalarPtRank_"+cutVar.first]->Fill( stop2Mass_ScalarPtRank, weight );
-            //my_histos["h_stop2Eta_ScalarPtRank_"+cutVar.first]->Fill( stop2Eta_ScalarPtRank, weight );
-            //my_histos["h_stop2Phi_ScalarPtRank_"+cutVar.first]->Fill( stop2Phi_ScalarPtRank, weight );
-            //my_histos["h_stop2Pt_ScalarPtRank_"+cutVar.first]->Fill( stop2Pt_ScalarPtRank, weight );
-            //my_histos["h_stop1ScalarPt_ScalarPtRank_"+cutVar.first]->Fill( stop1ScalarPt_ScalarPtRank, weight );
-            //my_histos["h_stop2ScalarPt_ScalarPtRank_"+cutVar.first]->Fill( stop2ScalarPt_ScalarPtRank, weight );
-            //my_histos["h_MT2_"+cutVar.first]->Fill( MT2, weight );
-            //my_histos["h_dR_stop1stop2_"+cutVar.first]->Fill( dR_stop1stop2, weight );
-            //my_histos["h_dPhi_stop1stop2_"+cutVar.first]->Fill( dPhi_stop1stop2, weight );
-            //my_histos["h_difference_stopMasses_"+cutVar.first]->Fill( difference_stopMasses, weight );
-            //my_histos["h_average_stopMasses_"+cutVar.first]->Fill( average_stopMasses, weight );
-            //my_histos["h_relativeDiff_stopMasses_"+cutVar.first]->Fill( relativeDiff_stopMasses, weight );
+            my_histos["h_stop1Mass_ScalarPtRank_"+cutVar.first]->Fill( stop1Mass_ScalarPtRank, weight );
+            my_histos["h_stop1Eta_ScalarPtRank_"+cutVar.first]->Fill( stop1Eta_ScalarPtRank, weight );
+            my_histos["h_stop1Phi_ScalarPtRank_"+cutVar.first]->Fill( stop1Phi_ScalarPtRank, weight );
+            my_histos["h_stop1Pt_ScalarPtRank_"+cutVar.first]->Fill( stop1Pt_ScalarPtRank, weight );
+            my_histos["h_stop2Mass_ScalarPtRank_"+cutVar.first]->Fill( stop2Mass_ScalarPtRank, weight );
+            my_histos["h_stop2Eta_ScalarPtRank_"+cutVar.first]->Fill( stop2Eta_ScalarPtRank, weight );
+            my_histos["h_stop2Phi_ScalarPtRank_"+cutVar.first]->Fill( stop2Phi_ScalarPtRank, weight );
+            my_histos["h_stop2Pt_ScalarPtRank_"+cutVar.first]->Fill( stop2Pt_ScalarPtRank, weight );
+            my_histos["h_stop1ScalarPt_ScalarPtRank_"+cutVar.first]->Fill( stop1ScalarPt_ScalarPtRank, weight );
+            my_histos["h_stop2ScalarPt_ScalarPtRank_"+cutVar.first]->Fill( stop2ScalarPt_ScalarPtRank, weight );
+            my_histos["h_MT2_"+cutVar.first]->Fill( MT2, weight );
+            my_histos["h_dR_stop1stop2_"+cutVar.first]->Fill( dR_stop1stop2, weight );
+            my_histos["h_dPhi_stop1stop2_"+cutVar.first]->Fill( dPhi_stop1stop2, weight );
+            my_histos["h_difference_stopMasses_"+cutVar.first]->Fill( difference_stopMasses, weight );
+            my_histos["h_average_stopMasses_"+cutVar.first]->Fill( average_stopMasses, weight );
+            my_histos["h_relativeDiff_stopMasses_"+cutVar.first]->Fill( relativeDiff_stopMasses, weight );
             
             // stop1VSstop2 Mass, Eta, Phi, Pt
-            //my_2d_histos["h_Mass_stop1vsstop2_PtRank_"+cutVar.first]->Fill(stop1Mass_PtRank, stop2Mass_PtRank, weight);
-            //my_2d_histos["h_Mass_stop1vsstop2_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank M_{#tildet}_{1}");
-            //my_2d_histos["h_Mass_stop1vsstop2_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank M_{#tildet}_{2}");
-            //my_2d_histos["h_Eta_stop1vsstop2_PtRank_"+cutVar.first]->Fill(stop1Eta_PtRank, stop2Eta_PtRank, weight);
-            //my_2d_histos["h_Eta_stop1vsstop2_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank #eta_{#tildet}_{1}");
-            //my_2d_histos["h_Eta_stop1vsstop2_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank #eta_{#tildet}_{2}");
-            //my_2d_histos["h_Phi_stop1vsstop2_PtRank_"+cutVar.first]->Fill(stop1Phi_PtRank, stop2Phi_PtRank, weight);
-            //my_2d_histos["h_Phi_stop1vsstop2_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank #phi_{#tildet}_{1}");
-            //my_2d_histos["h_Phi_stop1vsstop2_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank #phi_{#tildet}_{2}");
-            //my_2d_histos["h_Pt_stop1vsstop2_PtRank_"+cutVar.first]->Fill(stop1Pt_PtRank, stop2Pt_PtRank, weight);
-            //my_2d_histos["h_Pt_stop1vsstop2_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank pT_{#tildet}_{1}");
-            //my_2d_histos["h_Pt_stop1vsstop2_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank pT_{#tildet}_{2}");
-            //my_2d_histos["h_Mass_stop1vsstop2_MassRank_"+cutVar.first]->Fill(stop1Mass_MassRank, stop2Mass_MassRank, weight);
-            //my_2d_histos["h_Mass_stop1vsstop2_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("Mass Rank M_{#tildet}_{1}");
-            //my_2d_histos["h_Mass_stop1vsstop2_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank M_{#tildet}_{2}");
-            //my_2d_histos["h_Eta_stop1vsstop2_MassRank_"+cutVar.first]->Fill(stop1Eta_MassRank, stop2Eta_MassRank, weight);
-            //my_2d_histos["h_Eta_stop1vsstop2_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("Mass Rank #eta_{#tildet}_{1}");
-            //my_2d_histos["h_Eta_stop1vsstop2_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank #eta_{#tildet}_{2}");
-            //my_2d_histos["h_Phi_stop1vsstop2_MassRank_"+cutVar.first]->Fill(stop1Phi_MassRank, stop2Phi_MassRank, weight);
-            //my_2d_histos["h_Phi_stop1vsstop2_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("Mass Rank #phi_{#tildet}_{1}");
-            //my_2d_histos["h_Phi_stop1vsstop2_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank #phi_{#tildet}_{2}");
-            //my_2d_histos["h_Pt_stop1vsstop2_MassRank_"+cutVar.first]->Fill(stop1Pt_MassRank, stop2Pt_MassRank, weight);
-            //my_2d_histos["h_Pt_stop1vsstop2_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("Mass Rank pT_{#tildet}_{1}");
-            //my_2d_histos["h_Pt_stop1vsstop2_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank pT_{#tildet}_{2}");
-            //my_2d_histos["h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first]->Fill(stop1Mass_ScalarPtRank, stop2Mass_ScalarPtRank, weight);
-            //my_2d_histos["h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{1}");
-            //my_2d_histos["h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{2}");
-            //my_2d_histos["h_Eta_stop1vsstop2_ScalarPtRank_"+cutVar.first]->Fill(stop1Eta_ScalarPtRank, stop2Eta_ScalarPtRank, weight);
-            //my_2d_histos["h_Eta_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank #eta_{#tildet}_{1}");
-            //my_2d_histos["h_Eta_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank #eta_{#tildet}_{2}");
-            //my_2d_histos["h_Phi_stop1vsstop2_ScalarPtRank_"+cutVar.first]->Fill(stop1Phi_ScalarPtRank, stop2Phi_ScalarPtRank, weight);
-            //my_2d_histos["h_Phi_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank #phi_{#tildet}_{1}");
-            //my_2d_histos["h_Phi_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank #phi_{#tildet}_{2}");
-            //my_2d_histos["h_Pt_stop1vsstop2_ScalarPtRank_"+cutVar.first]->Fill(stop1Pt_ScalarPtRank, stop2Pt_ScalarPtRank, weight);
-            //my_2d_histos["h_Pt_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank pT_{#tildet}_{1}");
-            //my_2d_histos["h_Pt_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank pT_{#tildet}_{2}");
+            my_2d_histos["h_Mass_stop1vsstop2_PtRank_"+cutVar.first]->Fill(stop1Mass_PtRank, stop2Mass_PtRank, weight);
+            my_2d_histos["h_Mass_stop1vsstop2_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank M_{#tildet}_{1}");
+            my_2d_histos["h_Mass_stop1vsstop2_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank M_{#tildet}_{2}");
+            my_2d_histos["h_Eta_stop1vsstop2_PtRank_"+cutVar.first]->Fill(stop1Eta_PtRank, stop2Eta_PtRank, weight);
+            my_2d_histos["h_Eta_stop1vsstop2_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank #eta_{#tildet}_{1}");
+            my_2d_histos["h_Eta_stop1vsstop2_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank #eta_{#tildet}_{2}");
+            my_2d_histos["h_Phi_stop1vsstop2_PtRank_"+cutVar.first]->Fill(stop1Phi_PtRank, stop2Phi_PtRank, weight);
+            my_2d_histos["h_Phi_stop1vsstop2_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank #phi_{#tildet}_{1}");
+            my_2d_histos["h_Phi_stop1vsstop2_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank #phi_{#tildet}_{2}");
+            my_2d_histos["h_Pt_stop1vsstop2_PtRank_"+cutVar.first]->Fill(stop1Pt_PtRank, stop2Pt_PtRank, weight);
+            my_2d_histos["h_Pt_stop1vsstop2_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank pT_{#tildet}_{1}");
+            my_2d_histos["h_Pt_stop1vsstop2_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank pT_{#tildet}_{2}");
+            my_2d_histos["h_Mass_stop1vsstop2_MassRank_"+cutVar.first]->Fill(stop1Mass_MassRank, stop2Mass_MassRank, weight);
+            my_2d_histos["h_Mass_stop1vsstop2_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("Mass Rank M_{#tildet}_{1}");
+            my_2d_histos["h_Mass_stop1vsstop2_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank M_{#tildet}_{2}");
+            my_2d_histos["h_Eta_stop1vsstop2_MassRank_"+cutVar.first]->Fill(stop1Eta_MassRank, stop2Eta_MassRank, weight);
+            my_2d_histos["h_Eta_stop1vsstop2_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("Mass Rank #eta_{#tildet}_{1}");
+            my_2d_histos["h_Eta_stop1vsstop2_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank #eta_{#tildet}_{2}");
+            my_2d_histos["h_Phi_stop1vsstop2_MassRank_"+cutVar.first]->Fill(stop1Phi_MassRank, stop2Phi_MassRank, weight);
+            my_2d_histos["h_Phi_stop1vsstop2_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("Mass Rank #phi_{#tildet}_{1}");
+            my_2d_histos["h_Phi_stop1vsstop2_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank #phi_{#tildet}_{2}");
+            my_2d_histos["h_Pt_stop1vsstop2_MassRank_"+cutVar.first]->Fill(stop1Pt_MassRank, stop2Pt_MassRank, weight);
+            my_2d_histos["h_Pt_stop1vsstop2_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("Mass Rank pT_{#tildet}_{1}");
+            my_2d_histos["h_Pt_stop1vsstop2_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank pT_{#tildet}_{2}");
+            my_2d_histos["h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first]->Fill(stop1Mass_ScalarPtRank, stop2Mass_ScalarPtRank, weight);
+            my_2d_histos["h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{1}");
+            my_2d_histos["h_Mass_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{2}");
+            my_2d_histos["h_Eta_stop1vsstop2_ScalarPtRank_"+cutVar.first]->Fill(stop1Eta_ScalarPtRank, stop2Eta_ScalarPtRank, weight);
+            my_2d_histos["h_Eta_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank #eta_{#tildet}_{1}");
+            my_2d_histos["h_Eta_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank #eta_{#tildet}_{2}");
+            my_2d_histos["h_Phi_stop1vsstop2_ScalarPtRank_"+cutVar.first]->Fill(stop1Phi_ScalarPtRank, stop2Phi_ScalarPtRank, weight);
+            my_2d_histos["h_Phi_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank #phi_{#tildet}_{1}");
+            my_2d_histos["h_Phi_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank #phi_{#tildet}_{2}");
+            my_2d_histos["h_Pt_stop1vsstop2_ScalarPtRank_"+cutVar.first]->Fill(stop1Pt_ScalarPtRank, stop2Pt_ScalarPtRank, weight);
+            my_2d_histos["h_Pt_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank pT_{#tildet}_{1}");
+            my_2d_histos["h_Pt_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank pT_{#tildet}_{2}");
             
             // NJetsVSstops
-            //my_2d_histos["h_Mass_NJetsVSstop1_PtRank_"+cutVar.first]->Fill( NGoodJets_pt45, stop1Mass_PtRank, weight );
-            //my_2d_histos["h_Mass_NJetsVSstop1_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("N_{J}");
-            //my_2d_histos["h_Mass_NJetsVSstop1_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank M_{#tildet}_{1}"); 
-            //my_2d_histos["h_Mass_NJetsVSstop2_PtRank_"+cutVar.first]->Fill( NGoodJets_pt45, stop2Mass_PtRank, weight );
-            //my_2d_histos["h_Mass_NJetsVSstop2_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("N_{J}");
-            //my_2d_histos["h_Mass_NJetsVSstop2_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank M_{#tildet}_{2}");               
-            //my_2d_histos["h_Mass_NJetsVSstop1_MassRank_"+cutVar.first]->Fill( NGoodJets_pt45, stop1Mass_MassRank, weight );
-            //my_2d_histos["h_Mass_NJetsVSstop1_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("N_{J}");
-            //my_2d_histos["h_Mass_NJetsVSstop1_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank M_{#tildet}_{1}");
-            //my_2d_histos["h_Mass_NJetsVSstop2_MassRank_"+cutVar.first]->Fill( NGoodJets_pt45, stop2Mass_MassRank, weight );
-            //my_2d_histos["h_Mass_NJetsVSstop2_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("N_{J}");
-            //my_2d_histos["h_Mass_NJetsVSstop2_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank M_{#tildet}_{2}");
-            //my_2d_histos["h_Mass_NJetsVSstop1_ScalarPtRank_"+cutVar.first]->Fill( NGoodJets_pt45, stop1Mass_ScalarPtRank, weight );
-            //my_2d_histos["h_Mass_NJetsVSstop1_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("N_{J}");
-            //my_2d_histos["h_Mass_NJetsVSstop1_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{1}");
-            //my_2d_histos["h_Mass_NJetsVSstop2_ScalarPtRank_"+cutVar.first]->Fill( NGoodJets_pt45, stop2Mass_ScalarPtRank, weight );
-            //my_2d_histos["h_Mass_NJetsVSstop2_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("N_{J}");
-            //my_2d_histos["h_Mass_NJetsVSstop2_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{2}");
-            //my_2d_histos["h_stopMasses_diffVSavg_"+cutVar.first]->Fill( difference_stopMasses, average_stopMasses, weight);
-            //my_2d_histos["h_stopMasses_diffVSavg_"+cutVar.first]->GetXaxis()->SetTitle("difference");
-            //my_2d_histos["h_stopMasses_diffVSavg_"+cutVar.first]->GetYaxis()->SetTitle("average");
+            my_2d_histos["h_Mass_NJetsVSstop1_PtRank_"+cutVar.first]->Fill( NGoodJets_pt45, stop1Mass_PtRank, weight );
+            my_2d_histos["h_Mass_NJetsVSstop1_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("N_{J}");
+            my_2d_histos["h_Mass_NJetsVSstop1_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank M_{#tildet}_{1}"); 
+            my_2d_histos["h_Mass_NJetsVSstop2_PtRank_"+cutVar.first]->Fill( NGoodJets_pt45, stop2Mass_PtRank, weight );
+            my_2d_histos["h_Mass_NJetsVSstop2_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("N_{J}");
+            my_2d_histos["h_Mass_NJetsVSstop2_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank M_{#tildet}_{2}");               
+            my_2d_histos["h_Mass_NJetsVSstop1_MassRank_"+cutVar.first]->Fill( NGoodJets_pt45, stop1Mass_MassRank, weight );
+            my_2d_histos["h_Mass_NJetsVSstop1_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("N_{J}");
+            my_2d_histos["h_Mass_NJetsVSstop1_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank M_{#tildet}_{1}");
+            my_2d_histos["h_Mass_NJetsVSstop2_MassRank_"+cutVar.first]->Fill( NGoodJets_pt45, stop2Mass_MassRank, weight );
+            my_2d_histos["h_Mass_NJetsVSstop2_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("N_{J}");
+            my_2d_histos["h_Mass_NJetsVSstop2_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank M_{#tildet}_{2}");
+            my_2d_histos["h_Mass_NJetsVSstop1_ScalarPtRank_"+cutVar.first]->Fill( NGoodJets_pt45, stop1Mass_ScalarPtRank, weight );
+            my_2d_histos["h_Mass_NJetsVSstop1_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("N_{J}");
+            my_2d_histos["h_Mass_NJetsVSstop1_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{1}");
+            my_2d_histos["h_Mass_NJetsVSstop2_ScalarPtRank_"+cutVar.first]->Fill( NGoodJets_pt45, stop2Mass_ScalarPtRank, weight );
+            my_2d_histos["h_Mass_NJetsVSstop2_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("N_{J}");
+            my_2d_histos["h_Mass_NJetsVSstop2_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{2}");
+            my_2d_histos["h_stopMasses_diffVSavg_"+cutVar.first]->Fill( difference_stopMasses, average_stopMasses, weight);
+            my_2d_histos["h_stopMasses_diffVSavg_"+cutVar.first]->GetXaxis()->SetTitle("difference");
+            my_2d_histos["h_stopMasses_diffVSavg_"+cutVar.first]->GetYaxis()->SetTitle("average");
             
             // stop All Pt combinations
-            //my_2d_histos["h_ScalarPt_stop1vsstop2_ScalarPtRank_"+cutVar.first]->Fill( stop1ScalarPt_ScalarPtRank, stop2ScalarPt_ScalarPtRank, weight );
-            //my_2d_histos["h_ScalarPt_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank Scalar pT_{#tildet}_{1}");
-            //my_2d_histos["h_ScalarPt_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank Scalar pT_{#tildet}_{2}");
-            //my_2d_histos["h_Pt1_PtRankVsScalarPtRank_"+cutVar.first]->Fill( stop1Pt_PtRank, stop1Pt_ScalarPtRank, weight );
-            //my_2d_histos["h_Pt1_PtRankVsScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank pT_{#tildet}_{1}");
-            //my_2d_histos["h_Pt1_PtRankVsScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank pT_{#tildet}_{1}");
-            //my_2d_histos["h_Pt2_PtRankVsScalarPtRank_"+cutVar.first]->Fill( stop2Pt_PtRank, stop2Pt_ScalarPtRank, weight );
-            //my_2d_histos["h_Pt2_PtRankVsScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank pT_{#tildet}_{2}");
-            //my_2d_histos["h_Pt2_PtRankVsScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank pT_{#tildet}_{2}");
-            //my_2d_histos["h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first]->Fill( stop1Pt_PtRank, stop1ScalarPt_ScalarPtRank, weight );
-            //my_2d_histos["h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank pT_{#tildet}_{1}");
-            //my_2d_histos["h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank Scalar pT_{#tildet}_{1}");
-            //my_2d_histos["h_Pt2_PtRankVsScalarPt2_ScalarPtRank"+cutVar.first]->Fill( stop2Pt_PtRank, stop2ScalarPt_ScalarPtRank, weight );
-            //my_2d_histos["h_Pt2_PtRankVsScalarPt2_ScalarPtRank"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank pT_{#tildet}_{2}");
-            //my_2d_histos["h_Pt2_PtRankVsScalarPt2_ScalarPtRank"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank Scalar pT_{#tildet}_{2}");
+            my_2d_histos["h_ScalarPt_stop1vsstop2_ScalarPtRank_"+cutVar.first]->Fill( stop1ScalarPt_ScalarPtRank, stop2ScalarPt_ScalarPtRank, weight );
+            my_2d_histos["h_ScalarPt_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank Scalar pT_{#tildet}_{1}");
+            my_2d_histos["h_ScalarPt_stop1vsstop2_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank Scalar pT_{#tildet}_{2}");
+            my_2d_histos["h_Pt1_PtRankVsScalarPtRank_"+cutVar.first]->Fill( stop1Pt_PtRank, stop1Pt_ScalarPtRank, weight );
+            my_2d_histos["h_Pt1_PtRankVsScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank pT_{#tildet}_{1}");
+            my_2d_histos["h_Pt1_PtRankVsScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank pT_{#tildet}_{1}");
+            my_2d_histos["h_Pt2_PtRankVsScalarPtRank_"+cutVar.first]->Fill( stop2Pt_PtRank, stop2Pt_ScalarPtRank, weight );
+            my_2d_histos["h_Pt2_PtRankVsScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank pT_{#tildet}_{2}");
+            my_2d_histos["h_Pt2_PtRankVsScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank pT_{#tildet}_{2}");
+            my_2d_histos["h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first]->Fill( stop1Pt_PtRank, stop1ScalarPt_ScalarPtRank, weight );
+            my_2d_histos["h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank pT_{#tildet}_{1}");
+            my_2d_histos["h_Pt1_PtRankVsScalarPt1_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank Scalar pT_{#tildet}_{1}");
+            my_2d_histos["h_Pt2_PtRankVsScalarPt2_ScalarPtRank"+cutVar.first]->Fill( stop2Pt_PtRank, stop2ScalarPt_ScalarPtRank, weight );
+            my_2d_histos["h_Pt2_PtRankVsScalarPt2_ScalarPtRank"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank pT_{#tildet}_{2}");
+            my_2d_histos["h_Pt2_PtRankVsScalarPt2_ScalarPtRank"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank Scalar pT_{#tildet}_{2}");
             
             // stops MassVsPt
-            //my_2d_histos["h_stop1_MassVsPt_PtRank_"+cutVar.first]->Fill(stop1Mass_PtRank, stop1Pt_PtRank, weight);
-            //my_2d_histos["h_stop1_MassVsPt_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank M_{#tildet}_{1}");
-            //my_2d_histos["h_stop1_MassVsPt_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank pT_{#tildet}_{1}");
-            //my_2d_histos["h_stop2_MassVsPt_PtRank_"+cutVar.first]->Fill(stop2Mass_PtRank, stop2Pt_PtRank, weight);
-            //my_2d_histos["h_stop2_MassVsPt_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank M_{#tildet}_{2}");
-            //my_2d_histos["h_stop2_MassVsPt_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank pT_{#tildet}_{2}");
-            //my_2d_histos["h_stop1_MassVsPt_MassRank_"+cutVar.first]->Fill(stop1Mass_MassRank, stop1Pt_MassRank, weight);
-            //my_2d_histos["h_stop1_MassVsPt_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("Mass Rank M_{#tildet}_{1}");
-            //my_2d_histos["h_stop1_MassVsPt_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank pT_{#tildet}_{1}");
-            //my_2d_histos["h_stop2_MassVsPt_MassRank_"+cutVar.first]->Fill(stop2Mass_MassRank, stop2Pt_MassRank, weight);
-            //my_2d_histos["h_stop2_MassVsPt_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("Mass Rank M_{#tildet}_{2}");
-            //my_2d_histos["h_stop2_MassVsPt_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank pT_{#tildet}_{2}");
-            //my_2d_histos["h_stop1_MassVsPt_ScalarPtRank_"+cutVar.first]->Fill(stop1Mass_ScalarPtRank, stop1Pt_ScalarPtRank, weight);
-            //my_2d_histos["h_stop1_MassVsPt_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{1}");
-            //my_2d_histos["h_stop1_MassVsPt_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank pT_{#tildet}_{1}");
-            //my_2d_histos["h_stop2_MassVsPt_ScalarPtRank_"+cutVar.first]->Fill(stop2Mass_ScalarPtRank, stop2Pt_ScalarPtRank, weight);
-            //my_2d_histos["h_stop2_MassVsPt_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{2}");
-            //my_2d_histos["h_stop2_MassVsPt_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank pT_{#tildet}_{2}");
-            //my_2d_histos["h_stop1_MassVsScalarPt_ScalarPtRank_"+cutVar.first]->Fill(stop1Mass_ScalarPtRank, stop1ScalarPt_ScalarPtRank, weight);
-            //my_2d_histos["h_stop1_MassVsScalarPt_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{1}");
-            //my_2d_histos["h_stop1_MassVsScalarPt_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank Scalar pT_{#tildet}_{1}");
-            //my_2d_histos["h_stop2_MassVsScalarPt_ScalarPtRank_"+cutVar.first]->Fill(stop2Mass_ScalarPtRank, stop1ScalarPt_ScalarPtRank, weight);
-            //my_2d_histos["h_stop2_MassVsScalarPt_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{2}");
-            //my_2d_histos["h_stop2_MassVsScalarPt_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank Scalar pT_{#tildet}_{2}");
+            my_2d_histos["h_stop1_MassVsPt_PtRank_"+cutVar.first]->Fill(stop1Mass_PtRank, stop1Pt_PtRank, weight);
+            my_2d_histos["h_stop1_MassVsPt_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank M_{#tildet}_{1}");
+            my_2d_histos["h_stop1_MassVsPt_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank pT_{#tildet}_{1}");
+            my_2d_histos["h_stop2_MassVsPt_PtRank_"+cutVar.first]->Fill(stop2Mass_PtRank, stop2Pt_PtRank, weight);
+            my_2d_histos["h_stop2_MassVsPt_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("Pt Rank M_{#tildet}_{2}");
+            my_2d_histos["h_stop2_MassVsPt_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank pT_{#tildet}_{2}");
+            my_2d_histos["h_stop1_MassVsPt_MassRank_"+cutVar.first]->Fill(stop1Mass_MassRank, stop1Pt_MassRank, weight);
+            my_2d_histos["h_stop1_MassVsPt_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("Mass Rank M_{#tildet}_{1}");
+            my_2d_histos["h_stop1_MassVsPt_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank pT_{#tildet}_{1}");
+            my_2d_histos["h_stop2_MassVsPt_MassRank_"+cutVar.first]->Fill(stop2Mass_MassRank, stop2Pt_MassRank, weight);
+            my_2d_histos["h_stop2_MassVsPt_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("Mass Rank M_{#tildet}_{2}");
+            my_2d_histos["h_stop2_MassVsPt_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank pT_{#tildet}_{2}");
+            my_2d_histos["h_stop1_MassVsPt_ScalarPtRank_"+cutVar.first]->Fill(stop1Mass_ScalarPtRank, stop1Pt_ScalarPtRank, weight);
+            my_2d_histos["h_stop1_MassVsPt_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{1}");
+            my_2d_histos["h_stop1_MassVsPt_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank pT_{#tildet}_{1}");
+            my_2d_histos["h_stop2_MassVsPt_ScalarPtRank_"+cutVar.first]->Fill(stop2Mass_ScalarPtRank, stop2Pt_ScalarPtRank, weight);
+            my_2d_histos["h_stop2_MassVsPt_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{2}");
+            my_2d_histos["h_stop2_MassVsPt_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank pT_{#tildet}_{2}");
+            my_2d_histos["h_stop1_MassVsScalarPt_ScalarPtRank_"+cutVar.first]->Fill(stop1Mass_ScalarPtRank, stop1ScalarPt_ScalarPtRank, weight);
+            my_2d_histos["h_stop1_MassVsScalarPt_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{1}");
+            my_2d_histos["h_stop1_MassVsScalarPt_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank Scalar pT_{#tildet}_{1}");
+            my_2d_histos["h_stop2_MassVsScalarPt_ScalarPtRank_"+cutVar.first]->Fill(stop2Mass_ScalarPtRank, stop1ScalarPt_ScalarPtRank, weight);
+            my_2d_histos["h_stop2_MassVsScalarPt_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{2}");
+            my_2d_histos["h_stop2_MassVsScalarPt_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank Scalar pT_{#tildet}_{2}");
 
             // MT2
-            //my_2d_histos["h_NJetsVsMT2_"+cutVar.first]->Fill( NGoodJets_pt45, MT2, weight );
-            //my_2d_histos["h_NJetsVsMT2_"+cutVar.first]->GetXaxis()->SetTitle("N_{J}");
-            //my_2d_histos["h_NJetsVsMT2_"+cutVar.first]->GetYaxis()->SetTitle("MT2");
-            //my_2d_histos["h_Mass_MT2vsstop1_PtRank_"+cutVar.first]->Fill( MT2, stop1Mass_PtRank, weight );
-            //my_2d_histos["h_Mass_MT2vsstop1_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("MT2");
-            //my_2d_histos["h_Mass_MT2vsstop1_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank M_{#tildet}_{1} [GeV]");
-            //my_2d_histos["h_Mass_MT2vsstop2_PtRank_"+cutVar.first]->Fill( MT2, stop2Mass_PtRank, weight );
-            //my_2d_histos["h_Mass_MT2vsstop2_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("MT2");
-            //my_2d_histos["h_Mass_MT2vsstop2_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank M_{#tildet}_{2} [GeV]");
-            //my_2d_histos["h_Mass_MT2vsstop1_MassRank_"+cutVar.first]->Fill( MT2, stop1Mass_MassRank, weight );
-            //my_2d_histos["h_Mass_MT2vsstop1_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("MT2");
-            //my_2d_histos["h_Mass_MT2vsstop1_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank M_{#tildet}_{1} [GeV]");
-            //my_2d_histos["h_Mass_MT2vsstop2_MassRank_"+cutVar.first]->Fill( MT2, stop2Mass_MassRank, weight );
-            //my_2d_histos["h_Mass_MT2vsstop2_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("MT2");
-            //my_2d_histos["h_Mass_MT2vsstop2_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank M_{#tildet}_{2} [GeV]");
-            //my_2d_histos["h_Mass_MT2vsstop1_ScalarPtRank_"+cutVar.first]->Fill( MT2, stop1Mass_ScalarPtRank, weight );
-            //my_2d_histos["h_Mass_MT2vsstop1_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("MT2");
-            //my_2d_histos["h_Mass_MT2vsstop1_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{1} [GeV]");
-            //my_2d_histos["h_Mass_MT2vsstop2_ScalarPtRank_"+cutVar.first]->Fill( MT2, stop2Mass_ScalarPtRank, weight );
-            //my_2d_histos["h_Mass_MT2vsstop2_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("MT2");
-            //my_2d_histos["h_Mass_MT2vsstop2_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{2} [GeV]");
+            my_2d_histos["h_NJetsVsMT2_"+cutVar.first]->Fill( NGoodJets_pt45, MT2, weight );
+            my_2d_histos["h_NJetsVsMT2_"+cutVar.first]->GetXaxis()->SetTitle("N_{J}");
+            my_2d_histos["h_NJetsVsMT2_"+cutVar.first]->GetYaxis()->SetTitle("MT2");
+            my_2d_histos["h_Mass_MT2vsstop1_PtRank_"+cutVar.first]->Fill( MT2, stop1Mass_PtRank, weight );
+            my_2d_histos["h_Mass_MT2vsstop1_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("MT2");
+            my_2d_histos["h_Mass_MT2vsstop1_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank M_{#tildet}_{1} [GeV]");
+            my_2d_histos["h_Mass_MT2vsstop2_PtRank_"+cutVar.first]->Fill( MT2, stop2Mass_PtRank, weight );
+            my_2d_histos["h_Mass_MT2vsstop2_PtRank_"+cutVar.first]->GetXaxis()->SetTitle("MT2");
+            my_2d_histos["h_Mass_MT2vsstop2_PtRank_"+cutVar.first]->GetYaxis()->SetTitle("Pt Rank M_{#tildet}_{2} [GeV]");
+            my_2d_histos["h_Mass_MT2vsstop1_MassRank_"+cutVar.first]->Fill( MT2, stop1Mass_MassRank, weight );
+            my_2d_histos["h_Mass_MT2vsstop1_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("MT2");
+            my_2d_histos["h_Mass_MT2vsstop1_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank M_{#tildet}_{1} [GeV]");
+            my_2d_histos["h_Mass_MT2vsstop2_MassRank_"+cutVar.first]->Fill( MT2, stop2Mass_MassRank, weight );
+            my_2d_histos["h_Mass_MT2vsstop2_MassRank_"+cutVar.first]->GetXaxis()->SetTitle("MT2");
+            my_2d_histos["h_Mass_MT2vsstop2_MassRank_"+cutVar.first]->GetYaxis()->SetTitle("Mass Rank M_{#tildet}_{2} [GeV]");
+            my_2d_histos["h_Mass_MT2vsstop1_ScalarPtRank_"+cutVar.first]->Fill( MT2, stop1Mass_ScalarPtRank, weight );
+            my_2d_histos["h_Mass_MT2vsstop1_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("MT2");
+            my_2d_histos["h_Mass_MT2vsstop1_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{1} [GeV]");
+            my_2d_histos["h_Mass_MT2vsstop2_ScalarPtRank_"+cutVar.first]->Fill( MT2, stop2Mass_ScalarPtRank, weight );
+            my_2d_histos["h_Mass_MT2vsstop2_ScalarPtRank_"+cutVar.first]->GetXaxis()->SetTitle("MT2");
+            my_2d_histos["h_Mass_MT2vsstop2_ScalarPtRank_"+cutVar.first]->GetYaxis()->SetTitle("ScalarPt Rank M_{#tildet}_{2} [GeV]");
 
             // --------------------
             // -- stop gen level
@@ -740,155 +688,6 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
             //my_histos["h_Nlino2GenMass_"+cutVar.first]->Fill( Nlino2GenMass, weight );
             //my_histos["h_Single1GenMass_"+cutVar.first]->Fill( Single1GenMass, weight );
             //my_histos["h_Single2RecoMass_"+cutVar.first]->Fill( Single2GenMass, weight );
-
-            // ----------------------
-            // -- ISR gen matching
-            // ----------------------
-            my_histos["h_nGenISR_"+cutVar.first]->Fill( nGenISR, weight );
-            my_histos["h_nGenISR_"+cutVar.first]->GetXaxis()->SetTitle("nGenISR");
-            my_histos["h_nGenISR_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-            my_histos["h_nRecoISR_"+cutVar.first]->Fill( nRecoISR, weight );
-            my_histos["h_nRecoISR_"+cutVar.first]->GetXaxis()->SetTitle("nRecoISR");
-            my_histos["h_nRecoISR_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-
-            // --------------------
-            // all possible matches
-            // --------------------
-            for (double dr = 0.0; dr < GM_ISRmatching_allDR.size(); dr++)
-            {
-                my_histos["h_GM_ISRmatching_allDR_"+cutVar.first]->Fill( GM_ISRmatching_allDR.at(dr), weight );
-                my_histos["h_GM_ISRmatching_allDR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching all #DeltaR");
-                my_histos["h_GM_ISRmatching_allDR_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-
-                my_2d_histos["h_GM_all_PtRvsDR_"+cutVar.first]->Fill(GM_ISRmatching_allPtRatio.at(dr), GM_ISRmatching_allDR.at(dr), weight);
-                //my_2d_histos["h_GM_all_PtRvsDR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching all (1 - (Pt^{Reco}/Pt^{Gen}))");
-                my_2d_histos["h_GM_all_PtRvsDR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching all (Pt^{Reco}/Pt^{Gen})");
-                my_2d_histos["h_GM_all_PtRvsDR_"+cutVar.first]->GetYaxis()->SetTitle("ISRmatching all #DeltaR");
-            }
-
-            for (double pt = 0.0; pt < GM_ISRmatching_allPtRatio.size(); pt++)
-            {
-                my_histos["h_GM_ISRmatching_allPtRatio_"+cutVar.first]->Fill( GM_ISRmatching_allPtRatio.at(pt), weight );
-                //my_histos["h_GM_ISRmatching_allPtRatio_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching all (1 - (Pt^{Reco}/Pt^{Gen}))");
-                my_histos["h_GM_ISRmatching_allPtRatio_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching all (Pt^{Reco}/Pt^{Gen})");
-                my_histos["h_GM_ISRmatching_allPtRatio_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-            }
-
-            // ------------
-            // best matches
-            // ------------
-            for (double dr = 0.0; dr < GM_ISRmatching_bestDR.size(); dr++)
-            {
-                my_histos["h_GM_ISRmatching_bestDR_"+cutVar.first]->Fill( GM_ISRmatching_bestDR.at(dr), weight );
-                my_histos["h_GM_ISRmatching_bestDR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching best #DeltaR");
-                my_histos["h_GM_ISRmatching_bestDR_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-
-                my_2d_histos["h_GM_best_PtRvsDR_"+cutVar.first]->Fill(GM_ISRmatching_bestPtRatio.at(dr), GM_ISRmatching_bestDR.at(dr), weight);
-                //my_2d_histos["h_GM_best_PtRvsDR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching best (1 - (Pt^{Reco}/Pt^{Gen}))");
-                my_2d_histos["h_GM_best_PtRvsDR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching best (Pt^{Reco}/Pt^{Gen})");
-                my_2d_histos["h_GM_best_PtRvsDR_"+cutVar.first]->GetYaxis()->SetTitle("ISRmatching best #DeltaR");
-            }
-
-            for (double pt = 0.0; pt < GM_ISRmatching_bestPtRatio.size(); pt++)
-            {
-                my_histos["h_GM_ISRmatching_bestPtRatio_"+cutVar.first]->Fill( GM_ISRmatching_bestPtRatio.at(pt), weight );
-                //my_histos["h_GM_ISRmatching_bestPtRatio_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching best (1 - (Pt^{Reco}/Pt^{Gen}))");
-                my_histos["h_GM_ISRmatching_bestPtRatio_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching best (Pt^{Reco}/Pt^{Gen})");
-                my_histos["h_GM_ISRmatching_bestPtRatio_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-            }
-
-            // ------------------------------
-            // matches with cutting on deltaR
-            // ------------------------------
-            for (double dr = 0.0; dr < GM_ISRmatching_justCutOnDR_DR.size(); dr++)
-            {
-                my_histos["h_GM_ISRmatching_CutOnDR_DR_"+cutVar.first]->Fill( GM_ISRmatching_justCutOnDR_DR.at(dr), weight );
-                my_histos["h_GM_ISRmatching_CutOnDR_DR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching CutOnDR #DeltaR");
-                my_histos["h_GM_ISRmatching_CutOnDR_DR_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-
-                my_2d_histos["h_GM_CutOnDR_PtRvsDR_"+cutVar.first]->Fill(GM_ISRmatching_justCutOnDR_PtRatio.at(dr), GM_ISRmatching_justCutOnDR_DR.at(dr), weight);
-                //my_2d_histos["h_GM_CutOnDR_PtRvsDR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching CutOnDR (1 - (Pt^{Reco}/Pt^{Gen}))");
-                my_2d_histos["h_GM_CutOnDR_PtRvsDR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching CutOnDR (Pt^{Reco}/Pt^{Gen})");
-                my_2d_histos["h_GM_CutOnDR_PtRvsDR_"+cutVar.first]->GetYaxis()->SetTitle("ISRmatching CutOnDR #DeltaR");   
-            }
-
-            for (double pt = 0.0; pt < GM_ISRmatching_justCutOnDR_PtRatio.size(); pt++)
-            {
-                my_histos["h_GM_ISRmatching_CutOnDR_PtRatio_"+cutVar.first]->Fill( GM_ISRmatching_justCutOnDR_PtRatio.at(pt), weight );
-                //my_histos["h_GM_ISRmatching_CutOnDR_PtRatio_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching CutOnDR (1 - (Pt^{Reco}/Pt^{Gen}))");
-                my_histos["h_GM_ISRmatching_CutOnDR_PtRatio_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching CutOnDR (Pt^{Reco}/Pt^{Gen})");
-                my_histos["h_GM_ISRmatching_CutOnDR_PtRatio_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-            }
-
-            // --------------------------------
-            // matches with cutting on pt ratio
-            // --------------------------------
-            for (double dr = 0.0; dr < GM_ISRmatching_justCutOnPtRatio_DR.size(); dr++)
-            {
-                my_histos["h_GM_ISRmatching_CutOnPtRatio_DR_"+cutVar.first]->Fill( GM_ISRmatching_justCutOnPtRatio_DR.at(dr), weight );
-                my_histos["h_GM_ISRmatching_CutOnPtRatio_DR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching CutOnPtRatio #DeltaR");
-                my_histos["h_GM_ISRmatching_CutOnPtRatio_DR_"+cutVar.first]->GetYaxis()->SetTitle("Events");                
-
-                my_2d_histos["h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first]->Fill(GM_ISRmatching_justCutOnPtRatio_PtRatio.at(dr), GM_ISRmatching_justCutOnPtRatio_DR.at(dr), weight);
-                //my_2d_histos["h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching CutOnPtRatio (1 - (Pt^{Reco}/Pt^{Gen}))");
-                my_2d_histos["h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching CutOnPtRatio (Pt^{Reco}/Pt^{Gen})");
-                my_2d_histos["h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first]->GetYaxis()->SetTitle("ISRmatching CutOnPtRatio #DeltaR");
-            }
-
-            for (double pt = 0.0; pt < GM_ISRmatching_justCutOnPtRatio_PtRatio.size(); pt++)
-            {
-                my_histos["h_GM_ISRmatching_CutOnPtRatio_PtRatio_"+cutVar.first]->Fill( GM_ISRmatching_justCutOnPtRatio_PtRatio.at(pt), weight );
-                //my_histos["h_GM_ISRmatching_CutOnPtRatio_PtRatio_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching CutOnPtRatio (1 - (Pt^{Reco}/Pt^{Gen}))");
-                my_histos["h_GM_ISRmatching_CutOnPtRatio_PtRatio_"+cutVar.first]->GetXaxis()->SetTitle("ISRmatching CutOnPtRatio (Pt^{Reco}/Pt^{Gen})");
-                my_histos["h_GM_ISRmatching_CutOnPtRatio_PtRatio_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-            }            
-
-
-            // -----------------------------
-            // ISR and NON ISR Jet variables
-            // ----------------------------- 
-            int nISRJets = 0, nNonISRJets = 0;
-            for (unsigned int j = 0; j < Jets.size(); j++)
-            {
-                if (!GoodJets_pt20[j]) continue;
-                if (ISRmatched[j])
-                {
-                    my_histos["h_ISRJets_Mass_"+cutVar.first]->Fill( Jets[j].M(), weight );
-                    my_histos["h_ISRJets_Mass_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Mass");
-                    my_histos["h_ISRJets_Mass_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-                    my_histos["h_ISRJets_Pt_"+cutVar.first]->Fill( Jets[j].Pt(), weight );
-                    my_histos["h_ISRJets_Pt_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Pt");
-                    my_histos["h_ISRJets_Pt_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-                    my_histos["h_ISRJets_Phi_"+cutVar.first]->Fill( Jets[j].Phi(), weight );
-                    my_histos["h_ISRJets_Phi_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets #phi");
-                    my_histos["h_ISRJets_Phi_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-                    my_histos["h_ISRJets_Eta_"+cutVar.first]->Fill( Jets[j].Eta(), weight );
-                    my_histos["h_ISRJets_Eta_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets #eta");
-                    my_histos["h_ISRJets_Eta_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-                    nISRJets++;
-                } else
-                {
-                    my_histos["h_NonISRJets_Mass_"+cutVar.first]->Fill( Jets[j].M(), weight );
-                    my_histos["h_NonISRJets_Mass_"+cutVar.first]->GetXaxis()->SetTitle("NonISRJets Mass");
-                    my_histos["h_NonISRJets_Mass_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-                    my_histos["h_NonISRJets_Pt_"+cutVar.first]->Fill( Jets[j].Pt(), weight );
-                    my_histos["h_NonISRJets_Pt_"+cutVar.first]->GetXaxis()->SetTitle("NonISRJets Pt");
-                    my_histos["h_NonISRJets_Pt_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-                    my_histos["h_NonISRJets_Phi_"+cutVar.first]->Fill( Jets[j].Phi(), weight );
-                    my_histos["h_NonISRJets_Phi_"+cutVar.first]->GetXaxis()->SetTitle("NonISRJets #phi");
-                    my_histos["h_NonISRJets_Phi_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-                    my_histos["h_NonISRJets_Eta_"+cutVar.first]->Fill( Jets[j].Eta(), weight );
-                    my_histos["h_NonISRJets_Eta_"+cutVar.first]->GetXaxis()->SetTitle("NonISRJets #eta");
-                    my_histos["h_NonISRJets_Eta_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-                    nNonISRJets++;
-                }
-            }
-            my_histos["h_nISRJets_"+cutVar.first]->Fill( nISRJets, weight );
-            my_histos["h_nISRJets_"+cutVar.first]->GetXaxis()->SetTitle("nISRJets");
-            my_histos["h_nISRJets_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-            my_histos["h_nNonISRJets_"+cutVar.first]->Fill( nNonISRJets, weight );
-            my_histos["h_nNonISRJets_"+cutVar.first]->GetXaxis()->SetTitle("nNonISRJets");
-            my_histos["h_nNonISRJets_"+cutVar.first]->GetYaxis()->SetTitle("Events");
 
         }
     }
