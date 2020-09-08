@@ -270,7 +270,7 @@ public:
             };
             registerModules(tr, std::move(modulesList));
         }
-        else if(analyzer=="StealthHemispheres" || analyzer=="Semra_Analyzer" || analyzer=="AnalyzeTopTagger")
+        else if(analyzer=="StealthHemispheres" || analyzer=="Semra_Analyzer" || analyzer=="AnalyzeTopTagger" || analyzer=="ISRJets_Analyzer")
         {
             const std::vector<std::string> modulesList = {
                 "PartialUnBlinding",
