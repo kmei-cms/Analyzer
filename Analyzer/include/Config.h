@@ -56,6 +56,7 @@ private:
             else if(module=="CommonVariables")              tr.emplaceModule<CommonVariables>();
             else if(module=="MakeMVAVariables")             tr.emplaceModule<MakeMVAVariables>(false);
             else if(module=="MakeMVAVariables_NonIsoMuon")  tr.emplaceModule<MakeMVAVariables>(false, "", "NonIsoMuonJets_pt30");
+            else if(module=="MakeMVAVariables_2l")          tr.emplaceModule<MakeMVAVariables>(false, "", "GoodJets_pt30_GoodLeptons_pt20");
             else if(module=="Baseline")                     tr.emplaceModule<Baseline>();
             else if(module=="StopGenMatch")                 tr.emplaceModule<StopGenMatch>();
             else if(module=="MegaJetCombine")               tr.emplaceModule<MegaJetCombine>();
@@ -258,15 +259,15 @@ public:
                 "Jet",
                 "BJet",
                 "CommonVariables",
-                "MakeMVAVariables",
+                "FatJetCombine",
                 "Baseline",
+                "MakeMVAVariables",
 //                "DeepEventShape",
                 "StopGenMatch",
 //                "MegaJetCombine",
                 "BTagCorrector",
                 "ScaleFactors",
                 "TrainingNTupleVars",
-                "FatJetCombine"
             };
             registerModules(tr, std::move(modulesList));
         }
@@ -368,8 +369,9 @@ public:
                 "BJet",
                 "RunTopTagger",
                 "CommonVariables",
-                "MakeMVAVariables",
                 "Baseline",
+                "FatJetCombine",
+                "MakeMVAVariables",
                 "DeepEventShape",
                 "StopJets",
                 //"MakeStopHemispheres_All",
@@ -379,7 +381,6 @@ public:
                 "BTagCorrector",
                 "ScaleFactors",
                 "TrainingNTupleVars",
-                "FatJetCombine"
             };
             registerModules(tr, std::move(modulesList));
         }
