@@ -33,12 +33,10 @@ void MakeNNVariables::Loop(NTupleReader& tr, double, int maxevents, bool)
     while( tr.getNextEvent() )
     {
         const auto& eventCounter        = tr.getVar<int>("eventCounter");
-
         //const auto& runtype             = tr.getVar<std::string>("runtype");
         const auto& isSignal            = tr.getVar<bool>("isSignal");
         const auto& passBaseline1l      = tr.getVar<bool>("passBaseline1l_Good");
         const auto& filetag             = tr.getVar<std::string>("filetag");
-//        const auto& passBaseline2l_pt20 = tr.getVar<bool>("passBaseline2l_pt20");
 
         auto& mass = tr.createDerivedVar<double>("mass", 0.0);
         if(!isSignal)
@@ -94,23 +92,28 @@ void MakeNNVariables::Loop(NTupleReader& tr, double, int maxevents, bool)
             "Jet_phi_1",  "Jet_phi_2",  "Jet_phi_3",  "Jet_phi_4",  "Jet_phi_5",  "Jet_phi_6",  "Jet_phi_7",  "Jet_phi_8",  "Jet_phi_9",  "Jet_phi_10",  "Jet_phi_11",  "Jet_phi_12",
             "Jet_m_1",    "Jet_m_2",    "Jet_m_3",    "Jet_m_4",    "Jet_m_5",    "Jet_m_6",    "Jet_m_7",    "Jet_m_8",    "Jet_m_9",    "Jet_m_10",    "Jet_m_11",    "Jet_m_12",
             "Jet_dcsv_1", "Jet_dcsv_2", "Jet_dcsv_3", "Jet_dcsv_4", "Jet_dcsv_5", "Jet_dcsv_6", "Jet_dcsv_7", "Jet_dcsv_8", "Jet_dcsv_9", "Jet_dcsv_10", "Jet_dcsv_11", "Jet_dcsv_12",
+            "Jet_ptD_1",  "Jet_ptD_2",  "Jet_ptD_3",  "Jet_ptD_4",  "Jet_ptD_5",  "Jet_ptD_6",  "Jet_ptD_7",  "Jet_ptD_8",  "Jet_ptD_9",  "Jet_ptD_10",  "Jet_ptD_11",  "Jet_ptD_12",
+            "Jet_axismajor_1", "Jet_axismajor_2", "Jet_axismajor_3", "Jet_axismajor_4", "Jet_axismajor_5", "Jet_axismajor_6", "Jet_axismajor_7", "Jet_axismajor_8", "Jet_axismajor_9", "Jet_axismajor_10", "Jet_axismajor_11", "Jet_axismajor_12",
+            "Jet_axisminor_1", "Jet_axisminor_2", "Jet_axisminor_3", "Jet_axisminor_4", "Jet_axisminor_5", "Jet_axisminor_6", "Jet_axisminor_7", "Jet_axisminor_8", "Jet_axisminor_9", "Jet_axisminor_10", "Jet_axisminor_11", "Jet_axisminor_12",
+            "Jet_multiplicity_1", "Jet_multiplicity_2", "Jet_multiplicity_3", "Jet_multiplicity_4", "Jet_multiplicity_5", "Jet_multiplicity_6", "Jet_multiplicity_7", "Jet_multiplicity_8", "Jet_multiplicity_9", "Jet_multiplicity_10", "Jet_multiplicity_11", "Jet_multiplicity_12",
             "GoodLeptons_pt_1",  "GoodLeptons_pt_2",
             "GoodLeptons_eta_1", "GoodLeptons_eta_2",
             "GoodLeptons_phi_1", "GoodLeptons_phi_2",
             "GoodLeptons_m_1",   "GoodLeptons_m_2",
-            "JetsAK8Cands_pt_1",   "JetsAK8Cands_pt_2",   "JetsAK8Cands_pt_3",
-            "JetsAK8Cands_eta_1",  "JetsAK8Cands_eta_2",  "JetsAK8Cands_eta_3",
-            "JetsAK8Cands_phi_1",  "JetsAK8Cands_phi_2",  "JetsAK8Cands_phi_3",
-            "JetsAK8Cands_m_1",    "JetsAK8Cands_m_2",    "JetsAK8Cands_m_3",
-            "JetsAK8Cands_SDM_1",    "JetsAK8Cands_SDM_2",    "JetsAK8Cands_SDM_3",
-            "JetsAK8Cands_Pruned_1",    "JetsAK8Cands_Pruned_2",    "JetsAK8Cands_Pruned_3",
-            "JetsAK8Cands_T21_1",    "JetsAK8Cands_T21_2",    "JetsAK8Cands_T21_3",
+            "JetsAK8Cands_pt_1",     "JetsAK8Cands_pt_2",     "JetsAK8Cands_pt_3",     "JetsAK8Cands_pt_4",     "JetsAK8Cands_pt_5",
+            "JetsAK8Cands_eta_1",    "JetsAK8Cands_eta_2",    "JetsAK8Cands_eta_3",    "JetsAK8Cands_eta_4",    "JetsAK8Cands_eta_5",
+            "JetsAK8Cands_phi_1",    "JetsAK8Cands_phi_2",    "JetsAK8Cands_phi_3",    "JetsAK8Cands_phi_4",    "JetsAK8Cands_phi_5",
+            "JetsAK8Cands_m_1",      "JetsAK8Cands_m_2",      "JetsAK8Cands_m_3",      "JetsAK8Cands_m_4",      "JetsAK8Cands_m_5",
+            "JetsAK8Cands_SDM_1",    "JetsAK8Cands_SDM_2",    "JetsAK8Cands_SDM_3",    "JetsAK8Cands_SDM_4",    "JetsAK8Cands_SDM_5",
+            "JetsAK8Cands_Pruned_1", "JetsAK8Cands_Pruned_2", "JetsAK8Cands_Pruned_3", "JetsAK8Cands_Pruned_4", "JetsAK8Cands_Pruned_5",
+            "JetsAK8Cands_T21_1",    "JetsAK8Cands_T21_2",    "JetsAK8Cands_T21_3",    "JetsAK8Cands_T21_4",    "JetsAK8Cands_T21_5",
             "lvMET_cm_pt",
             "lvMET_cm_eta",
             "lvMET_cm_phi",
             "lvMET_cm_m",
             "stop1_PtRank_1l_mass", "stop2_PtRank_1l_mass",
             "mass",
+            "deepESM_valReg",
         };
 
         if( tr.isFirstEvent() ) 

@@ -3,10 +3,11 @@ Runs all of our anaylsis code.
 
 ## Using the tensor-flow based top tagger
 
-To have easy access to TensorFlow and UpRoot, we need to work in a CMSSW10_2_9 release:
+To have easy access to TensorFlow and UpRoot, we need to work in a CMSSW_11_2_0_pre5 release:
 ```
-cmsrel CMSSW_10_2_9
-cd CMSSW_10_2_9/src/
+export SCRAM_ARCH=slc7_amd64_gcc820
+cmsrel CMSSW_11_2_0_pre5
+cd CMSSW_11_2_0_pre5/src/
 cmsenv
 ```
 
@@ -37,7 +38,7 @@ make -j4
 ```
 
 We set up the top tagger cfg files for per year, because per year has different b-tagger working points (WPs).
-Last step is to get the cfg and model files for the top tagger and deepESM.
+Last step is to get the cfg and model files for the top tagger, deepESM, and mass regression.
 ```
 cmsenv
 getTaggerCfg.sh -t StealthStop_DeepCSV_DeepResolved_DeepAK8_wp0.98_2016_v1 -f TopTaggerCfg_2016.cfg -o
@@ -47,6 +48,7 @@ getDeepESMCfg.sh -t Keras_Tensorflow_2016_v1.2 -o -s 2016
 getDeepESMCfg.sh -t Keras_Tensorflow_2017_v1.2 -o -s 2017
 getDeepESMCfg.sh -t Keras_Tensorflow_2018pre_v1.2 -o -s 2018pre
 getDeepESMCfg.sh -t Keras_Tensorflow_2018post_v1.2 -o -s 2018post
+getDeepESMCfg.sh -t Reg_V1 -o -f Mass -F Mass_NonIsoMuon -s Regression
 ```
 
 Example of running MyAnalysis interactively
