@@ -18,7 +18,8 @@ Analyze1Lep::Analyze1Lep() : initHistos(false)
 }
 
 void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap, const std::vector<TH1DInfo>& histInfos, 
-                             const std::vector<TH2DInfo>& hist2DInfos,  const std::vector<TH2DProfileInfo>& hist2DProfileInfos)
+                             const std::vector<TH2DInfo>& hist2DInfos,  const std::vector<TH2DProfileInfo>& hist2DProfileInfos,
+                             const unsigned int nMVAJets)
 {
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
@@ -43,7 +44,7 @@ void Analyze1Lep::InitHistos(const std::map<std::string, bool>& cutMap, const st
     my_histos.emplace("GoodLeptons_phi_1", std::make_shared<TH1D>("GoodLeptons_phi_1","GoodLeptons_phi_1", 80, -4, 4 ) );
     my_histos.emplace("GoodLeptons_m_1", std::make_shared<TH1D>("GoodLeptons_m_1","GoodLeptons_m_1", 20, 0, 200 ) );
 
-    for(unsigned int i = 1; i <= 7 ; i++) //Bad hard code
+    for(unsigned int i = 1; i <= nMVAJets ; i++)
     {
         my_histos.emplace("Jet_cm_pt_"+std::to_string(i)+"_1l_ge7j_ge1b",  std::make_shared<TH1D>(("Jet_cm_pt_"+std::to_string(i)+"_1l_ge7j_ge1b").c_str(),("Jet_cm_pt_"+std::to_string(i)+"_1l_ge7j_ge1b").c_str(), 150, 0, 1500 ));
         my_histos.emplace("Jet_cm_eta_"+std::to_string(i)+"_1l_ge7j_ge1b", std::make_shared<TH1D>(("Jet_cm_eta_"+std::to_string(i)+"_1l_ge7j_ge1b").c_str(),("Jet_cm_eta_"+std::to_string(i)+"_1l_ge7j_ge1b").c_str(), 100, -6, 6 ));
@@ -144,6 +145,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double, int maxevents, bool)
         const auto& jmt_ev2_top6              = tr.getVar<double>("jmt_ev2_top6");
         const auto& Jets_cm_top6              = tr.getVec<TLorentzVector>("Jets_cm_top6");
         const auto& eventCounter              = tr.getVar<int>("eventCounter");
+        const auto& nMVAJets                  = tr.getVar<unsigned int>("nMVAJets");
 
         // ------------------------
         // -- Print event number
@@ -403,7 +405,7 @@ void Analyze1Lep::Loop(NTupleReader& tr, double, int maxevents, bool)
         // Initialize Histograms
         if(!initHistos)
         {
-            InitHistos(cut_map_1l, histInfos, hist2DInfos, hist2DProfileInfos);
+            InitHistos(cut_map_1l, histInfos, hist2DInfos, hist2DProfileInfos, nMVAJets);
             initHistos = true;
         }
 
@@ -526,20 +528,29 @@ void Analyze1Lep::Loop(NTupleReader& tr, double, int maxevents, bool)
             my_histos["GoodLeptons_phi_1"]->Fill(GoodLeptons.at(0).second.Phi(), weight);
             my_histos["GoodLeptons_m_1"]->Fill(GoodLeptons.at(0).second.M(), weight);
 
-            for(unsigned int i = 0; i < Jets_cm_top6.size(); i++)
+            unsigned int nJets = Jets_cm_top6.size();
+            unsigned int iVec  = 0;
+            for(unsigned int i = 1; i <= nMVAJets; i++)
             {
-                my_histos["Jet_cm_pt_"+std::to_string(i+1)+"_1l_ge7j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).Pt()), weight);
-                my_histos["Jet_cm_eta_"+std::to_string(i+1)+"_1l_ge7j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).Eta()), weight);
-                my_histos["Jet_cm_phi_"+std::to_string(i+1)+"_1l_ge7j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).Phi()), weight);
-                my_histos["Jet_cm_m_"+std::to_string(i+1)+"_1l_ge7j_ge1b"]->Fill(static_cast<double>(Jets_cm_top6.at(i).M()), weight);
-                my_2d_histos["Jet_cm_pt_"+std::to_string(i+1)+"_deepESM_1l_ge7j_ge1b"]->Fill(deepESM_val, Jets_cm_top6.at(i).Pt(), weight);
-                my_2d_histos["Jet_cm_eta_"+std::to_string(i+1)+"_deepESM_1l_ge7j_ge1b"]->Fill(deepESM_val, Jets_cm_top6.at(i).Eta(), weight);
-                my_2d_histos["Jet_cm_phi_"+std::to_string(i+1)+"_deepESM_1l_ge7j_ge1b"]->Fill(deepESM_val, Jets_cm_top6.at(i).Phi(), weight);
-                my_2d_histos["Jet_cm_m_"+std::to_string(i+1)+"_deepESM_1l_ge7j_ge1b"]->Fill(deepESM_val, Jets_cm_top6.at(i).M(), weight);
-                my_2d_histos["Jet_cm_pt_"+std::to_string(i+1)+"_njets_1l_ge7j_ge1b"]->Fill(NGoodJets_pt30, Jets_cm_top6.at(i).Pt(), weight);
-                my_2d_histos["Jet_cm_eta_"+std::to_string(i+1)+"_njets_1l_ge7j_ge1b"]->Fill(NGoodJets_pt30, Jets_cm_top6.at(i).Eta(), weight);
-                my_2d_histos["Jet_cm_phi_"+std::to_string(i+1)+"_njets_1l_ge7j_ge1b"]->Fill(NGoodJets_pt30, Jets_cm_top6.at(i).Phi(), weight);
-                my_2d_histos["Jet_cm_m_"+std::to_string(i+1)+"_njets_1l_ge7j_ge1b"]->Fill(NGoodJets_pt30, Jets_cm_top6.at(i).M(), weight);
+                double pt  = (iVec < nJets) ? static_cast<double>(Jets_cm_top6.at(iVec).Pt())  : 0.0;
+                double eta = (iVec < nJets) ? static_cast<double>(Jets_cm_top6.at(iVec).Eta()) : 0.0;
+                double phi = (iVec < nJets) ? static_cast<double>(Jets_cm_top6.at(iVec).Phi()) : 0.0;
+                double m   = (iVec < nJets) ? static_cast<double>(Jets_cm_top6.at(iVec).M())   : 0.0;
+
+                my_histos["Jet_cm_pt_"+std::to_string(i)+"_1l_ge7j_ge1b"]->Fill(pt, weight);
+                my_histos["Jet_cm_eta_"+std::to_string(i)+"_1l_ge7j_ge1b"]->Fill(eta, weight);
+                my_histos["Jet_cm_phi_"+std::to_string(i)+"_1l_ge7j_ge1b"]->Fill(phi, weight);
+                my_histos["Jet_cm_m_"+std::to_string(i)+"_1l_ge7j_ge1b"]->Fill(m, weight);
+                my_2d_histos["Jet_cm_pt_"+std::to_string(i)+"_deepESM_1l_ge7j_ge1b"]->Fill(deepESM_val, pt, weight);
+                my_2d_histos["Jet_cm_eta_"+std::to_string(i)+"_deepESM_1l_ge7j_ge1b"]->Fill(deepESM_val, eta, weight);
+                my_2d_histos["Jet_cm_phi_"+std::to_string(i)+"_deepESM_1l_ge7j_ge1b"]->Fill(deepESM_val, phi, weight);
+                my_2d_histos["Jet_cm_m_"+std::to_string(i)+"_deepESM_1l_ge7j_ge1b"]->Fill(deepESM_val, m, weight);
+                my_2d_histos["Jet_cm_pt_"+std::to_string(i)+"_njets_1l_ge7j_ge1b"]->Fill(NGoodJets_pt30, pt, weight);
+                my_2d_histos["Jet_cm_eta_"+std::to_string(i)+"_njets_1l_ge7j_ge1b"]->Fill(NGoodJets_pt30, eta, weight);
+                my_2d_histos["Jet_cm_phi_"+std::to_string(i)+"_njets_1l_ge7j_ge1b"]->Fill(NGoodJets_pt30, phi, weight);
+                my_2d_histos["Jet_cm_m_"+std::to_string(i)+"_njets_1l_ge7j_ge1b"]->Fill(NGoodJets_pt30, m, weight);
+
+                iVec++;
             }
         }
 

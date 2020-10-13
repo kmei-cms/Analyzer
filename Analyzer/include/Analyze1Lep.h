@@ -63,7 +63,7 @@ public:
     ~Analyze1Lep(){};
     
     void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false);
-    void InitHistos(const std::map<std::string, bool>& cutMap, const std::vector<TH1DInfo>& histInfos, const std::vector<TH2DInfo>& hist2DInfos, const std::vector<TH2DProfileInfo>& hist2DProfileInfos);
+    void InitHistos(const std::map<std::string, bool>& cutMap, const std::vector<TH1DInfo>& histInfos, const std::vector<TH2DInfo>& hist2DInfos, const std::vector<TH2DProfileInfo>& hist2DProfileInfos, const unsigned int nMVAJets);
     void WriteHistos(TFile* outfile);
 };
 

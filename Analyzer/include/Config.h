@@ -54,7 +54,7 @@ private:
             else if(module=="Jet")                          tr.emplaceModule<Jet>();
             else if(module=="BJet")                         tr.emplaceModule<BJet>();
             else if(module=="CommonVariables")              tr.emplaceModule<CommonVariables>();
-            else if(module=="MakeMVAVariables")             tr.emplaceModule<MakeMVAVariables>(false);
+            else if(module=="MakeMVAVariables")             tr.emplaceModule<MakeMVAVariables>(false, "", "GoodJets_pt30", false, true, 12);
             else if(module=="MakeMVAVariables_NonIsoMuon")  tr.emplaceModule<MakeMVAVariables>(false, "", "NonIsoMuonJets_pt30");
             else if(module=="MakeMVAVariables_2l")          tr.emplaceModule<MakeMVAVariables>(false, "", "GoodJets_pt30_GoodLeptons_pt20");
             else if(module=="Baseline")                     tr.emplaceModule<Baseline>();
