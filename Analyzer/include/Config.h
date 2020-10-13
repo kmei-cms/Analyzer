@@ -352,7 +352,6 @@ public:
                 "DeepEventShape_NonIsoMuon",
                 "BTagCorrector",
                 "ScaleFactors",
-                "Mass_Regression"
             };
             registerModules(tr, std::move(modulesList));
         }
