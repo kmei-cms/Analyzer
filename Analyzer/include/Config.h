@@ -22,6 +22,7 @@
 #include "Framework/Framework/include/TrainingNTupleVars.h"
 #include "Framework/Framework/include/MakeStopHemispheres.h"
 #include "Framework/Framework/include/StopJets.h"
+#include "Framework/Framework/include/ISRJets.h"
 #include "Framework/Framework/include/FatJetCombine.h"
 
 class Config
@@ -66,6 +67,7 @@ private:
             else if(module=="MakeStopHemispheres_0l")       tr.emplaceModule<MakeStopHemispheres>("Jets",     "GoodJets_pt45", "NGoodJets_pt45", "_0l", Hemisphere::InvMassSeed);
             else if(module=="MakeStopHemispheres_TaggedTop")tr.emplaceModule<MakeStopHemispheres>("StopJets", "GoodStopJets",  "NGoodStopJets",  "_TaggedTop", Hemisphere::TopSeed);
             else if(module=="StopJets")                     tr.emplaceModule<StopJets>();
+            else if(module=="ISRJets")                      tr.emplaceModule<ISRJets>();
             else if(module=="DeepEventShape")               tr.emplaceModule<DeepEventShape>(DeepESMCfg, ModelFile);
             else if(module=="Mass_Regression")              tr.emplaceModule<DeepEventShape>("Mass_Regression.cfg", "keras_frozen_Regression.pb");
             else if(module=="DeepEventShape_NonIsoMuon")    tr.emplaceModule<DeepEventShape>(DeepESMCfg_NonIsoMuon, ModelFile);
@@ -258,16 +260,16 @@ public:
                 "FatJetCombine",
                 "Baseline",
                 "MakeMVAVariables",
-//                "DeepEventShape",
+                //"DeepEventShape",
                 "StopGenMatch",
-//                "MegaJetCombine",
+                //"MegaJetCombine",
                 "BTagCorrector",
                 "ScaleFactors",
                 "TrainingNTupleVars",
             };
             registerModules(tr, std::move(modulesList));
         }
-        else if(analyzer=="StealthHemispheres" || analyzer=="Semra_Analyzer" || analyzer=="AnalyzeTopTagger")
+        else if(analyzer=="StealthHemispheres" || analyzer=="Semra_Analyzer" || analyzer=="AnalyzeTopTagger" || analyzer=="ISRJets_Analyzer")
         {
             const std::vector<std::string> modulesList = {
                 "PartialUnBlinding",
@@ -283,6 +285,7 @@ public:
                 "Baseline",
                 "DeepEventShape",
                 "StopJets",
+                "ISRJets",
                 "MakeStopHemispheres_All",
                 "MakeStopHemispheres_1l",
                 "MakeStopHemispheres_0l",

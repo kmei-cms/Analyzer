@@ -410,23 +410,26 @@ int main()
     // entry for data
     // --------------
     // 'leg entry'  'root file'     'draw options'  'draw color'
-    histInfo data = {"Data", "condor/hadd_2016_wholeTT_WP98_GoodJetsMaskTest_16.07.2020/2016_BG_OTHER.root", "PEX0", kBlack, false};
+    histInfo data = {"Data", "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_BG_OTHER.root", "PEX0", kBlack, false};
 
     // ----------------------------------------
     // vector summarizing background histograms 
     // ----------------------------------------
     std::vector<histInfo> bgEntries = {
 
-        {"t#bar{t}",        "condor/hadd_2016_wholeTT_WP98_GoodJetsMaskTest_16.07.2020/2016_TT.root",              "hist", kBlue - 6    },
-        {"t#bar{t}+X",      "condor/hadd_2016_wholeTT_WP98_GoodJetsMaskTest_16.07.2020/2016_TTX.root",             "hist", kOrange + 2   },
-        {"QCD",             "condor/hadd_2016_wholeTT_WP98_GoodJetsMaskTest_16.07.2020/2016_QCD.root",             "hist", kGreen + 1  },
-        {"Other",           "condor/hadd_2016_wholeTT_WP98_GoodJetsMaskTest_16.07.2020/2016_Other.root",           "hist", kMagenta + 2  },
+        //{"t#bar{t}",   "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_TT.root",    "hist", kBlue - 6    },
+        //{"t#bar{t}+X", "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_TTX.root",   "hist", kOrange + 2  },
+        //{"QCD",        "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_QCD.root",   "hist", kGreen + 1   },
+        //{"Other",      "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_Other.root", "hist", kMagenta + 2 },
          
-        //{"WJets",           "condor/hadd_2016_wholeTT_WP98_GoodJetsMaskTest_16.07.2020/2016_WJets.root",           "hist", kYellow + 1 },
-        //{"DYJetsToLL_M-50", "condor/hadd_2016_wholeTT_WP98_GoodJetsMaskTest_16.07.2020/2016_DYJetsToLL_M-50.root", "hist", kOrange + 2 },
-        //{"ST",              "condor/hadd_2016_wholeTT_WP98_GoodJetsMaskTest_16.07.2020/2016_ST.root",              "hist", kRed + 1    },
-        //{"Diboson",         "condor/hadd_2016_wholeTT_WP98_GoodJetsMaskTest_16.07.2020/2016_Diboson.root",         "hist", kMagenta + 1},
-        //{"Triboson",        "condor/hadd_2016_wholeTT_WP98_GoodJetsMaskTest_16.07.2020/2016_Triboson.root",        "hist", kGray       },
+        {"T#bar{T}",        "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_TT.root",              "hist", kBlue - 6   },
+        {"WJets",           "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_WJets.root",           "hist", kYellow + 1 },
+        {"DYJetsToLL_M-50", "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_DYJetsToLL_M-50.root", "hist", kOrange + 2 },
+        {"QCD",             "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_QCD.root",             "hist", kGreen + 1  },
+        {"ST",              "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_ST.root",              "hist", kRed + 1    },
+        {"Diboson",         "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_Diboson.root",         "hist", kMagenta + 1},
+        {"TTX",             "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_TTX.root",             "hist", kCyan + 1   },
+        {"Triboson",        "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_Triboson.root",        "hist", kGray       },        
 
     
     };
@@ -436,10 +439,10 @@ int main()
     // ------------------------------------ 
     std::vector<histInfo> sigEntries = { 
 
-        {"RPV m_{#tildet} = 350", "condor/hadd_2016_wholeTT_WP98_GoodJetsMaskTest_16.07.2020/2016_RPV_2t6j_mStop-350.root",        "hist", kCyan+1    }, 
-        {"RPV m_{#tildet} = 550", "condor/hadd_2016_wholeTT_WP98_GoodJetsMaskTest_16.07.2020/2016_RPV_2t6j_mStop-550.root",        "hist", kMagenta+2 },
-        {"RPV m_{#tildet} = 850", "condor/hadd_2016_wholeTT_WP98_GoodJetsMaskTest_16.07.2020/2016_RPV_2t6j_mStop-850.root",        "hist", kRed },
-        //{"SYY m_{#tildet} = 900", "condor/hadd_2016_wholeTT_WP98_GoodJetsMaskTest_16.07.2020/2016_StealthSYY_2t6j_mStop-900.root", "hist", kGray },
+        {"RPV m_{#tildet} = 350", "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_RPV_2t6j_mStop-350.root","hist", kCyan}, 
+        {"RPV m_{#tildet} = 550", "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_RPV_2t6j_mStop-550.root","hist", kMagenta},
+        {"RPV m_{#tildet} = 850", "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_RPV_2t6j_mStop-850.root","hist", kRed },
+        //{"SYY m_{#tildet} = 900", "condor/hadd_2016_makeStopHemispheres_TopSeed_StopJets_WP98_25.07.2020/2016_StealthSYY_2t6j_mStop-900.root", "hist", kGray },
     
     };
 
@@ -454,7 +457,8 @@ int main()
         
         //"0l_HT500", "0l_HT500_ge2b", "0l_HT500_ge2b_ge6j", 
  
-        //"0l_HT500_ge2b_ge6j_ge2t", "0l_HT500_ge2b_ge6j_ge2t1j", "0l_HT500_ge2b_ge6j_ge2t3j", "0l_HT500_ge2b_ge6j_ge2t1j3j",
+        //"0l_HT500_ge2b_ge6j_ge2t", 
+        //"0l_HT500_ge2b_ge6j_ge2t1j", "0l_HT500_ge2b_ge6j_ge2t3j", "0l_HT500_ge2b_ge6j_ge2t1j3j",
         
         "0l_HT500_ge2b_ge6j_ge2t_ge1dRbjets", 
         //"0l_HT500_ge2b_ge6j_ge2t1j_ge1dRbjets", "0l_HT500_ge2b_ge6j_ge2t3j_ge1dRbjets", "0l_HT500_ge2b_ge6j_ge2t1j3j_ge1dRbjets",
@@ -469,32 +473,35 @@ int main()
 
     for (const auto& cutlabel : cut) 
     {
-        plt.plot( "h_ntops_"+cutlabel,        "N_{T}",              "Events", true, cutlabel );
-        plt.plot( "h_njets_"+cutlabel,        "N_{J}",              "Events", true, cutlabel );
-        plt.plot( "h_nbjets_"+cutlabel,       "N_{BJ}",             "Events", true, cutlabel );
-        plt.plot( "h_ht_"+cutlabel,           "HT [GeV]",           "Events", true, cutlabel );
-        plt.plot( "h_met_"+cutlabel,          "MET [GeV]",          "Events", true, cutlabel );
+        // --------------------
+        // General Variables
+        // --------------------
+        //plt.plot( "h_ntops_"+cutlabel,         "N_{T}",                "Events", true, cutlabel );
+        //plt.plot( "h_njets_"+cutlabel,         "N_{J}",                "Events", true, cutlabel );
+        //plt.plot( "h_nbjets_"+cutlabel,        "N_{BJ}",               "Events", true, cutlabel );
+        //plt.plot( "h_ht_"+cutlabel,            "HT [GeV]",             "Events", true, cutlabel );
+        //plt.plot( "h_met_"+cutlabel,           "MET [GeV]",            "Events", true, cutlabel );
+        //plt.plot( "h_jetsPt_"+cutlabel,        "pT_{Jets} [GeV]",      "Events", true, cutlabel );
+        //plt.plot( "h_jetsMass_"+cutlabel,      "M_{Jets} [GeV]",       "Events", true, cutlabel );
+        //plt.plot( "h_jetsEta_"+cutlabel,       "#eta_{Jets} [GeV]",    "Events", true, cutlabel );
+        //plt.plot( "h_bjetsMass_"+cutlabel,     "M_{BJets} [GeV]",      "Events", true, cutlabel );
+        //plt.plot( "h_bjetsMass_"+cutlabel,     "M_{BJets} [GeV]",      "Events", true, cutlabel ); 
+        //plt.plot( "h_bjetsEta_"+cutlabel,      "#eta_{BJets} [GeV]",   "Events", true, cutlabel ); 
+        //plt.plot( "h_topsMass_"+cutlabel,      "M_{Tops} [GeV]",       "Events", true, cutlabel );
+        //plt.plot( "h_topsEta_"+cutlabel,       "#eta_{Tops}",          "Events", true, cutlabel, 5 );
+        //plt.plot( "h_topsPhi_"+cutlabel,       "#phi_{Tops}",          "Events", true, cutlabel, 5 );
+        //plt.plot( "h_topsPt_"+cutlabel,        "pT_{Tops} [GeV]",      "Events", true, cutlabel, 0, 1500);
+        //plt.plot( "h_bestTopMass_"+cutlabel,   "M_{BestTop} [GeV]",    "Events", true, cutlabel );
+        //plt.plot( "h_bestTopEta_"+cutlabel,    "#eta_{BestTop}",       "Events", true, cutlabel );         
+        //plt.plot( "h_bestTopPt_"+cutlabel,     "pT_{BestTop} [GeV]",   "Events", true, cutlabel );
+        //plt.plot( "h_dR_bjets_"+cutlabel,      "#DeltaR_{bjets}",      "Events", false, cutlabel ); // true: for not log scale
+        //plt.plot( "h_dR_top1_top2_"+cutlabel,  "#DeltaR_{t1-t2}",      "Events", false, cutlabel );
+        //plt.plot( "h_dR_tops_bjets_"+cutlabel, "#DeltaR_{tops-bjets}", "Events", false, cutlabel ); 
 
-        plt.plot( "h_topsMass_"+cutlabel,      "M_{Tops} [GeV]",       "Events", true, cutlabel, 0, 50);
-        plt.plot( "h_topsEta_"+cutlabel,       "#eta_{Tops}",          "Events", true, cutlabel, 5 );
-        plt.plot( "h_topsPhi_"+cutlabel,       "#phi_{Tops}",          "Events", true, cutlabel, 5 );
-        plt.plot( "h_topsPt_"+cutlabel,        "pT_{Tops} [GeV]",      "Events", true, cutlabel, 0, 500);
-
-        plt.plot( "h_resolvedMass_"+cutlabel,  "resolved jet M",       "Events", true, cutlabel, 0, 50);
-        plt.plot( "h_resolvedEta_"+cutlabel,   "resolved jet #eta",    "Events", true, cutlabel, 5 );
-        plt.plot( "h_resolvedPhi_"+cutlabel,   "resolved jet #phi",    "Events", true, cutlabel, 5 );
-        plt.plot( "h_resolvedPt_"+cutlabel,    "resolved jet pT",      "Events", true, cutlabel, 0, 500);
-
-        plt.plot( "h_bestTopMass_"+cutlabel,   "M_{BestTop} [GeV]",    "Events", true, cutlabel );
-        plt.plot( "h_bestTopEta_"+cutlabel,    "#eta_{BestTop}",       "Events", true, cutlabel );         
-        plt.plot( "h_bestTopPt_"+cutlabel,     "pT_{BestTop} [GeV]",   "Events", true, cutlabel );
-
-        plt.plot( "h_dR_bjets_"+cutlabel,      "#DeltaR_{bjets}",      "Events", false, cutlabel ); // true: for not log scale
-        plt.plot( "h_dR_top1_top2_"+cutlabel,  "#DeltaR_{t1-t2}",      "Events", false, cutlabel );
-        plt.plot( "h_dR_tops_bjets_"+cutlabel, "#DeltaR_{tops-bjets}", "Events", false, cutlabel ); 
-
-
-        // stop MT2 hemispheres 
+        // -----------------
+        // Stop Variables
+        // -----------------
+        // pt rank
         //plt.plot( "h_stop1Mass_PtRank_"+cutlabel,           "Pt Rank M_{#tildet}_{1}",               "Events", true, cutlabel, 0, 1500, 5 );
         //plt.plot( "h_stop1Eta_PtRank_"+cutlabel,            "Pt Rank #eta_{#tildet}_{1}",            "Events", true, cutlabel, 5 );
         //plt.plot( "h_stop1Phi_PtRank_"+cutlabel,            "Pt Rank #phi_{#tildet}_{1}",            "Events", true, cutlabel, 5 );
@@ -503,34 +510,33 @@ int main()
         //plt.plot( "h_stop2Eta_PtRank_"+cutlabel,            "Pt Rank #eta_{#tildet}_{2}",            "Events", true, cutlabel, 5 );
         //plt.plot( "h_stop2Phi_PtRank_"+cutlabel,            "Pt Rank #phi_{#tildet}_{2}",            "Events", true, cutlabel, 5 );
         //plt.plot( "h_stop2Pt_PtRank_"+cutlabel,             "Pt Rank pT_{#tildet}_{2}",              "Events", true, cutlabel, 0, 1500, 5 );
-
-        //plt.plot( "h_stop1Mass_MassRank_"+cutlabel,         "Mass Rank M_{#tildet}_{1}",             "Events", true, cutlabel, 0, 1500, 5 );
+        // mass rank
+        plt.plot( "h_stop1Mass_MassRank_"+cutlabel,         "Mass Rank M_{#tildet}_{1}",             "Events", true, cutlabel, 5 );
         //plt.plot( "h_stop1Eta_MassRank_"+cutlabel,          "Mass Rank #eta_{#tildet}_{1}",          "Events", true, cutlabel, 5 );
         //plt.plot( "h_stop1Phi_MassRank_"+cutlabel,          "Mass Rank #phi_{#tildet}_{1}",          "Events", true, cutlabel, 5 );
         //plt.plot( "h_stop1Pt_MassRank_"+cutlabel,           "Mass Rank pT_{#tildet}_{1}",            "Events", true, cutlabel, 0, 1500, 5 );
-        //plt.plot( "h_stop2Mass_MassRank_"+cutlabel,         "Mass Rank M_{#tildet}_{2}",             "Events", true, cutlabel, 0, 1500, 5 );
+        plt.plot( "h_stop2Mass_MassRank_"+cutlabel,         "Mass Rank M_{#tildet}_{2}",             "Events", true, cutlabel, 5 );
         //plt.plot( "h_stop2Eta_MassRank_"+cutlabel,          "Mass Rank #eta_{#tildet}_{2}",          "Events", true, cutlabel, 5 );
         //plt.plot( "h_stop2Phi_MassRank_"+cutlabel,          "Mass Rank #phi_{#tildet}_{2}",          "Events", true, cutlabel, 5 );
         //plt.plot( "h_stop2Pt_MassRank_"+cutlabel,           "Mass Rank pT_{#tildet}_{2}",            "Events", true, cutlabel, 0, 1500, 5 );
-
-        //plt.plot( "h_stop1Mass_ScalarPtRank_"+cutlabel,     "ScalarPt Rank M_{#tildet}_{1}",         "Events", true, cutlabel, 0, 1500, 5 );
+        // scalarPt rank
+        plt.plot( "h_stop1Mass_ScalarPtRank_"+cutlabel,     "ScalarPt Rank M_{#tildet}_{1}",         "Events", true, cutlabel, 5 );
         //plt.plot( "h_stop1Eta_ScalarPtRank_"+cutlabel,      "ScalarPt Rank #eta_{#tildet}_{1}",      "Events", true, cutlabel, 5 );
         //plt.plot( "h_stop1Phi_ScalarPtRank_"+cutlabel,      "ScalarPt Rank #phi_{#tildet}_{1}",      "Events", true, cutlabel, 5 );
         //plt.plot( "h_stop1Pt_ScalarPtRank_"+cutlabel,       "ScalarPt Rank pT_{#tildet}_{1}",        "Events", true, cutlabel, 0, 1500, 5 );
-        //plt.plot( "h_stop2Mass_ScalarPtRank_"+cutlabel,     "ScalarPt Rank M_{#tildet}_{2}",         "Events", true, cutlabel, 0, 1500, 5 );
+        plt.plot( "h_stop2Mass_ScalarPtRank_"+cutlabel,     "ScalarPt Rank M_{#tildet}_{2}",         "Events", true, cutlabel, 5 );
         //plt.plot( "h_stop2Eta_ScalarPtRank_"+cutlabel,      "ScalarPt Rank #eta_{#tildet}_{2}",      "Events", true, cutlabel, 5 );
         //plt.plot( "h_stop2Phi_ScalarPtRank_"+cutlabel,      "ScalarPt Rank #phi_{#tildet}_{2}",      "Events", true, cutlabel, 5 );
         //plt.plot( "h_stop2Pt_ScalarPtRank_"+cutlabel,       "ScalarPt Rank pT_{#tildet}_{2}",        "Events", true, cutlabel, 0, 1500, 5 );
-
-        //plt.plot( "h_stop1ScalarPt_ScalarPtRank_"+cutlabel, "ScalarPt Rank Scalar pT_{#tildet}_{1}", "Events", true, cutlabel, 0, 1500, 5 );
-        //plt.plot( "h_stop2ScalarPt_ScalarPtRank_"+cutlabel, "ScalarPt Rank Scalar pT_{#tildet}_{2}", "Events", true, cutlabel, 0, 1500, 5 );
-
+        plt.plot( "h_stop1ScalarPt_ScalarPtRank_"+cutlabel, "ScalarPt Rank Scalar pT_{#tildet}_{1}", "Events", true, cutlabel, 5 );
+        plt.plot( "h_stop2ScalarPt_ScalarPtRank_"+cutlabel, "ScalarPt Rank Scalar pT_{#tildet}_{2}", "Events", true, cutlabel, 5 );
+        // others
         //plt.plot( "h_MT2_"+cutlabel,                        "MT2",                                   "Events", true, cutlabel, 0, 1500, 5 );
-        //plt.plot( "h_dR_stop1stop2_"+cutlabel,              "#DeltaR",                               "Events", true, cutlabel, 5 );
-        //plt.plot( "h_dPhi_stop1stop2_"+cutlabel,            "#Delta#phi",                            "Events", true, cutlabel, 0, 4 );
-        //plt.plot( "h_difference_stopMasses_"+cutlabel,      "Pt Rank difference",                    "Events", true, cutlabel, 0, 1500, 5 );
-        //plt.plot( "h_average_stopMasses_"+cutlabel,         "average",                               "Events", true, cutlabel, 0, 1500, 5 );
-        //plt.plot( "h_relativeDiff_stopMasses_"+cutlabel,    "Pt Rank relative difference",           "Events", true, cutlabel, 0, 100,  5 );
+        plt.plot( "h_dR_stop1stop2_"+cutlabel,              "#DeltaR",                               "Events", true, cutlabel, 5 );
+        plt.plot( "h_dPhi_stop1stop2_"+cutlabel,            "#Delta#phi",                            "Events", true, cutlabel, 0, 4 );
+        plt.plot( "h_difference_stopMasses_"+cutlabel,      "difference",                            "Events", true, cutlabel, 5 );
+        plt.plot( "h_average_stopMasses_"+cutlabel,         "average",                               "Events", true, cutlabel, 5 );
+        plt.plot( "h_relativeDiff_stopMasses_"+cutlabel,    "relative difference",                   "Events", true, cutlabel, 0, 100,  5 );
 
     }
 }
