@@ -13,6 +13,7 @@
 #include "Framework/Framework/include/Jet.h"
 #include "Framework/Framework/include/BJet.h"
 #include "Framework/Framework/include/CommonVariables.h"
+#include "Framework/Framework/include/FatJetCombine.h"
 #include "Framework/Framework/include/MakeMVAVariables.h"
 #include "Framework/Framework/include/Baseline.h"
 #include "Framework/Framework/include/DeepEventShape.h"
@@ -193,6 +194,7 @@ public:
             Jet jet(myVarSuffix);
             BJet bjet(myVarSuffix);
             CommonVariables commonVariables(myVarSuffix);
+            FatJetCombine fatJetCombine(myVarSuffix);
             MakeMVAVariables makeMVAVariables(false, myVarSuffix);
             Baseline baseline(myVarSuffix);
             DeepEventShape deepEventShape(DeepESMCfg, ModelFile, "Info", true, myVarSuffix);
@@ -206,6 +208,7 @@ public:
             tr.registerFunction(jet);
             tr.registerFunction(bjet);
             tr.registerFunction(commonVariables);
+            tr.registerFunction(fatJetCombine);
             tr.registerFunction(makeMVAVariables);
             tr.registerFunction(baseline);
             tr.registerFunction(deepEventShape);
