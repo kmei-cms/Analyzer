@@ -35,7 +35,6 @@ void ISRJets_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // 
         // -- ISR gen variables
         // -----------------------
         my_histos.emplace( "h_nGenISR_"+cutVar.first, std::make_shared<TH1D> ( ("h_nGenISR_"+cutVar.first).c_str(), ("h_nGenISR_"+cutVar.first).c_str(), 20, 0, 20 ) );
-        
         my_histos.emplace( "h_GenISR_Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_GenISR_Mass_"+cutVar.first).c_str(), ("h_GenISR_Mass_"+cutVar.first).c_str(), 500, 0, 1500) );
         my_histos.emplace( "h_GenISR_Pt_"+cutVar.first, std::make_shared<TH1D> ( ("h_GenISR_Pt_"+cutVar.first).c_str(), ("h_GenISR_Pt_"+cutVar.first).c_str(), 100, 0, 1000 ) );
         my_histos.emplace( "h_GenISR_Phi_"+cutVar.first, std::make_shared<TH1D> ( ("h_GenISR_Phi_"+cutVar.first).c_str(), ("h_GenISR_Phi_"+cutVar.first).c_str(), 80, -4, 4 ) );
@@ -90,10 +89,16 @@ void ISRJets_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // 
         // -------------------
         // -- 2D histograms
         // -------------------
+        // Gen Matching
         my_2d_histos.emplace( "h_GM_all_PtRvsDR_"+cutVar.first, std::make_shared<TH2D>( ("h_GM_all_PtRvsDR_"+cutVar.first).c_str(), ("h_GM_all_PtRvsDR_"+cutVar.first).c_str(), 1000, 0, 10, 1000, 0, 10) );
         my_2d_histos.emplace( "h_GM_best_PtRvsDR_"+cutVar.first, std::make_shared<TH2D>( ("h_GM_best_PtRvsDR_"+cutVar.first).c_str(), ("h_GM_best_PtRvsDR_"+cutVar.first).c_str(), 1000, 0, 10, 1000, 0, 10) );
         my_2d_histos.emplace( "h_GM_CutOnDR_PtRvsDR_"+cutVar.first, std::make_shared<TH2D>( ("h_GM_CutOnDR_PtRvsDR_"+cutVar.first).c_str(), ("h_GM_CutOnDR_PtRvsDR_"+cutVar.first).c_str(), 1000, 0, 10, 1000, 0, 10) );
         my_2d_histos.emplace( "h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first, std::make_shared<TH2D>( ("h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first).c_str(), ("h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first).c_str(), 1000, 0, 10, 1000, 0, 10) );
+        // ISR Jets
+        my_2d_histos.emplace( "h_ISRJets_drPTR_EtaVsPhi_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_drPTR_EtaVsPhi_"+cutVar.first).c_str(), ("h_ISRJets_drPTR_EtaVsPhi_"+cutVar.first).c_str(), 100, -6, 6, 80, -4, 4) );
+        my_2d_histos.emplace( "h_ISRJets_dr_EtaVsPhi_"+cutVar.first, std::make_shared<TH2D> ( ("h_ISRJets_dr_EtaVsPhi_"+cutVar.first).c_str(), ("h_ISRJets_dr_EtaVsPhi_"+cutVar.first).c_str(), 100, -6, 6, 80, -4, 4 ) ); 
+        // Jets_ISRMask - From Ntuple to check
+        my_2d_histos.emplace( "h_Jets_ISRMask_EtaVsPhi_"+cutVar.first, std::make_shared<TH2D>( ("h_Jets_ISRMask_EtaVsPhi_"+cutVar.first).c_str(), ("h_Jets_ISRMask_EtaVsPhi_"+cutVar.first).c_str(), 100, -6, 6, 80, -4, 4) );
 
     }
 }
@@ -197,7 +202,6 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
             }
         }
 
-
         // -------------------------------------------------
         // -- Make cuts and fill histograms here & cutmap
         // -------------------------------------------------
@@ -208,7 +212,6 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
             {"0l_HT500_ge2b_ge6j_ge2t1j_ge1dRbjets",   passBaseline0l && pass_ge2t1j && pass_ge1dRbjets   },
             {"0l_HT500_ge2b_ge6j_ge2t3j_ge1dRbjets",   passBaseline0l && pass_ge2t3j && pass_ge1dRbjets   },
             {"0l_HT500_ge2b_ge6j_ge2t1j3j_ge1dRbjets", passBaseline0l && pass_ge2t1j3j && pass_ge1dRbjets },
-    
         };
 
         if (!inithisto) 
@@ -224,21 +227,19 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
         // --------------------------------     
         for (const auto& cutVar: cutmap) 
         { 
-               
             if (cutVar.second) 
             {
-
                 // -----------------------
                 // -- ISR gen variables
                 // -----------------------
                 my_histos["h_nGenISR_"+cutVar.first]->Fill( nGenISR, weight );
                 my_histos["h_nGenISR_"+cutVar.first]->GetXaxis()->SetTitle("nGenISR");
                 my_histos["h_nGenISR_"+cutVar.first]->GetYaxis()->SetTitle("Events");                
-
+                
                 for (unsigned int g = 0; g < GenParticles.size(); g++)
                 {
-                    if (!GoodJets_pt20[g]) continue;
-                    if (GenISR[g])
+                    bool filter = GenParticles.at(g).Pt() > 20 && abs(GenParticles.at(g).Eta()) < 2.4;
+                    if (GenISR[g] && filter)
                     {  
                         my_histos["h_GenISR_Mass_"+cutVar.first]->Fill( GenParticles[g].M(), weight );
                         my_histos["h_GenISR_Mass_"+cutVar.first]->GetXaxis()->SetTitle("GenISR Mass");
@@ -350,7 +351,7 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
 
                 // -----------------------------------
                 // -- ISR and NON ISR Jet variables
-                // ------------------------------------ 
+                // ----------------------------------- 
                 int nISRJets_dr_ptr = 0;
                 int nISRJets_dr     = 0;
                 int nJets_ISRMask   = 0;
@@ -362,6 +363,7 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                     // ISR Jets - matches cutting on dr and ptr
                     if (ISRmatched_dr_ptr[j])
                     {
+                        // 1D 
                         my_histos["h_ISRJets_drPTR_Mass_"+cutVar.first]->Fill( Jets[j].M(), weight );
                         my_histos["h_ISRJets_drPTR_Mass_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Mass");
                         my_histos["h_ISRJets_drPTR_Mass_"+cutVar.first]->GetYaxis()->SetTitle("Events");
@@ -374,12 +376,17 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                         my_histos["h_ISRJets_drPTR_Eta_"+cutVar.first]->Fill( Jets[j].Eta(), weight );
                         my_histos["h_ISRJets_drPTR_Eta_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets #eta");
                         my_histos["h_ISRJets_drPTR_Eta_"+cutVar.first]->GetYaxis()->SetTitle("Events");
+                        // 2D                        
+                        my_2d_histos["h_ISRJets_drPTR_EtaVsPhi_"+cutVar.first]->Fill( Jets[j].Eta(), Jets[j].Phi(), weight ); 
+                        my_2d_histos["h_ISRJets_drPTR_EtaVsPhi_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets #eta");
+                        my_2d_histos["h_ISRJets_drPTR_EtaVsPhi_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets #phi");
                         nISRJets_dr_ptr++;
                     }
             
                     // ISR Jets - matches cutting on dr 
                     if(ISRmatched_dr[j])
                     {
+                        // 1D
                         my_histos["h_ISRJets_dr_Mass_"+cutVar.first]->Fill( Jets[j].M(), weight );
                         my_histos["h_ISRJets_dr_Mass_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Mass");
                         my_histos["h_ISRJets_dr_Mass_"+cutVar.first]->GetYaxis()->SetTitle("Events");
@@ -392,12 +399,17 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                         my_histos["h_ISRJets_dr_Eta_"+cutVar.first]->Fill( Jets[j].Eta(), weight );
                         my_histos["h_ISRJets_dr_Eta_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets #eta");
                         my_histos["h_ISRJets_dr_Eta_"+cutVar.first]->GetYaxis()->SetTitle("Events");        
+                        // 2D 
+                        my_2d_histos["h_ISRJets_dr_EtaVsPhi_"+cutVar.first]->Fill( Jets[j].Eta(), Jets[j].Phi(), weight );
+                        my_2d_histos["h_ISRJets_dr_EtaVsPhi_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets #eta");
+                        my_2d_histos["h_ISRJets_dr_EtaVsPhi_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets #phi");
                         nISRJets_dr++;
                     }        
 
-                    // From Ntuple to check
+                    // Jets_ISRMask - From Ntuple to check
                     if (Jets_ISRMask[j])
-                    {                
+                    {   
+                        // 1D             
                         my_histos["h_Jets_ISRMask_Mass_"+cutVar.first]->Fill( Jets[j].M(), weight );
                         my_histos["h_Jets_ISRMask_Mass_"+cutVar.first]->GetXaxis()->SetTitle("Jets_ISRMask Mass");
                         my_histos["h_Jets_ISRMask_Mass_"+cutVar.first]->GetYaxis()->SetTitle("Events");
@@ -410,10 +422,14 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                         my_histos["h_Jets_ISRMask_Eta_"+cutVar.first]->Fill( Jets[j].Eta(), weight );
                         my_histos["h_Jets_ISRMask_Eta_"+cutVar.first]->GetXaxis()->SetTitle("Jets_ISRMask #eta");
                         my_histos["h_Jets_ISRMask_Eta_"+cutVar.first]->GetYaxis()->SetTitle("Events");
+                        // 2D
+                        my_2d_histos["h_Jets_ISRMask_EtaVsPhi_"+cutVar.first]->Fill( Jets[j].Eta(), Jets[j].Phi(), weight );
+                        my_2d_histos["h_Jets_ISRMask_EtaVsPhi_"+cutVar.first]->GetXaxis()->SetTitle("Jets_ISRMask #eta");
+                        my_2d_histos["h_Jets_ISRMask_EtaVsPhi_"+cutVar.first]->GetYaxis()->SetTitle("Jets_ISRMask #phi");
                         nJets_ISRMask++;
 
                     // Non ISR Jets
-                    } else
+                    } if (!ISRmatched_dr[j])
                     {
                         my_histos["h_NonISRJets_Mass_"+cutVar.first]->Fill( Jets[j].M(), weight );
                         my_histos["h_NonISRJets_Mass_"+cutVar.first]->GetXaxis()->SetTitle("NonISRJets Mass");
