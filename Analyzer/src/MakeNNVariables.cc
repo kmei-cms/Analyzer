@@ -36,6 +36,7 @@ void MakeNNVariables::Loop(NTupleReader& tr, double, int maxevents, bool)
         //const auto& runtype             = tr.getVar<std::string>("runtype");
         const auto& isSignal            = tr.getVar<bool>("isSignal");
         const auto& passBaseline1l      = tr.getVar<bool>("passBaseline1l_Good");
+//        const auto& passBaseline2l_pt20 = tr.getVar<bool>("passBaseline2l_pt20");
         const auto& filetag             = tr.getVar<std::string>("filetag");
 
         auto& mass = tr.createDerivedVar<double>("mass", 0.0);
@@ -100,13 +101,18 @@ void MakeNNVariables::Loop(NTupleReader& tr, double, int maxevents, bool)
             "GoodLeptons_eta_1", "GoodLeptons_eta_2",
             "GoodLeptons_phi_1", "GoodLeptons_phi_2",
             "GoodLeptons_m_1",   "GoodLeptons_m_2",
-            "JetsAK8Cands_pt_1",     "JetsAK8Cands_pt_2",     "JetsAK8Cands_pt_3",     "JetsAK8Cands_pt_4",     "JetsAK8Cands_pt_5",
-            "JetsAK8Cands_eta_1",    "JetsAK8Cands_eta_2",    "JetsAK8Cands_eta_3",    "JetsAK8Cands_eta_4",    "JetsAK8Cands_eta_5",
-            "JetsAK8Cands_phi_1",    "JetsAK8Cands_phi_2",    "JetsAK8Cands_phi_3",    "JetsAK8Cands_phi_4",    "JetsAK8Cands_phi_5",
-            "JetsAK8Cands_m_1",      "JetsAK8Cands_m_2",      "JetsAK8Cands_m_3",      "JetsAK8Cands_m_4",      "JetsAK8Cands_m_5",
-            "JetsAK8Cands_SDM_1",    "JetsAK8Cands_SDM_2",    "JetsAK8Cands_SDM_3",    "JetsAK8Cands_SDM_4",    "JetsAK8Cands_SDM_5",
-            "JetsAK8Cands_Pruned_1", "JetsAK8Cands_Pruned_2", "JetsAK8Cands_Pruned_3", "JetsAK8Cands_Pruned_4", "JetsAK8Cands_Pruned_5",
-            "JetsAK8Cands_T21_1",    "JetsAK8Cands_T21_2",    "JetsAK8Cands_T21_3",    "JetsAK8Cands_T21_4",    "JetsAK8Cands_T21_5",
+            "JetsAK8_pt_1",     "JetsAK8_pt_2",     "JetsAK8_pt_3",     "JetsAK8_pt_4",     "JetsAK8_pt_5",
+            "JetsAK8_eta_1",    "JetsAK8_eta_2",    "JetsAK8_eta_3",    "JetsAK8_eta_4",    "JetsAK8_eta_5",
+            "JetsAK8_phi_1",    "JetsAK8_phi_2",    "JetsAK8_phi_3",    "JetsAK8_phi_4",    "JetsAK8_phi_5",
+            "JetsAK8_m_1",      "JetsAK8_m_2",      "JetsAK8_m_3",      "JetsAK8_m_4",      "JetsAK8_m_5",
+            "JetsAK8_SDM_1",    "JetsAK8_SDM_2",    "JetsAK8_SDM_3",    "JetsAK8_SDM_4",    "JetsAK8_SDM_5",
+            "JetsAK8_Pruned_1", "JetsAK8_Pruned_2", "JetsAK8_Pruned_3", "JetsAK8_Pruned_4", "JetsAK8_Pruned_5",
+            "JetsAK8_Tau1_1",    "JetsAK8_Tau1_2",    "JetsAK8_Tau1_3",    "JetsAK8_Tau1_4",    "JetsAK8_Tau1_5",
+            "JetsAK8_Tau2_1",    "JetsAK8_Tau2_2",    "JetsAK8_Tau2_3",    "JetsAK8_Tau2_4",    "JetsAK8_Tau2_5",
+            "JetsAK8_Tau3_1",    "JetsAK8_Tau3_2",    "JetsAK8_Tau3_3",    "JetsAK8_Tau3_4",    "JetsAK8_Tau3_5",
+            "JetsAK8_axismajor_1",    "JetsAK8_axismajor_2",    "JetsAK8_axismajor_3",    "JetsAK8_axismajor_4",    "JetsAK8_axismajor_5",
+            "JetsAK8_axisminor_1",    "JetsAK8_axisminor_2",    "JetsAK8_axisminor_3",    "JetsAK8_axisminor_4",    "JetsAK8_axisminor_5",
+            "JetsAK8_nsubjets_1",    "JetsAK8_nsubjets_2",    "JetsAK8_nsubjets_3",    "JetsAK8_nsubjets_4",    "JetsAK8_nsubjets_5",
             "lvMET_cm_pt",
             "lvMET_cm_eta",
             "lvMET_cm_phi",
