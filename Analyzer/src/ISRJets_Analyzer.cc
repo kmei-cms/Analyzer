@@ -180,7 +180,7 @@ void ISRJets_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // 
         my_2d_histos.emplace( "h_ISRJets_drPTR_EtaVsPhi_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_drPTR_EtaVsPhi_"+cutVar.first).c_str(), ("h_ISRJets_drPTR_EtaVsPhi_"+cutVar.first).c_str(), 100, -6, 6, 80, -4, 4) );
         my_2d_histos.emplace( "h_ISRJets_dr_EtaVsPhi_"+cutVar.first, std::make_shared<TH2D> ( ("h_ISRJets_dr_EtaVsPhi_"+cutVar.first).c_str(), ("h_ISRJets_dr_EtaVsPhi_"+cutVar.first).c_str(), 100, -6, 6, 80, -4, 4 ) );
         // ISR Jets - by using TreeMaker 
-         my_2d_histos.emplace( "h_ISRJets_EtaVsPhi_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_EtaVsPhi_"+cutVar.first).c_str(), ("h_ISRJets_EtaVsPhi_"+cutVar.first).c_str(), 100, -6, 6, 80, -4, 4) ); 
+        my_2d_histos.emplace( "h_ISRJets_EtaVsPhi_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_EtaVsPhi_"+cutVar.first).c_str(), ("h_ISRJets_EtaVsPhi_"+cutVar.first).c_str(), 100, -6, 6, 80, -4, 4) ); 
 
     }
 }
@@ -556,7 +556,7 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                         nISRJets_dr_ptr++;
                     } else
                     {
-                        // 1D kinematic variables
+                        // 1D 
                         my_histos["h_NonISRJets_drPTR_Mass_"+cutVar.first]->Fill( Jets[j].M(), weight );
                         my_histos["h_NonISRJets_drPTR_Mass_"+cutVar.first]->GetXaxis()->SetTitle("NonISRJets Mass");
                         my_histos["h_NonISRJets_drPTR_Mass_"+cutVar.first]->GetYaxis()->SetTitle("Events");
@@ -651,7 +651,7 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                         nISRJets_dr++;
                     } else
                     {
-                        // 1D kinematic variables
+                        // 1D 
                         my_histos["h_NonISRJets_dr_Mass_"+cutVar.first]->Fill( Jets[j].M(), weight );
                         my_histos["h_NonISRJets_dr_Mass_"+cutVar.first]->GetXaxis()->SetTitle("NonISRJets Mass");
                         my_histos["h_NonISRJets_dr_Mass_"+cutVar.first]->GetYaxis()->SetTitle("Events");
@@ -791,18 +791,23 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                 my_histos["h_nISRJets_drPTR_"+cutVar.first]->Fill( nISRJets_dr_ptr, weight );
                 my_histos["h_nISRJets_drPTR_"+cutVar.first]->GetXaxis()->SetTitle("nISRJets");
                 my_histos["h_nISRJets_drPTR_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-                my_histos["h_nNonISRJets_drPTR_"+cutVar.first]->Fill( nISRJets_dr_ptr, weight );
+
+                my_histos["h_nNonISRJets_drPTR_"+cutVar.first]->Fill( nNonISRJets_dr_ptr, weight );
                 my_histos["h_nNonISRJets_drPTR_"+cutVar.first]->GetXaxis()->SetTitle("nNonISRJets");
                 my_histos["h_nNonISRJets_drPTR_"+cutVar.first]->GetYaxis()->SetTitle("Events"); 
+
                 my_histos["h_nISRJets_dr_"+cutVar.first]->Fill( nISRJets_dr, weight );
                 my_histos["h_nISRJets_dr_"+cutVar.first]->GetXaxis()->SetTitle("nISRJets");
                 my_histos["h_nISRJets_dr_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-                my_histos["h_nNonISRJets_dr_"+cutVar.first]->Fill( nISRJets_dr, weight );
+
+                my_histos["h_nNonISRJets_dr_"+cutVar.first]->Fill( nNonISRJets_dr, weight );
                 my_histos["h_nNonISRJets_dr_"+cutVar.first]->GetXaxis()->SetTitle("nNonISRJets");
                 my_histos["h_nNonISRJets_dr_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-                my_histos["h_nISRJets_"+cutVar.first]->Fill( nISRJets_dr, weight );
+
+                my_histos["h_nISRJets_"+cutVar.first]->Fill( nISRJets, weight );
                 my_histos["h_nISRJets_"+cutVar.first]->GetXaxis()->SetTitle("nISRJets");
                 my_histos["h_nISRJets_"+cutVar.first]->GetYaxis()->SetTitle("Events");
+
                 my_histos["h_nNonISRJets_"+cutVar.first]->Fill( nNonISRJets, weight );
                 my_histos["h_nNonISRJets_"+cutVar.first]->GetXaxis()->SetTitle("nNonISRJets");
                 my_histos["h_nNonISRJets_"+cutVar.first]->GetYaxis()->SetTitle("Events");
@@ -813,19 +818,25 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                 // Filter 1
                 for (unsigned int i = 0; i < dR_ISR_NonISR_dr_ptr.size(); i++) 
                 {
-                    my_histos["h_dR_ISR_NonISR_dr_ptr_"+cutVar.first]->Fill( dR_ISR_NonISR_dr_ptr.at(i), weight ); 
+                    my_histos["h_dR_ISR_NonISR_dr_ptr_"+cutVar.first]->Fill( dR_ISR_NonISR_dr_ptr.at(i), weight );
+                    my_histos["h_dR_ISR_NonISR_dr_ptr_"+cutVar.first]->GetXaxis()->SetTitle("#DeltaR");
+                    my_histos["h_dR_ISR_NonISR_dr_ptr_"+cutVar.first]->GetYaxis()->SetTitle("Events"); 
                 }
 
                 // Filter 2
                 for (unsigned int i = 0; i < dR_ISR_NonISR_dr.size(); i++)
                 {
-                    my_histos["h_dR_ISR_NonISR_dr_"+cutVar.first]->Fill( dR_ISR_NonISR_dr.at(i), weight );            
+                    my_histos["h_dR_ISR_NonISR_dr_"+cutVar.first]->Fill( dR_ISR_NonISR_dr.at(i), weight );           
+                    my_histos["h_dR_ISR_NonISR_dr_"+cutVar.first]->GetXaxis()->SetTitle("#DeltaR");
+                    my_histos["h_dR_ISR_NonISR_dr_"+cutVar.first]->GetYaxis()->SetTitle("Events"); 
                 }
 
                 // Filter 3
                 for (unsigned int i = 0; i < dR_ISR_NonISR.size(); i++)
                 {
-                    my_histos["h_dR_ISR_NonISR_"+cutVar.first]->Fill( dR_ISR_NonISR.at(i), weight );            
+                    my_histos["h_dR_ISR_NonISR_"+cutVar.first]->Fill( dR_ISR_NonISR.at(i), weight );           
+                    my_histos["h_dR_ISR_NonISR_dr_"+cutVar.first]->GetXaxis()->SetTitle("#DeltaR");
+                    my_histos["h_dR_ISR_NonISR_dr_"+cutVar.first]->GetYaxis()->SetTitle("Events"); 
                 }
                 
             }
