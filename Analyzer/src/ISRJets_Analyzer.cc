@@ -171,16 +171,48 @@ void ISRJets_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // 
         // -------------------
         // -- 2D histograms
         // -------------------
+        // ------------
         // Gen Matching
+        // ------------
         my_2d_histos.emplace( "h_GM_all_PtRvsDR_"+cutVar.first, std::make_shared<TH2D>( ("h_GM_all_PtRvsDR_"+cutVar.first).c_str(), ("h_GM_all_PtRvsDR_"+cutVar.first).c_str(), 1000, 0, 10, 1000, 0, 10) );
         my_2d_histos.emplace( "h_GM_best_PtRvsDR_"+cutVar.first, std::make_shared<TH2D>( ("h_GM_best_PtRvsDR_"+cutVar.first).c_str(), ("h_GM_best_PtRvsDR_"+cutVar.first).c_str(), 1000, 0, 10, 1000, 0, 10) );
         my_2d_histos.emplace( "h_GM_CutOnDR_PtRvsDR_"+cutVar.first, std::make_shared<TH2D>( ("h_GM_CutOnDR_PtRvsDR_"+cutVar.first).c_str(), ("h_GM_CutOnDR_PtRvsDR_"+cutVar.first).c_str(), 1000, 0, 10, 1000, 0, 10) );
         my_2d_histos.emplace( "h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first, std::make_shared<TH2D>( ("h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first).c_str(), ("h_GM_CutOnPtRatio_PtRvsDR_"+cutVar.first).c_str(), 1000, 0, 10, 1000, 0, 10) );
+        
+        // --------------------------------------------
         // ISR Jets - by using truth information of ISR
+        // --------------------------------------------
+        // Filter1
         my_2d_histos.emplace( "h_ISRJets_drPTR_EtaVsPhi_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_drPTR_EtaVsPhi_"+cutVar.first).c_str(), ("h_ISRJets_drPTR_EtaVsPhi_"+cutVar.first).c_str(), 100, -6, 6, 80, -4, 4) );
+        my_2d_histos.emplace( "h_ISRJets_drPTR_MassVsPt_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_drPTR_MassVsPt_"+cutVar.first).c_str(), ("h_ISRJets_drPTR_MassVsPt_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000) );
+        my_2d_histos.emplace( "h_ISRJets_drPTR_MassVsChargedHadronEnergyFraction_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_drPTR_MassVsChargedHadronEnergyFraction_"+cutVar.first).c_str(), ("h_ISRJets_drPTR_MassVsChargedHadronEnergyFraction_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1) );
+        my_2d_histos.emplace( "h_ISRJets_drPTR_MassVsChargedHadronMultiplicity_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_drPTR_MassVsChargedHadronMultiplicity_"+cutVar.first).c_str(), ("h_ISRJets_drPTR_MassVsChargedHadronMultiplicity_"+cutVar.first).c_str(), 500, 0, 1500, 1000, 0, 100) );
+        my_2d_histos.emplace( "h_ISRJets_drPTR_MassVsChargedMultiplicity_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_drPTR_MassVsChargedMultiplicity_"+cutVar.first).c_str(), ("h_ISRJets_drPTR_MassVsChargedMultiplicity_"+cutVar.first).c_str(), 500, 0, 1500, 1000, 0, 100) );
+        my_2d_histos.emplace( "h_ISRJets_drPTR_PtVsChargedHadronEnergyFraction_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_drPTR_PtVsChargedHadronEnergyFraction_"+cutVar.first).c_str(), ("h_ISRJets_drPTR_PtVsChargedHadronEnergyFraction_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1) );
+        my_2d_histos.emplace( "h_ISRJets_drPTR_PtVsChargedHadronMultiplicity_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_drPTR_PtVsChargedHadronMultiplicity_"+cutVar.first).c_str(), ("h_ISRJets_drPTR_PtVsChargedHadronMultiplicity_"+cutVar.first).c_str(), 100, 0, 1000, 1000, 0, 100) );
+        my_2d_histos.emplace( "h_ISRJets_drPTR_PtVsChargedMultiplicity_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_drPTR_PtVsChargedMultiplicity_"+cutVar.first).c_str(), ("h_ISRJets_drPTR_PtVsChargedMultiplicity_"+cutVar.first).c_str(), 100, 0, 1000, 1000, 0, 100) );
+        // Filter2
         my_2d_histos.emplace( "h_ISRJets_dr_EtaVsPhi_"+cutVar.first, std::make_shared<TH2D> ( ("h_ISRJets_dr_EtaVsPhi_"+cutVar.first).c_str(), ("h_ISRJets_dr_EtaVsPhi_"+cutVar.first).c_str(), 100, -6, 6, 80, -4, 4 ) );
-        // ISR Jets - by using TreeMaker 
+        my_2d_histos.emplace( "h_ISRJets_dr_MassVsPt_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_dr_MassVsPt_"+cutVar.first).c_str(), ("h_ISRJets_dr_MassVsPt_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000) );
+        my_2d_histos.emplace( "h_ISRJets_dr_MassVsChargedHadronEnergyFraction_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_dr_MassVsChargedHadronEnergyFraction_"+cutVar.first).c_str(), ("h_ISRJets_dr_MassVsChargedHadronEnergyFraction_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1) );
+        my_2d_histos.emplace( "h_ISRJets_dr_MassVsChargedHadronMultiplicity_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_dr_MassVsChargedHadronMultiplicity_"+cutVar.first).c_str(), ("h_ISRJets_dr_MassVsChargedHadronMultiplicity_"+cutVar.first).c_str(), 500, 0, 1500, 1000, 0, 100) );
+        my_2d_histos.emplace( "h_ISRJets_dr_MassVsChargedMultiplicity_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_dr_MassVsChargedMultiplicity_"+cutVar.first).c_str(), ("h_ISRJets_dr_MassVsChargedMultiplicity_"+cutVar.first).c_str(), 500, 0, 1500, 1000, 0, 100) );
+        my_2d_histos.emplace( "h_ISRJets_dr_PtVsChargedHadronEnergyFraction_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_dr_PtVsChargedHadronEnergyFraction_"+cutVar.first).c_str(), ("h_ISRJets_dr_PtVsChargedHadronEnergyFraction_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1) );
+        my_2d_histos.emplace( "h_ISRJets_dr_PtVsChargedHadronMultiplicity_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_dr_PtVsChargedHadronMultiplicity_"+cutVar.first).c_str(), ("h_ISRJets_dr_PtVsChargedHadronMultiplicity_"+cutVar.first).c_str(), 100, 0, 1000, 1000, 0, 100) );
+        my_2d_histos.emplace( "h_ISRJets_dr_PtVsChargedMultiplicity_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_dr_PtVsChargedMultiplicity_"+cutVar.first).c_str(), ("h_ISRJets_dr_PtVsChargedMultiplicity_"+cutVar.first).c_str(), 100, 0, 1000, 1000, 0, 100) );       
+ 
+        // -----------------------------
+        // ISR Jets - by using TreeMaker
+        // ----------------------------- 
         my_2d_histos.emplace( "h_ISRJets_EtaVsPhi_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_EtaVsPhi_"+cutVar.first).c_str(), ("h_ISRJets_EtaVsPhi_"+cutVar.first).c_str(), 100, -6, 6, 80, -4, 4) ); 
+        my_2d_histos.emplace( "h_ISRJets_MassVsPt_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_MassVsPt_"+cutVar.first).c_str(), ("h_ISRJets_MassVsPt_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1000) );
+        my_2d_histos.emplace( "h_ISRJets_MassVsChargedHadronEnergyFraction_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_MassVsChargedHadronEnergyFraction_"+cutVar.first).c_str(), ("h_ISRJets_MassVsChargedHadronEnergyFraction_"+cutVar.first).c_str(), 500, 0, 1500, 100, 0, 1) );
+        my_2d_histos.emplace( "h_ISRJets_MassVsChargedHadronMultiplicity_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_MassVsChargedHadronMultiplicity_"+cutVar.first).c_str(), ("h_ISRJets_MassVsChargedHadronMultiplicity_"+cutVar.first).c_str(), 500, 0, 1500, 1000, 0, 100) );
+        my_2d_histos.emplace( "h_ISRJets_MassVsChargedMultiplicity_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_MassVsChargedMultiplicity_"+cutVar.first).c_str(), ("h_ISRJets_MassVsChargedMultiplicity_"+cutVar.first).c_str(), 500, 0, 1500, 1000, 0, 100) );
+        my_2d_histos.emplace( "h_ISRJets_PtVsChargedHadronEnergyFraction_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_PtVsChargedHadronEnergyFraction_"+cutVar.first).c_str(), ("h_ISRJets_PtVsChargedHadronEnergyFraction_"+cutVar.first).c_str(), 100, 0, 1000, 100, 0, 1) );
+        my_2d_histos.emplace( "h_ISRJets_PtVsChargedHadronMultiplicity_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_PtVsChargedHadronMultiplicity_"+cutVar.first).c_str(), ("h_ISRJets_PtVsChargedHadronMultiplicity_"+cutVar.first).c_str(), 100, 0, 1000, 1000, 0, 100) );
+        my_2d_histos.emplace( "h_ISRJets_PtVsChargedMultiplicity_"+cutVar.first, std::make_shared<TH2D>( ("h_ISRJets_PtVsChargedMultiplicity_"+cutVar.first).c_str(), ("h_ISRJets_PtVsChargedMultiplicity_"+cutVar.first).c_str(), 100, 0, 1000, 1000, 0, 100) ); 
+        
 
     }
 }
@@ -553,6 +585,27 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                         my_2d_histos["h_ISRJets_drPTR_EtaVsPhi_"+cutVar.first]->Fill( Jets[j].Eta(), Jets[j].Phi(), weight ); 
                         my_2d_histos["h_ISRJets_drPTR_EtaVsPhi_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets #eta");
                         my_2d_histos["h_ISRJets_drPTR_EtaVsPhi_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets #phi");
+                        my_2d_histos["h_ISRJets_drPTR_MassVsPt_"+cutVar.first]->Fill( Jets[j].M(), Jets[j].Pt(), weight );
+                        my_2d_histos["h_ISRJets_drPTR_MassVsPt_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Mass");
+                        my_2d_histos["h_ISRJets_drPTR_MassVsPt_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets Pt");
+                        my_2d_histos["h_ISRJets_drPTR_MassVsChargedHadronEnergyFraction_"+cutVar.first]->Fill( Jets[j].M(), Jets_chargedHadronEnergyFraction[j], weight );
+                        my_2d_histos["h_ISRJets_drPTR_MassVsChargedHadronEnergyFraction_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Mass");
+                        my_2d_histos["h_ISRJets_drPTR_MassVsChargedHadronEnergyFraction_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedHadronEnergyFraction");
+                        my_2d_histos["h_ISRJets_drPTR_MassVsChargedHadronMultiplicity_"+cutVar.first]->Fill( Jets[j].M(), Jets_chargedHadronMultiplicity[j], weight );
+                        my_2d_histos["h_ISRJets_drPTR_MassVsChargedHadronMultiplicity_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Mass");
+                        my_2d_histos["h_ISRJets_drPTR_MassVsChargedHadronMultiplicity_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedHadronMultiplicity");
+                        my_2d_histos["h_ISRJets_drPTR_MassVsChargedMultiplicity_"+cutVar.first]->Fill( Jets[j].M(), Jets_chargedMultiplicity[j], weight );
+                        my_2d_histos["h_ISRJets_drPTR_MassVsChargedMultiplicity_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Mass");
+                        my_2d_histos["h_ISRJets_drPTR_MassVsChargedMultiplicity_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedMultiplicity");
+                        my_2d_histos["h_ISRJets_drPTR_PtVsChargedHadronEnergyFraction_"+cutVar.first]->Fill( Jets[j].Pt(), Jets_chargedHadronEnergyFraction[j], weight );
+                        my_2d_histos["h_ISRJets_drPTR_PtVsChargedHadronEnergyFraction_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Pt");
+                        my_2d_histos["h_ISRJets_drPTR_PtVsChargedHadronEnergyFraction_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedHadronEnergyFraction");        
+                        my_2d_histos["h_ISRJets_drPTR_PtVsChargedHadronMultiplicity_"+cutVar.first]->Fill( Jets[j].Pt(), Jets_chargedHadronMultiplicity[j], weight );
+                        my_2d_histos["h_ISRJets_drPTR_PtVsChargedHadronMultiplicity_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Pt");
+                        my_2d_histos["h_ISRJets_drPTR_PtVsChargedHadronMultiplicity_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedHadronMultiplicity");        
+                        my_2d_histos["h_ISRJets_drPTR_PtVsChargedMultiplicity_"+cutVar.first]->Fill( Jets[j].Pt(), Jets_chargedMultiplicity[j], weight );
+                        my_2d_histos["h_ISRJets_drPTR_PtVsChargedMultiplicity_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Pt");
+                        my_2d_histos["h_ISRJets_drPTR_PtVsChargedMultiplicity_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedMultiplicity");
                         nISRJets_dr_ptr++;
                     } else
                     {
@@ -648,6 +701,27 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                         my_2d_histos["h_ISRJets_dr_EtaVsPhi_"+cutVar.first]->Fill( Jets[j].Eta(), Jets[j].Phi(), weight );
                         my_2d_histos["h_ISRJets_dr_EtaVsPhi_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets #eta");
                         my_2d_histos["h_ISRJets_dr_EtaVsPhi_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets #phi");
+                        my_2d_histos["h_ISRJets_dr_MassVsPt_"+cutVar.first]->Fill( Jets[j].M(), Jets[j].Pt(), weight );
+                        my_2d_histos["h_ISRJets_dr_MassVsPt_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Mass");
+                        my_2d_histos["h_ISRJets_dr_MassVsPt_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets Pt");
+                        my_2d_histos["h_ISRJets_dr_MassVsChargedHadronEnergyFraction_"+cutVar.first]->Fill( Jets[j].M(), Jets_chargedHadronEnergyFraction[j], weight );
+                        my_2d_histos["h_ISRJets_dr_MassVsChargedHadronEnergyFraction_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Mass");
+                        my_2d_histos["h_ISRJets_dr_MassVsChargedHadronEnergyFraction_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedHadronEnergyFraction");
+                        my_2d_histos["h_ISRJets_dr_MassVsChargedHadronMultiplicity_"+cutVar.first]->Fill( Jets[j].M(), Jets_chargedHadronMultiplicity[j], weight );
+                        my_2d_histos["h_ISRJets_dr_MassVsChargedHadronMultiplicity_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Mass");
+                        my_2d_histos["h_ISRJets_dr_MassVsChargedHadronMultiplicity_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedHadronMultiplicity");
+                        my_2d_histos["h_ISRJets_dr_MassVsChargedMultiplicity_"+cutVar.first]->Fill( Jets[j].M(), Jets_chargedMultiplicity[j], weight );
+                        my_2d_histos["h_ISRJets_dr_MassVsChargedMultiplicity_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Mass");
+                        my_2d_histos["h_ISRJets_dr_MassVsChargedMultiplicity_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedMultiplicity");
+                        my_2d_histos["h_ISRJets_dr_PtVsChargedHadronEnergyFraction_"+cutVar.first]->Fill( Jets[j].Pt(), Jets_chargedHadronEnergyFraction[j], weight );
+                        my_2d_histos["h_ISRJets_dr_PtVsChargedHadronEnergyFraction_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Pt");
+                        my_2d_histos["h_ISRJets_dr_PtVsChargedHadronEnergyFraction_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedHadronEnergyFraction");
+                        my_2d_histos["h_ISRJets_dr_PtVsChargedHadronMultiplicity_"+cutVar.first]->Fill( Jets[j].Pt(), Jets_chargedHadronMultiplicity[j], weight );
+                        my_2d_histos["h_ISRJets_dr_PtVsChargedHadronMultiplicity_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Pt");
+                        my_2d_histos["h_ISRJets_dr_PtVsChargedHadronMultiplicity_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedHadronMultiplicity");
+                        my_2d_histos["h_ISRJets_dr_PtVsChargedMultiplicity_"+cutVar.first]->Fill( Jets[j].Pt(), Jets_chargedMultiplicity[j], weight );
+                        my_2d_histos["h_ISRJets_dr_PtVsChargedMultiplicity_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Pt");
+                        my_2d_histos["h_ISRJets_dr_PtVsChargedMultiplicity_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedMultiplicity");
                         nISRJets_dr++;
                     } else
                     {
@@ -743,6 +817,27 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                         my_2d_histos["h_ISRJets_EtaVsPhi_"+cutVar.first]->Fill( Jets[j].Eta(), Jets[j].Phi(), weight );
                         my_2d_histos["h_ISRJets_EtaVsPhi_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets #eta");
                         my_2d_histos["h_ISRJets_EtaVsPhi_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets #phi");
+                        my_2d_histos["h_ISRJets_MassVsPt_"+cutVar.first]->Fill( Jets[j].M(), Jets[j].Pt(), weight );
+                        my_2d_histos["h_ISRJets_MassVsPt_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Mass");
+                        my_2d_histos["h_ISRJets_MassVsPt_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets Pt");
+                        my_2d_histos["h_ISRJets_MassVsChargedHadronEnergyFraction_"+cutVar.first]->Fill( Jets[j].M(), Jets_chargedHadronEnergyFraction[j], weight );
+                        my_2d_histos["h_ISRJets_MassVsChargedHadronEnergyFraction_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Mass");
+                        my_2d_histos["h_ISRJets_MassVsChargedHadronEnergyFraction_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedHadronEnergyFraction");
+                        my_2d_histos["h_ISRJets_MassVsChargedHadronMultiplicity_"+cutVar.first]->Fill( Jets[j].M(), Jets_chargedHadronMultiplicity[j], weight );
+                        my_2d_histos["h_ISRJets_MassVsChargedHadronMultiplicity_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Mass");
+                        my_2d_histos["h_ISRJets_MassVsChargedHadronMultiplicity_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedHadronMultiplicity");
+                        my_2d_histos["h_ISRJets_MassVsChargedMultiplicity_"+cutVar.first]->Fill( Jets[j].M(), Jets_chargedMultiplicity[j], weight );
+                        my_2d_histos["h_ISRJets_MassVsChargedMultiplicity_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Mass");
+                        my_2d_histos["h_ISRJets_MassVsChargedMultiplicity_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedMultiplicity");
+                        my_2d_histos["h_ISRJets_PtVsChargedHadronEnergyFraction_"+cutVar.first]->Fill( Jets[j].Pt(), Jets_chargedHadronEnergyFraction[j], weight );
+                        my_2d_histos["h_ISRJets_PtVsChargedHadronEnergyFraction_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Pt");
+                        my_2d_histos["h_ISRJets_PtVsChargedHadronEnergyFraction_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedHadronEnergyFraction");
+                        my_2d_histos["h_ISRJets_PtVsChargedHadronMultiplicity_"+cutVar.first]->Fill( Jets[j].Pt(), Jets_chargedHadronMultiplicity[j], weight );
+                        my_2d_histos["h_ISRJets_PtVsChargedHadronMultiplicity_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Pt");
+                        my_2d_histos["h_ISRJets_PtVsChargedHadronMultiplicity_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedHadronMultiplicity");
+                        my_2d_histos["h_ISRJets_PtVsChargedMultiplicity_"+cutVar.first]->Fill( Jets[j].Pt(), Jets_chargedMultiplicity[j], weight );
+                        my_2d_histos["h_ISRJets_PtVsChargedMultiplicity_"+cutVar.first]->GetXaxis()->SetTitle("ISRJets Pt");
+                        my_2d_histos["h_ISRJets_PtVsChargedMultiplicity_"+cutVar.first]->GetYaxis()->SetTitle("ISRJets ChargedMultiplicity");
                         nISRJets++;
                     } else
                     {
@@ -791,23 +886,18 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                 my_histos["h_nISRJets_drPTR_"+cutVar.first]->Fill( nISRJets_dr_ptr, weight );
                 my_histos["h_nISRJets_drPTR_"+cutVar.first]->GetXaxis()->SetTitle("nISRJets");
                 my_histos["h_nISRJets_drPTR_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-
                 my_histos["h_nNonISRJets_drPTR_"+cutVar.first]->Fill( nNonISRJets_dr_ptr, weight );
                 my_histos["h_nNonISRJets_drPTR_"+cutVar.first]->GetXaxis()->SetTitle("nNonISRJets");
                 my_histos["h_nNonISRJets_drPTR_"+cutVar.first]->GetYaxis()->SetTitle("Events"); 
-
                 my_histos["h_nISRJets_dr_"+cutVar.first]->Fill( nISRJets_dr, weight );
                 my_histos["h_nISRJets_dr_"+cutVar.first]->GetXaxis()->SetTitle("nISRJets");
                 my_histos["h_nISRJets_dr_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-
                 my_histos["h_nNonISRJets_dr_"+cutVar.first]->Fill( nNonISRJets_dr, weight );
                 my_histos["h_nNonISRJets_dr_"+cutVar.first]->GetXaxis()->SetTitle("nNonISRJets");
                 my_histos["h_nNonISRJets_dr_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-
                 my_histos["h_nISRJets_"+cutVar.first]->Fill( nISRJets, weight );
                 my_histos["h_nISRJets_"+cutVar.first]->GetXaxis()->SetTitle("nISRJets");
                 my_histos["h_nISRJets_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-
                 my_histos["h_nNonISRJets_"+cutVar.first]->Fill( nNonISRJets, weight );
                 my_histos["h_nNonISRJets_"+cutVar.first]->GetXaxis()->SetTitle("nNonISRJets");
                 my_histos["h_nNonISRJets_"+cutVar.first]->GetYaxis()->SetTitle("Events");
