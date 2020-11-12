@@ -14,14 +14,14 @@
 #include <TDirectory.h>
 #include <TH1F.h>
 
-ISRJets_Analyzer::ISRJets_Analyzer() : inithisto(false) // define inithisto variable
+ISRJets_Analyzer::ISRJets_Analyzer() : inithisto(false) 
 {
 }
 
 // -------------------
 // -- Define histos
 // -------------------
-void ISRJets_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // define variable map
+void ISRJets_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) 
 {
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
@@ -31,17 +31,6 @@ void ISRJets_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // 
     for (const auto& cutVar : cutmap) 
     {  
         
-        // -----------------------
-        // -- ISR gen variables
-        // -----------------------
-        my_histos.emplace( "h_nGenISR_"+cutVar.first, std::make_shared<TH1D> ( ("h_nGenISR_"+cutVar.first).c_str(), ("h_nGenISR_"+cutVar.first).c_str(), 20, 0, 20 ) );
-        my_histos.emplace( "h_GenISR_Mass_"+cutVar.first, std::make_shared<TH1D> ( ("h_GenISR_Mass_"+cutVar.first).c_str(), ("h_GenISR_Mass_"+cutVar.first).c_str(), 500, 0, 1500) );
-        my_histos.emplace( "h_GenISR_Pt_"+cutVar.first, std::make_shared<TH1D> ( ("h_GenISR_Pt_"+cutVar.first).c_str(), ("h_GenISR_Pt_"+cutVar.first).c_str(), 100, 0, 1000 ) );
-        my_histos.emplace( "h_GenISR_Phi_"+cutVar.first, std::make_shared<TH1D> ( ("h_GenISR_Phi_"+cutVar.first).c_str(), ("h_GenISR_Phi_"+cutVar.first).c_str(), 80, -4, 4 ) );
-        my_histos.emplace( "h_GenISR_Eta_"+cutVar.first, std::make_shared<TH1D> ( ("h_GenISR_Eta_"+cutVar.first).c_str(), ("h_GenISR_Eta_"+cutVar.first).c_str(), 100, -6, 6 ) );
-
-        my_histos.emplace( "h_nRecoISR_"+cutVar.first, std::make_shared<TH1D> ( ("h_nRecoISR_"+cutVar.first).c_str(), ("h_nRecoISR_"+cutVar.first).c_str(), 20, 0, 20 ) );
-
         // --------------------------------
         // -- ISR gen matching variables
         // --------------------------------
@@ -228,33 +217,25 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
         if( maxevents != -1 && tr.getEvtNum() >= maxevents ) break;
         if( tr.getEvtNum() & (10000 == 0) ) printf( " Event %i\n", tr.getEvtNum() );
 
-        const auto& runtype         = tr.getVar<std::string>("runtype");     
-        const auto& Jets            = tr.getVec<TLorentzVector>("Jets");
-        const auto& GoodJets_pt20   = tr.getVec<bool>("GoodJets_pt20");
-        const auto& GenParticles    = tr.getVec<TLorentzVector>("GenParticles");
-        const auto& passBaseline0l  = tr.getVar<bool>("passBaseline0l_Good");
-        const auto& ntops           = tr.getVar<int>("ntops");
-        const auto& topsLV          = tr.getVec<TLorentzVector>("topsLV");
-        //const auto& ntops_1jet      = tr.getVar<int>("ntops_1jet"); // merged
-        //const auto& ntops_2jet      = tr.getVar<int>("ntops_2jet");
-        //const auto& ntops_3jet      = tr.getVar<int>("ntops_3jet"); // resolved 
-        const auto& dR_bjets        = tr.getVar<double>("dR_bjets");
-        const bool  pass_ge2t       = ntops >= 2;
-        //const bool  pass_ge2t1j     = ntops >= 2 && ntops_3jet == 0 && ntops_2jet==0;
-        //const bool  pass_ge2t3j     = ntops >= 2 && ntops_1jet == 0 && ntops_2jet==0;
-        //const bool  pass_ge2t1j3j   = ntops >= 2 && ntops_1jet >= 1 && ntops_3jet >= 1 && ntops_2jet==0;
-        const bool  pass_ge1dRbjets = dR_bjets >= 1.0;       
+        const auto& runtype               = tr.getVar<std::string>("runtype");     
+        const auto& Jets                  = tr.getVec<TLorentzVector>("Jets");
+        const auto& GoodJets_pt20         = tr.getVec<bool>("GoodJets_pt20");
+        //const auto& GenParticles          = tr.getVec<TLorentzVector>("GenParticles");
+        const auto& passBaseline0l        = tr.getVar<bool>("passBaseline0l_Good");
+        const auto& ntops                 = tr.getVar<int>("ntops");
+        const auto& topsLV                = tr.getVec<TLorentzVector>("topsLV");
+        const auto& dR_bjets              = tr.getVar<double>("dR_bjets");
+        const bool  pass_ge2t             = ntops >= 2;
+        const bool  pass_ge1dRbjets       = dR_bjets >= 1.0;       
 
         // ----------------------
         // -- ISR gen matching
         // ----------------------
-        // ISR variables crated
-        const auto& GenISR                                  = tr.getVec<bool>("GenISR");
-        const auto& nGenISR                                 = tr.getVar<int>("nGenISR");
-        const auto& nRecoISR                                = tr.getVar<int>("nRecoISR");
-        //const auto& ISRmatched_dr_ptr                       = tr.getVec<bool>("ISRmatched_dr_ptr");
         const auto& ISRmatched_dr                           = tr.getVec<bool>("ISRmatched_dr");
-        const auto& NonISRmatched                           = tr.getVec<bool>("NonISRmatched");
+        const auto& ISRmatched_dr_ptr                       = tr.getVec<bool>("ISRmatched_dr_ptr");
+        const auto& NonISRmatched_dr                        = tr.getVec<bool>("NonISRmatched_dr"); // TreeMaker NonISR (Signal Jets) filter
+        const auto& NonISRmatched_dr_ptr                    = tr.getVec<bool>("NonISRmatched_dr_ptr"); 
+        const auto& OtherJets                               = tr.getVec<bool>("OtherJets"); // TreeMaker OtherJets (ISR+FSR+underlying) filter
         const auto& GM_ISRmatching_allDR                    = tr.getVec<double>("GM_ISRmatching_allDR");
         const auto& GM_ISRmatching_bestDR                   = tr.getVec<double>("GM_ISRmatching_bestDR");
         const auto& GM_ISRmatching_justCutOnDR_DR           = tr.getVec<double>("GM_ISRmatching_justCutOnDR_DR");
@@ -266,9 +247,9 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
         // AK4 variables from ntuple
         const auto& Jets_axismajor                          = tr.getVec<double>("Jets_axismajor");
         const auto& Jets_axisminor                          = tr.getVec<double>("Jets_axisminor");
+        const auto& Jets_ptD                                = tr.getVec<double>("Jets_ptD");
         const auto& Jets_chargedHadronEnergyFraction        = tr.getVec<double>("Jets_chargedHadronEnergyFraction");
         const auto& Jets_neutralHadronEnergyFraction        = tr.getVec<double>("Jets_neutralHadronEnergyFraction");
-        const auto& Jets_ptD                                = tr.getVec<double>("Jets_ptD");
         const auto& Jets_chargedHadronMultiplicity          = tr.getVec<int>("Jets_chargedHadronMultiplicity");
         const auto& Jets_neutralHadronMultiplicity          = tr.getVec<int>("Jets_neutralHadronMultiplicity");
         const auto& Jets_chargedMultiplicity                = tr.getVec<int>("Jets_chargedMultiplicity");
@@ -303,15 +284,16 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
         // --------------------------------------------
         std::vector<TLorentzVector> ISRJets;
         std::vector<TLorentzVector> NonISRJets;
-
         for(unsigned int j = 0; j < Jets.size(); j++) 
         {
             if(!GoodJets_pt20[j]) continue;
             
-            if (ISRmatched_dr[j])
+            if (ISRmatched_dr_ptr[j]) 
             {   
                 ISRJets.push_back(Jets.at(j));
-            } else
+            }
+
+            if (NonISRmatched_dr_ptr[j])
             {   
                 NonISRJets.push_back(Jets.at(j));
             }
@@ -320,7 +302,7 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
         std::vector<double> dR_ISR_NonISR;
         for (unsigned int i = 0; i < ISRJets.size(); i++)
         {
-            double tempDR = 999; // keep track of smallest dR
+            double tempDR = 999; 
             
             for (unsigned int n = 0; n < NonISRJets.size(); n++)
             {
@@ -370,11 +352,7 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
         // -------------------------------------------------
         const std::map<std::string, bool>& cutmap
         {
-            //{"",                                       true                                               },
-            {"0l_HT500_ge2b_ge6j_ge2t_ge1dRbjets",     passBaseline0l && pass_ge2t && pass_ge1dRbjets     },
-            //{"0l_HT500_ge2b_ge6j_ge2t1j_ge1dRbjets",   passBaseline0l && pass_ge2t1j && pass_ge1dRbjets   },
-            //{"0l_HT500_ge2b_ge6j_ge2t3j_ge1dRbjets",   passBaseline0l && pass_ge2t3j && pass_ge1dRbjets   },
-            //{"0l_HT500_ge2b_ge6j_ge2t1j3j_ge1dRbjets", passBaseline0l && pass_ge2t1j3j && pass_ge1dRbjets },
+            {"0l_HT500_ge2b_ge6j_ge2t_ge1dRbjets", passBaseline0l && pass_ge2t && pass_ge1dRbjets},
         };
 
         if (!inithisto) 
@@ -392,36 +370,6 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
         { 
             if (cutVar.second) 
             {
-                // -----------------------
-                // -- ISR gen variables
-                // -----------------------
-                my_histos["h_nGenISR_"+cutVar.first]->Fill( nGenISR, weight );
-                my_histos["h_nGenISR_"+cutVar.first]->GetXaxis()->SetTitle("nGenISR");
-                my_histos["h_nGenISR_"+cutVar.first]->GetYaxis()->SetTitle("Events"); 
-                
-                for (unsigned int g = 0; g < GenParticles.size(); g++)
-                {
-                    bool filter = GenParticles.at(g).Pt() > 20 && abs(GenParticles.at(g).Eta()) < 2.4;
-                    if (GenISR[g] && filter)
-                    {  
-                        my_histos["h_GenISR_Mass_"+cutVar.first]->Fill( GenParticles[g].M(), weight );
-                        my_histos["h_GenISR_Mass_"+cutVar.first]->GetXaxis()->SetTitle("GenISR Mass");
-                        my_histos["h_GenISR_Mass_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-                        my_histos["h_GenISR_Pt_"+cutVar.first]->Fill( GenParticles[g].Pt(), weight );
-                        my_histos["h_GenISR_Pt_"+cutVar.first]->GetXaxis()->SetTitle("GenISR Pt");
-                        my_histos["h_GenISR_Pt_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-                        my_histos["h_GenISR_Phi_"+cutVar.first]->Fill( GenParticles[g].Phi(), weight );
-                        my_histos["h_GenISR_Phi_"+cutVar.first]->GetXaxis()->SetTitle("GenISR #phi");
-                        my_histos["h_GenISR_Phi_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-                        my_histos["h_GenISR_Eta_"+cutVar.first]->Fill( GenParticles[g].Eta(), weight );
-                        my_histos["h_GenISR_Eta_"+cutVar.first]->GetXaxis()->SetTitle("GenISR #eta");
-                        my_histos["h_GenISR_Eta_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-                    }
-                }
-                my_histos["h_nRecoISR_"+cutVar.first]->Fill( nRecoISR, weight );
-                my_histos["h_nRecoISR_"+cutVar.first]->GetXaxis()->SetTitle("nRecoISR");
-                my_histos["h_nRecoISR_"+cutVar.first]->GetYaxis()->SetTitle("Events");
-
                 // -------------------------------
                 // -- ISR gen matching variables
                 // -------------------------------
@@ -519,39 +467,6 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                 int nNonISRJets = 0;
                 int nOtherJets  = 0;
 
-
-                //int isr = 0;
-                //int nisr = 0;
-                //int other = 0;
-                //for (unsigned int j = 0; j < Jets.size(); j++)
-                //{
-                //    if (!GoodJets_pt20[j]) continue;
-
-                //    if (ISRmatched_dr[j])
-                //    {
-                //        isr++; 
-                //    }
-
-                //    if (NonISRmatched[j])
-                //    {
-                //        nisr++;
-                //    }   
-    
-                //    //if ( (!(ISRmatched_dr[j]))  && (!(NonISRmatched[j])) )
-                //    //{
-                //    //    other++;
-                //    //}
-
-                //    else
-                //    {
-                //        other++;
-                //    } 
-                //}
-
-                //std::cout << "Other : " << other << std::endl;
-                
-
-
                 for (unsigned int j = 0; j < Jets.size(); j++)
                 {
                     if (!GoodJets_pt20[j]) continue;
@@ -559,7 +474,7 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                     // --------------------------------------------------------------------
                     // ISR Jets - matches cutting on dr - by using truth information of ISR
                     // -------------------------------------------------------------------- 
-                    if (ISRmatched_dr[j])
+                    if (ISRmatched_dr_ptr[j])
                     {
                         // 1D
                         my_histos["h_ISRJets_Mass_"+cutVar.first]->Fill( Jets[j].M(), weight );
@@ -668,7 +583,7 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                     // --------------------------------
                     // NonISR Jets - by using TreeMaker
                     // -------------------------------- 
-                    if (NonISRmatched[j])
+                    if (NonISRmatched_dr_ptr[j])
                     {
                         // 1D
                         my_histos["h_NonISRJets_Mass_"+cutVar.first]->Fill( Jets[j].M(), weight );
@@ -773,20 +688,11 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                         my_2d_histos["h_NonISRJets_PtVSbJetTagDeepCSVtotb_"+cutVar.first]->GetYaxis()->SetTitle("NonISRJets bJetTagDeepCSVtotb");
                         nNonISRJets++;
                     }
-                
-                    // check that when the jth jet is ISR and not ISR
-                    //if (ISRmatched_dr[j] && NonISRmatched[j])
-                    //{
-                    //    std::cout << "WE HAVE A WEIRD JET !!!" << std::endl;
-                    //    std::cout << "ISR : " << isr << std::endl;
-
-                    //}
 
                     // ---------------------------------
                     // Other Jets - not ISR + not NonISR
                     // ---------------------------------
-                    //else
-                    if ( (!(ISRmatched_dr[j]))  && (!(NonISRmatched[j])) )
+                    if (OtherJets[j])
                     {
                         // 1D 
                         my_histos["h_OtherJets_Mass_"+cutVar.first]->Fill( Jets[j].M(), weight );
