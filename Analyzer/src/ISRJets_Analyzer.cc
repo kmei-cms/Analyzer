@@ -60,7 +60,7 @@ void ISRJets_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap)
         my_histos.emplace( "h_ISRJets_axisminor_"+cutVar.first, std::make_shared<TH1D> ( ("h_ISRJets_axisminor_"+cutVar.first).c_str(), ("h_ISRJets_axisminor_"+cutVar.first).c_str(), 100, 0, 1 ) );
         my_histos.emplace( "h_ISRJets_chargedHadronEnergyFraction_"+cutVar.first, std::make_shared<TH1D> ( ("h_ISRJets_chargedHadronEnergyFraction_"+cutVar.first).c_str(), ("h_ISRJets_chargedHadronEnergyFraction_"+cutVar.first).c_str(), 100, 0, 1 ) );
         my_histos.emplace( "h_ISRJets_neutralHadronEnergyFraction_"+cutVar.first, std::make_shared<TH1D> ( ("h_ISRJets_neutralHadronEnergyFraction_"+cutVar.first).c_str(), ("h_ISRJets_neutralHadronEnergyFraction_"+cutVar.first).c_str(), 100, 0, 1 ) );
-        my_histos.emplace( "h_ISRJets_ptD_"+cutVar.first, std::make_shared<TH1D> ( ("h_ISRJets_ptD_"+cutVar.first).c_str(), ("h_ISRJets_ptD_"+cutVar.first).c_str(), 100, 0, 1 ) );                                                  
+        my_histos.emplace( "h_ISRJets_ptD_"+cutVar.first, std::make_shared<TH1D> ( ("h_ISRJets_ptD_"+cutVar.first).c_str(), ("h_ISRJets_ptD_"+cutVar.first).c_str(), 100, 0, 1 ) );  
         my_histos.emplace( "h_ISRJets_chargedHadronMultiplicity_"+cutVar.first, std::make_shared<TH1D> ( ("h_ISRJets_chargedHadronMultiplicity_"+cutVar.first).c_str(), ("h_ISRJets_chargedHadronMultiplicity_"+cutVar.first).c_str(), 1000, 0, 100 ) );
         my_histos.emplace( "h_ISRJets_neutralHadronMultiplicity_"+cutVar.first, std::make_shared<TH1D> ( ("h_ISRJets_neutralHadronMultiplicity_"+cutVar.first).c_str(), ("h_ISRJets_neutralHadronMultiplicity_"+cutVar.first).c_str(), 1000, 0, 100 ) );
         my_histos.emplace( "h_ISRJets_chargedMultiplicity_"+cutVar.first, std::make_shared<TH1D> ( ("h_ISRJets_chargedMultiplicity_"+cutVar.first).c_str(), ("h_ISRJets_chargedMultiplicity_"+cutVar.first).c_str(), 1000, 0, 100 ) );
@@ -78,9 +78,9 @@ void ISRJets_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap)
         my_histos.emplace( "h_NonISRJets_Eta_"+cutVar.first, std::make_shared<TH1D> ( ("h_NonISRJets_Eta_"+cutVar.first).c_str(), ("h_NonISRJets_Eta_"+cutVar.first).c_str(), 100, -6, 6 ) );
         my_histos.emplace( "h_NonISRJets_axismajor_"+cutVar.first, std::make_shared<TH1D> ( ("h_NonISRJets_axismajor_"+cutVar.first).c_str(), ("h_NonISRJets_axismajor_"+cutVar.first).c_str(), 100, 0, 1 ) );
         my_histos.emplace( "h_NonISRJets_axisminor_"+cutVar.first, std::make_shared<TH1D> ( ("h_NonISRJets_axisminor_"+cutVar.first).c_str(), ("h_NonISRJets_axisminor_"+cutVar.first).c_str(), 100, 0, 1 ) );
+        my_histos.emplace( "h_NonISRJets_ptD_"+cutVar.first, std::make_shared<TH1D> ( ("h_NonISRJets_ptD_"+cutVar.first).c_str(), ("h_NonISRJets_ptD_"+cutVar.first).c_str(), 100, 0, 1 ) ); 
         my_histos.emplace( "h_NonISRJets_chargedHadronEnergyFraction_"+cutVar.first, std::make_shared<TH1D> ( ("h_NonISRJets_chargedHadronEnergyFraction_"+cutVar.first).c_str(), ("h_NonISRJets_chargedHadronEnergyFraction_"+cutVar.first).c_str(), 100, 0, 1 ) );
         my_histos.emplace( "h_NonISRJets_neutralHadronEnergyFraction_"+cutVar.first, std::make_shared<TH1D> ( ("h_NonISRJets_neutralHadronEnergyFraction_"+cutVar.first).c_str(), ("h_NonISRJets_neutralHadronEnergyFraction_"+cutVar.first).c_str(), 100, 0, 1 ) );
-        my_histos.emplace( "h_NonISRJets_ptD_"+cutVar.first, std::make_shared<TH1D> ( ("h_NonISRJets_ptD_"+cutVar.first).c_str(), ("h_NonISRJets_ptD_"+cutVar.first).c_str(), 100, 0, 1 ) );
         my_histos.emplace( "h_NonISRJets_chargedHadronMultiplicity_"+cutVar.first, std::make_shared<TH1D> ( ("h_NonISRJets_chargedHadronMultiplicity_"+cutVar.first).c_str(), ("h_NonISRJets_chargedHadronMultiplicity_"+cutVar.first).c_str(), 1000, 0, 100 ) );
         my_histos.emplace( "h_NonISRJets_neutralHadronMultiplicity_"+cutVar.first, std::make_shared<TH1D> ( ("h_NonISRJets_neutralHadronMultiplicity_"+cutVar.first).c_str(), ("h_NonISRJets_neutralHadronMultiplicity_"+cutVar.first).c_str(), 1000, 0, 100 ) );
         my_histos.emplace( "h_NonISRJets_chargedMultiplicity_"+cutVar.first, std::make_shared<TH1D> ( ("h_NonISRJets_chargedMultiplicity_"+cutVar.first).c_str(), ("h_NonISRJets_chargedMultiplicity_"+cutVar.first).c_str(), 1000, 0, 100 ) );
@@ -98,9 +98,9 @@ void ISRJets_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap)
         my_histos.emplace( "h_OtherJets_Eta_"+cutVar.first, std::make_shared<TH1D> ( ("h_OtherJets_Eta_"+cutVar.first).c_str(), ("h_OtherJets_Eta_"+cutVar.first).c_str(), 100, -6, 6 ) );
         my_histos.emplace( "h_OtherJets_axismajor_"+cutVar.first, std::make_shared<TH1D> ( ("h_OtherJets_axismajor_"+cutVar.first).c_str(), ("h_OtherJets_axismajor_"+cutVar.first).c_str(), 100, 0, 1 ) );
         my_histos.emplace( "h_OtherJets_axisminor_"+cutVar.first, std::make_shared<TH1D> ( ("h_OtherJets_axisminor_"+cutVar.first).c_str(), ("h_OtherJets_axisminor_"+cutVar.first).c_str(), 100, 0, 1 ) );
+        my_histos.emplace( "h_OtherJets_ptD_"+cutVar.first, std::make_shared<TH1D> ( ("h_OtherJets_ptD_"+cutVar.first).c_str(), ("h_OtherJets_ptD_"+cutVar.first).c_str(), 100, 0, 1 ) ); 
         my_histos.emplace( "h_OtherJets_chargedHadronEnergyFraction_"+cutVar.first, std::make_shared<TH1D> ( ("h_OtherJets_chargedHadronEnergyFraction_"+cutVar.first).c_str(), ("h_OtherJets_chargedHadronEnergyFraction_"+cutVar.first).c_str(), 100, 0, 1 ) );
         my_histos.emplace( "h_OtherJets_neutralHadronEnergyFraction_"+cutVar.first, std::make_shared<TH1D> ( ("h_OtherJets_neutralHadronEnergyFraction_"+cutVar.first).c_str(), ("h_OtherJets_neutralHadronEnergyFraction_"+cutVar.first).c_str(), 100, 0, 1 ) );
-        my_histos.emplace( "h_OtherJets_ptD_"+cutVar.first, std::make_shared<TH1D> ( ("h_NonISRJets_ptD_"+cutVar.first).c_str(), ("h_OtherJets_ptD_"+cutVar.first).c_str(), 100, 0, 1 ) );
         my_histos.emplace( "h_OtherJets_chargedHadronMultiplicity_"+cutVar.first, std::make_shared<TH1D> ( ("h_OtherJets_chargedHadronMultiplicity_"+cutVar.first).c_str(), ("h_OtherJets_chargedHadronMultiplicity_"+cutVar.first).c_str(), 1000, 0, 100 ) );
         my_histos.emplace( "h_OtherJets_neutralHadronMultiplicity_"+cutVar.first, std::make_shared<TH1D> ( ("h_OtherJets_neutralHadronMultiplicity_"+cutVar.first).c_str(), ("h_OtherJets_neutralHadronMultiplicity_"+cutVar.first).c_str(), 1000, 0, 100 ) );
         my_histos.emplace( "h_OtherJets_chargedMultiplicity_"+cutVar.first, std::make_shared<TH1D> ( ("h_OtherJets_chargedMultiplicity_"+cutVar.first).c_str(), ("h_OtherJets_chargedMultiplicity_"+cutVar.first).c_str(), 1000, 0, 100 ) );
@@ -114,6 +114,8 @@ void ISRJets_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap)
         my_histos.emplace( "h_dR_ISR_NonISR_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_ISR_NonISR_"+cutVar.first).c_str(), ("h_dR_ISR_NonISR_"+cutVar.first).c_str(), 50, 0, 10 ) );
         my_histos.emplace( "h_dR_top_ISR_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_top_ISR_"+cutVar.first).c_str(), ("h_dR_top_ISR_"+cutVar.first).c_str(), 50, 0, 10 ) );
         my_histos.emplace( "h_dR_top_NonISR_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_top_NonISR_"+cutVar.first).c_str(), ("h_dR_top_NonISR_"+cutVar.first).c_str(), 50, 0, 10 ) );
+        my_histos.emplace( "h_dR_bjet_ISR_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_bjet_ISR_"+cutVar.first).c_str(), ("h_dR_bjet_ISR_"+cutVar.first).c_str(), 50, 0, 10 ) );
+        my_histos.emplace( "h_dR_bjet_NonISR_"+cutVar.first, std::make_shared<TH1D> ( ("h_dR_bjet_NonISR_"+cutVar.first).c_str(), ("h_dR_bjet_NonISR_"+cutVar.first).c_str(), 50, 0, 10 ) );
 
         // -------------------
         // -- 2D histograms
@@ -220,6 +222,7 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
         const auto& runtype               = tr.getVar<std::string>("runtype");     
         const auto& Jets                  = tr.getVec<TLorentzVector>("Jets");
         const auto& GoodJets_pt20         = tr.getVec<bool>("GoodJets_pt20");
+        const auto& GoodBJets_pt45        = tr.getVec<bool>("GoodBJets_pt45");
         //const auto& GenParticles          = tr.getVec<TLorentzVector>("GenParticles");
         const auto& passBaseline0l        = tr.getVar<bool>("passBaseline0l_Good");
         const auto& ntops                 = tr.getVar<int>("ntops");
@@ -313,9 +316,9 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
             dR_ISR_NonISR.push_back(tempDR);
         }
 
-        // -----------------------------------------
-        // DeltaR between each top and each ISR jets
-        // -----------------------------------------
+        // -------------------------------------------
+        // DeltaR between closet top and each ISR jets
+        // -------------------------------------------
         std::vector<double> dR_top_ISR; 
         for (unsigned int j = 0; j < ISRJets.size(); j++)
         {   
@@ -330,9 +333,9 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
             dR_top_ISR.push_back(tempDR);
         } 
 
-        // --------------------------------------------
-        // DeltaR between each top and each NonISR jets
-        // --------------------------------------------
+        // -----------------------------------------------
+        // DeltaR between closest top and each NonISR jets
+        // -----------------------------------------------
         std::vector<double> dR_top_NonISR;
         for (unsigned int j = 0; j < NonISRJets.size(); j++)
         {
@@ -347,11 +350,53 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
             dR_top_NonISR.push_back(tempDR);
         }
 
+        // ----------------------------------------------
+        // DeltaR between closest b-jet and each ISR jets  
+        // ----------------------------------------------
+        std::vector<TLorentzVector> bjets;
+        for(unsigned int ijet = 0; ijet < Jets.size(); ijet++) 
+        {
+            if(!GoodBJets_pt45[ijet]) continue;
+            bjets.push_back(Jets.at(ijet));        
+        } 
+    
+        std::vector<double> dR_bjet_ISR;
+        for (unsigned int j = 0; j < ISRJets.size(); j++)
+        {
+            double tempDR = 999; 
+
+            for (unsigned int t = 0; t < bjets.size(); t++)
+            {
+                double deltaR = bjets.at(t).DeltaR(ISRJets.at(j));
+                if (deltaR < tempDR) tempDR = deltaR; 
+            }
+
+            dR_bjet_ISR.push_back(tempDR);
+        }
+
+        // -------------------------------------------------
+        // DeltaR between closest b-jet and each NonISR jets
+        // -------------------------------------------------
+        std::vector<double> dR_bjet_NonISR;
+        for (unsigned int j = 0; j < NonISRJets.size(); j++)
+        {
+            double tempDR = 999; 
+
+            for (unsigned int t = 0; t < bjets.size(); t++)
+            {
+                double deltaR = bjets.at(t).DeltaR(NonISRJets.at(j));
+                if (deltaR < tempDR) tempDR = deltaR;
+            }
+
+            dR_bjet_NonISR.push_back(tempDR);
+        }
+
         // -------------------------------------------------
         // -- Make cuts and fill histograms here & cutmap
         // -------------------------------------------------
         const std::map<std::string, bool>& cutmap
         {
+            {"", true},
             {"0l_HT500_ge2b_ge6j_ge2t_ge1dRbjets", passBaseline0l && pass_ge2t && pass_ge1dRbjets},
         };
 
@@ -817,9 +862,9 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                     my_histos["h_dR_ISR_NonISR_"+cutVar.first]->GetYaxis()->SetTitle("Events"); 
                 }
 
-                // -----------------------------------------
-                // DeltaR between each top and each ISR jets
-                // -----------------------------------------
+                // --------------------------------------------
+                // DeltaR between closest top and each ISR jets
+                // --------------------------------------------
                 for (unsigned int i = 0; i < dR_top_ISR.size(); i++)
                 {
                     my_histos["h_dR_top_ISR_"+cutVar.first]->Fill( dR_top_ISR.at(i), weight );
@@ -827,17 +872,35 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                     my_histos["h_dR_top_ISR_"+cutVar.first]->GetYaxis()->SetTitle("Events");
                 }
            
-                // --------------------------------------------
-                // DeltaR between each top and each NonISR jets
-                // --------------------------------------------
+                // -----------------------------------------------
+                // DeltaR between closest top and each NonISR jets
+                // -----------------------------------------------
                 for (unsigned int i = 0; i < dR_top_NonISR.size(); i++)
                 {   
                     my_histos["h_dR_top_NonISR_"+cutVar.first]->Fill( dR_top_NonISR.at(i), weight );
                     my_histos["h_dR_top_NonISR_"+cutVar.first]->GetXaxis()->SetTitle("#DeltaR(top,NonISR)");
                     my_histos["h_dR_top_NonISR_"+cutVar.first]->GetYaxis()->SetTitle("Events");
                 }   
-                
-                
+
+                // ---------------------------------------------
+                // DeltaR between closest bjet and each ISR jets
+                // ---------------------------------------------
+                for (unsigned int i = 0; i < dR_bjet_ISR.size(); i++)
+                {
+                    my_histos["h_dR_bjet_ISR_"+cutVar.first]->Fill( dR_bjet_ISR.at(i), weight );
+                    my_histos["h_dR_bjet_ISR_"+cutVar.first]->GetXaxis()->SetTitle("#DeltaR(bjet,ISR)");
+                    my_histos["h_dR_bjet_ISR_"+cutVar.first]->GetYaxis()->SetTitle("Events");
+                }                 
+
+                // ------------------------------------------------
+                // DeltaR between closest bjet and each NonISR jets
+                // ------------------------------------------------                
+                for (unsigned int i = 0; i < dR_bjet_NonISR.size(); i++)  
+                {
+                    my_histos["h_dR_bjet_NonISR_"+cutVar.first]->Fill( dR_bjet_NonISR.at(i), weight );
+                    my_histos["h_dR_bjet_NonISR_"+cutVar.first]->GetXaxis()->SetTitle("#DeltaR(bjet,NonISR)");
+                    my_histos["h_dR_bjet_NonISR_"+cutVar.first]->GetYaxis()->SetTitle("Events");
+                }  
             }
         }
     }    
