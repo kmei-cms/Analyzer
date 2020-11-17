@@ -350,9 +350,9 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
             dR_top_NonISR.push_back(tempDR);
         }
 
-        // ----------------------------------------------
-        // DeltaR between closest b-jet and each ISR jets  
-        // ----------------------------------------------
+        // ---------------------------------------------
+        // DeltaR between closest bjet and each ISR jets  
+        // ---------------------------------------------
         std::vector<TLorentzVector> bjets;
         for(unsigned int ijet = 0; ijet < Jets.size(); ijet++) 
         {
@@ -374,9 +374,9 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
             dR_bjet_ISR.push_back(tempDR);
         }
 
-        // -------------------------------------------------
-        // DeltaR between closest b-jet and each NonISR jets
-        // -------------------------------------------------
+        // ------------------------------------------------
+        // DeltaR between closest bjet and each NonISR jets
+        // ------------------------------------------------
         std::vector<double> dR_bjet_NonISR;
         for (unsigned int j = 0; j < NonISRJets.size(); j++)
         {
