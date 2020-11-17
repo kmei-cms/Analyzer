@@ -1,5 +1,5 @@
-#define Semra_Analyzer_cxx
-#include "Analyzer/Analyzer/include/Semra_Analyzer.h"
+#define StealthHemispheres_cxx
+#include "Analyzer/Analyzer/include/StealthHemispheres.h"
 #include "Framework/Framework/include/Utility.h"
 #include "SusyAnaTools/Tools/NTupleReader.h"
 
@@ -14,14 +14,14 @@
 #include <TDirectory.h>
 #include <TH1F.h>
 
-Semra_Analyzer::Semra_Analyzer() : inithisto(false) // define inithisto variable
+StealthHemispheres::StealthHemispheres() : inithisto(false) 
 {
 }
 
 // -------------------
 // -- Define histos
 // -------------------
-void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // define variable map
+void StealthHemispheres::InitHistos(const std::map<std::string, bool>& cutmap) 
 {
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
@@ -132,7 +132,7 @@ void Semra_Analyzer::InitHistos(const std::map<std::string, bool>& cutmap) // de
 // ---------------------------------------------
 // -- Put everything you want to do per event 
 // ---------------------------------------------
-void Semra_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
+void StealthHemispheres::Loop(NTupleReader& tr, double, int maxevents, bool)
 {
     while( tr.getNextEvent() )
     {
@@ -147,9 +147,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
 
         const auto& runtype         = tr.getVar<std::string>("runtype");     
         const auto& JetID           = tr.getVar<bool>("JetID");
-        const auto& Jets            = tr.getVec<TLorentzVector>("Jets");
         const auto& NGoodLeptons    = tr.getVar<int>("NGoodLeptons");
-        const auto& GoodBJets_pt45  = tr.getVec<bool>("GoodBJets_pt45");
         const auto& HT_trigger_pt45 = tr.getVar<double>("HT_trigger_pt45");
         const auto& NGoodJets_pt45  = tr.getVar<int>("NGoodJets_pt45");
         const auto& NGoodBJets_pt45 = tr.getVar<int>("NGoodBJets_pt45");
@@ -454,7 +452,7 @@ void Semra_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
     } 
 }
 
-void Semra_Analyzer::WriteHistos(TFile* outfile)
+void StealthHemispheres::WriteHistos(TFile* outfile)
 {
     outfile->cd();
 
