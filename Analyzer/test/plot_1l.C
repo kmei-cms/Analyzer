@@ -15,7 +15,7 @@ void setHistInfo(const std::string& path, std::vector<histInfo>& data, std::vect
     //this uses the initializer syntax to initialize the histInfo object
     //               leg entry root file                 draw options  draw color
     data = {
-        {"Data_SingleLepton" , path + "/"+year+"_Data.root", "PEX0", kBlack, printNEvents},
+        //{"Data_SingleLepton" , path + "/"+year+"_Data.root", "PEX0", kBlack, printNEvents},
         ////{"MadGraph T#bar{T}",        path + "/"+year+"_TT.root",              "hist", kBlack   },
         //{"RPV 350: 2016", "condor/Analyze1Lep_Kerasv1.2.8/2016_RPV_2t6j_mStop-350.root",               "hist", kBlack, printNEvents, 1.0/35.9},
         //{"T#bar{T}: 2016", "condor/Analyze1Lep_Kerasv1.2.8/2016_TT.root",               "hist", kBlack, printNEvents, 1.0/35.9},
@@ -57,9 +57,12 @@ void setHistInfo(const std::string& path, std::vector<histInfo>& data, std::vect
     }
 
     sig = {        
-        {"RPV 300", path + "/"+year+"_RPV_2t6j_mStop-300.root",      "hist", kCyan    + color  , printNEvents},
-        //{"RPV 550", path + "/"+year+"_RPV_2t6j_mStop-550.root",      "hist", kMagenta + 2*color , printNEvents },        
-        {"RPV 850", path + "/"+year+"_RPV_2t6j_mStop-850.root",      "hist", kRed     + color , printNEvents },
+        {"RPV 300", path + "/"+year+"_RPV_2t6j_mStop-300.root",      "hist", kRed    , printNEvents},
+        {"RPV 450", path + "/"+year+"_RPV_2t6j_mStop-450.root",      "hist", kGreen+2, printNEvents },        
+        {"RPV 550", path + "/"+year+"_RPV_2t6j_mStop-550.root",      "hist", kBlack  , printNEvents },        
+        {"RPV 650", path + "/"+year+"_RPV_2t6j_mStop-650.root",      "hist", kMagenta+2, printNEvents },        
+        {"RPV 850", path + "/"+year+"_RPV_2t6j_mStop-850.root",      "hist", kOrange+1, printNEvents },
+        {"RPV 1200", path + "/"+year+"_RPV_2t6j_mStop-1200.root",    "hist", kBlue, printNEvents },
         //{"SYY 550", path + "/"+year+"_StealthSYY_2t6j_mStop-550.root",       "hist", kMagenta  + 2*color  , printNEvents},        
     };
 }
@@ -69,7 +72,7 @@ int main(int argc, char *argv[])
     TH1::AddDirectory(false);
 
     int opt, option_index = 0;    
-    std::string year = "2018post";
+    std::string year = "2017";
 
     static struct option long_options[] = {
         {"year",     required_argument, 0, 'y'},
@@ -84,16 +87,17 @@ int main(int argc, char *argv[])
     }
 
     std::string path;
-    if     (year=="2016")     path= "condor/Analyze1Lep_2016_v1.0";
-    else if(year=="2017")     path= "condor/Analyze1Lep_2017_v1.0";
-    else if(year=="2018")     path= "condor/Analyze1Lep_2018_v1.0";
-    else if(year=="2018pre")  path= "condor/Analyze1Lep_2018pre_v1.0";
-    else if(year=="2018post") path= "condor/Analyze1Lep_2018post_v1.0";
+    if     (year=="2016")     path= "condor/Analyze1Lep_2016_v1.2";
+    //if     (year=="2016")     path= "condor/Analyze1Lep_2016_v1.2_doubleDisc2";
+    else if(year=="2017")     path= "condor/Analyze1Lep_2017_v1.2";
+    else if(year=="2018")     path= "condor/pTScaled_Analyze1Lep_2018_v1.0";
+    else if(year=="2018pre")  path= "condor/Analyze1Lep_2018pre_v1.2";
+    else if(year=="2018post") path= "condor/Analyze1Lep_2018post_v1.2";
 
     std::vector<histInfo> data, bg, sig;
     std::vector<histInfo> dataQCD, bgQCD, sigQCD;
-    setHistInfo(path, data, bg, sig, year, 0);
-    setHistInfo(path, dataQCD, bgQCD, sigQCD, year, 0, true);
+    setHistInfo(path, data, bg, sig, year, 0, false, false);
+    setHistInfo(path, dataQCD, bgQCD, sigQCD, year, 0, true, true);
     HistInfoCollection histInfoCollection(data, bg, sig);
     HistInfoCollection histInfoCollectionQCD(dataQCD, bgQCD, sigQCD);
 
@@ -106,7 +110,7 @@ int main(int argc, char *argv[])
     std::vector<histInfo> data2017, bg2017, sig2017;
     std::vector<histInfo> data2018pre, bg2018pre, sig2018pre;
     std::vector<histInfo> data2018post, bg2018post, sig2018post;
-    setHistInfo("condor/Analyze1Lep_2017_v1.0",     data2017,     bg2017,     sig2017,     "2017",     0, false, false);
+    setHistInfo("condor/Analyze1Lep_2017_v1.1",     data2017,     bg2017,     sig2017,     "2017",     0, false, false);
     setHistInfo("condor/Analyze1Lep_2018pre_v1.0",  data2018pre,  bg2018pre,  sig2018pre,  "2018pre",  2, false, false);
     setHistInfo("condor/Analyze1Lep_2018post_v1.0", data2018post, bg2018post, sig2018post, "2018post", 3, false, false);
     HistInfoCollection histInfoCollection2017    (data2017,     bg2017,     sig2017    );
@@ -139,7 +143,12 @@ int main(int argc, char *argv[])
         //"_1l_HT300_ge4j_ge1b_Mbl",
         //"_1e_HT300_ge4j_ge1b_Mbl",
         //"_1m_HT300_ge4j_ge1b_Mbl",
-          "_1l_HT300_ge7j_ge1b_Mbl",
+    	"_1l_HT300_ge7j_ge1b_Mbl",
+        //"_1l_HT300_ge7j_ge1b_Mbl_ge8d1",
+        //"_1l_HT300_ge7j_ge1b_Mbl_ge8d2",
+        //"_1l_HT300_ge7j_ge1b_Mbl_ge8d1_ge8d2",
+        //"_1l_HT300_ge7j_ge1b_Mbl_le8d1",
+        //"_1l_HT300_ge7j_ge1b_Mbl_le8d2",
         //"_1l_HT300_ge7j_ge1b_Mbl_noLepWeight",
         //"_1l_HT300_ge7j_ge2b_Mbl",
         //"_1l_HT300_ge7j_ge1b_Mbl_lBarrel",
@@ -161,21 +170,23 @@ int main(int argc, char *argv[])
         ////"_1l_HT300_4j_ge1b_Mbl",
         ////"_1l_HT300_5j_ge1b_Mbl",
         ////"_1l_HT300_6j_ge1b_Mbl",
-        ////"_1l_HT300_7j_ge1b_Mbl",
-        ////"_1l_HT300_8j_ge1b_Mbl",
-        ////"_1l_HT300_9j_ge1b_Mbl",
-        ////"_1l_HT300_10j_ge1b_Mbl",
-        ////"_1l_HT300_11j_ge1b_Mbl",
-        ////"_1l_HT300_12j_ge1b_Mbl",
-        ////"_1l_HT300_13j_ge1b_Mbl",
-        ////"_1l_HT300_14j_ge1b_Mbl",
-        ////"_1l_HT300_15j_ge1b_Mbl",
+        //"_1l_HT300_7j_ge1b_Mbl",
+        //"_1l_HT300_8j_ge1b_Mbl",
+        //"_1l_HT300_9j_ge1b_Mbl",
+        //"_1l_HT300_10j_ge1b_Mbl",
+        //"_1l_HT300_11j_ge1b_Mbl",
+        //"_1l_HT300_12j_ge1b_Mbl",
+        //"_1l_HT300_13j_ge1b_Mbl",
+        //"_1l_HT300_14j_ge1b_Mbl",
+        //"_1l_HT300_15j_ge1b_Mbl",
         ////"_1l_HT300_5j_ge1b_Mbl_htCorr",
         ////"_1l_HT300_6j_ge1b_Mbl_htCorr",
         ////"_1l_HT300_7j_ge1b_Mbl_htCorr",
         ////"_1l_HT300_8j_ge1b_Mbl_htCorr",
         //
         //"_passQCDCR",
+        //"_1p_1l_HT300_ge7j_ge1b_Mbl",
+        //"_0p_1l_HT300_ge7j_ge1b_Mbl",
     };
 
     //plt.plotStack("h_njets_1l_ge7j_ge1b",    "N_{J}", "Events", true, -1, false, false);
@@ -187,7 +198,10 @@ int main(int argc, char *argv[])
     {
         //plt.plotStack(    "h_njets"+mycut,         "N_{J}" ,             "Events",      true, -1, false, true);
         //pltQCD.plotStack( "h_njetsQCDCR"+mycut,    "N_{J}" ,             "Events",      true, -1, false, true);
-        //plt.plotStack(    "h_deepESM"+mycut,       "DeepESM" ,           "Events",      true, 20, false, true);
+        //plt.plotStack(    "h_deepESM"+mycut,       "DeepESM" ,           "Events",      true, 4, false, true);
+        //plt.plotStack(    "h_deepESM1"+mycut,       "DeepESM1" ,           "Events",      true,  4, false, true);
+        //plt.plotStack(    "h_deepESM2"+mycut,       "DeepESM2" ,           "Events",      true,  4, false, true);
+        //plt.plotStack(    "h_deepESM3"+mycut,       "DeepESM3" ,           "Events",      true,  4, false, true, 0, 1000);
         //pltQCD.plotStack( "h_deepESMQCDCR"+mycut,  "DeepESM" ,           "Events",      false,20, false, true);
         //plt.plotStack(    "h_deepESMMerged"+mycut, "DeepESM Bin",        "Events",      false,-1, false, true);
         //plt.plotStack(    "h_mbl"+mycut,           "M(l,b) [GeV]",       "Events",      true, 10, false, true);
@@ -216,11 +230,15 @@ int main(int argc, char *argv[])
         //plt.plotStack( "blind_ntops"+mycut,         "N_{T}" ,             "Events",      true, -1, false, true);
         //plt.plotStack( "blind_nb"   +mycut,         "N_{B}" ,             "Events",      true, -1, false, true);        
         ////
+
+
+
+
         //plt.plotNormFisher("h_deepESM"+mycut, "DeepESM" , "Norm", false, 10);
-        //plt.plotNormFisher("h_njets"+mycut, "DeepESM" , "Events", false);
-        //// - Make  Roc Curve
-        //pltRoc.plotRocFisher("h_deepESM"+mycut,"Background","Signal", true, false);        
-        pltRocCompare.plotRocFisher("h_deepESM"+mycut,"Background","Signal", true, false);
+        ////plt.plotNormFisher("h_njets"+mycut, "DeepESM" , "Events", false);
+        ////// - Make  Roc Curve
+        pltRoc.plotRocFisher("h_deepESM"+mycut,"Background Fakerate","Signal Efficiency", true, false);        
+        //pltRocCompare.plotRocFisher("h_deepESM"+mycut,"Background","Signal", true, false);
     }
     //plt.plotStack( "fwm2_top6_1l_ge7j_ge1b",  "FWM2", "Events", true, -1, false, 0, 2);
     //plt.plotStack( "fwm3_top6_1l_ge7j_ge1b",  "FWM3", "Events", true, -1, false, 0, 2);
@@ -250,16 +268,16 @@ int main(int argc, char *argv[])
     // - Make fisher plots
     // --------------------
 
-    std::vector< FisherHolder > fisherHolder
-    {
-        { {"h_njets_1l_HT300_ge7j_ge1b_Mbl_d1", "h_njets_1l_HT300_ge7j_ge1b_Mbl_d2", "h_njets_1l_HT300_ge7j_ge1b_Mbl_d3"  , "h_njets_1l_HT300_ge7j_ge1b_Mbl_d4"  } , "njets_1l_HT300_ge7j_ge1b_Mbl"  },
-    };
-    
-    for (auto& f : fisherHolder)
-    {
-        plt.plotFisher(f.cutNames_,      f.plotName_, "N_{J}", "Events",           true, 7, "DeepESM");
-        plt.plotRatioFisher(f.cutNames_, f.plotName_, "N_{J}", "N_{J+1} / N_{J}", false, 6, "DeepESM");
-    }
+    //std::vector< FisherHolder > fisherHolder
+    //{
+    //    { {"h_njets_1l_HT300_ge7j_ge1b_Mbl_d1", "h_njets_1l_HT300_ge7j_ge1b_Mbl_d2", "h_njets_1l_HT300_ge7j_ge1b_Mbl_d3"  , "h_njets_1l_HT300_ge7j_ge1b_Mbl_d4"  } , "njets_1l_HT300_ge7j_ge1b_Mbl"  },
+    //};
+    //
+    //for (auto& f : fisherHolder)
+    //{
+    //    plt.plotFisher(f.cutNames_,      f.plotName_, "N_{J}", "Events",           true, 7, "DeepESM");
+    //    plt.plotRatioFisher(f.cutNames_, f.plotName_, "N_{J}", "N_{J+1} / N_{J}", false, 6, "DeepESM");
+    //}
     
     // --------------------
     // - Compute Yields
