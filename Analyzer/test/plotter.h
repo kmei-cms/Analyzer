@@ -53,14 +53,14 @@ public:
         //switch to the canvas to ensure it is the active object
         c->cd();
 
-        //----------------------------------------
-            // Upper plot will be in pad1: TPad(x1, y1, x2, y2)
-            TPad *pad1 = new TPad("pad1", "pad1", 0.0, 0.31, 1.0, 1.0);
-            pad1->SetBottomMargin(0); // Upper and lower plot are joined
-            //pad1->SetGridy();         // Horizontal grid
-            pad1->Draw();             // Draw the upper pad: pad1
-            pad1->cd();               // pad1 becomes the current pad
-        //----------------------------------------
+        ////----------------------------------------
+        //    // Upper plot will be in pad1: TPad(x1, y1, x2, y2)
+        //    TPad *pad1 = new TPad("pad1", "pad1", 0.0, 0.31, 1.0, 1.0);
+        //    pad1->SetBottomMargin(0); // Upper and lower plot are joined
+        //    //pad1->SetGridy();         // Horizontal grid
+        //    pad1->Draw();             // Draw the upper pad: pad1
+        //    pad1->cd();               // pad1 becomes the current pad
+        ////----------------------------------------
         
         //Create TLegend
         TLegend *leg = new TLegend(0.15, 0.75, 0.89, 0.88);
@@ -154,7 +154,8 @@ public:
         significance.DrawLatex(0.099, 0.92, ("Significance = "+std::to_string(sig)).c_str());
 
         //Draw CMS and lumi lables
-        drawLables(lumi);
+        //std::cout<<lumi<<std::endl;
+        //drawLables(lumi);
             
         //Compute and draw yields for njets min to max
         //drawYields(histName,"njets",12,20);
@@ -167,58 +168,58 @@ public:
         ///////////////////////////////////////////////////////////////////////
         dummy.draw("AXIS");
                         
-        //----------------------------------------            
-            // lower plot will be in pad2
-            c->cd();          // Go back to the main canvas before defining pad2
-            TPad *pad2 = new TPad("pad2", "pad2", 0.0, 0.0, 1.0, 0.3);
-            pad2->SetTopMargin(0);
-            pad2->SetBottomMargin(0.3);
-            //pad2->SetGridy(); // Horizontal grid
-            pad2->Draw();
-            pad2->cd();       // pad2 becomes the current pad        
-            gPad->SetTicks(1,1);
-            gPad->SetGrid();
-                
-            //make ratio dummy
-            histInfo ratioDummy(new TH1D("rdummy", "rdummy", 1000, hc_.bgVec_[0].h->GetBinLowEdge(1), 
-                                         hc_.bgVec_[0].h->GetBinLowEdge(hc_.bgVec_[0].h->GetNbinsX()) + hc_.bgVec_[0].h->GetBinWidth(hc_.bgVec_[0].h->GetNbinsX())));
-            ratioDummy.h->GetXaxis()->SetTitle(xAxisLabel.c_str());
-            //ratioDummy.h->GetYaxis()->SetTitle(yAxisLabel.c_str());
-            //ratioDummy.h->GetYaxis()->SetTitle("Data / BG");
-            ratioDummy.h->GetYaxis()->SetTitle("Ratio");
-            ratioDummy.h->GetXaxis()->SetTickLength(0.1);
-            ratioDummy.h->GetYaxis()->SetTickLength(0.045);
-            ratioDummy.setupAxes(1.2, 0.5, 0.1, 0.1, 0.1, 0.1);
-            ratioDummy.h->GetYaxis()->SetNdivisions(3,5,0);
-            ratioDummy.h->GetXaxis()->SetRangeUser(xmin, xmax);
-            ratioDummy.h->GetYaxis()->SetRangeUser(0.4, 1.6);
-            ratioDummy.h->SetStats(0);
-            //ratioDummy.h->SetMinimum(0.5);
-            //ratioDummy.h->SetMaximum(1.5);
-                
-            //Make ratio histogram for data / background.
-            histInfo ratio((TH1*)hc_.dataVec_[0].h->Clone());
-                    
-            // set pad margins: setupPad(left, right, top, bottom)
-            //ratio.setupPad(0.12, 0.06, 0.0, 0.40);
-                
-            ratio.drawOptions = "ep";
-            ratio.color = kBlack;
-                
-            //ratio.h->SetLineColor(kBlack);
-            //ratio.h->Sumw2();
-            //ratio.h->SetStats(0);
-            ratio.h->Divide(hbgSum_.get());
-            ratio.h->SetMarkerStyle(21);
-                
-            ratioDummy.draw();
-            ratio.draw("same");
-                
-            TF1* line = new TF1("1" ,"1" ,-2000,20000);
-            line->SetLineColor(kRed);
-            line->Draw("same");
-            ratio.draw("same");
-        //----------------------------------------
+        ////----------------------------------------            
+        //    // lower plot will be in pad2
+        //    c->cd();          // Go back to the main canvas before defining pad2
+        //    TPad *pad2 = new TPad("pad2", "pad2", 0.0, 0.0, 1.0, 0.3);
+        //    pad2->SetTopMargin(0);
+        //    pad2->SetBottomMargin(0.3);
+        //    //pad2->SetGridy(); // Horizontal grid
+        //    pad2->Draw();
+        //    pad2->cd();       // pad2 becomes the current pad        
+        //    gPad->SetTicks(1,1);
+        //    gPad->SetGrid();
+        //        
+        //    //make ratio dummy
+        //    histInfo ratioDummy(new TH1D("rdummy", "rdummy", 1000, hc_.bgVec_[0].h->GetBinLowEdge(1), 
+        //                                 hc_.bgVec_[0].h->GetBinLowEdge(hc_.bgVec_[0].h->GetNbinsX()) + hc_.bgVec_[0].h->GetBinWidth(hc_.bgVec_[0].h->GetNbinsX())));
+        //    ratioDummy.h->GetXaxis()->SetTitle(xAxisLabel.c_str());
+        //    //ratioDummy.h->GetYaxis()->SetTitle(yAxisLabel.c_str());
+        //    //ratioDummy.h->GetYaxis()->SetTitle("Data / BG");
+        //    ratioDummy.h->GetYaxis()->SetTitle("Ratio");
+        //    ratioDummy.h->GetXaxis()->SetTickLength(0.1);
+        //    ratioDummy.h->GetYaxis()->SetTickLength(0.045);
+        //    ratioDummy.setupAxes(1.2, 0.5, 0.1, 0.1, 0.1, 0.1);
+        //    ratioDummy.h->GetYaxis()->SetNdivisions(3,5,0);
+        //    ratioDummy.h->GetXaxis()->SetRangeUser(xmin, xmax);
+        //    ratioDummy.h->GetYaxis()->SetRangeUser(0.4, 1.6);
+        //    ratioDummy.h->SetStats(0);
+        //    //ratioDummy.h->SetMinimum(0.5);
+        //    //ratioDummy.h->SetMaximum(1.5);
+        //        
+        //    //Make ratio histogram for data / background.
+        //    histInfo ratio((TH1*)hc_.dataVec_[0].h->Clone());
+        //            
+        //    // set pad margins: setupPad(left, right, top, bottom)
+        //    //ratio.setupPad(0.12, 0.06, 0.0, 0.40);
+        //        
+        //    ratio.drawOptions = "ep";
+        //    ratio.color = kBlack;
+        //        
+        //    //ratio.h->SetLineColor(kBlack);
+        //    //ratio.h->Sumw2();
+        //    //ratio.h->SetStats(0);
+        //    ratio.h->Divide(hbgSum_.get());
+        //    ratio.h->SetMarkerStyle(21);
+        //        
+        //    ratioDummy.draw();
+        //    ratio.draw("same");
+        //        
+        //    TF1* line = new TF1("1" ,"1" ,-2000,20000);
+        //    line->SetLineColor(kRed);
+        //    line->Draw("same");
+        //    ratio.draw("same");
+        ////----------------------------------------
         
         //save new plot to file
         c->Print((outpath_ + "/" + histName + ".pdf").c_str());
@@ -311,13 +312,14 @@ public:
         leg->Draw("same");
 
         //Draw dummy hist again to get axes on top of histograms
-        setupDummy(dummy, leg, histName, xAxisLabel, yAxisLabel, isLogY, xmin, xmax, min, max, lmax);
+        setupDummy(dummy, leg, "", xAxisLabel, yAxisLabel, isLogY, xmin, xmax, min, max, lmax);
         dummy.h->GetYaxis()->SetTitleOffset(1.6);
         dummy.draw("AXIS");
         
 
         //Draw CMS and lumi lables
-        drawLables(lumi);
+        //std::cout<<lumi<<std::endl;
+        //drawLables(lumi);
 
         //save new plot to file
         c->Print((outpath_ + "/fisherNorm_" + histName + ".pdf").c_str());
@@ -352,7 +354,7 @@ public:
         leg->SetLineWidth(1);
         leg->SetNColumns(3);
         leg->SetTextFont(42);
-        leg->SetTextSize(0.02);
+        //leg->SetTextSize(0.02);
 
         //create a dummy histogram to act as the axes
         histInfo dummy(new TH1D("dummy", "dummy", 1000, 0, 1));
@@ -384,7 +386,8 @@ public:
             std::vector<rocInfo> rocBgVec  = makeRocVec(mhc.second.bgVec_);
             std::vector<rocInfo> rocSigVec = makeRocVec(mhc.second.sigVec_);
             if(firstOnly) rocBgVec.emplace(rocBgVec.begin(), bgSumRocInfo);
-            int lineStyle = (mhc.first == "No 350") ?  kSolid : kDashed;
+            //int lineStyle = (mhc.first == "No 350") ?  kSolid : kDashed;
+            int lineStyle = kSolid;
             int markStyle = (mhc.first == "No 350") ?  kFullCircle : kFullSquare;
             drawRocCurve(mhc.first, graphVec, rocBgVec, rocSigVec, firstOnly, leg, lineStyle, markStyle);
             //std::cout<<histName<<" "<<mhc.first<<std::endl;
@@ -402,11 +405,12 @@ public:
         leg->Draw("same");
 
         //Draw dummy hist again to get axes on top of histograms
-        setupDummy(dummy, leg, histName, xAxisLabel, yAxisLabel, isLogY, xmin, xmax, min, max, lmax);
+        setupDummy(dummy, leg, "", xAxisLabel, yAxisLabel, isLogY, xmin, xmax, min, max, lmax);
         dummy.draw("AXIS");
 
         //Draw CMS and lumi lables
-        drawLables(lumi);
+        //std::cout<<lumi<<std::endl;
+	drawLables(lumi);
 
         //save new plot to file
         if(firstOnly) 
@@ -535,7 +539,8 @@ public:
         dummy.draw("AXIS");
 
         //Draw CMS and lumi lables
-        drawLables(lumi);
+        //std::cout<<lumi<<std::endl;
+        //drawLables(lumi);
 
         //save new plot to file
         c->Print( (outpath_ + "/" + name + "_" + histTitle + ".pdf").c_str() );
@@ -661,7 +666,8 @@ public:
         dummy.draw("AXIS");
 
         //Draw CMS and lumi lables
-        drawLables(lumi);
+        //std::cout<<lumi<<std::endl;
+        //drawLables(lumi);
 
         //save new plot to file
         c->Print( (outpath_+"/"+name+"Ratio_" + histTitle + ".pdf").c_str() );
@@ -740,14 +746,16 @@ public:
                     //std::cout<<mBg.legEntry<<" "<<x[i]<<" "<<mSig.legEntry<<" "<<y[i]<<std::endl;
                 }
                 TGraph* g = new TGraph (n, x.data(), y.data());
-                g->SetLineWidth(2);
+                g->SetLineWidth(3);
                 g->SetLineStyle(lineStyle);
-                g->SetLineColor( mBg.color );
-                g->SetMarkerSize(0.7);
+                //g->SetLineColor( mBg.color );
+                g->SetLineColor( mSig.color );
+                g->SetMarkerSize(0.0);
                 g->SetMarkerStyle(markStyle);
                 g->SetMarkerColor( mSig.color );
                 g->Draw("same LP");                
-                leg->AddEntry(g, (fType + " " + mBg.legEntry + " vs " + mSig.legEntry).c_str(), "LP");
+                //leg->AddEntry(g, (fType + " " + mBg.legEntry + " vs " + mSig.legEntry).c_str(), "LP");
+                leg->AddEntry(g, (mSig.legEntry).c_str(), "LP");
                 graphVec.push_back(g);
                 //if(firstOnly) break; 
             }
@@ -790,7 +798,8 @@ public:
     {
         //Draw CMS and lumi lables
         char lumistamp[128];
-        sprintf(lumistamp, "%.1f fb^{-1} (13 TeV)", lumi / 1000.0);
+        //sprintf(lumistamp, "%.1f fb^{-1} (13 TeV)", lumi / 1000.0);
+        sprintf(lumistamp, "2017 (13 TeV)", lumi / 1000.0);
 
         TLatex mark;
         mark.SetNDC(true);
@@ -800,10 +809,11 @@ public:
         mark.SetTextSize(0.050);
         mark.SetTextFont(61);
         mark.DrawLatex(gPad->GetLeftMargin(), 1 - (gPad->GetTopMargin() - 0.017), "CMS"); // #scale[0.8]{#it{Preliminary}}");
-        //mark.SetTextSize(0.040);
+        mark.SetTextSize(0.040);
         mark.SetTextFont(52);
         //mark.DrawLatex(gPad->GetLeftMargin() + 0.1, 1 - (gPad->GetTopMargin() - 0.017), "Stealth 2018");
-        mark.DrawLatex(gPad->GetLeftMargin() + 0.08, 1 - (gPad->GetTopMargin() - 0.017), "Preliminary");
+        //mark.DrawLatex(gPad->GetLeftMargin() + 0.08, 1 - (gPad->GetTopMargin() - 0.017), "Preliminary");
+        mark.DrawLatex(gPad->GetLeftMargin() + 0.11, 1 - (gPad->GetTopMargin() - 0.017), "Simulation Supplementary");
 
         //Draw lumistamp
         mark.SetTextFont(42);
