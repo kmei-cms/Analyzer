@@ -234,11 +234,11 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
         // ----------------------
         // -- ISR gen matching
         // ----------------------
-        const auto& ISRmatched_dr                           = tr.getVec<bool>("ISRmatched_dr");
+        //const auto& ISRmatched_dr                           = tr.getVec<bool>("ISRmatched_dr");
         const auto& ISRmatched_dr_ptr                       = tr.getVec<bool>("ISRmatched_dr_ptr");
-        const auto& NonISRmatched_dr                        = tr.getVec<bool>("NonISRmatched_dr"); // TreeMaker NonISR (Signal Jets) filter
+        //const auto& NonISRmatched_dr                        = tr.getVec<bool>("NonISRmatched_dr"); // TreeMaker NonISR (Signal Jets) filter
         const auto& NonISRmatched_dr_ptr                    = tr.getVec<bool>("NonISRmatched_dr_ptr"); 
-        const auto& OtherJets                               = tr.getVec<bool>("OtherJets"); // TreeMaker OtherJets (ISR+FSR+underlying) filter
+        //const auto& OtherJets                               = tr.getVec<bool>("OtherJets"); // TreeMaker OtherJets (ISR+FSR+underlying) filter
         const auto& GM_ISRmatching_allDR                    = tr.getVec<double>("GM_ISRmatching_allDR");
         const auto& GM_ISRmatching_bestDR                   = tr.getVec<double>("GM_ISRmatching_bestDR");
         const auto& GM_ISRmatching_justCutOnDR_DR           = tr.getVec<double>("GM_ISRmatching_justCutOnDR_DR");
@@ -737,7 +737,8 @@ void ISRJets_Analyzer::Loop(NTupleReader& tr, double, int maxevents, bool)
                     // ---------------------------------
                     // Other Jets - not ISR + not NonISR
                     // ---------------------------------
-                    if (OtherJets[j])
+                    //if (OtherJets[j])
+                    if ( (!(ISRmatched_dr_ptr[j])) && (!(NonISRmatched_dr_ptr[j])) )
                     {
                         // 1D 
                         my_histos["h_OtherJets_Mass_"+cutVar.first]->Fill( Jets[j].M(), weight );
