@@ -62,11 +62,13 @@ private:
             else if(module=="MegaJetCombine")               tr.emplaceModule<MegaJetCombine>();
             else if(module=="FatJetCombine")                tr.emplaceModule<FatJetCombine>();
             else if(module=="TrainingNTupleVars")           tr.emplaceModule<TrainingNTupleVars>();
-            else if(module=="MakeStopHemispheres_All")      tr.emplaceModule<MakeStopHemispheres>("Jets",      "AllJets",       "NJets",          "_All",       Hemisphere::InvMassSeed);
-            else if(module=="MakeStopHemispheres_2l")       tr.emplaceModule<MakeStopHemispheres>("Jets",      "GoodJets_pt20", "NGoodJets_pt20", "_2l",        Hemisphere::InvMassSeed);
-            else if(module=="MakeStopHemispheres_1l")       tr.emplaceModule<MakeStopHemispheres>("Jets",      "GoodJets_pt20", "NGoodJets_pt20", "_1l",        Hemisphere::InvMassSeed);
-            else if(module=="MakeStopHemispheres_0l")       tr.emplaceModule<MakeStopHemispheres>("Jets",      "GoodJets_pt20", "NGoodJets_pt20", "_0l",        Hemisphere::InvMassSeed);
-            else if(module=="MakeStopHemispheres_TaggedTop")tr.emplaceModule<MakeStopHemispheres>("StopJets",  "GoodStopJets",  "NGoodStopJets",  "_TaggedTop", Hemisphere::TopSeed);
+            else if(module=="MakeStopHemispheres_All")                 tr.emplaceModule<MakeStopHemispheres>("Jets",     "AllJets",                 "NJets",                    "_All",                 Hemisphere::InvMassSeed);
+            else if(module=="MakeStopHemispheres_2l")                  tr.emplaceModule<MakeStopHemispheres>("Jets",     "GoodJets_pt20",           "NGoodJets_pt20",           "_2l",                  Hemisphere::InvMassSeed);
+            else if(module=="MakeStopHemispheres_1l")                  tr.emplaceModule<MakeStopHemispheres>("Jets",     "GoodJets_pt20",           "NGoodJets_pt20",           "_1l",                  Hemisphere::InvMassSeed);
+            else if(module=="MakeStopHemispheres_0l")                  tr.emplaceModule<MakeStopHemispheres>("Jets",     "GoodJets_pt20",           "NGoodJets_pt20",           "_0l",                  Hemisphere::InvMassSeed);
+            else if(module=="MakeStopHemispheres_0l_maskedISR")        tr.emplaceModule<MakeStopHemispheres>("Jets",     "GoodJets_pt20_maskedISR", "NGoodJets_pt20_maskedISR", "_0l_maskedISR",        Hemisphere::InvMassSeed);
+            else if(module=="MakeStopHemispheres_TaggedTop")           tr.emplaceModule<MakeStopHemispheres>("StopJets", "GoodStopJets",            "NGoodStopJets",            "_TaggedTop",           Hemisphere::TopSeed);
+            else if(module=="MakeStopHemispheres_TaggedTop_maskedISR") tr.emplaceModule<MakeStopHemispheres>("StopJets", "GoodStopJets_maskedISR",  "NGoodStopJets_maskedISR",  "_TaggedTop_maskedISR", Hemisphere::TopSeed);
             else if(module=="StopJets")                     tr.emplaceModule<StopJets>();
             else if(module=="ISRJets")                      tr.emplaceModule<ISRJets>();
             else if(module=="DeepEventShape")               tr.emplaceModule<DeepEventShape>(DeepESMCfg, ModelFile);
@@ -288,12 +290,14 @@ public:
                 "MakeMVAVariables",
                 "Baseline",
                 "DeepEventShape",
-                "StopJets",
                 "ISRJets",
+                "StopJets",
                 "MakeStopHemispheres_All",
                 "MakeStopHemispheres_1l",
                 "MakeStopHemispheres_0l",
+                "MakeStopHemispheres_0l_maskedISR",
                 "MakeStopHemispheres_TaggedTop",
+                "MakeStopHemispheres_TaggedTop_maskedISR",
                 //"StopGenMatch",
                 "BTagCorrector",
                 "ScaleFactors",
