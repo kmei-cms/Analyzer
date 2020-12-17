@@ -35,8 +35,9 @@ void MakeNNVariables::Loop(NTupleReader& tr, double, int maxevents, bool)
         const auto& eventCounter        = tr.getVar<int>("eventCounter");
         //const auto& runtype             = tr.getVar<std::string>("runtype");
         const auto& isSignal            = tr.getVar<bool>("isSignal");
+        const auto& passBaseline0l      = tr.getVar<bool>("passBaseline0l_Good"); 
         const auto& passBaseline1l      = tr.getVar<bool>("passBaseline1l_Good");
-//        const auto& passBaseline2l_pt20 = tr.getVar<bool>("passBaseline2l_pt20");
+        //const auto& passBaseline2l_pt20 = tr.getVar<bool>("passBaseline2l_pt20");
         const auto& filetag             = tr.getVar<std::string>("filetag");
 
         auto& mass = tr.createDerivedVar<double>("mass", 0.0);
@@ -121,7 +122,54 @@ void MakeNNVariables::Loop(NTupleReader& tr, double, int maxevents, bool)
             "lvMET_cm_eta",
             "lvMET_cm_phi",
             "lvMET_cm_m",
-            "stop1_PtRank_1l_mass", "stop2_PtRank_1l_mass",
+            //"stop1_PtRank_0l_mass",          "stop2_PtRank_0l_mass", // 0 lepton
+            //"stop1_PtRank_0l_pt",            "stop2_PtRank_0l_pt",
+            //"stop1_PtRank_0l_phi",           "stop2_PtRank_0l_phi",
+            //"stop1_PtRank_0l_eta",           "stop2_PtRank_0l_eta",
+            //"stop1_MassRank_0l_mass",        "stop2_MassRank_0l_mass",
+            //"stop1_MassRank_0l_pt",          "stop2_MassRank_0l_pt",
+            //"stop1_MassRank_0l_phi",         "stop2_MassRank_0l_phi",
+            //"stop1_MassRank_0l_eta",         "stop2_MassRank_0l_eta",
+            //"stop1_ScalarPtRank_0l_mass",    "stop2_ScalarPtRank_0l_mass",
+            //"stop1_ScalarPtRank_0l_pt",      "stop2_ScalarPtRank_0l_pt",
+            //"stop1_ScalarPtRank_0l_phi",     "stop2_ScalarPtRank_0l_phi",
+            //"stop1_ScalarPtRank_0l_eta",     "stop2_ScalarPtRank_0l_eta", 
+            //"stop1_PtRank_cm_0l_mass",       "stop2_PtRank_cm_0l_mass", // 0 lepton
+            //"stop1_PtRank_cm_0l_pt",         "stop2_PtRank_cm_0l_pt",
+            //"stop1_PtRank_cm_0l_phi",        "stop2_PtRank_cm_0l_phi",  
+            //"stop1_PtRank_cm_0l_eta",        "stop2_PtRank_cm_0l_eta",
+            //"stop1_MassRank_cm_0l_mass",     "stop2_MassRank_cm_0l_mass", 
+            //"stop1_MassRank_cm_0l_pt",       "stop2_MassRank_cm_0l_pt",
+            //"stop1_MassRank_cm_0l_phi",      "stop2_MassRank_cm_0l_phi",  
+            //"stop1_MassRank_cm_0l_eta",      "stop2_MassRank_cm_0l_eta",
+            //"stop1_ScalarPtRank_cm_0l_mass", "stop2_ScalarPtRank_cm_0l_mass", 
+            //"stop1_ScalarPtRank_cm_0l_pt",   "stop2_ScalarPtRank_cm_0l_pt",
+            //"stop1_ScalarPtRank_cm_0l_phi",  "stop2_ScalarPtRank_cm_0l_phi",  
+            //"stop1_ScalarPtRank_cm_0l_eta",  "stop2_ScalarPtRank_cm_0l_eta",
+            "stop1_PtRank_1l_mass",          "stop2_PtRank_1l_mass", // 1 lepton
+            "stop1_PtRank_1l_pt",            "stop2_PtRank_1l_pt",
+            "stop1_PtRank_1l_phi",           "stop2_PtRank_1l_phi",
+            "stop1_PtRank_1l_eta",           "stop2_PtRank_1l_eta",
+            "stop1_MassRank_1l_mass",        "stop2_MassRank_1l_mass",
+            "stop1_MassRank_1l_pt",          "stop2_MassRank_1l_pt",
+            "stop1_MassRank_1l_phi",         "stop2_MassRank_1l_phi",
+            "stop1_MassRank_1l_eta",         "stop2_MassRank_1l_eta",
+            "stop1_ScalarPtRank_1l_mass",    "stop2_ScalarPtRank_1l_mass",
+            "stop1_ScalarPtRank_1l_pt",      "stop2_ScalarPtRank_1l_pt",
+            "stop1_ScalarPtRank_1l_phi",     "stop2_ScalarPtRank_1l_phi",
+            "stop1_ScalarPtRank_1l_eta",     "stop2_ScalarPtRank_1l_eta",            
+            "stop1_PtRank_cm_1l_mass",       "stop2_PtRank_cm_1l_mass", // 1 lepton
+            "stop1_PtRank_cm_1l_pt",         "stop2_PtRank_cm_1l_pt",
+            "stop1_PtRank_cm_1l_phi",        "stop2_PtRank_cm_1l_phi",
+            "stop1_PtRank_cm_1l_eta",        "stop2_PtRank_cm_1l_eta",
+            "stop1_MassRank_cm_1l_mass",     "stop2_MassRank_cm_1l_mass",
+            "stop1_MassRank_cm_1l_pt",       "stop2_MassRank_cm_1l_pt",
+            "stop1_MassRank_cm_1l_phi",      "stop2_MassRank_cm_1l_phi",
+            "stop1_MassRank_cm_1l_eta",      "stop2_MassRank_cm_1l_eta",
+            "stop1_ScalarPtRank_cm_1l_mass", "stop2_ScalarPtRank_cm_1l_mass",
+            "stop1_ScalarPtRank_cm_1l_pt",   "stop2_ScalarPtRank_cm_1l_pt",
+            "stop1_ScalarPtRank_cm_1l_phi",  "stop2_ScalarPtRank_cm_1l_phi",
+            "stop1_ScalarPtRank_cm_1l_eta",  "stop2_ScalarPtRank_cm_1l_eta",            
             "mass",
             "deepESM_valReg",
         };

@@ -74,8 +74,8 @@ private:
             else if(module=="DeepEventShape")               tr.emplaceModule<DeepEventShape>(DeepESMCfg, ModelFile);
             else if(module=="Mass_Regression")              tr.emplaceModule<DeepEventShape>("Mass_Regression.cfg", "keras_frozen_Regression.pb");
             else if(module=="DeepEventShape_NonIsoMuon")    tr.emplaceModule<DeepEventShape>(DeepESMCfg_NonIsoMuon, ModelFile);
-            else if(module=="DoubleDisCo_Reg")              tr.emplaceModule<DeepEventShape>("Keras_Tensorflow_DoubleDisCo_Reg_2016.cfg", "keras_frozen_DoubleDisCo_Reg_2016.pb");
-            
+            else if(module=="DoubleDisCo_Reg")              tr.emplaceModule<DeepEventShape>("Keras_Tensorflow_DoubleDisCo_Reg_2016.cfg", "keras_frozen_DoubleDisCo_Reg_2016.pb");           
+ 
             if(runtype == "MC")
             {
                 if     (module=="ScaleFactors")  tr.emplaceModule<ScaleFactors>(runYear, leptonFileName, puFileName, meanFileName);
@@ -384,6 +384,7 @@ public:
                 "FatJetCombine",
                 "MakeMVAVariables",
                 "DeepEventShape",
+                "ISRJets",
                 "StopJets",
                 //"MakeStopHemispheres_All",
                 "MakeStopHemispheres_1l",
