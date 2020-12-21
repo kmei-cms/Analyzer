@@ -343,7 +343,7 @@ public:
             };
             registerModules(tr, std::move(modulesList));
         }
-        else if(analyzer=="Analyze1Lep")
+        else if(analyzer=="Analyze1Lep" or analyzer=="AnalyzeDoubleDisCo")
         {
             const std::vector<std::string> modulesList = {
                 "PartialUnBlinding",
