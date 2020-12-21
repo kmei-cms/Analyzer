@@ -37,26 +37,9 @@ private:
         double highY;        
     };
 
-    class TH2DProfileInfo
-    {
-    public:
-        std::string name;
-        int nBinsX;
-        double lowX;
-        double highX;        
-        int nBinsY;
-        double lowY;
-        double highY;        
-        double lowZ;
-        double highZ;
-    };
-
 public:
     std::map<std::string, std::shared_ptr<TH1D>>  my_histos;
     std::map<std::string, std::shared_ptr<TH2D>>  my_2d_histos;
-    std::map<std::string, std::shared_ptr<TProfile>>  my_tp_histos;
-    std::map<std::string, std::shared_ptr<TProfile2D>>  my_2d_tp_histos;
-    std::map<std::string, std::shared_ptr<TEfficiency>>  my_efficiencies;
     bool initHistos;
     
     AnalyzeDoubleDisCo();
