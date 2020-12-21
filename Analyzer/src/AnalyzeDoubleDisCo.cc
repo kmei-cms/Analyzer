@@ -7,8 +7,6 @@
 #include <TH2D.h>
 #include <TStyle.h>
 #include <TCanvas.h>
-#include <TEfficiency.h>
-#include <TRandom3.h>
 #include <iostream>
 
 AnalyzeDoubleDisCo::AnalyzeDoubleDisCo() : initHistos(false)
@@ -16,7 +14,7 @@ AnalyzeDoubleDisCo::AnalyzeDoubleDisCo() : initHistos(false)
 }
 
 void AnalyzeDoubleDisCo::InitHistos(const std::map<std::string, bool>& cutMap, const std::map<int, bool>& njetsMap, const std::map<std::string, bool>& ABCDmap,
-                                    const std::vector<TH1DInfo>& histInfos,    const std::vector<TH2DInfo>& hist2DInfos, const unsigned int nMVAJets)
+                                    const std::vector<TH1DInfo>& histInfos,    const std::vector<TH2DInfo>& hist2DInfos)
 {
     TH1::SetDefaultSumw2();
     TH2::SetDefaultSumw2();
@@ -236,7 +234,7 @@ void AnalyzeDoubleDisCo::Loop(NTupleReader& tr, double, int maxevents, bool)
         // Initialize Histograms
         if(!initHistos)
         {
-            InitHistos(cut_map_1l, njetsMap, ABCDmap, histInfos, hist2DInfos, nMVAJets);
+            InitHistos(cut_map_1l, njetsMap, ABCDmap, histInfos, hist2DInfos);
             initHistos = true;
         }
 

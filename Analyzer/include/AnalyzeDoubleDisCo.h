@@ -3,8 +3,6 @@
 
 #include <TH1D.h>
 #include <TH2D.h>
-#include <TProfile2D.h>
-#include <TEfficiency.h>
 #include <TTree.h>
 #include <TFile.h>
 
@@ -46,7 +44,7 @@ public:
     ~AnalyzeDoubleDisCo(){};
     
     void Loop(NTupleReader& tr, double weight, int maxevents = -1, bool isQuiet = false);
-    void InitHistos(const std::map<std::string, bool>& cutMap, const std::map<int, bool>& njetsMap, const std::map<std::string, bool>& ABCDmap, const std::vector<TH1DInfo>& histInfos, const std::vector<TH2DInfo>& hist2DInfos, const unsigned int nMVAJets);
+    void InitHistos(const std::map<std::string, bool>& cutMap, const std::map<int, bool>& njetsMap, const std::map<std::string, bool>& ABCDmap, const std::vector<TH1DInfo>& histInfos, const std::vector<TH2DInfo>& hist2DInfos);
     void WriteHistos(TFile* outfile);
 };
 
