@@ -240,7 +240,6 @@ void MakeNNVariables::Loop(NTupleReader& tr, double, int maxevents, bool)
             myMiniTupleTest_0l->setTupleVars(varJetsAK8);
             myMiniTupleTest_0l->setTupleVars(varOldSeed);
             myMiniTupleTest_0l->setTupleVars(varTopSeed);
-
             myMiniTupleTest_0l->initBranches(tr);
 
             my_histos["EventCounterVal_0l"]->Fill( eventCounter );
@@ -252,7 +251,6 @@ void MakeNNVariables::Loop(NTupleReader& tr, double, int maxevents, bool)
             myMiniTupleVal_0l->setTupleVars(varJetsAK8);
             myMiniTupleVal_0l->setTupleVars(varOldSeed);
             myMiniTupleVal_0l->setTupleVars(varTopSeed);
-
             myMiniTupleVal_0l->initBranches(tr);
 
             // ------------
