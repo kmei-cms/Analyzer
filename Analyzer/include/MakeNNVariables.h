@@ -26,13 +26,25 @@ public :
    void     InitHistos();
    void     WriteHistos(TFile* outfile); 
 
-   MiniTupleMaker *myMiniTupleTrain;
-   MiniTupleMaker *myMiniTupleTest;
-   MiniTupleMaker *myMiniTupleVal;
+   MiniTupleMaker *myMiniTupleTrain_0l;
+   MiniTupleMaker *myMiniTupleTrain_1l; 
+   MiniTupleMaker *myMiniTupleTrain_2l;
+   MiniTupleMaker *myMiniTupleTest_0l;
+   MiniTupleMaker *myMiniTupleTest_1l;
+   MiniTupleMaker *myMiniTupleTest_2l;
+   MiniTupleMaker *myMiniTupleVal_0l;
+   MiniTupleMaker *myMiniTupleVal_1l;
+   MiniTupleMaker *myMiniTupleVal_2l;
 
-   TTree          *myTreeTrain;
-   TTree          *myTreeTest;
-   TTree          *myTreeVal;
+   TTree          *myTreeTrain_0l;
+   TTree          *myTreeTrain_1l;
+   TTree          *myTreeTrain_2l;
+   TTree          *myTreeTest_0l;
+   TTree          *myTreeTest_1l;
+   TTree          *myTreeTest_2l;
+   TTree          *myTreeVal_0l;
+   TTree          *myTreeVal_1l;
+   TTree          *myTreeVal_2l;
 };
 
 #endif
