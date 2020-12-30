@@ -1,4 +1,4 @@
-README for QCD Estimate Derivation
+# README for QCD Estimate Derivation
 
 ## Last updated by Kelvin Mei on December 30th, 2020
 
@@ -6,7 +6,7 @@ The purpose of the scripts in this folder is to generate the qcd estimate for th
 
 To run these scripts, you will first need:
 
-* The mini tree that has totalEventWeight (all SFs applied) for the QCD MC that pass the signal region baseline
+* The mini tree that has totalEventWeight (all SFs applied) for the QCD and TT MC that pass the signal region baseline (also TT+X and Other if you want to do extra comparison studies)
 * The mini tree that has totalEventWeightNIM (just CR SFs applied) for the QCD MC, TT MC, TT+X MC, and Other that pass the control region baseline
 * The mini tree that has the data (Single Muon data set) in the QCD control region that pass the control region baseline
 * The njets\_for\_Aron.root file just for QCD passing the signal region baseline (normally output as QCD.root) that has the default QCD MC njets shape and all the njets shapes with the systematics applied.
