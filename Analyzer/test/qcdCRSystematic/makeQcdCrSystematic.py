@@ -1,7 +1,8 @@
 # This script creates the final distributions used to generate the fit
 #   parameters for the CR data-driven systematic
 
-# Input: ROOT files containing all of the toys from throwToysForSystematic.py
+# Input: ROOT files containing all of the toys from throwToysForSystematic.py and
+#       the njets_for_Aron.root file for each year
 # Output: Histograms per year that serve as the baseline for the CR data-driven 
 #   systematic.
 
