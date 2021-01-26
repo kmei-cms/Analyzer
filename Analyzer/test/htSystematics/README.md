@@ -1,4 +1,4 @@
-# README for the $$H_{T}$$ systematics for the SUS-19-004 Analysis
+# README for the H<sub>T<\sub> systematics for the SUS-19-004 Analysis
 
 ## Last Updated by Kelvin Mei on January 26th, 2021
 
